@@ -21,4 +21,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency 'metasploit-version', '= 0.1.3.pre.changelog.pre.template'
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency 'simplecov'
 end

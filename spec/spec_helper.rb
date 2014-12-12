@@ -1,5 +1,8 @@
 require 'bundler/setup'
 
+# require before anything else so coverage is shown for all project files
+require 'simplecov'
+
 #
 # Gems
 #
