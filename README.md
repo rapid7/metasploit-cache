@@ -1,4 +1,4 @@
-# Metasploit::Cache
+# Metasploit::Cache [![Build Status](https://travis-ci.org/rapid7/metasploit-cache.svg?branch=master)](https://travis-ci.org/rapid7/metasploit-cache)
 
 TODO: Write a gem description
 
