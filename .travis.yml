@@ -1,0 +1,17 @@
+env:
+  matrix:
+    - RAKE_TASK=spec
+language: ruby
+matrix:
+  # documentation coverage is not influenced by ruby implementation, so only run once
+  include:
+    - rvm: 2.1
+      env: RAKE_TASK=yard
+rvm:
+  - '1.9.3'
+  - '2.0'
+  - '2.1'
+  - 'ruby-head'
+  - 'jruby-19mode'
+  - 'rbx-2.2'
+script: "bundle exec rake $RAKE_TASK"
