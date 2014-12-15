@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description   = "Cache of Metasploit Module metadata, architectures, platforms, references, and authorities " \
                        "that can persist between reboots of metasploit-framework and Metasploit applications"
   spec.homepage      = "https://github.com/rapid7/metasploit-cache"
-  spec.license       = "MIT"
+  spec.license       = "BSD-3-clause"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
