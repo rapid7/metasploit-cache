@@ -43,6 +43,7 @@ end
 
 if ENV['TRAVIS'] == 'true'
   require 'codeclimate-test-reporter'
+  require 'coveralls'
 
   formatters = []
 
@@ -50,6 +51,8 @@ if ENV['TRAVIS'] == 'true'
   if CodeClimate::TestReporter.run?
     formatters << CodeClimate::TestReporter::Formatter
   end
+
+  formatters << Coveralls::SimpleCov::Formatter
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
       *formatters
