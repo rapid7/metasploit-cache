@@ -40,3 +40,18 @@ SimpleCov.configure do
 
   add_group 'Specs', 'spec'
 end
+
+if ENV['TRAVIS'] == 'true'
+  require 'codeclimate-test-reporter'
+
+  formatters = []
+
+  # don't use `CodeClimate::TestReporter.start` as it will overwrite some .simplecov settings
+  if CodeClimate::TestReporter.run?
+    formatters << CodeClimate::TestReporter::Formatter
+  end
+
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+      *formatters
+  ]
+end
