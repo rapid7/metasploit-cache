@@ -8,9 +8,10 @@ Gem::Specification.new do |spec|
   spec.version       = Metasploit::Cache::VERSION
   spec.authors       = ["Luke Imhoff"]
   spec.email         = ["luke_imhoff@rapid7.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = "Metasploit Module cache"
+  spec.description   = "Cache of Metasploit Module metadata, architectures, platforms, references, and authorities " \
+                       "that can persist between reboots of metasploit-framework and Metasploit applications"
+  spec.homepage      = "https://github.com/rapid7/metasploit-cache"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
