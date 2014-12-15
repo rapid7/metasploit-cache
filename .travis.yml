@@ -1,17 +1,18 @@
 env:
   matrix:
-    - RAKE_TASK=spec
+  - RAKE_TASK=spec
+  global:
+    secure: cOCoUB1zTvnl274EftNxbbmkL8MIlXa9a2/NLXpJFfJaL39JLYLCvrj85ndLO75fl8W5j7Xnx1w3kyNCL0FUumWzrIfcJFwTADv20EggrmrrJaEJDdqi3+oxFA8/AHQK7GUXws2AEhbs1ujXO7wA44qeQmO1daWdbXmN5t2qoxc=
 language: ruby
 matrix:
-  # documentation coverage is not influenced by ruby implementation, so only run once
   include:
-    - rvm: 2.1
-      env: RAKE_TASK=yard
+  - rvm: 2.1
+    env: RAKE_TASK=yard
 rvm:
-  - '1.9.3'
-  - '2.0'
-  - '2.1'
-  - 'ruby-head'
-  - 'jruby-19mode'
-  - 'rbx'
-script: "bundle exec rake $RAKE_TASK"
+- 1.9.3
+- '2.0'
+- '2.1'
+- ruby-head
+- jruby-19mode
+- rbx
+script: bundle exec rake $RAKE_TASK
