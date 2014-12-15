@@ -13,5 +13,5 @@ rvm:
   - '2.1'
   - 'ruby-head'
   - 'jruby-19mode'
-  - 'rbx-2.2'
+  - 'rbx'
 script: "bundle exec rake $RAKE_TASK"
