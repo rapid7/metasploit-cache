@@ -1,1 +1,5 @@
 --files CHANGELOG.md,CONTRIBUTING.md,LICENSE,RELEASING.md,UPGRADING.md
+--markup markdown
+--private
+--protected
+{app,lib}/**/*.rb

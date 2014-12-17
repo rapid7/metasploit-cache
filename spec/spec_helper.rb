@@ -1,7 +1,14 @@
-require 'bundler/setup'
+# Configure Rails Environment
+ENV['RAILS_ENV'] = 'test'
+require 'bundler'
+Bundler.setup(:default, :test)
 
 # require before anything else so coverage is shown for all project files
 require 'simplecov'
+
+require File.expand_path('../dummy/config/environment.rb',  __FILE__)
+require 'rspec/rails'
+require 'rspec/autorun'
 
 #
 # Gems
@@ -9,17 +16,18 @@ require 'simplecov'
 
 require 'metasploit/version'
 
-#
-# Project
-#
-
-require 'metasploit/cache'
+roots = []
 
 # Use find_all_by_name instead of find_by_name as find_all_by_name will return pre-release versions
-gem_specification = Gem::Specification.find_all_by_name('metasploit-version').first
+metasploit_version_gem_specification = Gem::Specification.find_all_by_name('metasploit-version').first
+roots << metasploit_version_gem_specification.gem_dir
 
-Dir[File.join(gem_specification.gem_dir, 'spec', 'support', '**', '*.rb')].each do |f|
-  require f
+roots << Metasploit::Model::Engine.root
+
+roots.each do |root|
+  Dir[File.join(root, 'spec', 'support', '**', '*.rb')].each do |f|
+    require f
+  end
 end
 
 RSpec.configure do |config|
@@ -75,5 +83,20 @@ RSpec.configure do |config|
     # Prevents you from mocking or stubbing a method that does not exist on
     # a real object.
     mocks.verify_partial_doubles = true
+  end
+
+  config.before(:suite) do
+    # this must be explicitly set here because it should always be spec/tmp for w/e project is using
+    # Metasploit::Model::Spec to handle file system clean up.
+    Metasploit::Model::Spec.temporary_pathname = Metasploit::Model::Engine.root.join('spec', 'tmp')
+    # Clean up any left over files from a previously aborted suite
+    Metasploit::Model::Spec.remove_temporary_pathname
+
+    # catch missing translations
+    I18n.exception_handler = Metasploit::Model::Spec::I18nExceptionHandler.new
+  end
+
+  config.after(:each) do
+    Metasploit::Model::Spec.remove_temporary_pathname
   end
 end

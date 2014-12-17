@@ -1,14 +1,33 @@
+# bundler configuration
 /.bundle/
+# Rubymine project configuration
 /.idea
+# Don't check in new rvm version and gemset files
+/.ruby-gemset
+/.ruby-version
+# Don't check in rvmrc since this is a gem
+/.rvmrc
+# YARD database
 /.yardoc
+# Installed gem versions.  Not stored for the same reasons as .rvmrc
 /Gemfile.lock
-/_yardoc/
+# coverage report directory for simplecov/Rubymine
 /coverage/
+# generated yardocs
 /doc/
+# Packaging directory for builds
 /pkg/
+# Database configuration (with passwords) for specs
+/spec/dummy/config/database.yml
 /spec/reports/
 /tmp/
+# Mac OS X folder attributes
+.DS_Store
 *.bundle
+# built gems
+*.gem
+# logs
+*.log
 *.so
 *.o
 *.a
