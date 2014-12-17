@@ -1,4 +1,17 @@
+#
+# Gems
+#
+
+require 'metasploit/model'
+
+#
+# Project
+#
+
 require "metasploit/cache/version"
+
+autoload :DerivationValidator, 'derivation_validator'
+autoload :DynamicLengthValidator, 'dynamic_length_validator'
 
 # Namespace shared between gems in the Metasploit ecosystem.
 module Metasploit

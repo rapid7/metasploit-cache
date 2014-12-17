@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Metasploit::Model::Engine do
+RSpec.describe Metasploit::Cache::Engine do
   context 'config' do
     subject(:config) do
       described_class.config
@@ -75,7 +75,7 @@ RSpec.describe Metasploit::Model::Engine do
     context 'metasploit-model.prepend_factory_path' do
       subject(:initializer) do
         initializers.find { |initializer|
-          initializer.name == 'metasploit-model.prepend_factory_path'
+          initializer.name == 'metasploit-cache.prepend_factory_path'
         }
       end
 
@@ -90,7 +90,7 @@ RSpec.describe Metasploit::Model::Engine do
 
         context 'with FactoryGirl defined' do
           it 'should prepend full path to spec/factories to FactoryGirl.definition_file_paths' do
-            definition_file_path = Metasploit::Model::Engine.root.join('spec', 'factories')
+            definition_file_path = Metasploit::Cache::Engine.root.join('spec', 'factories')
 
             expect(FactoryGirl.definition_file_paths).to receive(:unshift).with(definition_file_path)
 

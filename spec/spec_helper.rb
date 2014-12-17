@@ -23,6 +23,7 @@ metasploit_version_gem_specification = Gem::Specification.find_all_by_name('meta
 roots << metasploit_version_gem_specification.gem_dir
 
 roots << Metasploit::Model::Engine.root
+roots << Metasploit::Cache::Engine.root
 
 roots.each do |root|
   Dir[File.join(root, 'spec', 'support', '**', '*.rb')].each do |f|
@@ -88,7 +89,7 @@ RSpec.configure do |config|
   config.before(:suite) do
     # this must be explicitly set here because it should always be spec/tmp for w/e project is using
     # Metasploit::Model::Spec to handle file system clean up.
-    Metasploit::Model::Spec.temporary_pathname = Metasploit::Model::Engine.root.join('spec', 'tmp')
+    Metasploit::Model::Spec.temporary_pathname = Metasploit::Cache::Engine.root.join('spec', 'tmp')
     # Clean up any left over files from a previously aborted suite
     Metasploit::Model::Spec.remove_temporary_pathname
 

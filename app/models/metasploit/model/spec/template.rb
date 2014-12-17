@@ -197,7 +197,7 @@ class Metasploit::Model::Spec::Template < Metasploit::Model::Base
     #
     # @return [Pathname] Defaults to 'spec/support/templates/metasploit/model' under Metasploit::Model.root.
     def root
-      @@root ||= Metasploit::Model::Engine.root.join('spec', 'support', 'templates', 'metasploit', 'model')
+      @@root ||= Metasploit::Cache::Engine.root.join('spec', 'support', 'templates', 'metasploit', 'model')
     end
 
     # Sets the {root} pathname for all {#search_pathnames}, including those on subclasses.
