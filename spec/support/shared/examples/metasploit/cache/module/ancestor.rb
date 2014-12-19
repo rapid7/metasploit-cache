@@ -754,7 +754,7 @@ Metasploit::Cache::Spec.shared_examples_for 'Module::Ancestor' do
       end
     end
 
-    it { should ensure_inclusion_of(:module_type).in_array(Metasploit::Cache::Module::Type::ALL) }
+    it { should validate_inclusion_of(:module_type).in_array(Metasploit::Cache::Module::Type::ALL) }
     it { should validate_presence_of(:parent_path) }
 
     context 'payload_type' do

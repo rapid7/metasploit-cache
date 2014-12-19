@@ -308,7 +308,7 @@ Metasploit::Cache::Spec.shared_examples_for 'Architecture' do
   context 'validations' do
     context 'abbreviation' do
       # have to test inclusion validation manually because
-      # ensure_inclusion_of(:abbreviation).in_array(described_class::ABBREVIATIONS).allow_nil does not work with
+      # validate_inclusion_of(:abbreviation).in_array(described_class::ABBREVIATIONS).allow_nil does not work with
       # additional uniqueness validation.
       context 'ensure inclusion of abbreviation in ABBREVIATIONS' do
         let(:error) do
@@ -354,9 +354,9 @@ Metasploit::Cache::Spec.shared_examples_for 'Architecture' do
       end
     end
 
-    it { should ensure_inclusion_of(:bits).in_array(described_class::BITS).allow_nil }
-    it { should ensure_inclusion_of(:endianness).in_array(described_class::ENDIANNESSES).allow_nil }
-    it { should ensure_inclusion_of(:family).in_array(described_class::FAMILIES).allow_nil }
+    it { should validate_inclusion_of(:bits).in_array(described_class::BITS).allow_nil }
+    it { should validate_inclusion_of(:endianness).in_array(described_class::ENDIANNESSES).allow_nil }
+    it { should validate_inclusion_of(:family).in_array(described_class::FAMILIES).allow_nil }
     it { should validate_presence_of(:summary) }
   end
 

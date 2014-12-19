@@ -107,7 +107,7 @@ Metasploit::Cache::Spec.shared_examples_for 'Module::Rank' do
 
   context 'validations' do
     context 'name' do
-      it { should ensure_inclusion_of(:name).in_array(described_class::NUMBER_BY_NAME.keys) }
+      it { should validate_inclusion_of(:name).in_array(described_class::NUMBER_BY_NAME.keys) }
 
       context 'format' do
         it 'should not allow #name starting with a lowercase letter' do
@@ -125,7 +125,7 @@ Metasploit::Cache::Spec.shared_examples_for 'Module::Rank' do
     end
 
     context 'number' do
-      it { should ensure_inclusion_of(:number).in_array(described_class::NUMBER_BY_NAME.values) }
+      it { should validate_inclusion_of(:number).in_array(described_class::NUMBER_BY_NAME.values) }
       it { should validate_numericality_of(:number).only_integer }
     end
   end
