@@ -55,9 +55,9 @@ class Metasploit::Cache::Module::Ancestor::Spec::Template < Metasploit::Cache::S
 
   # The pathname where to {#write} to template results.
   #
-  # @return [Pathname] `Metasploit::Cache::Module::Ancestor#real_pathname.
+  # @return [Pathname] {Metasploit::Cache::RealPathname#real_pathname}.
   # @return [nil] if {#module_ancestor} is `nil`.
-  # @return [nil] if {#module_ancestor #module_ancestor's} {Metasploit::Cache::Module::Ancestor#real_pathname} is `nil`
+  # @return [nil] if {#module_ancestor #module_ancestor's} {Metasploit::Cache::RealPathname#real_pathname} is `nil`
   #   after derivation.
   def destination_pathname
     unless instance_variable_defined? :@destination_pathname
