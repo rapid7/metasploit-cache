@@ -30,7 +30,7 @@ FactoryGirl.define do
   }
 
   trait :metasploit_cache_module_instance do
-    ignore do
+    transient do
       actions_length(&arbitrary_supported_length)
 
       # this length is only used if supports?(:module_architectures) is true.  It can be set to 0 when

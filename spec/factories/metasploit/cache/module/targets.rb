@@ -10,7 +10,7 @@ FactoryGirl.define do
   end
 
   trait :metasploit_cache_module_target do
-    ignore do
+    transient do
       module_type { generate :metasploit_cache_module_target_module_type }
 
       target_architectures_length { Random.rand(1 .. total_architectures) }

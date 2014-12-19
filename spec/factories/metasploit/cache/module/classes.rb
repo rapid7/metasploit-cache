@@ -9,7 +9,7 @@ FactoryGirl.define do
     # Don't set full_name: before_validation will derive it from {Metasploit::Cache::Module::Class#module_type} and
     # {Metasploit::Cache::Module::Class::reference_name}.
 
-    ignore do
+    transient do
       # derives from associations in instance, so don't set on instance
       module_type { generate :metasploit_cache_module_type }
 

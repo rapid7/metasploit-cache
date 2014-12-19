@@ -8,7 +8,7 @@ FactoryGirl.define do
   sequence :metasploit_cache_module_platform_module_type, metasploit_cache_module_platform_module_types.cycle
 
   trait :metasploit_cache_module_platform do
-    ignore do
+    transient do
       module_type { generate :metasploit_cache_module_platform_module_type }
     end
   end

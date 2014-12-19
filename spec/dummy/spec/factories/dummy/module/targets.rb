@@ -5,7 +5,7 @@ FactoryGirl.define do
               :metasploit_model_base,
               :metasploit_cache_module_target
           ] do
-    ignore do
+    transient do
       # have to use module_type from metasploit_cache_module_target trait to ensure module_instance will support
       # module targets.
       module_class { FactoryGirl.create(:dummy_module_class, module_type: module_type) }

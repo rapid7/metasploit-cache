@@ -75,7 +75,7 @@ FactoryGirl.define do
 
     module_type { generate :metasploit_cache_module_type }
 
-    ignore do
+    transient do
       # depends on module_type
       payload_type {
         if payload?
@@ -138,7 +138,7 @@ FactoryGirl.define do
   trait :non_payload_metasploit_cache_module_ancestor do
     module_type { generate :metasploit_cache_non_payload_module_type }
 
-    ignore do
+    transient do
       payload_type nil
     end
   end
@@ -146,7 +146,7 @@ FactoryGirl.define do
   trait :payload_metasploit_cache_module_ancestor do
     module_type 'payload'
 
-    ignore do
+    transient do
       payload_type { generate :metasploit_cache_module_ancestor_payload_type }
     end
 
@@ -162,19 +162,19 @@ FactoryGirl.define do
   end
 
   trait :single_payload_metasploit_cache_module_ancestor do
-    ignore do
+    transient do
       payload_type 'single'
     end
   end
 
   trait :stage_payload_metasploit_cache_module_ancestor do
-    ignore do
+    transient do
       payload_type 'stage'
     end
   end
 
   trait :stager_payload_metasploit_cache_module_ancestor do
-    ignore do
+    transient do
       payload_type 'stager'
     end
   end
