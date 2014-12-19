@@ -1,7 +1,7 @@
-# Implementation of {Metasploit::Model::Module::Author} to allow testing of {Metasploit::Model::Module::Author}
+# Implementation of {Metasploit::Cache::Module::Author} to allow testing of {Metasploit::Cache::Module::Author}
 # using an in-memory ActiveModel and use of factories.
 class Dummy::Module::Author < Metasploit::Model::Base
-  include Metasploit::Model::Module::Author
+  include Metasploit::Cache::Module::Author
 
   #
   # Associations

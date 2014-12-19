@@ -1,7 +1,7 @@
-# Implementation of {Metasploit::Model::Module::Rank} to allow testing of {Metasploit::Model::Module::Rank}
+# Implementation of {Metasploit::Cache::Module::Rank} to allow testing of {Metasploit::Cache::Module::Rank}
 # using an in-memory ActiveModel and use of factories.
 class Dummy::Module::Rank < Metasploit::Model::Base
-  include Metasploit::Model::Module::Rank
+  include Metasploit::Cache::Module::Rank
 
   #
   # Attributes
@@ -19,7 +19,7 @@ class Dummy::Module::Rank < Metasploit::Model::Base
   #   @return [Integer]
   attr_accessor :number
 
-  # Keep single instance for each pair in {Metasploit::Model::Module::Rank::NUMBER_BY_NAME} to emulate unique database
+  # Keep single instance for each pair in {Metasploit::Cache::Module::Rank::NUMBER_BY_NAME} to emulate unique database
   # seeds in-memory.
   #
   # @param name [String] {#name}

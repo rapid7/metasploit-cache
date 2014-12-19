@@ -1,5 +1,5 @@
 class Dummy::Module::Target::Platform < Metasploit::Model::Base
-  include Metasploit::Model::Module::Target::Platform
+  include Metasploit::Cache::Module::Target::Platform
 
   #
   # Associations

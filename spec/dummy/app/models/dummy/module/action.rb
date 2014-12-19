@@ -1,7 +1,7 @@
-# Implementation of {Metasploit::Model::Module::Action} to allow testing of {Metasploit::Model::Module::Action}
+# Implementation of {Metasploit::Cache::Module::Action} to allow testing of {Metasploit::Cache::Module::Action}
 # using an in-memory ActiveModel and use of factories.
 class Dummy::Module::Action < Metasploit::Model::Base
-  include Metasploit::Model::Module::Action
+  include Metasploit::Cache::Module::Action
 
   #
   # Associations

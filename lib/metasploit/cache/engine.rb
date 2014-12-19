@@ -13,7 +13,7 @@ class Metasploit::Cache::Engine < Rails::Engine
   end
 
   # Remove ActiveSupport::Dependencies loading paths to save time during constant resolution and to ensure that
-  # metasploit-model is properly declaring all autoloads and not falling back on ActiveSupport::Dependencies
+  # metasploit-cache is properly declaring all autoloads and not falling back on ActiveSupport::Dependencies
   config.paths.each_value do |path|
     path.skip_autoload!
     path.skip_autoload_once!

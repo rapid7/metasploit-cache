@@ -1,17 +1,17 @@
-# Implementation of {Metasploit::Model::Architecture} to allow testing of {Metasploit::Model::Architecture} using an
+# Implementation of {Metasploit::Cache::Architecture} to allow testing of {Metasploit::Cache::Architecture} using an
 # in-memory ActiveModel and use of factories.
 class Dummy::Architecture < Metasploit::Model::Base
-  include Metasploit::Model::Architecture
+  include Metasploit::Cache::Architecture
 
   #
   # Associations
   #
 
   # @!attribute [r] module_instances
-  #   {Dummy::Module::Instance Modules} that have this {Metasploit::Model::Module::Architecture} as a
+  #   {Dummy::Module::Instance Modules} that have this {Metasploit::Cache::Module::Architecture} as a
   #   {Dummy::Module::Instance#architectures support architecture}.
   #
-  #   @return [Array<Metasploit::Model::Module::Instance>]
+  #   @return [Array<Metasploit::Cache::Module::Instance>]
 
   #
   # Attributes

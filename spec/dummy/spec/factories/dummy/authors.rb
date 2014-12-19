@@ -3,6 +3,6 @@ FactoryGirl.define do
           :class => Dummy::Author,
           :traits => [
               :metasploit_model_base,
-              :metasploit_model_author
+              :metasploit_cache_author
           ]
 end

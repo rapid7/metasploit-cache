@@ -2,7 +2,7 @@ en:
   metasploit:
     model:
       ancestors:
-        metasploit/model/architecture:
+        metasploit/cache/architecture:
           search:
             operator:
               names:
@@ -15,21 +15,21 @@ en:
                 family:
                   help: "The CPU architecture family.  For example x86_64 and x86 are both in the x86 family.  Certain architectures, such as those for programming languages like Ruby and PHP, do not have a family."
 
-        metasploit/model/author:
+        metasploit/cache/author:
           search:
             operator:
               names:
                 name:
                   help: "Full name (first + last name) or handle of the author."
 
-        metasploit/model/authority:
+        metasploit/cache/authority:
           search:
             operator:
               names:
                 abbreviation:
                   help:  "Abbreviation or initialism for authority, such as CVE for 'Common Vulnerability and Exposures'."
 
-        metasploit/model/email_address:
+        metasploit/cache/email_address:
           search:
             operator:
               names:
@@ -40,14 +40,14 @@ en:
                 local:
                   help: "The local part of the email address before the '@'."
 
-        metasploit/model/module/action:
+        metasploit/cache/module/action:
           search:
             operator:
               names:
                 name:
                   help: "The name of the module action."
 
-        metasploit/model/module/class:
+        metasploit/cache/module/class:
           search:
             operator:
               names:
@@ -60,7 +60,7 @@ en:
                 reference_name:
                   help: "The reference name relative to the module_type."
 
-        metasploit/model/module/instance:
+        metasploit/cache/module/instance:
           search:
             operator:
               names:
@@ -89,7 +89,7 @@ en:
                 text:
                   help: "Search most of the text fields of the module metadata.  Maps to description, name, actions.name, architectures.abbreviation, platform, or ref."
 
-        metasploit/model/module/rank:
+        metasploit/cache/module/rank:
           search:
             operator:
               names:
@@ -98,21 +98,21 @@ en:
                 number:
                   help: "Numerical value of the rank.  Higher numbers are better."
 
-        metasploit/model/module/target:
+        metasploit/cache/module/target:
           search:
             operator:
               names:
                 name:
                   help: "Name of module target."
 
-        metasploit/model/platform:
+        metasploit/cache/platform:
           search:
             operator:
               names:
                 fully_qualified_name:
                   help: "Fully-qualified name of the platform."
 
-        metasploit/model/reference:
+        metasploit/cache/reference:
           search:
             operator:
               names:
@@ -122,7 +122,7 @@ en:
                   help: "URL to web page with information about referenced exploit.  The URL may be null if the authority is obsolete."
 
       attributes:
-        metasploit/model/module/instance:
+        metasploit/cache/module/instance:
           actions:
             one: 'action'
             other: 'actions'
@@ -137,12 +137,8 @@ en:
             other: 'targets'
 
       errors:
-        messages:
-          boolean: "is not a boolean (false or true)."
-          model_invalid: "Validation failed: %{errors}"
-
         models:
-          metasploit/model/module/instance:
+          metasploit/cache/module/instance:
             attributes:
               actions:
                 wrong_length: "cannot have any actions"
@@ -171,32 +167,32 @@ en:
                 too_short: "is too short (minimum is %{count} targets)"
                 wrong_length: "cannot have any targets"
 
-          metasploit/model/search/operation/date:
+          metasploit/cache/search/operation/date:
             attributes:
               value:
                 unparseable_date: "is not a parseable Date"
 
-          metasploit/model/search/operation/null:
+          metasploit/cache/search/operation/null:
             attributes:
               operator:
                 type: "is not a %{type}"
 
-          metasploit/model/search/operation/set:
+          metasploit/cache/search/operation/set:
             attributes:
               value:
                 inclusion: "is not part of the set (%{set})"
 
-          metasploit/model/search/operation/group/base:
+          metasploit/cache/search/operation/group/base:
             attributes:
               children:
                 too_short: "is too short (minimum is %{count} child)"
 
-          metasploit/model/search/operator/null:
+          metasploit/cache/search/operator/null:
             attributes:
               name:
                 unknown: "is unknown"
 
-          metasploit/model/search/query:
+          metasploit/cache/search/query:
             attributes:
               operations:
                 too_short: "is too short (minimum is %{count} operation)"
@@ -204,6 +200,6 @@ en:
       search:
         operator:
           ancestors:
-            metasploit/model/search/operator/deprecated/authority:
+            metasploit/cache/search/operator/deprecated/authority:
               help: "Modules with reference from the %{name} authority.  Maps to `authorities.abbreviation:%{name} references.designation:<value>`."
 

@@ -8,7 +8,7 @@ FactoryGirl.define do
           :class => Dummy::Module::Instance,
           :traits => [
               :metasploit_model_base,
-              :metasploit_model_module_instance
+              :metasploit_cache_module_instance
           ] do
     #
     # Associations
@@ -21,7 +21,7 @@ FactoryGirl.define do
     # :traits) did not work.
     stance {
       if stanced?
-        generate :metasploit_model_module_stance
+        generate :metasploit_cache_module_stance
       else
         nil
       end

@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  abbreviations = Metasploit::Model::Architecture::ABBREVIATIONS
+  abbreviations = Metasploit::Cache::Architecture::ABBREVIATIONS
 
   # dummy_architectures is not a factory, but a sequence because only the seeded Dummy::Architectures are valid
   sequence :dummy_architecture do |n|

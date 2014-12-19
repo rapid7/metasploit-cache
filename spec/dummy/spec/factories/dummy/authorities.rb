@@ -3,16 +3,16 @@ FactoryGirl.define do
           :class => Dummy::Authority,
           :traits => [
               :metasploit_model_base,
-              :metasploit_model_authority
+              :metasploit_cache_authority
           ] do
     factory :full_dummy_authority,
             :traits => [
-                :full_metasploit_model_authority
+                :full_metasploit_cache_authority
             ]
 
     factory :obsolete_dummy_authority,
             :traits => [
-                :obsolete_metasploit_model_authority
+                :obsolete_metasploit_cache_authority
             ]
   end
 

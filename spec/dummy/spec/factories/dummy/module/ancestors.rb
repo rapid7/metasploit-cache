@@ -1,10 +1,10 @@
 FactoryGirl.define do
-  # Used to test {Metasploit::Model::Module::Ancestor} and to ensure that traits work when used in factories.
+  # Used to test {Metasploit::Cache::Module::Ancestor} and to ensure that traits work when used in factories.
   factory :dummy_module_ancestor,
           :class => Dummy::Module::Ancestor,
           :traits => [
               :metasploit_model_base,
-              :metasploit_model_module_ancestor
+              :metasploit_cache_module_ancestor
           ] do
     #
     # Associations
@@ -19,26 +19,26 @@ FactoryGirl.define do
 
     factory :non_payload_dummy_module_ancestor,
             :traits => [
-                :non_payload_metasploit_model_module_ancestor
+                :non_payload_metasploit_cache_module_ancestor
             ]
 
     factory :payload_dummy_module_ancestor,
             :traits => [
-                :payload_metasploit_model_module_ancestor
+                :payload_metasploit_cache_module_ancestor
             ] do
       factory :single_payload_dummy_module_ancestor,
               :traits => [
-                  :single_payload_metasploit_model_module_ancestor
+                  :single_payload_metasploit_cache_module_ancestor
               ]
 
       factory :stage_payload_dummy_module_ancestor,
               :traits => [
-                  :stage_payload_metasploit_model_module_ancestor
+                  :stage_payload_metasploit_cache_module_ancestor
               ]
 
       factory :stager_payload_dummy_module_ancestor,
               :traits => [
-                  :stager_payload_metasploit_model_module_ancestor
+                  :stager_payload_metasploit_cache_module_ancestor
               ]
     end
   end

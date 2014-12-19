@@ -5,7 +5,7 @@ shared_examples_for 'derives' do |attribute, options={}|
   validates = options.fetch(:validates)
 
   context attribute do
-    it { should be_a Metasploit::Model::Derivation }
+    it { should be_a Metasploit::Cache::Derivation }
 
     let(:validate) do
       # don't use `described_class` as it won't be correct when testing mixin modules.

@@ -1,7 +1,7 @@
-# Implementation of {Metasploit::Model::EmailAddress} to allow testing of {Metasploit::Model::EmailAddress} using an in-memory
+# Implementation of {Metasploit::Cache::EmailAddress} to allow testing of {Metasploit::Cache::EmailAddress} using an in-memory
 # ActiveModel and use of factories.
 class Dummy::EmailAddress < Metasploit::Model::Base
-  include Metasploit::Model::EmailAddress
+  include Metasploit::Cache::EmailAddress
 
   #
   # Attributes

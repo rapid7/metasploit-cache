@@ -72,7 +72,7 @@ RSpec.describe Metasploit::Cache::Engine do
       Rails.application.initializers
     end
 
-    context 'metasploit-model.prepend_factory_path' do
+    context 'metasploit-cache.prepend_factory_path' do
       subject(:initializer) do
         initializers.find { |initializer|
           initializer.name == 'metasploit-cache.prepend_factory_path'

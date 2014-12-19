@@ -1,16 +1,16 @@
-# Implementation of {Metasploit::Model::Reference} to allow testing of {Metasploit::Model::Reference} using an in-memory
+# Implementation of {Metasploit::Cache::Reference} to allow testing of {Metasploit::Cache::Reference} using an in-memory
 # ActiveModel and use of factories.
 class Dummy::Reference < Metasploit::Model::Base
-  include Metasploit::Model::Reference
+  include Metasploit::Cache::Reference
 
   #
   # Associations
   #
 
   # @!attribute [rw] authority
-  #   The {Metasploit::Model::Authority authority} that assigned {#designation}.
+  #   The {Metasploit::Cache::Authority authority} that assigned {#designation}.
   #
-  #   @return [Metasploit::Model::Authority, nil]
+  #   @return [Metasploit::Cache::Authority, nil]
   attr_accessor :authority
 
   #

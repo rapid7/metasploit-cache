@@ -1,5 +1,5 @@
 class Dummy::Module::Target::Architecture < Metasploit::Model::Base
-  include Metasploit::Model::Module::Target::Architecture
+  include Metasploit::Cache::Module::Target::Architecture
 
   #
   # Associations

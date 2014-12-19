@@ -3,7 +3,7 @@ FactoryGirl.define do
           :class => Dummy::Reference,
           :traits => [
               :metasploit_model_base,
-              :metasploit_model_reference
+              :metasploit_cache_reference
           ] do
     #
     # Associations
@@ -13,14 +13,14 @@ FactoryGirl.define do
 
     factory :obsolete_dummy_reference,
             :traits => [
-                :obsolete_metasploit_model_reference
+                :obsolete_metasploit_cache_reference
             ] do
       association :authority, :factory => :obsolete_dummy_authority
     end
 
     factory :url_dummy_reference,
             :traits => [
-                :url_metasploit_model_reference
+                :url_metasploit_cache_reference
             ]
   end
 end

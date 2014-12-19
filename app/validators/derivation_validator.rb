@@ -1,4 +1,4 @@
-# Validator for {Metasploit::Model::Derivation::ClassMethods#derives}.
+# Validator for {Metasploit::Cache::Derivation::ClassMethods#derives}.
 class DerivationValidator < ActiveModel::EachValidator
   # Validates that `attribute`'s `value` equals derived_<attribute>'s value.  If they are not equal then the error
   # message is `'must match its derivation'`.

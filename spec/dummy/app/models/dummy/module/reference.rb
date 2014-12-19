@@ -1,5 +1,5 @@
 class Dummy::Module::Reference < Metasploit::Model::Base
-  include Metasploit::Model::Module::Reference
+  include Metasploit::Cache::Module::Reference
 
   #
   # Associations

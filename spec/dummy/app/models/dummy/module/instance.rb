@@ -1,8 +1,8 @@
-# Implementation of {Metasploit::Model::Module::Instance} to allow testing of {Metasploit::Model::Module::Instance}
+# Implementation of {Metasploit::Cache::Module::Instance} to allow testing of {Metasploit::Cache::Module::Instance}
 # using an in-memory ActiveModel and use of factories.
 class Dummy::Module::Instance < Metasploit::Model::Base
   include Metasploit::Model::Association
-  include Metasploit::Model::Module::Instance
+  include Metasploit::Cache::Module::Instance
 
   #
   #

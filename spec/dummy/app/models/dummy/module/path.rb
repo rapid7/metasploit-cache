@@ -1,7 +1,7 @@
-# In-memory implementation of {Metasploit::Model::Module::Path} to allow testing of {Metasploit::Model::Module::Path} in
+# In-memory implementation of {Metasploit::Cache::Module::Path} to allow testing of {Metasploit::Cache::Module::Path} in
 # an ActiveModel and use of factories.
 class Dummy::Module::Path < Metasploit::Model::Base
-  include Metasploit::Model::Module::Path
+  include Metasploit::Cache::Module::Path
 
   #
   # Attributes Methods - used to track changed attributes

@@ -3,7 +3,7 @@ FactoryGirl.define do
           :class => Dummy::Module::Class,
           :traits => [
               :metasploit_model_base,
-              :metasploit_model_module_class
+              :metasploit_cache_module_class
           ] do
     #
     # Associations

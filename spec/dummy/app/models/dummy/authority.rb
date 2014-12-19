@@ -1,7 +1,7 @@
-# Implementation of {Metasploit::Model::Authority} to allow testing of {Metasploit::Model::Authority} using an in-memory
+# Implementation of {Metasploit::Cache::Authority} to allow testing of {Metasploit::Cache::Authority} using an in-memory
 # ActiveModel and use of factories.
 class Dummy::Authority < Metasploit::Model::Base
-  include Metasploit::Model::Authority
+  include Metasploit::Cache::Authority
 
   #
   # CONSTANTS

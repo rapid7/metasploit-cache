@@ -1,7 +1,7 @@
-# Implementation of {Metasploit::Model::Platform} to allow testing of {Metasploit::Model::Platform} using an in-memory
+# Implementation of {Metasploit::Cache::Platform} to allow testing of {Metasploit::Cache::Platform} using an in-memory
 # ActiveModel and use of factories.
 class Dummy::Platform < Metasploit::Model::Base
-  include Metasploit::Model::Platform
+  include Metasploit::Cache::Platform
 
   #
   # Attributes
@@ -19,7 +19,7 @@ class Dummy::Platform < Metasploit::Model::Base
   #   Windows 98 FE.
   #
   #   @return [nil] if this is a top-level platform, such as Windows or Linux.
-  #   @return [Metasploit::Model::Platform]
+  #   @return [Metasploit::Cache::Platform]
   attr_accessor :parent
 
   # @!attribute [rw] relative_name
@@ -37,7 +37,7 @@ class Dummy::Platform < Metasploit::Model::Base
     unless instance_variable_defined? :@all
       @all = []
 
-      Metasploit::Model::Platform.each_seed_attributes do |attributes|
+      Metasploit::Cache::Platform.each_seed_attributes do |attributes|
         child = new(attributes)
         # validate to populate {#fully_qualified_name}
         child.valid!

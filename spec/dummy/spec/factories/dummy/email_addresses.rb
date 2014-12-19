@@ -3,6 +3,6 @@ FactoryGirl.define do
           :class => Dummy::EmailAddress,
           :traits => [
               :metasploit_model_base,
-              :metasploit_model_email_address
+              :metasploit_cache_email_address
           ]
 end

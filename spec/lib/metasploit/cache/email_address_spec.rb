@@ -1,0 +1,19 @@
+require 'spec_helper'
+
+RSpec.describe Metasploit::Cache::EmailAddress,
+         # setting the metadata type makes rspec-rails include RSpec::Rails::ModelExampleGroup, which includes a better
+         # be_valid matcher that will print full error messages
+         type: :model  do
+  it_should_behave_like 'Metasploit::Cache::EmailAddress',
+                        namespace_name: 'Dummy' do
+     def attribute_type(attribute)
+      type_by_attribute = {
+        domain: :string,
+        full: :string,
+        local: :string
+      }
+
+      type_by_attribute.fetch(attribute)
+    end
+  end
+end

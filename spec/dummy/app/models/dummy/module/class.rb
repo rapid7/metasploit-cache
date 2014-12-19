@@ -1,7 +1,7 @@
-# Implementation of {Metasploit::Model::Module::Class} to allow testing of {Metasploit::Model::Module::Class}
+# Implementation of {Metasploit::Cache::Module::Class} to allow testing of {Metasploit::Cache::Module::Class}
 # using an in-memory ActiveModel and use of factories.
 class Dummy::Module::Class < Metasploit::Model::Base
-  include Metasploit::Model::Module::Class
+  include Metasploit::Cache::Module::Class
 
   #
   # Associations
@@ -32,7 +32,7 @@ class Dummy::Module::Class < Metasploit::Model::Base
   attr_accessor :full_name
 
   # @!attribute [rw] module_type
-  #   A denormalized cache of the {Metasploit::Model::Module::Class#module_type ancestors' module_types}, which
+  #   A denormalized cache of the {Metasploit::Cache::Module::Class#module_type ancestors' module_types}, which
   #   must all be the same.  This cache exists so that queries for modules of a given type don't need include the
   #   {#ancestors}.
   #
@@ -50,7 +50,7 @@ class Dummy::Module::Class < Metasploit::Model::Base
   #   The reference name for the Class<Msf::Module>. For non-payloads, this will just be
   #   {Mdm::Module::Ancestor#reference_name} for the only element in {#ancestors}.  For payloads composed of a
   #   stage and stager, the reference name will be derived from the
-  #   {Metasplit::Model::Module::Ancestor#reference_name} of each element {#ancestors} or an alias defined in
+  #   {Metasploit::Cache::Module::Ancestor#reference_name} of each element {#ancestors} or an alias defined in
   #   those Modules.
   #
   #   @return [String
