@@ -8,10 +8,11 @@ Gem::Specification.new do |spec|
   spec.version       = Metasploit::Cache::VERSION
   spec.authors       = ["Luke Imhoff"]
   spec.email         = ["luke_imhoff@rapid7.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.summary       = "Metasploit Module cache"
+  spec.description   = "Cache of Metasploit Module metadata, architectures, platforms, references, and authorities " \
+                       "that can persist between reboots of metasploit-framework and Metasploit applications"
+  spec.homepage      = "https://github.com/rapid7/metasploit-cache"
+  spec.license       = "BSD-3-clause"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
@@ -19,5 +20,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.7"
+  spec.add_development_dependency 'codeclimate-test-reporter'
+  spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'metasploit-version', '= 0.1.3.pre.changelog.pre.template'
+  spec.add_development_dependency 'metasploit-yard', '~> 1.0'
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency 'simplecov'
 end
