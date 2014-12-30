@@ -137,20 +137,20 @@ module Metasploit::Cache::Platform
   # Attributes
   #
 
-  # @!attribute [rw] fully_qualified_name
+  # @!attribute fully_qualified_name
   #   The fully qualified name of this platform, as would be used in the platform list in a metasploit-framework
   #   module.
   #
   #   @return [String]
 
-  # @!attribute [rw] parent
+  # @!attribute parent
   #   The parent platform of this platform.  For example, Windows is parent of Windows 98, which is the parent of
   #   Windows 98 FE.
   #
   #   @return [nil] if this is a top-level platform, such as Windows or Linux.
   #   @return [Metasploit::Cache::Platform]
 
-  # @!attribute [rw] relative_name
+  # @!attribute relative_name
   #   The name of this platform relative to the {#fully_qualified_name} of {#parent}.
   #
   #   @return [String]
@@ -215,6 +215,13 @@ module Metasploit::Cache::Platform
     end
   end
 
+  # @!method fully_qualified_name=(fully_qualified_name)
+  #   Sets {#fully_qualified_name}.
+  #
+  #   @param [String] The fully qualified name of this platform, as would be used in the platform list in a
+  #     metasploit-framework module.
+  #   @return [void]
+
   # List of valid {#fully_qualified_name} derived from {SEED_RELATIVE_NAME_TREE}.
   #
   # @return [Array<String>]
@@ -243,4 +250,17 @@ module Metasploit::Cache::Platform
 
     @fully_qualified_name_set
   end
+
+  # @!method parent=(parent)
+  #   Sets {#parent}.
+  #
+  #   @param [Metasploit::Cache::Platform, nil]  The parent platform of this platform; `nil` if this is a top-level
+  #     platform.
+  #   @return [void]
+
+  # @!method relative_name=(relative_name)
+  #   Sets {#relative_name}.
+  #
+  #   @param [String] the name of this platform relative to the {#fully_qualified_name} of {#parent}.
+  #   @return [void]
 end

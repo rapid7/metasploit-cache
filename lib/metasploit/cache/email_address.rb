@@ -47,7 +47,7 @@ module Metasploit::Cache::EmailAddress
   # Associations
   #
 
-  # @!attribute [rw] module_authors
+  # @!attribute module_authors
   #   Credits where {#authors} used this email address for {#module_instances modules}.
   #
   #   @return [Array<Metasploit::Cache::Module::Author>]
@@ -71,18 +71,18 @@ module Metasploit::Cache::EmailAddress
   #
   #   @return [String]
 
-  # @!attribute [rw] full
+  # @!attribute full
   #   The full email address.
   #
-  #   @return [String] <{#local}>@<{#domain}
+  #   @return [String] <{#local}>@<{#domain}>
 
-  # @!attribute [rw] local
+  # @!attribute local
   #   The local part of the email address before the `'@'`.
   #
   #   @return [String]
 
   #
-  # Methods
+  # Instance Methods
   #
 
   # Derives {#domain} from {#full}
@@ -121,4 +121,29 @@ module Metasploit::Cache::EmailAddress
 
     local
   end
+
+  # @!method domain=(domain)
+  #   Sets {#domain}.
+  #
+  #   @param domain [String] The domain part of the email address after the `'@'`.
+  #   @return [void]
+
+  # @!method full=(full)
+  #   Sets {#full}.
+  #
+  #   @param full [String] <{#local}>@<{#domain}>
+  #   @return [void]
+
+  # @!method local=(local)
+  #   Sets {#local}.
+  #
+  #   @param local [String] The local part of the email address before the `'@'`.
+  #   @return [void]
+
+  # @!method module_authors=(module_authors)
+  #   Sets {#module_authors}.
+  #
+  #   @param module_authors [Array<Metasploit::Cache::Module::Authors>] Credits where {#authors} used this email address
+  #     for {#module_instances modules}.
+  #   @return [void]
 end

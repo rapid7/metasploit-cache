@@ -309,34 +309,71 @@ module Metasploit::Cache::Architecture
   # Attributes
   #
 
-  # @!attribute [rw] abbreviation
+  # @!attribute abbreviation
   #   Abbreviation used for the architecture.  Will match ARCH constants in metasploit-framework.
   #
   #   @return [String]
 
-  # @!attribute [rw] bits
+  # @!attribute bits
   #   Number of bits supported by this architecture.
   #
   #   @return [32] if 32-bit
   #   @return [64] if 64-bit
   #   @return [nil] if bits aren't applicable, such as for non-CPU architectures like ruby, etc.
 
-  # @!attribute [rw] endianness
+  # @!attribute endianness
   #   The endianness of the architecture.
   #
   #   @return ['big'] if big endian
   #   @return ['little'] if little endian
   #   @return [nil] if endianness is not applicable, such as for software architectures like tty.
 
-  # @!attribute [rw] family
+  # @!attribute family
   #   The CPU architecture family.
   #
   #   @return [String] if a CPU architecture.
   #   @return [nil] if not a CPU architecture.
 
-  # @!attribute [rw] summary
+  # @!attribute summary
   #   Sentence length summary of architecture.  Usually an expansion of the abbreviation or initialism in the
   #   {#abbreviation} and the {#bits} and {#endianness} in prose.
   #
   #   @return [String]
+
+  #
+  # Instance Methods
+  #
+
+  # @!method abbreviation=(abbreviation)
+  #   Sets the {#abbreviation} used for the architecture.
+  #
+  #   @param [String]
+  #   @return [void]
+
+  # @!method bits=(bits)
+  #   Sets the number of bits supported by this architecture
+  #
+  #   @param bits [32, 64, nil] `32` if 32-bit; `64` if 64-bit; `nil` if bits aren't applicable, such as for non-CPU
+  #     architectures like ruby, etc.
+  #   @return [void]
+
+  # @!method endianness=(endianness)
+  #   Sets the {#endianness} of the architecture.
+  #
+  #   @param endianness ['big', 'little', nil] For 'big' endian, 'litte' endian, or nil if endianness is not applicable,
+  #     such as for software architectures like tty.
+  #   @return [void]
+
+  # @!method family=(family)
+  #  Sets the CPU architecture {#family}.
+  #
+  #  @param family [String, nil] the CPU family architecture; `nil` if not a CPU archtitecture.
+  #  @return [void]
+
+  # @!method summary=(summary)
+  #   Sets the {#summary} of the architecture.
+  #
+  #   @param summary [String] Sentence length summary of architecture.  Usually an expansion of the abbreviation or
+  #   initialism in the {#abbreviation} and the {#bits} and {#endianness} in prose.
+  #   @return [void]
 end

@@ -19,16 +19,32 @@ module Metasploit::Cache::Module::Architecture
   end
 
   #
-  # Attributes
+  # Associations
   #
 
-  # @!attribute [rw] architecture
+  # @!attribute architecture
   #   The architecture supported by the {#module_instance}.
   #
   #   @return [Metasploit::Cache::Architecture]
 
-  # @!attribute [rw] module_instance
+  # @!attribute module_instance
   #   The module instance that supports {#architecture}.
   #
   #   @return [Metasploit::Cache::Module::Instance]
+
+  #
+  # Instance Methods
+  #
+
+  # @!method architecture=(architecture)
+  #   Sets {#architecture}.
+  #
+  #   @param architecture [Metasploit::Cache::Architecture] the architecture supported by the {#module_instance}.
+  #   @return [void]
+
+  # @!method module_instance=(module_instance)
+  #   Sets {#module_instance}.
+  #
+  #   @param module_instance [MEtasploit::Cache::Module::Instance] the module instance that supports {#architecture}.
+  #   @return [void]
 end

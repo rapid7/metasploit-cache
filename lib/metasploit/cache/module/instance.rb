@@ -250,44 +250,44 @@ module Metasploit::Cache::Module::Instance
   #
   #
 
-  # @!attribute [rw] actions
+  # @!attribute actions
   #   Auxiliary actions to perform when this running this module.
   #
   #   @return [Array<Metasploit::Cache::Module::Action>]
 
-  # @!attribute [rw] default_action
+  # @!attribute default_action
   #   The default action in {#actions}.
   #
   #   @return [Metasploit::Cache::Module::Action]
 
-  # @!attribute [rw] default_target
+  # @!attribute default_target
   #   The default target in {#targets}.
   #
   #   @return [Metasploit::Cache::Module::Target]
 
-  # @!attribute [rw] module_architectures
+  # @!attribute module_architectures
   #   Joins this with {#architectures}.
   #
   #   @return [Array<Metasploit::Cache::Module::Architecture>]
 
-  # @!attribute [rw] module_authors
+  # @!attribute module_authors
   #   Joins this with {#authors} and {#email_addresses} to model the name and email address used for an author
   #   entry in the module metadata.
   #
   #   @return [Array<Metasploit::Cache::Module::Author>]
 
-  # @!attribute [rw] module_class
+  # @!attribute module_class
   #   Class-derived metadata to go along with the instance-derived metadata in this model.
   #
   #   @return [Metasploit::Cache::Module::Class]
 
-  # @!attribute [rw] module_platforms
+  # @!attribute module_platforms
   #   Joins this with {#platforms}.
   #
   #   @return [Array<Metasploit::Cache::Module::Platform>]
 
-  # @!attribute [rw] targets
-  #   Names of targets with different configurations that can be exploited by this module.
+  # @!attribute targets
+  #   Targets with different configurations that can be exploited by this module.
   #
   #   @return [Array<Metasploit::Cache::Module::Target>]
 
@@ -335,34 +335,34 @@ module Metasploit::Cache::Module::Instance
   # Attributes
   #
 
-  # @!attribute [rw] description
+  # @!attribute description
   #   A long, paragraph description of what the module does.
   #
   #   @return [String]
 
-  # @!attribute [rw] disclosed_on
+  # @!attribute disclosed_on
   #   The date the vulnerability exploited by this module was disclosed to the public.
   #
   #   @return [Date, nil]
 
-  # @!attribute [rw] license
+  # @!attribute license
   #   The name of the software license for the module's code.
   #
   #   @return [String]
 
-  # @!attribute [rw] name
+  # @!attribute name
   #   The human readable name of the module.  It is unrelated to {Metasploit::Cache::Module::Class#full_name} or
   #   {Metasploit::Cache::Module::Class#reference_name} and is better thought of as a short summary of the
   #   {#description}.
   #
   #   @return [String]
 
-  # @!attribute [rw] privileged
+  # @!attribute privileged
   #   Whether this module requires privileged access to run.
   #
   #   @return [Boolean]
 
-  # @!attribute [rw] stance
+  # @!attribute stance
   #   Whether the module is active or passive.  `nil` if the {#module_type} is not {#stanced?}.
   #
   #   @return ['active', 'passive', nil]
@@ -473,6 +473,13 @@ module Metasploit::Cache::Module::Instance
   # Instance Methods
   #
 
+  # @!method actions=(actions)
+  #   Sets {#actions}.
+  #
+  #   @param actions [Array<Metasploit::Cache::Module::Action>] Auxiliary actions to perform when this running this
+  #     module.
+  #   @return [void]
+
   # Whether the given `attribute` is allowed to have elements.
   #
   # @param attribute [Symbol] name of attribute to check if {#module_type} allows it to have one or more
@@ -489,6 +496,31 @@ module Metasploit::Cache::Module::Instance
       false
     end
   end
+
+  # @!method default_action=(default_action)
+  #   Sets {#default_action}.
+  #
+  #   @param default_action [Metasploit::Cache::Module::Action] The default action in {#actions}.
+  #   @return [void]
+
+  # @!method default_target=(default_target)
+  #   Sets {#default_target}.
+  #
+  #   @param default_target [Metasploit::Cache::Module::Target] the default target in {#targets}.
+  #   @return [void]
+
+  # @!method description=(description)
+  #   Sets {#description}.
+  #
+  #   @param description [String] A long, paragraph description of what the module does.
+  #   @return [void]
+
+  # @!method disclosed_on=(disclosed_on)
+  #   Sets {#disclosed_on}.
+  #
+  #   @param disclosed_on [Date, nil] the date the vulnerability exploited by this module was disclosed to the
+  #     public.
+  #   @return [void]
 
   # The dynamic length valdiations, such as `:is` and `:minimum` for the given attribute for the current
   # {#module_type}.
@@ -507,6 +539,38 @@ module Metasploit::Cache::Module::Instance
     end
   end
 
+  # @!method license=(license)
+  #   Sets {#license}.
+  #
+  #   @param license [String] The name of the software license for the module's code.
+  #   @return [void]
+
+  # @!method module_architectures=(module_architectures)
+  #   Sets {#module_architectures}.
+  #
+  #   @param module_architectures [Array<Metasploit::Cache::Module::Architecture>] Joins this with {#architectures}.
+  #   @return [void]
+
+  # @!method module_authors=(module_authors)
+  #   Sets {#module_authors}.
+  #
+  #   @param module_authors [Array<Metasploit::Cache::Module::Author>] Joins this with {#authors} and {#email_addresses}
+  #     to model the name and email address used for an author entry in the module metadata.
+  #   @return [void]
+
+  # @!method module_class=(module_class)
+  #   Sets {#module_class}.
+  #
+  #   @param module_class [Metasploit::Cache::Module::Class] Class-derived metadata to go along with the
+  #     instance-derived metadata in this model.
+  #   @return [void]
+
+  # @!method module_platforms=(module_platforms)
+  #   Sets {#module_platforms}.
+  #
+  #   @param module_platforms [Array<Metasploit::Cache::Module::Platform>>] joins this with {#platforms}.
+  #   @return [void]
+
   # @!method module_type
   #   The {Metasploit::Cache::Module::Class#module_type} of the {#module_class}.
   #
@@ -515,6 +579,27 @@ module Metasploit::Cache::Module::Instance
            allow_nil: true,
            to: :module_class
 
+  # @!method name=(name)
+  #   Sets {#name}.
+  #
+  #   @param name [String] The human readable name of the module.  It is unrelated to
+  #     {Metasploit::Cache::Module::Class#full_name} or {Metasploit::Cache::Module::Class#reference_name} and is better
+  #     thought of as a short summary of the {#description}.
+  #   @return [void]
+
+  # @!method privileged=(privileged)
+  #   Sets {#priviledged}.
+  #
+  #   @param priviledged [Boolean] Whether this module requires privileged access to run.
+  #   @return [void]
+
+  # @!method stance=(stance)
+  #   Sets {#stance}.
+  #
+  #   @param stance ['active', 'passive', nil] Whether the module is active or passive; `nil` if the {#module_type} is
+  #     not {#stanced?}.
+  #   @return [void]
+
   # Whether {#module_type} requires {#stance} to be set or to be `nil`.
   #
   # @return (see Metasploit::Cache::Module::Instance::ClassMethods#stanced?)
@@ -522,6 +607,15 @@ module Metasploit::Cache::Module::Instance
   def stanced?
     self.class.stanced?(module_type)
   end
+
+  # @!method targets=(targets)
+  #   Sets {#targets}.
+  #
+  #   @param targets [Array<Metasploit::Cache::Module::Target>] Targets with different configurations that can be
+  #     exploited by this module.
+  #   @return [void]
+
+  # Comment break to make {#targets=} docs work above `private`
 
   private
 

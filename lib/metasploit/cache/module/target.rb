@@ -46,7 +46,7 @@ module Metasploit::Cache::Module::Target
   #
   #   @return [Array<Metasploit::Cache::Architecture>]
 
-  # @!attribute [rw] module_instance
+  # @!attribute module_instance
   #   Module where this target was declared.
   #
   #   @return [Metasploit::Cache::Module::Instance]
@@ -57,12 +57,12 @@ module Metasploit::Cache::Module::Target
   #
   #   @return [Array<Metasploit::Cache::Platform>]
 
-  # @!attribute [rw] target_architectures
+  # @!attribute target_architectures
   #   Joins this target to its {#architectures}
   #
   #   @return [Array<Metasploit::Cache::Module::Target::Architecture]
 
-  # @!attribute [rw] target_platforms
+  # @!attribute target_platforms
   #   Joins this target to its {#platforms}
   #
   #   @return [Array<Metasploit::Cache::Module::Target::Platform>]
@@ -71,8 +71,38 @@ module Metasploit::Cache::Module::Target
   # Attributes
   #
 
-  # @!attribute [rw] name
+  # @!attribute name
   #   The name of this target.
   #
   #   @return [String]
+
+  #
+  # Instance Methods
+  #
+
+  # @!method module_instance=(module_instance)
+  #   Sets {#module_instance}.
+  #
+  #   @param module_instance [Metasploit::Cache::Module::Instance] module where this target was declared.
+  #   @return [void]
+
+  # @!method name=(name)
+  #   Sets {#name}.
+  #
+  #   @param name [String] name of this target.
+  #   @return [void]
+
+  # @!method target_architectures=(target_architectures)
+  #   Sets {#target_architectures}.
+  #
+  #   @param target_architectures [Array<Metasploit::Cache::Module::Target::Architecture>] joins this target ot its
+  #     {#architectures}.
+  #   @return [void]
+
+  # @!method target_platforms=(target_platforms)
+  #   Sets {#target_platforms}.
+  #
+  #   @param target_platforms [Array<Metasploit::Cache::Module::Target::Platform>] joins this target to its
+  #     {#platforms}.
+  #   @return [void]
 end

@@ -81,7 +81,7 @@ module Metasploit::Cache::Module::Class
   # Associations
   #
 
-  # @!attribute [rw] rank
+  # @!attribute rank
   #   The reliability of the module and likelyhood that the module won't knock over the service or host being
   #   exploited.  Bigger values is better.
   #
@@ -96,26 +96,26 @@ module Metasploit::Cache::Module::Class
   # Attributes
   #
 
-  # @!attribute [rw] full_name
+  # @!attribute full_name
   #   The full name (type + reference) for the Class<Msf::Module>.  This is merely a denormalized cache of
   #   `"#{{#module_type}}/#{{#reference_name}}"` as full_name is used in numerous queries and reports.
   #
   #   @return [String]
 
-  # @!attribute [rw] module_type
+  # @!attribute module_type
   #   A denormalized cache of the {Metasploit::Cache::Module::Class#module_type ancestors' module_types}, which
   #   must all be the same.  This cache exists so that queries for modules of a given type don't need include the
   #   {#ancestors}.
   #
   #   @return [String]
 
-  # @!attribute [rw] payload_type
+  # @!attribute payload_type
   #   For payload modules, the {PAYLOAD_TYPES type} of payload, either 'single' or 'staged'.
   #
   #   @return [String] if {#payload?} is `true`.
   #   @return [nil] if {#payload?} is `false`
 
-  # @!attribute [rw] reference_name
+  # @!attribute reference_name
   #   The reference name for the Class<Msf::Module>. For non-payloads, this will just be
   #   {Metasploit::Cache::Module::Ancestor#reference_name} for the only element in {#ancestors}.  For payloads
   #   composed of a stage and stager, the reference name will be derived from the
@@ -378,6 +378,46 @@ module Metasploit::Cache::Module::Class
 
     derived
   end
+
+  # @!method full_name=(full_name)
+  #   Sets {#full_name}.
+  #
+  #   @param full_name [String] The full name (type + reference) for the Class<Msf::Module>.  This is merely a
+  #     denormalized cache of `"#{{#module_type}}/#{{#reference_name}}"` as full_name is used in numerous queries and
+  #     reports.
+  #   @return [void]
+
+  # @!method module_type=(module_type)
+  #   Sets {#module_type}.
+  #
+  #   @param module_type [String] A denormalized cache of the
+  #     {Metasploit::Cache::Module::Class#module_type ancestors' module_types}, which must all be the same.  This cache
+  #     exists so that queries for modules of a given type don't need include the {#ancestors}.
+  #   @return [void]
+
+
+  # @!method payload_type=(payload_type)
+  #   Sets {#payload_type}.
+  #
+  #   @param payload_type ['single', 'staged', nil] the payload type when {#payload?} `true`; otherwise `nil`.
+  #   @return [void]
+
+  # @!method rank=(rank)
+  #   Sets {#rank}.
+  #
+  #   @param rank [Metasploit::Cache::Module::Rank] The reliability of the module and likelyhood that the module won't
+  #     knock over the service or host being exploited.  Bigger values is better.
+  #   @return [void]
+
+  # @!method reference_name=(reference_name)
+  #   Sets {#reference_name}.
+  #
+  #   @param reference_name [String] The reference name for the Class<Msf::Module>. For non-payloads, this will just be
+  #     {Metasploit::Cache::Module::Ancestor#reference_name} for the only element in {#ancestors}.  For payloads
+  #     composed of a stage and stager, the reference name will be derived from the
+  #     {Metasploit::Cache::Module::Ancestor#reference_name} of each element {#ancestors} or an alias defined in those
+  #     Modules.
+  #   @return [void]
 
   # Validates that only 1 ancestor with the given payload_type exists.
   #

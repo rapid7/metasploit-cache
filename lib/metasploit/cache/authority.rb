@@ -48,7 +48,7 @@ module Metasploit::Cache::Authority
   # Associations
   #
 
-  # @!attribute [rw] references
+  # @!attribute references
   #   {Metasploit::Cache::Reference References} that use this authority's scheme for their
   #   {Metasploit::Cache::Reference#authority}.
   #
@@ -68,23 +68,23 @@ module Metasploit::Cache::Authority
   # Attributes
   #
 
-  # @!attribute [rw] abbreviation
+  # @!attribute abbreviation
   #   Abbreviation or initialism for authority, such as CVE for 'Common Vulnerability and Exposures'.
   #
   #   @return [String]
 
-  # @!attribute [rw] obsolete
+  # @!attribute obsolete
   #   Whether this authority is obsolete and no longer exists on the internet.
   #
   #   @return [false]
   #   @return [true] {#url} may be `nil` because authory no longer has a web site.
 
-  # @!attribute [rw] summary
+  # @!attribute summary
   #   An expansion of the {#abbreviation}.
   #
   #   @return [String, nil]
 
-  # @!attribute [rw] url
+  # @!attribute url
   #   URL to the authority's home page or root URL for their {#references} database.
   #
   #   @return [String, nil]
@@ -92,6 +92,20 @@ module Metasploit::Cache::Authority
   #
   # Instance Methods
   #
+
+  # @!method abbreviation=(abbreviation)
+  #   Sets {#abbreviation}.
+  #
+  #   @param abbreviation [String] Abbreviation or initialism for authority, such as CVE for
+  #     'Common Vulnerability and Exposures'.
+  #   @return [void]
+
+  # @!method obsolete=(obsolete)
+  #   Sets {#obsolete}.
+  #
+  #   @param obsolete [Boolean] `true` if this authority is obsolete and no longer exists on the internet; otherwise
+  #     `false`.
+  #   @return [void]
 
   # Returns the {Metasploit::Cache::Reference#url URL} for a {Metasploit::Cache::Reference#designation designation}.
   #
@@ -138,4 +152,23 @@ module Metasploit::Cache::Authority
 
     extension_name
   end
+
+  # @!method references=(references)
+  #   Sets {#references}.
+  #
+  #   @param references [Array<Metasploit::Cache::Reference>] {Metasploit::Cache::Reference References} that use this
+  #     authority's scheme for their {Metasploit::Cache::Reference#authority}.
+  #   @return [void]
+
+  # @!method summary=(summary)
+  #   Sets {#summary}.
+  #
+  #   @param summary [String] An expansion of the {#abbreviation}.
+  #   @return [void]
+
+  # @!method url=(url)
+  #   Sets {#url}.
+  #
+  #   @param url [String]  URL to the authority's home page or root URL for their {#references} database.
+  #   @return [void]
 end

@@ -73,13 +73,29 @@ module Metasploit::Cache::Module::Rank
   # Attributes
   #
 
-  # @!attribute [rw] name
+  # @!attribute name
   #   The name of the rank.
   #
   #   @return [String]
 
-  # @!attribute [rw] number
+  # @!attribute number
   #   The numerical value of the rank.  Higher numbers are better.
   #
   #   @return [Integer]
+
+  #
+  # Instance Methods
+  #
+
+  # @!method name=(name)
+  #   Sets {#name}.
+  #
+  #   @param name [String] the name of the rank.
+  #   @return [void]
+
+  # @!method number=(number)
+  #   Sets {#number}.
+  #
+  #   @param number [Integer] the numerical value of teh rank.  Higher numbers are better.
+  #   @return [void]
 end

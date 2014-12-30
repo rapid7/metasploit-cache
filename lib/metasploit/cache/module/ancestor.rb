@@ -170,7 +170,7 @@ module Metasploit::Cache::Module::Ancestor
   # Associations
   #
 
-  # @!attribute [rw] parent_path
+  # @!attribute parent_path
   #   Path under which this ancestor exists on-disk.
   #
   #   @return [Metasploit::Cache::Module::Path]
@@ -179,12 +179,12 @@ module Metasploit::Cache::Module::Ancestor
   # Attributes
   #
 
-  # @!attribute [rw] full_name
+  # @!attribute full_name
   #   The full name of the module.  The full name is `"#{module_type}/#{reference_name}"`.
   #
   #   @return [String]
 
-  # @!attribute [rw] handler_type
+  # @!attribute handler_type
   #   The handler type (in the case of singles) or (in the case of stagers) the handler type alias.  Handler type is
   #   appended to the end of the single's or stage's {#reference_name} to get the
   #   {Metasploit::Cache::Module::Class#reference_name}.
@@ -192,37 +192,37 @@ module Metasploit::Cache::Module::Ancestor
   #   @return [String] if {Metasploit::Cache::Module::Ancestor#handled?} is `true`.
   #   @return [nil] if {Metasploit::Cache::Module::Ancestor#handled?} is `false`.
 
-  # @!attribute [rw] module_type
+  # @!attribute module_type
   #   The type of the module. This would be called #type, but #type is reserved for ActiveRecord's single table
   #   inheritance.
   #
   #   @return [String] key in {Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE}.
 
-  # @!attribute [rw] payload_type
+  # @!attribute payload_type
   #   For payload modules, the type of payload, either 'single', 'stage', or 'stager'.
   #
   #   @return ['single', 'stage', 'stager'] if `Metasploit::Cache::Module::Ancestor#payload?` is `true`.
   #   @return [nil] if `Metasploit::Cache::Module::Ancestor#payload?` is `false`
   #   @see Metasploit::Cache::Module::Ancestor::PAYLOAD_TYPES
 
-  # @!attribute [rw] real_path
+  # @!attribute real_path
   #   The real (absolute) path to module file on-disk.
   #
   #   @return [String]
 
-  # @!attribute [rw] real_path_modified_at
+  # @!attribute real_path_modified_at
   #   The modification time of the module {#real_path file on-disk}.
   #
   #   @return [DateTime]
 
-  # @!attribute [rw] real_path_sha1_hex_digest
+  # @!attribute real_path_sha1_hex_digest
   #   The SHA1 hexadecimal digest of contents of the file at {#real_path}.  Stored as a string because postgres does not
   #   have support for a 160 bit numerical type and the hexdigest format is more recognizable when using SQL directly.
   #
   #   @see Digest::SHA1#hexdigest
   #   @return [String]
 
-  # @!attribute [rw] reference_name
+  # @!attribute reference_name
   #   The reference name of the module.  The name of the module under its {#module_type type}.
   #
   #   @return [String]
@@ -356,6 +356,12 @@ module Metasploit::Cache::Module::Ancestor
     derived
   end
 
+  # @!method full_name=(full_name)
+  #   Sets {#full_name}.
+  #
+  #   @param full_name [String] `"#{module_type}/#{reference_name}"`.
+  #   @return [void]
+
   # Returns whether {#handler_type} is required or must be `nil`.
   #
   # @return (see handled?)
@@ -367,6 +373,22 @@ module Metasploit::Cache::Module::Ancestor
     )
   end
 
+  # @!method handler_type=(handler_type)
+  #   Sets {#handler_type}.
+  #
+  #   @param handler_type [String, nil] The handler type (in the case of singles) or (in the case of stagers) the
+  #     handler type alias.  Handler type is appended to the end of the single's or stage's {#reference_name} to get the
+  #     {Metasploit::Cache::Module::Class#reference_name}; `nil` if {Metasploit::Cache::Module::Ancestor#handled?} is
+  #     `false`.
+  #   @return [void]
+
+  # @!method module_type=(module_type)
+  #   Sets {#module_type}.
+  #
+  #   @param module_type [String] key in {Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE}. The type of
+  #     the module. This would be called #type, but #type is reserved for ActiveRecord's single table inheritance.
+  #   @return [void]
+
   # The directory for {#module_type} under {Metasploit::Cache::Module::Path parent_path.real_path}.
   #
   # @return [String]
@@ -374,6 +396,12 @@ module Metasploit::Cache::Module::Ancestor
   def module_type_directory
     Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE[module_type]
   end
+
+  # @!method parent_path=(parent_path)
+  #   Sets {#parent_path}.
+  #
+  #   @param parent_path [Metasploit::Cache::Module::Path] Path under which this ancestor exists on-disk.
+  #   @return [void]
 
   # Return whether this forms part of a payload (either a single, stage, or stager).
   #
@@ -412,6 +440,13 @@ module Metasploit::Cache::Module::Ancestor
     payload_name
   end
 
+  # @!method payload_type=(payload_type)
+  #   Sets {#payload_type}.
+  #
+  #   @param payload_type ['single', 'stage', 'stager'] if `Metasploit::Cache::Module::Ancestor#payload?` is `true`,
+  #     the type of the payload; otherwise `nil`.
+  #   @return [void]
+
   # The directory for {#payload_type} under {#module_type_directory} in {#real_path}.
   #
   # @return [String] first directory in reference_name
@@ -427,6 +462,24 @@ module Metasploit::Cache::Module::Ancestor
 
     directory
   end
+
+  # @!method real_path=(real_path)
+  #   Sets {#real_path}.
+  #
+  #   @param real_path [String] The real (absolute) path to module file on-disk.
+  #   @return [void]
+
+  # @!method real_path_modified_at=(real_path_modified_at)
+  #   Sets {#real_path_modified_at}.
+  #
+  #   @param real_path_modified_at [String] The modification time of the module {#real_path file on-disk}.
+  #   @return [void]
+
+  # @!method real_path_sha1_hex_digest=(real_path_sha1_hex_digest)
+  #   Sets {#real_path_sha1_hex_digest}.
+  #
+  #   @param real_path_sha1_hex_digest [String] The SHA1 hexadecimal digest of contents of the file at {#real_path}.
+  #   @return [void]
 
   # File names on {#relative_pathname}.
   #
@@ -463,6 +516,12 @@ module Metasploit::Cache::Module::Ancestor
 
     relative_pathname
   end
+
+  # @!method reference_name=(reference_name)
+  #   Sets {#reference_name}.
+  #
+  #   @param reference_name [String] The name of the module under its {#module_type type}.
+  #   @return [void]
 
   # The path relative to the {#module_type_directory} under the {Metasploit::Cache::Module::Path
   # parent_path.real_path}, including the file {EXTENSION extension}.

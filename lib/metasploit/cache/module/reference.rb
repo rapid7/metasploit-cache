@@ -20,13 +20,31 @@ module Metasploit::Cache::Module::Reference
   # Associations
   #
 
-  # @!attribute [rw] module_instance
+  # @!attribute module_instance
   #   {Metasploit::Cache::Module::Instance Module} with {#reference}.
   #
   #   @return [Metasploit::Cache::Module::Instance]
 
-  # @!attribute [rw] reference
-  #   {Metasploit::Cache::Reference reference} to exploit or proof-of-concept (PoC) code for {#module_instance}.
+  # @!attribute reference
+  #   {Metasploit::Cache::Reference reference} to exploit or proof-of-concept (PoC) code for module_instance.
   #
   #   @return [Metasploit::Cache::Reference]
+
+  #
+  # Instance Methods
+  #
+
+  # @!method module_instance=(module_instance)
+  #   Sets module_instance.
+  #
+  #   @param module_instance [Metasploit::Cache::Module::Instance] {Metasploit::Cache::Module::Instance Module} with
+  #     {#reference}.
+  #   @return [void]
+
+  # @!method reference=(reference)
+  #   Sets {#reference}.
+  #
+  #   @param reference [Metasploit::Cache::Reference] {Metasploit::Cache::Reference reference} to exploit or
+  #     proof-of-concept (PoC) code for module_instance.
+  #   @return [void]
 end

@@ -52,7 +52,7 @@ module Metasploit::Cache::Reference
   # Associations
   #
 
-  # @!attribute [rw] authority
+  # @!attribute authority
   #   The {Metasploit::Cache::Authority authority} that assigned {#designation}.
   #
   #   @return [Metasploit::Cache::Authority, nil]
@@ -67,12 +67,12 @@ module Metasploit::Cache::Reference
   # Attributes
   #
 
-  # @!attribute [rw] designation
+  # @!attribute designation
   #   A designation (usually a string of numbers and dashes) assigned by {#authority}.
   #
   #   @return [String, nil]
 
-  # @!attribute [rw] url
+  # @!attribute url
   #   URL to web page with information about referenced exploit.
   #
   #   @return [String, nil]
@@ -80,6 +80,12 @@ module Metasploit::Cache::Reference
   #
   # Instance Methods
   #
+
+  # @!method authority=(authority)
+  #   Sets {#authority}.
+  #
+  #   @param authority [Metasploit::Cache::Authority, nil]  The {Metasploit::Cache::Authority authority} that assigned
+  #     {#designation}.  `nil` if only a {#url} reference and not from an {Metasploit::Cache::Authority authority}.
 
   # Returns whether {#authority} is not `nil`.
   #
@@ -101,4 +107,18 @@ module Metasploit::Cache::Reference
 
     derived
   end
+
+  # @!method designation=(designation)
+  #   Sets {#designation}.
+  #
+  #   @param designation [String, nil] a designation (usually a string of numbers and dashes) assigned by {#authority};
+  #     `nil` if a {#url} only reference.
+  #   @return [void]
+
+  # @!method url=(url)
+  #   Sets {#url}.
+  #
+  #   @param url [String, nil] URL to web page with information about referenced exploit. Should only be `nil` if
+  #     {#authority} {Metasploit::Cache::Authority#obsolete} is `true`.
+  #   @return [void]
 end

@@ -20,13 +20,29 @@ module Metasploit::Cache::Module::Platform
   # Associations
   #
 
-  # @!attribute [rw] module_instance
+  # @!attribute module_instance
   #   Module that supports {#platform}.
   #
   #   @return [Metasploit::Cache::Module::Instance]
 
-  # @!attribute [rw] platform
+  # @!attribute platform
   #  Platform supported by {#module_instance}.
   #
   #  @return [Metasploit::Cache::Platform]
+
+  #
+  # Instance Methods
+  #
+
+  # @!method module_instance=(module_instance)
+  #   Sets {#module_instance}.
+  #
+  #   @param module_instance [Metasploit::Cache::Module::Instance] Module that supports {#platform}.
+  #   @return [void]
+
+  # @!method platform=(platform)
+  #   Sets {#platform}.
+  #
+  #   @param platform [Metasploit::Cache::Platform] platform supported by {#module_instance}.
+  #   @return [void]
 end

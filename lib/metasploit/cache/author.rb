@@ -47,8 +47,18 @@ module Metasploit::Cache::Author
   # Attributes
   #
 
-  # @!attribute [rw] name
+  # @!attribute name
   #   Full name (First + Last name) or handle of author.
   #
   #   @return [String]
+
+  #
+  # Instance Methods
+  #
+
+  # @!method name=(name)
+  #   Set the {#name}.
+  #
+  #   @param name [String] Full name (First + Last name) or handle of author.
+  #   @return [void]
 end

@@ -36,7 +36,7 @@ module Metasploit::Cache::Module::Action
   # Associations
   #
 
-  # @!attribute [rw] module_instance
+  # @!attribute module_instance
   #   Module that has this action.
   #
   #   @return [Metasploit::Cache::Module::Instance]
@@ -49,4 +49,20 @@ module Metasploit::Cache::Module::Action
   #   The name of this action.
   #
   #   @return [String]
+
+  #
+  # Instance Methods
+  #
+
+  # @!method module_instance=(module_instance)
+  #   Sets {#module_instance}.
+  #
+  #   @param module_instance [Module::Cache::Module::Instance] Module that has this action.
+  #   @return [void]
+
+  # @!method name=(name)
+  #   Sets {#name}.
+  #
+  #   @param name [String] Name of this action.
+  #   @return [void]
 end
