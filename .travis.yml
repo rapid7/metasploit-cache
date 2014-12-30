@@ -19,7 +19,6 @@ rvm:
 - 2.1
 - 2.2
 - ruby-head
-- jruby-1.7.18
 - jruby-head
 - rbx
 script: bundle exec rake $RAKE_TASK
