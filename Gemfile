@@ -5,7 +5,7 @@ gemspec
 
 gem 'metasploit-model',
     github: 'rapid7/metasploit-model',
-    ref: '7006e87e954eea2e6f264ee76afbbbbe6ed658cd'
+    ref: '8794a1313d58fc588fa0fd5994cd1a8c150536f0'
 # TODO remove once metasploit-version has owners besides Trevor and I can prerelease the gem.
 gem 'metasploit-version',
     branch: 'v0.1.3.pre.changelog.pre.template',
