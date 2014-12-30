@@ -6,6 +6,7 @@ env:
 language: ruby
 matrix:
   allow_failures:
+  - rvm: jruby-head
   - rvm: ruby-head
   include:
   - rvm: 2.1
