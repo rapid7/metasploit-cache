@@ -1,3 +1,4 @@
+cache: bundler
 env:
   matrix:
   - RAKE_TASK=spec
