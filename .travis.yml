@@ -5,6 +5,8 @@ env:
     secure: cOCoUB1zTvnl274EftNxbbmkL8MIlXa9a2/NLXpJFfJaL39JLYLCvrj85ndLO75fl8W5j7Xnx1w3kyNCL0FUumWzrIfcJFwTADv20EggrmrrJaEJDdqi3+oxFA8/AHQK7GUXws2AEhbs1ujXO7wA44qeQmO1daWdbXmN5t2qoxc=
 language: ruby
 matrix:
+  allow_failures:
+  - rvm: ruby-head
   include:
   - rvm: 2.1
     env: RAKE_TASK=yard
