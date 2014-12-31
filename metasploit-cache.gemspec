@@ -22,9 +22,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency 'codeclimate-test-reporter'
   spec.add_development_dependency 'coveralls'
-  spec.add_development_dependency 'metasploit-model', '~> 0.28.0'
   spec.add_development_dependency 'metasploit-version', '= 0.1.3.pre.changelog.pre.template'
   spec.add_development_dependency 'metasploit-yard', '~> 1.0'
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency 'simplecov'
+
+  spec.add_runtime_dependency 'metasploit-model', '~> 0.28.0'
 end
