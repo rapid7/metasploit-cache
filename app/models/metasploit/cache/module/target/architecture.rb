@@ -48,4 +48,6 @@ class Metasploit::Cache::Module::Target::Architecture < ActiveRecord::Base
   #
   #   @param module_target [Metasploit::Cache::Module::Target] the module target that supports {#architecture}.
   #   @return [void]
+
+  Metasploit::Concern.run(self)
 end

@@ -94,4 +94,6 @@ class Metasploit::Cache::Module::Instance::Spec::Template < Metasploit::Model::B
       errors.add(:class_template, :invalid, value: class_template)
     end
   end
+
+  Metasploit::Concern.run(self)
 end

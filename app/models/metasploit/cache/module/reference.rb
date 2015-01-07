@@ -51,4 +51,6 @@ class Metasploit::Cache::Module::Reference < ActiveRecord::Base
   #   @param reference [Metasploit::Cache::Reference] {Metasploit::Cache::Reference reference} to exploit or
   #     proof-of-concept (PoC) code for module_instance.
   #   @return [void]
+
+  Metasploit::Concern.run(self)
 end

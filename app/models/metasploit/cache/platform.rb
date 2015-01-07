@@ -286,5 +286,6 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   #
   #   @param [String] the name of this platform relative to the {#fully_qualified_name} of {#parent}.
   #   @return [void]
+
   Metasploit::Concern.run(self)
 end

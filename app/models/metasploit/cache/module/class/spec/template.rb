@@ -89,4 +89,6 @@ class Metasploit::Cache::Module::Class::Spec::Template < Metasploit::Model::Base
       errors.add(:ancestor_templates, :invalid, value: ancestor_templates)
     end
   end
+
+  Metasploit::Concern.run(self)
 end

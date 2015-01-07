@@ -48,4 +48,6 @@ class Metasploit::Cache::Module::Target::Platform < ActiveRecord::Base
   #
   #   @param platform [Metasploit::Cache::Platform] the platform supported by the {#module_target}.
   #   @return [void]
+
+  Metasploit::Concern.run(self)
 end

@@ -368,4 +368,9 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
       end
     end
   end
+
+  # Switch back to public for load hooks
+  public
+
+  Metasploit::Concern.run(self)
 end

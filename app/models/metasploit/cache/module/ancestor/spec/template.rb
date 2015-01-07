@@ -122,4 +122,6 @@ class Metasploit::Cache::Module::Ancestor::Spec::Template < Metasploit::Cache::S
   def source_relative_name
     @source_relative_name ||= DEFAULT_SOURCE_RELATIVE_NAME
   end
+
+  Metasploit::Concern.run(self)
 end

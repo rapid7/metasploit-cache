@@ -274,4 +274,9 @@ class Metasploit::Cache::Spec::Template < Metasploit::Model::Base
       end
     }
   end
+
+  # Switch back to public for load hooks
+  public
+
+  Metasploit::Concern.run(self)
 end

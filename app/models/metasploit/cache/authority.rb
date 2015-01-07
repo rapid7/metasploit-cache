@@ -191,4 +191,6 @@ class Metasploit::Cache::Authority < ActiveRecord::Base
   #
   #   @param url [String]  URL to the authority's home page or root URL for their {#references} database.
   #   @return [void]
+
+  Metasploit::Concern.run(self)
 end
