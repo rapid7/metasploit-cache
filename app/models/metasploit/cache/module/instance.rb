@@ -3,9 +3,9 @@
 class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
+  include Metasploit::Cache::Batch::Root
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
-  include MetasploitDataModels::Batch::Root
 
   autoload :Spec
 

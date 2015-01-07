@@ -3,9 +3,9 @@
 # {Metasploit::Cache::Module::Instance modules} have {Metasploit::Cache::Module::Action actions} with the same {Metasploit::Cache::Module::Action name}, no
 # similarity should be assumed between those two {Metasploit::Cache::Module::Action actions} or {Metasploit::Cache::Module::Instance modules}.
 class Metasploit::Cache::Module::Action < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
-  include MetasploitDataModels::Batch::Descendant
 
   #
   # Associations

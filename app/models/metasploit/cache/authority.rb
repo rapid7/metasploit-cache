@@ -2,9 +2,9 @@
 class Metasploit::Cache::Authority < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
-  include Metasploit::Model::Translation
+  include Metasploit::Cache::Batch::Descendant
   include Metasploit::Model::Search
-  include MetasploitDataModels::Batch::Descendant
+  include Metasploit::Model::Translation
 
   autoload :Bid
   autoload :Cve

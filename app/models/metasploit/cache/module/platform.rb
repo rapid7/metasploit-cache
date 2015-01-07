@@ -1,8 +1,8 @@
 # Join model between {Metasploit::Cache::Module::Instance} and {Metasploit::Cache::Platform} used to represent a platform that a given module
 # supports.
 class Metasploit::Cache::Module::Platform < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
   include Metasploit::Model::Translation
-  include MetasploitDataModels::Batch::Descendant
 
   #
   # Associations

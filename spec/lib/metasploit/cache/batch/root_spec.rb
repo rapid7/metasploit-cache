@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe MetasploitDataModels::Batch::Root do
+RSpec.describe Metasploit::Cache::Batch::Root do
   subject(:base_instance) do
     base_class.new
   end

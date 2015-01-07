@@ -1,7 +1,7 @@
 # Join model that maps a {Metasploit::Cache::Module::Instance model} to a supported {Metasploit::Cache::Module::Architecture architecture}.
 class Metasploit::Cache::Module::Architecture < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
   include Metasploit::Model::Translation
-  include MetasploitDataModels::Batch::Descendant
 
   #
   # Associations

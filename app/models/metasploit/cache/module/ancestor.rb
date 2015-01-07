@@ -6,12 +6,12 @@ require 'digest/sha1'
 class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
+  include Metasploit::Cache::Batch::Descendant
+  include Metasploit::Cache::Batch::Root
   include Metasploit::Cache::Derivation
   include Metasploit::Cache::Derivation::FullName
   include Metasploit::Cache::RealPathname
   include Metasploit::Model::Translation
-  include MetasploitDataModels::Batch::Descendant
-  include MetasploitDataModels::Batch::Root
 
   autoload :Spec
 

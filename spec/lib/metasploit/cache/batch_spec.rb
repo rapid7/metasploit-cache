@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-RSpec.describe MetasploitDataModels::Batch do
+RSpec.describe Metasploit::Cache::Batch do
   context 'CONSTANTS' do
     context 'THREAD_LOCAL_VARIABLE_NAME' do
       subject(:thread_local_variable_name) do
         described_class::THREAD_LOCAL_VARIABLE_NAME
       end
 
-      it { is_expected.to eq(:metasploit_data_models_batch) }
+      it { is_expected.to eq(:metasploit_cache_batch) }
     end
   end
 
@@ -17,11 +17,11 @@ RSpec.describe MetasploitDataModels::Batch do
     end
 
     around(:each) do |example|
-      before = Thread.current[:metasploit_data_models_batch]
+      before = Thread.current[:metasploit_cache_batch]
 
       example.run
 
-      Thread.current[:metasploit_data_models_batch] = before
+      Thread.current[:metasploit_cache_batch] = before
     end
 
     context 'inside block' do

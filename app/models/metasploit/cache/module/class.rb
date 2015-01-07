@@ -4,11 +4,11 @@
 class Metasploit::Cache::Module::Class < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
+  include Metasploit::Cache::Batch::Root
   include Metasploit::Cache::Derivation
   include Metasploit::Cache::Derivation::FullName
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
-  include MetasploitDataModels::Batch::Root
   
 
   autoload :Spec

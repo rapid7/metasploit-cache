@@ -1,7 +1,7 @@
 # {#architecture} supported by {#module_target}.
 class Metasploit::Cache::Module::Target::Architecture < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
   include Metasploit::Model::Translation
-  include MetasploitDataModels::Batch::Descendant
 
   #
   # Associations

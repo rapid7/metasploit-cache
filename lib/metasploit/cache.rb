@@ -28,6 +28,7 @@ module Metasploit
     autoload :Author
     autoload :Authority
     autoload :Base
+    autoload :Batch
     autoload :Derivation
     autoload :EmailAddress
     autoload :Error

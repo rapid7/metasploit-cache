@@ -1,6 +1,6 @@
 # Enables use of batch mode in `Thread` inside a {batch} block.  Code, such as uniqueness validations can check if they
 # are being called from inside a {batch} block by querying {batched?}.
-module MetasploitDataModels::Batch
+module Metasploit::Cache::Batch
   extend ActiveSupport::Autoload
 
   autoload :Descendant
@@ -11,14 +11,14 @@ module MetasploitDataModels::Batch
   #
 
   # Thread local variable that is `true` in {batch} block.
-  THREAD_LOCAL_VARIABLE_NAME = :metasploit_data_models_batch
+  THREAD_LOCAL_VARIABLE_NAME = :metasploit_cache_batch
 
   #
   # Methods
   #
 
   # Inside the block, {batched?} will be true, so in practice, when uniqueness validations should be disabled, wrap the
-  # code in `MetasploitDataModels::Batch.batch { ... }`.
+  # code in `Metasploit::Cache::Batch.batch { ... }`.
   #
   # @yield batched block
   # @yieldreturn value to return from this method

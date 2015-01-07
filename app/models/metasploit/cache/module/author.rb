@@ -1,8 +1,8 @@
 # Joins {Metasploit::Cache::Author} and {Metasploit::Cache::EmailAddress} to {Metasploit::Cache::Module::Instance} to record authors and the email they used for
 # a given module.
 class Metasploit::Cache::Module::Author < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
   include Metasploit::Model::Translation
-  include MetasploitDataModels::Batch::Descendant
 
   #
   # Associations

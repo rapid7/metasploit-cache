@@ -1,10 +1,10 @@
 # Reference to a {#url} or a {#designation} maintained by an {#authority}, such as CVE, that describes an exposure or
 # vulnerability on a {#hosts host} or that is exploited by a {#module_instances module}.
 class Metasploit::Cache::Reference < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
   include Metasploit::Cache::Derivation
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
-  include MetasploitDataModels::Batch::Descendant
 
   #
   #

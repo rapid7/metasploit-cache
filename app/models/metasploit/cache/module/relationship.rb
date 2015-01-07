@@ -1,7 +1,7 @@
 # Associates an {Metasploit::Cache::Module::Ancestor} with an {Metasploit::Cache::Module::Class}. Shows that the ruby Class represented by
 # {Metasploit::Cache::Module::Class} is descended from one of more {Metasploit::Cache::Module::Ancestor Metasploit::Cache::Module::Ancestors}.
 class Metasploit::Cache::Module::Relationship < ActiveRecord::Base
-  include MetasploitDataModels::Batch::Descendant
+  include Metasploit::Cache::Batch::Descendant
 
   #
   # Associations

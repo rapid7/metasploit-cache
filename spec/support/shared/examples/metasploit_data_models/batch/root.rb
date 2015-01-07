@@ -13,7 +13,7 @@ shared_examples_for 'MetasploitDataModels::Batch::Root' do
     end
 
     it 'should call MetasploitDataModels::Batch.batch' do
-      expect(MetasploitDataModels::Batch).to receive(:batch)
+      expect(Metasploit::Cache::Batch).to receive(:batch)
 
       batched_save
     end
@@ -31,7 +31,7 @@ shared_examples_for 'MetasploitDataModels::Batch::Root' do
 
       it 'should call recoverable_save outside batch mode' do
         expect(base_instance).to receive(:recoverable_save) {
-          expect(MetasploitDataModels::Batch).not_to be_batched
+          expect(Metasploit::Cache::Batch).not_to be_batched
         }
 
         batched_save
