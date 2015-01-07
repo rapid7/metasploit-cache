@@ -9,7 +9,7 @@ RSpec.describe Metasploit::Cache::Module::Class::Spec::Template do
 
   let(:module_class) do
     FactoryGirl.build(
-        :dummy_module_class
+        :metasploit_cache_module_class
     )
   end
 

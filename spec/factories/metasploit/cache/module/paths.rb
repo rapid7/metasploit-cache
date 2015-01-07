@@ -1,4 +1,25 @@
 FactoryGirl.define do
+  factory :metasploit_cache_module_path,
+          aliases: [
+              :unnamed_metasploit_cache_module_path
+          ],
+          class: Metasploit::Cache::Module::Path do
+    #
+    # Attributes
+    #
+
+    real_path { generate :metasploit_cache_module_path_real_path }
+
+    #
+    # Child factories
+    #
+
+    factory :named_metasploit_cache_module_path do
+      gem { generate :metasploit_cache_module_path_gem }
+      name { generate :metasploit_cache_module_path_name }
+    end
+  end
+
   sequence :metasploit_cache_module_path_gem do |n|
     "metasploit_cache_module_path_gem#{n}"
   end
@@ -38,14 +59,5 @@ FactoryGirl.define do
     pathname.mkpath
 
     pathname.to_path
-  end
-
-  trait :unnamed_metasploit_cache_module_path do
-    real_path { generate :metasploit_cache_module_path_real_path }
-  end
-
-  trait :named_metasploit_cache_module_path do
-    gem { generate :metasploit_cache_module_path_gem }
-    name { generate :metasploit_cache_module_path_name }
   end
 end

@@ -8,7 +8,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Template do
   end
 
   let(:module_ancestor) do
-    FactoryGirl.build(:dummy_module_ancestor)
+    FactoryGirl.build(:metasploit_cache_module_ancestor)
   end
 
   context 'CONSTANTS' do

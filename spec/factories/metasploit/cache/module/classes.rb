@@ -1,11 +1,6 @@
 FactoryGirl.define do
-  sequence :metasploit_cache_module_class_payload_type, Metasploit::Cache::Module::Class::PAYLOAD_TYPES.cycle
-
-  trait :metasploit_cache_module_class do
-    #
-    # Attributes
-    #
-
+  factory :metasploit_cache_module_class,
+          class: Metasploit::Cache::Module::Class do
     # Don't set full_name: before_validation will derive it from {Metasploit::Cache::Module::Class#module_type} and
     # {Metasploit::Cache::Module::Class::reference_name}.
 
@@ -39,9 +34,47 @@ FactoryGirl.define do
       }
     end
 
+    #
+    # Associations
+    #
+
+    # depends on module_type and payload_type
+    ancestors {
+      ancestors  = []
+
+      # ignored attribute from factory; NOT the instance attribute
+      case module_type
+      when 'payload'
+        # ignored attribute from factory; NOT the instance attribute
+        case payload_type
+        when 'single'
+          ancestors << FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
+        when 'staged'
+          ancestors << FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor)
+          ancestors << FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor)
+        else
+          raise ArgumentError,
+                "Don't know how to create Mdm::Module::Class#ancestors " \
+                    "for Mdm::Module::Class#payload_type (#{payload_type})"
+        end
+      else
+        ancestors << FactoryGirl.create(:metasploit_cache_module_ancestor, :module_type => module_type)
+      end
+
+      ancestors
+    }
+
+    rank { generate :metasploit_cache_module_rank }
+
+    #
+    # Callbacks
+    #
+
     after(:build) do |module_class, evaluator|
       instance_exec(evaluator, evaluator, &evaluator.before_write_template)
       instance_exec(evaluator, evaluator, &evaluator.write_template)
     end
   end
+
+  sequence :metasploit_cache_module_class_payload_type, Metasploit::Cache::Module::Class::PAYLOAD_TYPES.cycle
 end

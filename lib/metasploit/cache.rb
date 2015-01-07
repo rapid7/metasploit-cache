@@ -2,7 +2,10 @@
 # Gems
 #
 
+require 'awesome_nested_set'
+require 'metasploit/concern'
 require 'metasploit/model'
+require 'metasploit_data_models'
 
 #
 # Project
@@ -41,5 +44,16 @@ module Metasploit
     autoload :Spec
     autoload :Translation
     autoload :Visitation
+
+    #
+    # Module Methods
+    #
+
+    # @note Can't use the proper `'metasploit_cache_'` because table names are too long for PostgreSQL.
+    #
+    # @return ['cache_']
+    def self.table_name_prefix
+      'mc_'
+    end
   end
 end

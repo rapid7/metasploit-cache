@@ -1,5 +1,6 @@
 require 'rails'
 
+require 'metasploit/model'
 require 'metasploit/model/engine'
 
 # Rails engine for Metasploit::Cache.

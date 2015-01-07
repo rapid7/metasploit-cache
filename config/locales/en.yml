@@ -137,6 +137,10 @@ en:
             other: 'targets'
 
       errors:
+        messages:
+          # have to duplicate activerecord.model.errors.message.taken because of the different i18n_scope
+          taken: "has already been taken"
+
         models:
           metasploit/cache/module/instance:
             attributes:

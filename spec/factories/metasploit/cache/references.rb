@@ -1,4 +1,61 @@
 FactoryGirl.define do
+  factory :metasploit_cache_reference,
+          class: Metasploit::Cache::Reference do
+    #
+    # Associations
+    #
+
+    association :authority, factory: :metasploit_cache_authority
+
+    #
+    # Attributes
+    #
+
+    designation { generate :metasploit_cache_reference_designation }
+    url { generate :metasploit_cache_reference_url }
+
+    #
+    # Child factories
+    #
+
+    factory :obsolete_metasploit_cache_reference do
+      #
+      # Attributes
+      #
+
+      url nil
+    end
+
+    factory :seeded_authority_metasploit_cache_reference do
+      #
+      # Associations
+      #
+
+      authority { generate :seeded_metasploit_cache_authority }
+
+      #
+      # Attributes
+      #
+
+      # nil url so that it is derived using authority
+      url { nil }
+    end
+
+    factory :url_metasploit_cache_reference do
+      #
+      # Associations
+      #
+
+      authority nil
+
+      #
+      # Attributes
+      #
+
+      designation nil
+    end
+  end
+
   #
   #
   # Metasploit::Cache::Reference#designation sequences
@@ -66,23 +123,5 @@ FactoryGirl.define do
 
   sequence :metasploit_cache_reference_url do |n|
     "http://example.com/metasploit/cache/reference/#{n}"
-  end
-
-  trait :metasploit_cache_reference do
-    #
-    # Attributes
-    #
-
-    designation { generate :metasploit_cache_reference_designation }
-    url { generate :metasploit_cache_reference_url }
-  end
-
-  trait :obsolete_metasploit_cache_reference do
-    url nil
-  end
-
-  trait :url_metasploit_cache_reference do
-    authority nil
-    designation nil
   end
 end

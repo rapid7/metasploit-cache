@@ -8,7 +8,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Spec::Template do
   end
 
   let(:module_instance) do
-    FactoryGirl.build(:dummy_module_instance)
+    FactoryGirl.build(:metasploit_cache_module_instance)
   end
 
   context 'validations' do

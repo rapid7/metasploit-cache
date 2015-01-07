@@ -61,6 +61,8 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = :random
 
+  config.use_transactional_fixtures = true
+
   # Seed global randomization in this process using the `--seed` CLI option.
   # Setting this allows you to use `--seed` to deterministically reproduce
   # test failures related to randomization by passing the same `--seed` value
@@ -88,6 +90,13 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
+    # clean database of any records left-over from a previously aborted suite.
+    DatabaseCleaner.clean_with(:truncation)
+
+    # Run seeds, but not using rake db:seeds so seeds will populate test database when using `rake spec` _OR_ `rspec` to
+    # run a subset of specs.
+    load Metasploit::Cache::Engine.root.join('db', 'seeds.rb')
+
     # this must be explicitly set here because it should always be spec/tmp for w/e project is using
     # Metasploit::Model::Spec to handle file system clean up.
     Metasploit::Model::Spec.temporary_pathname = Metasploit::Cache::Engine.root.join('spec', 'tmp')

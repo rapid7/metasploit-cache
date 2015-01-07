@@ -1,9 +1,10 @@
 FactoryGirl.define do
-  sequence :metasploit_cache_author_name do |n|
-    "Metasploit::Cache::Author #{n}"
+  factory :metasploit_cache_author,
+          class: Metasploit::Cache::Author do
+    name { generate :metasploit_cache_author_name }
   end
 
-  trait :metasploit_cache_author do
-    name { generate :metasploit_cache_author_name }
+  sequence :metasploit_cache_author_name do |n|
+    "Metasploit::Cache::Author #{n}"
   end
 end

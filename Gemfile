@@ -19,6 +19,15 @@ group :development, :test do
   gem 'factory_girl', '>= 4.1.0'
   # auto-load factories from spec/factories
   gem 'factory_girl_rails'
+  # Use to create fake data
+  gem 'faker'
+  # tests compatibility with main progess bar target
+  gem 'ruby-progressbar'
+end
+
+group :documentation do
+  # Entity-Relationship diagrams for developers that need to access database using SQL directly.
+  gem 'rails-erd'
 end
 
 group :test do
@@ -31,6 +40,10 @@ group :test do
 
   # Dummy app uses actionpack for ActionController, but not rails since it doesn't use activerecord.
   gem 'actionpack', *rails_version_constraint
+  # used for building markup for webpage factories
+  gem 'builder'
+  # for cleaning the database before suite in case previous run was aborted without clean up
+  gem 'database_cleaner' 
   # Engine tasks are loaded using railtie
   gem 'railties', *rails_version_constraint
   gem 'rspec'
