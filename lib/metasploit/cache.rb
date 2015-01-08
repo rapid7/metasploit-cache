@@ -37,6 +37,7 @@ module Metasploit
     autoload :Login
     autoload :Module
     autoload :NilifyBlanks
+    autoload :NullProgressBar
     autoload :Platform
     autoload :RealPathname
     autoload :Realm

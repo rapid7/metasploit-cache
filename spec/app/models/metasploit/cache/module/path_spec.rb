@@ -484,7 +484,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
           it 'should set #total to #module_ancestor_real_paths #length' do
             expected_total = path.module_ancestor_real_paths.length
 
-            expect_any_instance_of(MetasploitDataModels::NullProgressBar).to receive(:total=).with(expected_total)
+            expect_any_instance_of(Metasploit::Cache::NullProgressBar).to receive(:total=).with(expected_total)
 
             each_changed_module_ancestor
           end
@@ -502,7 +502,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
               end
 
               it 'increments progress bar with yielding' do
-                expect_any_instance_of(MetasploitDataModels::NullProgressBar).to receive(:increment).exactly(existing_module_ancestors.length).times
+                expect_any_instance_of(Metasploit::Cache::NullProgressBar).to receive(:increment).exactly(existing_module_ancestors.length).times
 
                 actual_real_paths = []
 
@@ -522,7 +522,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
               end
 
               it 'increments progress bar without yielding' do
-                expect_any_instance_of(MetasploitDataModels::NullProgressBar).to receive(:increment).exactly(existing_module_ancestors.length).times
+                expect_any_instance_of(Metasploit::Cache::NullProgressBar).to receive(:increment).exactly(existing_module_ancestors.length).times
 
                 expect { |b|
                   path.each_changed_module_ancestor(options, &b)
@@ -537,7 +537,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
             end
 
             it 'increments progress bar' do
-              expect_any_instance_of(MetasploitDataModels::NullProgressBar).to receive(:increment).exactly(new_module_ancestor_real_paths.length).times
+              expect_any_instance_of(Metasploit::Cache::NullProgressBar).to receive(:increment).exactly(new_module_ancestor_real_paths.length).times
 
               each_changed_module_ancestor
             end

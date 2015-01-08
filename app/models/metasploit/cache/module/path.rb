@@ -158,7 +158,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
     else
       real_paths = module_ancestor_real_paths
 
-      progress_bar = options[:progress_bar] || MetasploitDataModels::NullProgressBar.new
+      progress_bar = options[:progress_bar] || Metasploit::Cache::NullProgressBar.new
       progress_bar.total = real_paths.length
 
       # ensure the connection doesn't stay checked out for thread in metasploit-framework.
