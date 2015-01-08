@@ -8,7 +8,6 @@ shared_examples_for 'derives' do |attribute, options={}|
     it { should be_a Metasploit::Cache::Derivation }
 
     let(:validate) do
-      # don't use `described_class` as it won't be correct when testing mixin modules.
       base_class.validate_by_derived_attribute[attribute]
     end
 
