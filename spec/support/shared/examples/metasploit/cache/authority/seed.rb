@@ -5,7 +5,7 @@ shared_examples_for 'Metasploit::Cache::Authority seed' do |attributes={}|
 
   context "with #{abbreviation}" do
     subject(:seed) do
-      seed_with_abbreviation(abbreviation)
+      Metasploit::Cache::Authority.where(abbreviation: abbreviation).first
     end
 
     it 'should exist' do
