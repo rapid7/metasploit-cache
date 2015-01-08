@@ -335,22 +335,22 @@ class Metasploit::Cache::Architecture < ActiveRecord::Base
     }
   end
 
-  # @!method abbreviation_set
+  # @!method self.abbreviation_set
   #   Set of valid {Metasploit::Cache::Architecture#abbreviation} for search.
   #
   #   @return [Set<String>]
   #
-  # @!method bits_set
+  # @!method self.bits_set
   #   Set of valid {Metasploit::Cache::Architecture#bits} for search.
   #
   #   @return [Set<Integer>]
   #
-  # @!method endianness_set
+  # @!method self.endianness_set
   #   Set of valid {Metasploit::Cache::Architecture#endianness} for search.
   #
   #   @return [Set<String>]
   #
-  # @!method family_set
+  # @!method self.family_set
   #   Set of valid {Metasploit::Cache::Architecture#family} for search.
   #
   #   @return [Set<String>]
