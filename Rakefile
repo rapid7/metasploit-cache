@@ -21,7 +21,9 @@ end
 
 require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(:spec)
+# Depend on app:db:test:prepare so that test database is recreated just like in a full rails app
+# @see http://viget.com/extend/rails-engine-testing-with-rspec-capybara-and-factorygirl
+RSpec::Core::RakeTask.new(spec: 'app:db:test:prepare')
 
 task default: :spec
 
