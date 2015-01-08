@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'metasploit-yard', '~> 1.0'
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'yard-metasploit-erd', '~> 0.0.2'
 
   spec.add_runtime_dependency 'activerecord', '>= 3.2.13', '< 4.0.0'
   spec.add_runtime_dependency 'awesome_nested_set'

@@ -31,3 +31,13 @@ gem_specification = Gem::Specification.find_all_by_name('metasploit-yard').first
 Dir[File.join(gem_specification.gem_dir, 'lib', 'tasks', '**', '*.rake')].each do |rake|
   load rake
 end
+
+#
+# Eager load before yard docs so that ActiveRecord::Base subclasses are loaded for yard-metasploit-erd
+#
+
+task 'yard:doc' => :eager_load
+
+task eager_load: :environment do
+  Rails.application.eager_load!
+end
