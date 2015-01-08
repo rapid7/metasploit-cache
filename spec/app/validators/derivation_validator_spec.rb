@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe DerivationValidator do
   subject(:derivation_validator) do
     described_class.new(

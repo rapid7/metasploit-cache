@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Derivation do
   let(:base_class) do
     # capture for class_eval scope

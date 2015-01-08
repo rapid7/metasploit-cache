@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe DynamicLengthValidator do
     subject(:dynamic_length_validator) do
     described_class.new(

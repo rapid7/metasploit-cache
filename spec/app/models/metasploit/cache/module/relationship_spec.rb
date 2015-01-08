@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Module::Relationship do
   context 'associations' do
     it { should belong_to(:ancestor).class_name('Metasploit::Cache::Module::Ancestor') }

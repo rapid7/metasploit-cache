@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::EmailAddress do
   it_should_behave_like 'Metasploit::Cache::EmailAddress',
                         namespace_name: 'Metasploit::Cache' do

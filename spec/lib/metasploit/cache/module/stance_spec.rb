@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Module::Stance do
   context 'CONSTANTS' do
     context 'ALL' do

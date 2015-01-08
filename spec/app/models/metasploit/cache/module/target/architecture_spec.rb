@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Module::Target::Architecture do
   it_should_behave_like 'Metasploit::Cache::Module::Target::Architecture',
                         namespace_name: 'Metasploit::Cache'

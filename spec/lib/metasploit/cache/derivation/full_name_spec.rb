@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Derivation::FullName do
   subject(:base_instance) do
     base_class.new

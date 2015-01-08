@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Authority::Waraxe do
   context 'CONSTANTS' do
     context 'DESIGNATION_REGEXP' do

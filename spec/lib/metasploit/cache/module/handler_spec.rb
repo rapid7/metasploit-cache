@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Module::Handler do
   context 'CONSTANTS' do
     context 'GENERAL_TYPES' do

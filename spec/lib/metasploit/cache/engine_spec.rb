@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Engine do
   context 'config' do
     subject(:config) do

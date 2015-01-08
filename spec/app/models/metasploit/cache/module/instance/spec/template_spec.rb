@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Module::Instance::Spec::Template do
   subject(:template) do
     described_class.new(

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Batch do
   context 'CONSTANTS' do
     context 'THREAD_LOCAL_VARIABLE_NAME' do

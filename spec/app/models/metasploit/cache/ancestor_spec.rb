@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Module::Ancestor do
   subject(:ancestor) do
     FactoryGirl.build(:metasploit_cache_module_ancestor)

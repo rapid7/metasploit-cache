@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Authority::Msb do
   context 'designation_url' do
     subject(:designation_url) do

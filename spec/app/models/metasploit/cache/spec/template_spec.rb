@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Spec::Template do
   context 'root' do
     around(:each) do |example|

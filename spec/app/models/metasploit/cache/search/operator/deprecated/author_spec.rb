@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Author do
   subject(:operator) do
     described_class.new(

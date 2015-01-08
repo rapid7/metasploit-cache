@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Module::Rank do
   subject(:rank) do
     FactoryGirl.generate :metasploit_cache_module_rank

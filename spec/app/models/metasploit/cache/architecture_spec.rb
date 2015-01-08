@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe Metasploit::Cache::Architecture do
   subject(:architecture) do
     described_class.new
