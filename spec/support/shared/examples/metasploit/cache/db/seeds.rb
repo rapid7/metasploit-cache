@@ -1,4 +1,6 @@
-shared_examples_for 'MetasploitDataModels db/seeds.rb' do
+# A shared example so that downstream gems that can check that they are running
+# `load Metasploit::Cache::Engine.root.join('db', 'seeds.rb')` in their db/seeds.rb
+shared_examples_for 'Metasploit::Cache db/seeds.rb' do
   # undo seeding done for suite
   before(:each) do
     Metasploit::Cache::Architecture.delete_all
