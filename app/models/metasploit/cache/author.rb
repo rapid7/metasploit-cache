@@ -67,6 +67,13 @@ class Metasploit::Cache::Author < ActiveRecord::Base
   # Instance Methods
   #
 
+  # @!method module_authors=(module_authors)
+  #   Sets {#module_authors}.
+  #
+  #   @param module_authors [Enumerable<Metasploit::Cache::Module::Author>] Joins this to {#email_addresses} and
+  #     {#module_instances}.
+  #   @return [void]
+
   # @!method name=(name)
   #   Set the {#name}.
   #

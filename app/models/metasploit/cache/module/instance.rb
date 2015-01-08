@@ -840,7 +840,14 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # @!method module_platforms=(module_platforms)
   #   Sets {#module_platforms}.
   #
-  #   @param module_platforms [Array<Metasploit::Cache::Module::Platform>>] joins this with {#platforms}.
+  #   @param module_platforms [Enumerable<Metasploit::Cache::Module::Platform>] joins this with {#platforms}.
+  #   @return [void]
+
+  # @!method module_references=(module_references)
+  #   Sets {#module_references}.
+  #
+  #   @param module_references [Enumerable<Metasploit::Cache::Module::Reference>, nil] Joins {#references} to this
+  #     {Metasploit::Cache::Module::Instance}.
   #   @return [void]
 
   # @!method module_type

@@ -363,5 +363,58 @@ class Metasploit::Cache::Architecture < ActiveRecord::Base
     end
   end
 
+  #
+  # Instance Methods
+  #
+
+  # @!method abbreviation=(abbreviation)
+  #   Sets {#abbreviation}.
+  #
+  #   @param abbreviation [String] Abbreviation used for the architecture.  Will match ARCH constants in
+  #     metasploit-framework.
+  #   @return [void]
+
+  # @!method bits=(bits)
+  #   Sets {#bits}.
+  #
+  #   @param bits [32, 64, nil] Number of bits supported by this architecture: `32` if 32-bit; `64` if 64-bit; `nil` if
+  #     bits aren't applicable, such as for non-CPU architectures like ruby, etc.
+  #   @return [void]
+
+  # @!method endianness=(endianness)
+  #   Sets {#endianness}.
+  #
+  #   @param endianness ['big', 'little', nil] `'big'` if big-endian; `'little'` if little-endian; `nil` if endianness
+  #     is not applicable, such as for software architectures like tty.
+  #   @return [void]
+
+  # @!method family=(family)
+  #   Sets {#family}.
+  #
+  #   @param family [String, nil] The CPU architecture family. `String` if a CPU architecture; `nil` if not a CPU
+  #     architecture.
+  #   @return [void]
+
+  # @!method summary=(summary)
+  #   Sets {#summary}.
+  #
+  #   @param summary [String] Sentence length summary of architecture.  Usually an expansion of the abbreviation or
+  #     initialism in the {#abbreviation} and the {#bits} and {#endianness} in prose.
+  #   @return [void]
+
+  # @!method module_architectures=(module_architectures)
+  #   Sets {#module_architectures}.
+  #
+  #   @param module_architectures [Enumerable<Metasploit::Cache::Module::Architecture>, nil] Join models between this
+  #     {Metasploit::Cache::Architecture} and {Metasploit::Cache::Module::Instance}.
+  #   @return [void]
+
+  # @!method target_architectures=(target_architectures)
+  #   Sets {#target_architectures}.
+  #
+  #   @param target_architectures [Enumerable<Metasploit::Cache::Target::Architecture>, nil] Join models between this
+  #     and {Metasploit::Cache::Module::Target}.
+  #   @return [void]
+
   Metasploit::Concern.run(self)
 end

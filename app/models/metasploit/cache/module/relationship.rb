@@ -33,5 +33,23 @@ class Metasploit::Cache::Module::Relationship < ActiveRecord::Base
   validates :descendant,
             presence: true
 
+  #
+  # Instance Methods
+  #
+
+  # @!method ancestor=(ancestor)
+  #   Sets {#ancestors}.
+  #
+  #   @param ancestor [Metasploit::Cache::Module::Ancestor] The {Metasploit::Cache::Module::Ancestor} whose
+  #     {Metasploit::Cache::Module::Ancestor#real_path file} defined the ruby Class or ruby Module.
+  #   @return [void]
+
+  # @!method descendant=(descendant)
+  #   Ses {#descendant}.
+  #
+  #   @param descendant [Metasploit::Cache::Module::Class] The {Metasploit::Cache::Module::Class} that either has the
+  #     Module in {#ancestor} mixed in or is the Class in {#ancestor}.
+  #   @return [void]
+
   Metasploit::Concern.run(self)
 end

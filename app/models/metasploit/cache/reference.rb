@@ -132,6 +132,13 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
   #     `nil` if a {#url} only reference.
   #   @return [void]
 
+  # @!method module_references=(module_references)
+  #   Sets {#module_references}.
+  #
+  #   @param module_references [Enumerable<Metasploit::Cache::Module::Reference>, nil] Joins this
+  #     {Metasploit::Cache::Reference} to {#module_instances}.
+  #   @return [void]
+
   # @!method url=(url)
   #   Sets {#url}.
   #

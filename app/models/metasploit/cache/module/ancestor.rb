@@ -520,6 +520,15 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #   @param real_path_sha1_hex_digest [String] The SHA1 hexadecimal digest of contents of the file at {#real_path}.
   #   @return [void]
 
+  # @!method relationships=(relationships)
+  #   Sets {#relationships}.
+  #
+  #   @param relationships [Enumerable<Metasploit::Cache::Model::Relationship>] Relates this
+  #     {Metasploit::Cache::Module::Ancestor} to the
+  #     {Metasploit::Cache::Module::Class Metasploit::Cache::Module::Classes} that
+  #     {Metasploit::Cache::Module::Relationship#descendant descend} from the {Metasploit::Cache::Module::Ancestor}.
+  #   @return [void]
+
   # File names on {#relative_pathname}.
   #
   # @return [Enumerator<String>]

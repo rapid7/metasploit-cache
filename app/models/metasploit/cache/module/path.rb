@@ -234,6 +234,13 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
     )
   end
 
+  # @!method module_ancestors=(module_ancestors)
+  #   Sets {#module_ancestors}.
+  #
+  #   @param module_ancestors [Enumerable<Metasploit::Cache::Module::Ancestor>, nil] The modules ancestors that use
+  #     this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
+  #   @return [void]
+
   # @note This path should be validated before calling {#name_collision} so that {#gem} and {#name} is normalized.
   #
   # Returns path with the same {#gem} and {#name}.

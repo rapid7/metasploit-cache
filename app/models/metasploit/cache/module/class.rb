@@ -38,7 +38,7 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
   # @!attribute module_instance
   #   Instance-derived metadata to go along with the class-derived metadata from this model.
   #
-  #   @return [Metasploit::Cache::Module::Instance]
+  #   @return [Metasploit::Cache::Module::Instance, nil]
   has_one :module_instance,
           class_name: 'Metasploit::Cache::Module::Instance',
           dependent: :destroy,
@@ -303,6 +303,13 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     derived
   end
 
+  # @!method module_instance=(module_instance)
+  #   Sets {#module_instance}.
+  #
+  #   @param module_instance [Metasploit::Cache::Module::Instance, nil]
+  #     Instance-derived metadata to go along with the class-derived metadata from this model.
+  #   @return [void]
+
   # Returns whether this represents a Class<Msf::Payload>.
   #
   # @return [true] if {#module_type} == 'payload'
@@ -314,6 +321,17 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
       false
     end
   end
+
+  # @!method relationships=(relationships)
+  #   Sets {#relationships}.
+  #
+  #   @param relationships [Enumerable<Metasploit::Cache::Module::Relationship>, nil] Join model between
+  #     {Metasploit::Cache::Module::Class} and {Metasploit::Cache::Module::Ancestor} that represents that the Class or
+  #     Module in {Metasploit::Cache::Module::Ancestor#real_path} is an ancestor of the Class represented by this
+  #     {Metasploit::Cache::Module::Class}.
+  #   @return [void]
+
+  # Comment break before private so above comment will be parsed correctly by YARD
 
   private
 
