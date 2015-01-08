@@ -22,6 +22,8 @@
 # Database configuration (with passwords) for specs
 /spec/dummy/config/database.yml
 /spec/reports/
+# Files and directories created by Metasploit::Model::Spec.temporary_pathname
+/spec/tmp
 /tmp/
 # Mac OS X folder attributes
 .DS_Store
