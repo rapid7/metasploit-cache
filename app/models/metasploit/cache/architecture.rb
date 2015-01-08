@@ -1,4 +1,4 @@
-# The architecture of a {Metasploit::Cache::Host host's cpu} or that is targeted by the shellcode for a
+# The architecture of a host's cpu or that is targeted by the shellcode for a
 # {Metasploit::Cache::Module::Instance module}.
 class Metasploit::Cache::Architecture < ActiveRecord::Base
   include Metasploit::Model::Translation

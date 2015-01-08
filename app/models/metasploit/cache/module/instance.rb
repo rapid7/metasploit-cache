@@ -188,7 +188,7 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #   @return [Metasploit::Cache::Module::Class]
   belongs_to :module_class, class_name: 'Metasploit::Cache::Module::Class', inverse_of: :module_instance
 
-  # @!attribute module_platform
+  # @!attribute module_platforms
   #   Joins this {Metasploit::Cache::Module::Instance} to its supported {Metasploit::Cache::Platform platforms}.
   #
   #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Platform>]

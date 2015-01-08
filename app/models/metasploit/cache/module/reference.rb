@@ -1,5 +1,5 @@
-# Join model between {Metasploit::Cache::Module::Instance modules} and {Metasploit::Cache::Reference references} that refer to the exploit in the
-# modules.
+# Join model between {Metasploit::Cache::Module::Instance modules} and {Metasploit::Cache::Reference references} that
+# refer to the exploit in the modules.
 class Metasploit::Cache::Module::Reference < ActiveRecord::Base
   include Metasploit::Cache::Batch::Descendant
   include Metasploit::Model::Translation
@@ -8,7 +8,7 @@ class Metasploit::Cache::Module::Reference < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute module_instance
+  # @!attribute [rw] module_instance
   #   {Metasploit::Cache::Module::Instance Module} with {#reference}.
   #
   #   @return [Metasploit::Cache::Module::Instance]
@@ -39,7 +39,7 @@ class Metasploit::Cache::Module::Reference < ActiveRecord::Base
   #
 
   # @!method module_instance=(module_instance)
-  #   Sets module_instance.
+  #   Sets {#module_instance}.
   #
   #   @param module_instance [Metasploit::Cache::Module::Instance] {Metasploit::Cache::Module::Instance Module} with
   #     {#reference}.
