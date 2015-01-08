@@ -20,12 +20,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = %w{app/models app/validators lib}
 
   spec.add_development_dependency "bundler", "~> 1.7"
-  spec.add_development_dependency 'codeclimate-test-reporter'
-  spec.add_development_dependency 'coveralls'
   spec.add_development_dependency 'metasploit-version', '= 0.1.3.pre.changelog.pre.template'
   spec.add_development_dependency 'metasploit-yard', '~> 1.0'
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'yard-metasploit-erd', '~> 0.0.2'
 
   spec.add_runtime_dependency 'activerecord', '>= 3.2.13', '< 4.0.0'

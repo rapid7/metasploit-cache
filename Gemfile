@@ -42,6 +42,10 @@ group :test do
   gem 'actionpack', *rails_version_constraint
   # used for building markup for webpage factories
   gem 'builder'
+  # simplecov test formatter and uploader for CodeClimate
+  gem 'codeclimate-test-reporter', require: false
+  # simplecov test formatter and uploader for Coveralls.io
+  gem 'coveralls', require: false
   # for cleaning the database before suite in case previous run was aborted without clean up
   gem 'database_cleaner' 
   # Engine tasks are loaded using railtie
@@ -56,6 +60,8 @@ group :test do
   # want rails in :test, factory_girl_rails must also only be in :test.
   # add matchers from shoulda, such as validates_presence_of, which are useful for testing validations
   gem 'shoulda-matchers'
+  # Coverage reports
+  gem 'simplecov', require: false
   # defines time zones for activesupport.  Must be explicit since it is normally implicit with activerecord
   gem 'tzinfo'
 end
