@@ -1,8 +1,5 @@
 RSpec.describe Metasploit::Cache::Module::Architecture do
-  it_should_behave_like 'Metasploit::Cache::Module::Architecture',
-                        namespace_name: 'Metasploit::Cache'
-
-  context 'associations' do
+ context 'associations' do
     it { should belong_to(:architecture).class_name('Metasploit::Cache::Architecture') }
     it { should belong_to(:module_instance).class_name('Metasploit::Cache::Module::Instance') }
   end
@@ -25,6 +22,28 @@ RSpec.describe Metasploit::Cache::Module::Architecture do
       end
 
       it { should be_valid }
+
+      context '#module_instance' do
+        subject(:module_instance) do
+          metasploit_cache_module_architecture.module_instance
+        end
+
+        it { should be_valid }
+
+        context '#module_architectures' do
+          subject(:module_architectures) do
+            module_instance.module_architectures
+          end
+
+          it 'has one entry' do
+            expect(module_architectures.length).to eq(1)
+          end
+
+          it "should include metasploit_cache_module_architecture" do
+            expect(module_architectures).to include metasploit_cache_module_architecture
+          end
+        end
+      end
     end
   end
 
