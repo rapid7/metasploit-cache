@@ -165,9 +165,7 @@ class Metasploit::Cache::Authority < ActiveRecord::Base
     unless abbreviation.blank?
       # underscore before camelize to eliminate -'s
       relative_model_name = abbreviation.underscore.camelize
-      # don't scope to self.class.name so that authority extension are always resolved the same in Mdm and
-      # Metasploit::Framework.
-      extension_name = "Metasploit::Cache::Authority::#{relative_model_name}"
+      extension_name = "#{self.class.name}::#{relative_model_name}"
     end
 
     extension_name

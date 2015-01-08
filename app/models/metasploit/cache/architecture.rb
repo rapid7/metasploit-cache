@@ -1,4 +1,4 @@
-# The architecture of a {Mdm::Host host's cpu} or that is targeted by the shellcode for a
+# The architecture of a {Metasploit::Cache::Host host's cpu} or that is targeted by the shellcode for a
 # {Metasploit::Cache::Module::Instance module}.
 class Metasploit::Cache::Architecture < ActiveRecord::Base
   include Metasploit::Model::Translation
@@ -51,8 +51,7 @@ class Metasploit::Cache::Architecture < ActiveRecord::Base
       'sparc',
       'x86'
   ]
-  # Attributes for seeds.  Ensures that in-database seeds for `Mdm::Architecture` and in-memory seeds for
-  # `Metasploit::Framework::Architecture` are the same.
+  # Attributes for seeds.
   SEED_ATTRIBUTES = [
       {
           :abbreviation => 'armbe',

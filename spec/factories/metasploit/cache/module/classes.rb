@@ -54,8 +54,8 @@ FactoryGirl.define do
           ancestors << FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor)
         else
           raise ArgumentError,
-                "Don't know how to create Mdm::Module::Class#ancestors " \
-                    "for Mdm::Module::Class#payload_type (#{payload_type})"
+                "Don't know how to create Metasploit::Cache::Module::Class#ancestors " \
+                    "for Metasploit::Cache::Module::Class#payload_type (#{payload_type})"
         end
       else
         ancestors << FactoryGirl.create(:metasploit_cache_module_ancestor, :module_type => module_type)

@@ -1,5 +1,6 @@
-# Methods for deriving full_name from module_type and reference_name in `Mdm::Module::Ancestor`,
-# `Mdm::Module::Class`, `Metasploit::Framework::Module::Ancestor`, and `Metasploit::Framework::Module::Class`.
+# Methods for deriving full_name from module_type and reference_name in {Metasploit::Cache::Module::Ancestor},
+# {Metasploit::Cache::Module::Class}, `Metasploit::Framework::Module::Ancestor`, and
+# `Metasploit::Framework::Module::Class`.
 module Metasploit::Cache::Derivation::FullName
   # Derives full_name by combining module_type and reference_name in the same way used to create modules using
   # Msf::ModuleManager#create in metasploit-framework.

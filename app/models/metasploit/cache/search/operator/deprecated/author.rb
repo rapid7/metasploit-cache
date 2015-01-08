@@ -1,5 +1,5 @@
 # Operator that emulates the behavior of 'author' operator that could search `Mdm::Module::Detail` by making
-# {Metasploit::Model::Search::Operation::Group::Union} between `authors.name`, `email_addresss.domain`, and
+# {Metasploit::Model::Search::Operation::Group::Union} between `authors.name`, `email_addresses.domain`, and
 # `email_addresses.local`.
 class Metasploit::Cache::Search::Operator::Deprecated::Author < Metasploit::Model::Search::Operator::Group::Union
   # Turns author:<formatted_value> into Array of authors.name:<formatted_value>,

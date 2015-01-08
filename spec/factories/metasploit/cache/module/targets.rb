@@ -47,7 +47,7 @@ FactoryGirl.define do
         factory = "metasploit_cache_module_target_#{infix}"
         length = evaluator.send("#{attribute}_length")
 
-        # factories add selves to associations on mdm_module_target
+        # factories add selves to associations on metasploit_cache_module_target
         FactoryGirl.build_list(
             factory,
             length,

@@ -23,7 +23,7 @@ shared_examples_for 'MetasploitDataModels::Search::Visitor::Relation#visit match
       FactoryGirl.build(
           :metasploit_cache_module_instance,
           module_class: matching_module_class,
-          # disable factory making references automatically so Mdm::Module::Reference#reference can be set to
+          # disable factory making references automatically so Metasploit::Cache::Module::Reference#reference can be set to
           # matching_reference
           module_references_length: 0
       ).tap { |module_instance|

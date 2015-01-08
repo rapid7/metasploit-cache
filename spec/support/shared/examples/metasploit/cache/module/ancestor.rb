@@ -276,10 +276,10 @@ Metasploit::Cache::Spec.shared_examples_for 'Module::Ancestor' do
       subject(:module_ancestor) do
         FactoryGirl.build(
             module_ancestor_factory,
-            # {Mdm::Module::Ancestor#derived_payload_type} will be `nil` unless {Mdm::Module::Ancestor#module_type} is
+            # {Metasploit::Cache::Module::Ancestor#derived_payload_type} will be `nil` unless {Metasploit::Cache::Module::Ancestor#module_type} is
             # `'payload'`
             :module_type => 'payload',
-            # Ensure {Mdm::Module::Ancestor#derived_payload} will be a valid {Mdm::Module::Ancestor#payload_type}.
+            # Ensure {Metasploit::Cache::Module::Ancestor#derived_payload} will be a valid {Metasploit::Cache::Module::Ancestor#payload_type}.
             :reference_name => reference_name
         )
       end

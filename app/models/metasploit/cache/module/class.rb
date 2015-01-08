@@ -1,5 +1,5 @@
-# 1. A ruby Class defined in one {Mdm::Module::Ancestor#real_path} for non-payloads.
-# 2. A ruby Class with one or more ruby Modules mixed into the Class from {Mdm::Module::Ancestor#real_path multiple paths}
+# 1. A ruby Class defined in one {Metasploit::Cache::Module::Ancestor#real_path} for non-payloads.
+# 2. A ruby Class with one or more ruby Modules mixed into the Class from {Metasploit::Cache::Module::Ancestor#real_path multiple paths}
 #    for payloads.
 class Metasploit::Cache::Module::Class < ActiveRecord::Base
   extend ActiveSupport::Autoload
@@ -57,7 +57,7 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
   #   that the Class or Module in {Metasploit::Cache::Module::Ancestor#real_path} is an ancestor of the Class
   #   represented by this {Metasploit::Cache::Module::Class}.
   #
-  #   @return [ActiveRecord::Relation<Mdm::Module::Relationship>]
+  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Relationship>]
   has_many :relationships,
            class_name: 'Metasploit::Cache::Module::Relationship',
            dependent: :destroy,
