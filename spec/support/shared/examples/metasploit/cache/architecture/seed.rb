@@ -4,8 +4,8 @@ shared_examples_for 'Metasploit::Cache::Architecture seed' do |attributes={}|
   context_abbreviation = attributes.fetch(:abbreviation)
 
   context "with #{context_abbreviation}" do
-    subject do
-      seed
+    subject(:seed) do
+      described_class.where(abbreviation: abbreviation).first
     end
 
     # put in a let so that `let(:seed)` has access to abbreviation.
