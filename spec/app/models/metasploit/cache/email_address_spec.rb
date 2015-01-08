@@ -68,7 +68,7 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         end
 
         context 'with batched' do
-          include_context 'MetasploitDataModels::Batch.batch'
+          include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on local' do
             new_email_address.valid?
@@ -106,7 +106,7 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         end
 
         context 'with batched' do
-          include_context 'MetasploitDataModels::Batch.batch'
+          include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on local' do
             new_email_address.valid?

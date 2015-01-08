@@ -59,7 +59,7 @@ RSpec.describe Metasploit::Cache::Module::Relationship do
         end
 
         context 'with batched' do
-          include_context 'MetasploitDataModels::Batch.batch'
+          include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on #ancestor_id' do
             new_relationship.valid?

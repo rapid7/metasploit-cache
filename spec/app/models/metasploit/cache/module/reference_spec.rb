@@ -62,7 +62,7 @@ RSpec.describe Metasploit::Cache::Module::Reference do
         end
 
         context 'with batched' do
-          include_context 'MetasploitDataModels::Batch.batch'
+          include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on #reference_id' do
             new_module_reference.valid?

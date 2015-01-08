@@ -56,7 +56,7 @@ RSpec.describe Metasploit::Cache::Authority do
         end
 
         context 'with batched' do
-          include_context 'MetasploitDataModels::Batch.batch'
+          include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on #abbreviation' do
             new_authority.valid?
@@ -91,7 +91,7 @@ RSpec.describe Metasploit::Cache::Authority do
         end
 
         context 'with batched' do
-          include_context 'MetasploitDataModels::Batch.batch'
+          include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on #summary' do
             new_authority.valid?
@@ -126,7 +126,7 @@ RSpec.describe Metasploit::Cache::Authority do
         end
 
         context 'with batched' do
-          include_context 'MetasploitDataModels::Batch.batch'
+          include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on #url' do
             new_authority.valid?

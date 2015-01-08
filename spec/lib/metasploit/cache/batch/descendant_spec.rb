@@ -13,5 +13,5 @@ RSpec.describe Metasploit::Cache::Batch::Descendant do
     end
   end
 
-  it_should_behave_like 'MetasploitDataModels::Batch::Descendant'
+  it_should_behave_like 'Metasploit::Cache::Batch::Descendant'
 end

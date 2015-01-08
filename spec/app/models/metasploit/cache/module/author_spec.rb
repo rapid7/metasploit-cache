@@ -56,7 +56,7 @@ RSpec.describe Metasploit::Cache::Module::Author do
       end
 
       context 'with batched' do
-        include_context 'MetasploitDataModels::Batch.batch'
+        include_context 'Metasploit::Cache::Batch.batch'
 
         context 'with same #module_instance_id' do
           context 'with same #author_id' do

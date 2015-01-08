@@ -82,7 +82,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
           end
 
           context 'with batched' do
-            include_context 'MetasploitDataModels::Batch.batch'
+            include_context 'Metasploit::Cache::Batch.batch'
 
             it 'should not add error on #full_name' do
               same_full_name_ancestor.valid?
@@ -125,7 +125,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
           end
 
           context 'with batched' do
-            include_context 'MetasploitDataModels::Batch.batch'
+            include_context 'Metasploit::Cache::Batch.batch'
 
             it 'should not add error on #real_path' do
               same_real_path_ancestor.valid?
@@ -168,7 +168,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
           end
 
           context 'with batched' do
-            include_context 'MetasploitDataModels::Batch.batch'
+            include_context 'Metasploit::Cache::Batch.batch'
 
             it 'should not add error on #real_path_sha1_hex_digest' do
               same_real_path_sha1_hex_digest_ancestor.valid?
@@ -232,7 +232,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
             end
 
             context 'with batched' do
-              include_context 'MetasploitDataModels::Batch.batch'
+              include_context 'Metasploit::Cache::Batch.batch'
 
               it 'should not add error on #reference_name' do
                 new_ancestor.valid?
@@ -269,7 +269,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
             end
 
             context 'with batched' do
-              include_context 'MetasploitDataModels::Batch.batch'
+              include_context 'Metasploit::Cache::Batch.batch'
 
               it 'should not record error on reference_name' do
                 new_ancestor.valid?

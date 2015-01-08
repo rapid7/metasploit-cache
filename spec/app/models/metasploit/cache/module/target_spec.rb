@@ -75,7 +75,7 @@ RSpec.describe Metasploit::Cache::Module::Target do
           end
 
           context 'with batched' do
-            include_context 'MetasploitDataModels::Batch.batch'
+            include_context 'Metasploit::Cache::Batch.batch'
 
             it 'should not add error on #name' do
               new_module_target.valid?

@@ -17,5 +17,5 @@ RSpec.describe Metasploit::Cache::Batch::Root do
     end
   end
 
-  it_should_behave_like 'MetasploitDataModels::Batch::Root'
+  it_should_behave_like 'Metasploit::Cache::Batch::Root'
 end

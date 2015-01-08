@@ -1,4 +1,4 @@
-shared_examples_for 'MetasploitDataModels::Batch::Root' do
+shared_examples_for 'Metasploit::Cache::Batch::Root' do
   let(:error) do
     ActiveRecord::RecordNotUnique.new("not unique", original_exception)
   end
@@ -12,7 +12,7 @@ shared_examples_for 'MetasploitDataModels::Batch::Root' do
       base_instance.batched_save
     end
 
-    it 'should call MetasploitDataModels::Batch.batch' do
+    it 'should call Metasploit::Cache::Batch.batch' do
       expect(Metasploit::Cache::Batch).to receive(:batch)
 
       batched_save

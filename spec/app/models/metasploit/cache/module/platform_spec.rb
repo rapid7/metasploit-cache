@@ -76,7 +76,7 @@ RSpec.describe Metasploit::Cache::Module::Platform do
         end
 
         context 'with batched' do
-          include_context 'MetasploitDataModels::Batch.batch'
+          include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on #platform_id' do
             new_module_platform.valid?

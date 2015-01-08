@@ -78,7 +78,7 @@ RSpec.describe Metasploit::Cache::Module::Architecture do
       end
 
       context 'with batched' do
-        include_context 'MetasploitDataModels::Batch.batch'
+        include_context 'Metasploit::Cache::Batch.batch'
 
         context 'with same architecture_id' do
           subject(:new_module_architecture) do
