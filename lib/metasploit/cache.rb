@@ -5,7 +5,6 @@
 require 'awesome_nested_set'
 require 'metasploit/concern'
 require 'metasploit/model'
-require 'metasploit_data_models'
 
 #
 # Project
