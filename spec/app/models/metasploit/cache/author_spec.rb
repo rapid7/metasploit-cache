@@ -1,7 +1,4 @@
 RSpec.describe Metasploit::Cache::Author do
-  it_should_behave_like 'Metasploit::Cache::Author',
-                        namespace_name: 'Metasploit::Cache'
-
   context 'associations' do
     it { should have_many(:email_addresses).class_name('Metasploit::Cache::EmailAddress').through(:module_authors) }
     it { should have_many(:module_authors).class_name('Metasploit::Cache::Module::Author').dependent(:destroy) }
@@ -18,7 +15,32 @@ RSpec.describe Metasploit::Cache::Author do
     end
   end
 
+  context 'factories' do
+    context :metasploit_cache_author do
+      subject(:metasploit_cache_author) do
+        FactoryGirl.build(:metasploit_cache_author)
+      end
+
+      it { should be_valid }
+    end
+  end
+
+  context 'mass assignment security' do
+    it { should allow_mass_assignment_of(:name) }
+  end
+
+  context 'search' do
+    let(:base_class) {
+      Metasploit::Cache::Author
+    }
+
+    context 'attributes' do
+      it_should_behave_like 'search_attribute', :name, :type => :string
+    end
+  end
+
   context 'validations' do
+    it { should validate_presence_of :name }
     it { should validate_uniqueness_of :name }
   end
 end
