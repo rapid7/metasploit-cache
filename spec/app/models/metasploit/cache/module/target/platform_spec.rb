@@ -16,16 +16,16 @@ RSpec.describe Metasploit::Cache::Module::Target::Platform do
   end
 
   context 'factories' do
-    context module_target_platform_factory do
-      subject(module_target_platform_factory) do
-        FactoryGirl.build(module_target_platform_factory)
+    context :metasploit_cache_module_target_platform do
+      subject(:metasploit_cache_module_target_platform) do
+        FactoryGirl.build(:metasploit_cache_module_target_platform)
       end
 
       it { should be_valid }
 
       context '#module_target' do
         subject(:module_target) do
-          send(module_target_platform_factory).module_target
+          metasploit_cache_module_target_platform.module_target
         end
 
         it { should be_valid }
@@ -61,8 +61,8 @@ RSpec.describe Metasploit::Cache::Module::Target::Platform do
             expect(target_platforms.length).to eq(1)
           end
 
-          it "should include #{module_target_platform_factory}" do
-            expect(target_platforms).to include send(module_target_platform_factory)
+          it "should include #{:metasploit_cache_module_target_platform}" do
+            expect(target_platforms).to include send(:metasploit_cache_module_target_platform)
           end
         end
       end
