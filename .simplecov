@@ -1,6 +1,10 @@
 if ENV['TRAVIS'] == 'true'
   require 'coveralls'
-  Coveralls.wear!
+
+  Coveralls.wear! do
+    minimum_coverage 99.47
+    refuse_coverage_drop
+  end
 else
   # RM_INFO is set when using Rubymine.  In Rubymine, starting SimpleCov is
   # controlled by running with coverage, so don't explicitly start coverage (and
