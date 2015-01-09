@@ -7,14 +7,20 @@ unless ENV['RM_INFO']
 end
 
 SimpleCov.configure do
-  load_profile('rails')
+  require 'pathname'
+
+  root = Pathname.new(__FILE__).expand_path.parent
 
   # ignore this file
-  add_filter '.simplecov'
+  add_filter root.join('.simplecov').to_path
+
+  # db/seeds.rb is run before tests and in tests, but the whole file won't run under simplecov because seeds are already
+  # seeded.
+  add_filter root.join('db/seeds.rb').to_path
 
   # Rake tasks aren't tested with rspec
-  add_filter 'Rakefile'
-  add_filter 'lib/tasks'
+  add_filter root.join('Rakefile').to_path
+  add_filter root.join('lib/tasks').to_path
 
   #
   # Changed Files in Git Group
@@ -33,14 +39,40 @@ SimpleCov.configure do
     }
   end
 
-  add_group 'Libraries', 'lib'
+  add_group 'Models', root.join('app/models').to_path
+  add_group 'Validators', root.join('app/validators').to_path
+  add_group 'Libraries', root.join('lib').to_path
 
   #
   # Specs are reported on to ensure that all examples are being run and all
   # lets, befores, afters, etc are being used.
   #
 
-  add_group 'Specs', 'spec'
+  spec = root.join('spec')
+  factories_path = spec.join('factories').to_path
+  add_group 'Factories', factories_path
+
+  spec_support = spec.join('support')
+  shared = spec_support.join('shared')
+
+  contexts_path = shared.join('context').to_path
+  add_group 'Shared Contexts', contexts_path
+
+  examples_path = shared.join('examples').to_path
+  add_group 'Shared Examples', examples_path
+
+  dummy_path = spec.join('dummy').to_path
+  add_group 'Dummy Application', dummy_path
+
+  spec_path = spec.to_path
+  spec_support_path = spec_support.to_path
+  add_group('Specs') { |source_file|
+    source_path = source_file.filename
+
+    [dummy_path, factories_path, spec_support_path].none? { |path|
+      source_path.start_with? path
+    } && source_path.start_with?(spec_path)
+  }
 end
 
 if ENV['TRAVIS'] == 'true'
