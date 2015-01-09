@@ -1,7 +1,4 @@
 RSpec.describe Metasploit::Cache::Module::Target do
-  it_should_behave_like 'Metasploit::Cache::Module::Target',
-                        namespace_name: 'Metasploit::Cache'
-
   context 'associations' do
     it { should have_many(:architectures).class_name('Metasploit::Cache::Architecture').through(:target_architectures) }
     it { should belong_to(:module_instance).class_name('Metasploit::Cache::Module::Instance') }
@@ -21,11 +18,35 @@ RSpec.describe Metasploit::Cache::Module::Target do
     end
   end
 
+  context 'factories' do
+    context :metasploit_cache_module_target do
+      subject(:metasploit_cache_module_target) do
+        FactoryGirl.build(:metasploit_cache_module_target)
+      end
+
+      it { should be_valid }
+    end
+  end
+
   context 'mass assignment security' do
     it { should_not allow_mass_assignment_of(:module_instance_id) }
+    it { should allow_mass_assignment_of(:name) }
+  end
+
+  context 'search' do
+    let(:base_class) {
+      Metasploit::Cache::Module::Target
+    }
+
+    context 'attributes' do
+      it_should_behave_like 'search_attribute', :name, :type => :string
+    end
   end
 
   context 'validations' do
+    it { should validate_presence_of(:module_instance) }
+    it { should validate_presence_of(:name) }
+
     context 'validates uniqueness of #name scoped to #module_instance_id' do
       #
       # lets
@@ -98,5 +119,8 @@ RSpec.describe Metasploit::Cache::Module::Target do
         end
       end
     end
+
+    it { should validate_presence_of :target_architectures }
+    it { should validate_presence_of :target_platforms }
   end
 end
