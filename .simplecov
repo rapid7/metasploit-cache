@@ -1,7 +1,21 @@
 if ENV['TRAVIS'] == 'true'
+  require 'codeclimate-test-reporter'
   require 'coveralls'
 
   Coveralls.wear! do
+    formatters = []
+
+    # don't use `CodeClimate::TestReporter.start` as it will overwrite some .simplecov settings
+    if CodeClimate::TestReporter.run?
+      formatters << CodeClimate::TestReporter::Formatter
+    end
+
+    formatters << Coveralls::SimpleCov::Formatter
+
+    formatter SimpleCov::Formatter::MultiFormatter[
+        *formatters
+    ]
+
     minimum_coverage 99.47
     refuse_coverage_drop
   end
