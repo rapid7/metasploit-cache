@@ -3,14 +3,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
     FactoryGirl.build(:metasploit_cache_module_ancestor)
   end
 
-  it_should_behave_like 'Metasploit::Cache::Module::Ancestor', namespace_name: 'Metasploit::Cache' do
-    def attribute_type(attribute)
-      column = ancestor_class.columns_hash.fetch(attribute.to_s)
-
-      column.type
-    end
-  end
-
   context 'associations' do
     it { should have_many(:descendants).class_name('Metasploit::Cache::Module::Class').through(:relationships) }
     it { should belong_to(:parent_path).class_name('Metasploit::Cache::Module::Path') }
