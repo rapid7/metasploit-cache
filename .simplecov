@@ -79,19 +79,6 @@ SimpleCov.configure do
 end
 
 if ENV['TRAVIS'] == 'true'
-  require 'codeclimate-test-reporter'
   require 'coveralls'
-
-  formatters = []
-
-  # don't use `CodeClimate::TestReporter.start` as it will overwrite some .simplecov settings
-  if CodeClimate::TestReporter.run?
-    formatters << CodeClimate::TestReporter::Formatter
-  end
-
-  formatters << Coveralls::SimpleCov::Formatter
-
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-      *formatters
-  ]
+  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
 end

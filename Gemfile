@@ -42,8 +42,6 @@ group :test do
   gem 'actionpack', *rails_version_constraint
   # used for building markup for webpage factories
   gem 'builder'
-  # simplecov test formatter and uploader for CodeClimate
-  gem 'codeclimate-test-reporter', require: false
   # simplecov test formatter and uploader for Coveralls.io
   gem 'coveralls', require: false
   # for cleaning the database before suite in case previous run was aborted without clean up
