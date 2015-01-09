@@ -1,7 +1,4 @@
 RSpec.describe Metasploit::Cache::Module::Platform do
-  it_should_behave_like 'Metasploit::Cache::Module::Platform',
-                        namespace_name: 'Metasploit::Cache'
-
   context 'associations' do
     it { should belong_to(:module_instance).class_name('Metasploit::Cache::Module::Instance') }
     it { should belong_to(:platform).class_name('Metasploit::Cache::Platform') }
@@ -18,7 +15,42 @@ RSpec.describe Metasploit::Cache::Module::Platform do
     end
   end
 
+  context 'factories' do
+    context :metasploit_cache_module_platform do
+      subject(:metasploit_cache_module_platform) do
+        FactoryGirl.build(:metasploit_cache_module_platform)
+      end
+
+      it { should be_valid }
+
+      context '#module_instance' do
+        subject(:module_instance) do
+          metasploit_cache_module_platform.module_instance
+        end
+
+        it { should be_valid }
+
+        context '#module_platforms' do
+          subject(:module_platforms) do
+            module_instance.module_platforms
+          end
+
+          it 'has one' do
+            expect(module_platforms.length).to eq(1)
+          end
+
+          it "should include #{:metasploit_cache_module_platform}" do
+            expect(module_platforms).to include metasploit_cache_module_platform
+          end
+        end
+      end
+    end
+  end
+
   context 'validations' do
+    it { should validate_presence_of :module_instance }
+    it { should validate_presence_of :platform }
+
     # Can't use validate_uniqueness_of(:platform_id).scoped_to(:module_instance_id) because it will attempt to set
     # module_instance_id to nil.
     context 'validate uniqueness of platform_id scoped to module_instance_id' do
