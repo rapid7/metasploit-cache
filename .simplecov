@@ -16,7 +16,7 @@ if ENV['TRAVIS'] == 'true'
         *formatters
     ]
 
-    minimum_coverage 99.13
+    minimum_coverage 98.88
     refuse_coverage_drop
   end
 else
