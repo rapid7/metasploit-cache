@@ -74,7 +74,7 @@ SimpleCov.configure do
     } && source_path.start_with?(spec_path)
   }
 
-  minimum_coverage 99.54
+  minimum_coverage 99.52
   refuse_coverage_drop
 end
 
