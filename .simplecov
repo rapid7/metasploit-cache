@@ -73,6 +73,9 @@ SimpleCov.configure do
       source_path.start_with? path
     } && source_path.start_with?(spec_path)
   }
+
+  minimum_coverage 99.54
+  refuse_coverage_drop
 end
 
 if ENV['TRAVIS'] == 'true'
