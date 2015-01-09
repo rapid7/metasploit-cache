@@ -1,7 +1,4 @@
 RSpec.describe Metasploit::Cache::Module::Reference do
-  it_should_behave_like 'Metasploit::Cache::Module::Reference',
-                        namespace_name: 'Metasploit::Cache'
-
   context 'associations' do
     it { should belong_to(:module_instance).class_name('Metasploit::Cache::Module::Instance') }
     it { should belong_to(:reference).class_name('Metasploit::Cache::Reference') }
