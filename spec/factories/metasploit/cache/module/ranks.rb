@@ -10,8 +10,12 @@ FactoryGirl.define do
     rank = Metasploit::Cache::Module::Rank.where(:name => name).first
 
     unless rank
+      # Ranks will always be seeded before tests start, so this line will only execute if a rank is added without being
+      # added to db/seeds.rb
+      # :nocov:
       raise ArgumentError,
             "Metasploit::Cache::Module::Rank with name (#{name}) has not been seeded."
+      # :nocov:
     end
 
     rank

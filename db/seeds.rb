@@ -93,10 +93,14 @@ Metasploit::Cache::Platform.each_seed_attributes do |attributes|
   child = Metasploit::Cache::Platform.where(parent_id: parent_id, relative_name: relative_name).first
 
   unless child
+    # rake db:seed is run at least once prior to simplecov loading, so turn off coverage of parts that are only run when
+    # there are no seeds
+    # :nocov:
     child = Metasploit::Cache::Platform.new
     child.parent = parent
     child.relative_name = relative_name
     child.save!
+    # :nocov:
   end
 
   # yieldreturn

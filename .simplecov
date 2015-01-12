@@ -36,10 +36,6 @@ else
     # ignore this file
     add_filter root.join('.simplecov').to_path
 
-    # db/seeds.rb is run before tests and in tests, but the whole file won't run under simplecov because seeds are already
-    # seeded.
-    add_filter root.join('db/seeds.rb').to_path
-
     # Rake tasks aren't tested with rspec
     add_filter root.join('Rakefile').to_path
     add_filter root.join('lib/tasks').to_path
