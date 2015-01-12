@@ -17,6 +17,5 @@ rvm:
 - 1.9.3
 - 2.0
 - 2.1
-- jruby-1.7.17
 script: bundle exec rake $RAKE_TASK
 sudo: false
