@@ -368,6 +368,49 @@ RSpec.describe Metasploit::Cache::Module::Class do
         expect(ranked).to eq([excellent, great, good, normal, average, low, manaual])
       end
     end
+
+    context 'with_module_instances' do
+      subject(:with_module_instances) {
+        described_class.with_module_instances(queried_module_instance_relation).to_a
+      }
+
+      #
+      # lets
+      #
+
+      let(:expected_module_classes) {
+        queried_module_instances.map(&:module_class)
+      }
+
+      let(:other_module_classes) {
+        other_module_instances.map(&:module_class)
+      }
+
+      let(:queried_module_instance_relation) {
+        Metasploit::Cache::Module::Instance.where(id: queried_module_instances.map(&:id))
+      }
+
+      #
+      # let!s
+      #
+
+      let!(:other_module_instances) {
+        FactoryGirl.create_list(:metasploit_cache_module_instance, 2)
+      }
+
+      let!(:queried_module_instances) {
+        FactoryGirl.create_list(:metasploit_cache_module_instance, 2)
+      }
+
+      it 'returns Metasploit::Cache::Module::Classes correspond to Metasploit::Cache::Module::Instance#module_class' do
+        expect(with_module_instances).to match_array(expected_module_classes)
+      end
+
+      it 'does not return other Metasploit::Cache::Module::Classes' do
+        expect(with_module_instances).not_to include(other_module_classes[0])
+        expect(with_module_instances).not_to include(other_module_classes[1])
+      end
+    end
   end
 
   context 'search' do
