@@ -278,6 +278,45 @@ RSpec.describe Metasploit::Cache::Module::Class do
     end
   end
 
+  context 'scopes' do
+    context 'non_generic_payloads' do
+      subject(:non_generic_payloads) {
+        described_class.non_generic_payloads.to_a
+      }
+
+      let!(:generic_payload) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            ancestors: [
+                generic_payload_ancestor
+            ]
+        )
+      }
+
+      let!(:generic_payload_ancestor) {
+        FactoryGirl.create(
+                       :single_payload_metasploit_cache_module_ancestor,
+                       reference_name: 'singles/generic/shell_bind_tcp'
+        )
+      }
+
+      let!(:non_generic_payload) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'payload'
+        )
+      }
+
+      it 'does not return generic payloads' do
+        expect(non_generic_payloads).not_to include(generic_payload)
+      end
+
+      it 'returns generic payloads' do
+        expect(non_generic_payloads).to include(non_generic_payload)
+      end
+    end
+  end
+
   context 'search' do
     let(:base_class) {
       Metasploit::Cache::Module::Class
