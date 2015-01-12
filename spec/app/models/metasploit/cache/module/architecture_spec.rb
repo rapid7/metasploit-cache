@@ -47,6 +47,11 @@ RSpec.describe Metasploit::Cache::Module::Architecture do
     end
   end
 
+ context 'mass assignment security' do
+   it { is_expected.to allow_mass_assignment_of(:architecture) }
+   it { is_expected.to allow_mass_assignment_of(:module_instance) }
+ end
+
   context 'validations' do
     it { should validate_presence_of(:architecture) }
 

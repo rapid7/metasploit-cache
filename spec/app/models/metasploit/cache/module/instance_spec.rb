@@ -1204,6 +1204,149 @@ RSpec.describe Metasploit::Cache::Module::Instance do
         payloads_compatible_with
       end
     end
+
+    context 'nops_compatible_with' do
+      subject(:nops_compatible_with) {
+        described_class.nops_compatible_with(payload_instance)
+      }
+
+      #
+      # lets
+      #
+
+      let(:first_payload_architecture) {
+        Metasploit::Cache::Architecture.where(abbreviation: 'x86').first
+      }
+
+      let(:fully_matched_nop_class) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'nop'
+        )
+      }
+
+      let(:partially_matched_nop_architecture) {
+        Metasploit::Cache::Architecture.where(abbreviation: 'ppc64').first
+      }
+
+      let(:partially_matched_nop_class) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'nop'
+        )
+      }
+
+      let(:payload_class) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'payload'
+        )
+      }
+
+      let(:second_payload_architecture) {
+        Metasploit::Cache::Architecture.where(abbreviation: 'x86_64').first
+      }
+
+      let(:unmatched_nop_architecture) {
+        Metasploit::Cache::Architecture.where(abbreviation: 'ppc').first
+      }
+
+      let(:unmatched_nop_class) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'nop'
+        )
+      }
+
+      #
+      # let!s
+      #
+
+      let!(:fully_matched_nop_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_module_instance,
+            # zero as it will be filed in manually
+            module_architectures_length: 0,
+            module_class: fully_matched_nop_class
+        ).tap { |module_instance|
+          module_instance.module_architectures.build(architecture: first_payload_architecture)
+          module_instance.module_architectures.build(architecture: second_payload_architecture)
+
+          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
+
+          module_instance.save!
+        }
+      }
+
+      let!(:partially_matched_nop_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_module_instance,
+            # zero as it will be filed in manually
+            module_architectures_length: 0,
+            module_class: partially_matched_nop_class
+        ).tap { |module_instance|
+          module_instance.module_architectures.build(architecture: partially_matched_nop_architecture)
+          module_instance.module_architectures.build(architecture: second_payload_architecture)
+
+          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
+
+          module_instance.save!
+        }
+      }
+
+      let!(:payload_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_module_instance,
+            # zero as it will be filed in manually
+            module_architectures_length: 0,
+            module_class: payload_class
+        ).tap { |module_instance|
+          module_instance.module_architectures.build(architecture: first_payload_architecture)
+          module_instance.module_architectures.build(architecture: second_payload_architecture)
+
+          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
+
+          module_instance.save!
+        }
+      }
+
+      let!(:unmatched_nop_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_module_instance,
+            # zero as it will be filed in manually
+            module_architectures_length: 0,
+            module_class: unmatched_nop_class
+        ).tap { |module_instance|
+          module_instance.module_architectures  .build(architecture: unmatched_nop_architecture)
+
+          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
+
+          module_instance.save!
+        }
+      }
+
+      it "matches Metasploit::Cache::Module::Instance with Metasploit::Cache::Module::Class#module_type 'nop'" do
+        expect(nops_compatible_with).not_to be_empty
+
+        expect(
+            nops_compatible_with.all? { |module_instance|
+              module_instance.module_class.module_type == 'nop'
+            }
+        ).to eq(true)
+      end
+
+      it 'matches nops with same architectures' do
+        expect(nops_compatible_with).to include(fully_matched_nop_instance)
+      end
+
+      it 'matches nops with some architectures overlapping' do
+        expect(nops_compatible_with).to include(partially_matched_nop_instance)
+      end
+
+      it 'does not match nops with different architecture' do
+        expect(nops_compatible_with).not_to include(unmatched_nop_instance)
+      end
+    end
   end
 
   context 'search' do
