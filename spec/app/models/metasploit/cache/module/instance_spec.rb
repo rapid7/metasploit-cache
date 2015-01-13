@@ -1497,6 +1497,14 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       it 'does not match nops with different architecture' do
         expect(nops_compatible_with).not_to include(unmatched_nop_instance)
       end
+
+      it 'is ordered by rank' do
+        expected_nops = [fully_matched_nop_instance, partially_matched_nop_instance].sort_by { |module_instance|
+          module_instance.rank.number
+        }.reverse # reverse to make descending
+
+        expect(nops_compatible_with).to eq(expected_nops)
+      end
     end
   end
 
