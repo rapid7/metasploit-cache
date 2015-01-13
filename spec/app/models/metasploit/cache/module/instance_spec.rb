@@ -2137,6 +2137,92 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     end
   end
 
+  context '.allows?' do
+    subject(:allows?) {
+      described_class.allows?(options)
+    }
+
+    #
+    # lets
+    #
+
+    let(:options) {
+      # made up option values so dynamic_length_validation_options can be faked.
+      {
+          attribute: :attribute,
+          module_type: :module_type
+      }
+    }
+
+    #
+    # Callbacks
+    #
+    
+    before(:each) do
+      expect(described_class).to receive(:dynamic_length_validation_options)
+                                     .with(options)
+                                     .and_return(dynamic_length_validation_options)
+    end
+
+    context 'with :is' do
+      let(:dynamic_length_validation_options) {
+        {
+            is: is
+        }
+      }
+
+      context '0' do
+        let(:is) {
+          0
+        }
+
+        it { is_expected.to eq(false) }
+      end
+
+      context '> 0' do
+        let(:is) {
+          1
+        }
+
+        it { is_expected.to eq(true) }
+      end
+    end
+
+    context 'without :is' do
+      context 'with :maximum' do
+        let(:dynamic_length_validation_options) {
+          {
+              maximum: maximum
+          }
+        }
+
+        context '0' do
+          let(:maximum) {
+            0
+          }
+
+          it { is_expected.to eq(false) }
+        end
+
+        context '> 0' do
+          let(:maximum) {
+            1
+          }
+
+          it { is_expected.to eq(true) }
+        end
+      end
+
+      context 'without :maximum' do
+        let(:dynamic_length_validation_options) {
+          {}
+        }
+
+        it { is_expected.to eq(true) }
+      end
+    end
+  end
+
   context '.module_types_that_allow' do
     subject(:module_types_that_allow) do
       described_class.module_types_that_allow(attribute)
