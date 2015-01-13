@@ -353,7 +353,11 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
               'encoder'
           ).intersecting_architectures_with(
               module_instance
-          ).ranked
+          ).select(
+              Metasploit::Cache::Module::Instance.arel_table['*']
+          ).select(
+              Metasploit::Cache::Module::Rank.arel_table[:number]
+          ).uniq.ranked
         }
 
   # @!method self.intersecting_architecture_abbreviations

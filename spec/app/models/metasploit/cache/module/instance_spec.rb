@@ -824,6 +824,157 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       end
     end
 
+    context 'encoders_compatible_with' do
+      subject(:encoders_compatible_with) {
+        described_class.encoders_compatible_with(payload_instance)
+      }
+      
+      #
+      # lets
+      #
+
+      let(:first_payload_architecture) {
+        Metasploit::Cache::Architecture.where(abbreviation: 'x86').first
+      }
+
+      let(:fully_matched_encoder_class) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'encoder'
+        )
+      }
+
+      let(:partially_matched_encoder_architecture) {
+        Metasploit::Cache::Architecture.where(abbreviation: 'ppc64').first
+      }
+
+      let(:partially_matched_encoder_class) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'encoder'
+        )
+      }
+
+      let(:payload_class) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'payload'
+        )
+      }
+
+      let(:second_payload_architecture) {
+        Metasploit::Cache::Architecture.where(abbreviation: 'x86_64').first
+      }
+
+      let(:unmatched_encoder_architecture) {
+        Metasploit::Cache::Architecture.where(abbreviation: 'ppc').first
+      }
+
+      let(:unmatched_encoder_class) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'encoder'
+        )
+      }
+
+      #
+      # let!s
+      #
+
+      let!(:fully_matched_encoder_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_module_instance,
+            # zero as it will be filed in manually
+            module_architectures_length: 0,
+            module_class: fully_matched_encoder_class
+        ).tap { |module_instance|
+          module_instance.module_architectures.build(architecture: first_payload_architecture)
+          module_instance.module_architectures.build(architecture: second_payload_architecture)
+
+          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
+
+          module_instance.save!
+        }
+      }
+
+      let!(:partially_matched_encoder_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_module_instance,
+            # zero as it will be filed in manually
+            module_architectures_length: 0,
+            module_class: partially_matched_encoder_class
+        ).tap { |module_instance|
+          module_instance.module_architectures.build(architecture: partially_matched_encoder_architecture)
+          module_instance.module_architectures.build(architecture: second_payload_architecture)
+
+          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
+
+          module_instance.save!
+        }
+      }
+
+      let!(:payload_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_module_instance,
+            # zero as it will be filed in manually
+            module_architectures_length: 0,
+            module_class: payload_class
+        ).tap { |module_instance|
+          module_instance.module_architectures.build(architecture: first_payload_architecture)
+          module_instance.module_architectures.build(architecture: second_payload_architecture)
+
+          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
+
+          module_instance.save!
+        }
+      }
+
+      let!(:unmatched_encoder_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_module_instance,
+            # zero as it will be filed in manually
+            module_architectures_length: 0,
+            module_class: unmatched_encoder_class
+        ).tap { |module_instance|
+          module_instance.module_architectures  .build(architecture: unmatched_encoder_architecture)
+
+          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
+
+          module_instance.save!
+        }
+      }
+
+      it "matches Metasploit::Cache::Module::Instance with Metasploit::Cache::Module::Class#module_type 'encoder'" do
+        expect(encoders_compatible_with).not_to be_empty
+
+        expect(
+            encoders_compatible_with.all? { |module_instance|
+              module_instance.module_class.module_type == 'encoder'
+            }
+        ).to eq(true)
+      end
+
+      it 'matches encoders with same architectures' do
+        expect(encoders_compatible_with).to include(fully_matched_encoder_instance)
+      end
+
+      it 'matches encoders with some architectures overlapping' do
+        expect(encoders_compatible_with).to include(partially_matched_encoder_instance)
+      end
+
+      it 'does not match encoders with different architecture' do
+        expect(encoders_compatible_with).not_to include(unmatched_encoder_instance)
+      end
+
+      it 'is ordered by rank' do
+        expected_encoders = [fully_matched_encoder_instance, partially_matched_encoder_instance].sort_by { |module_instance|
+          module_instance.rank.number
+        }.reverse # reverse to make descending
+
+        expect(encoders_compatible_with).to eq(expected_encoders)
+      end
+    end
+
     context 'intersecting_architecture_abbreviations' do
       subject(:intersecting_architecture_abbreviations) do
         described_class.intersecting_architecture_abbreviations(architecture_abbreviation)
