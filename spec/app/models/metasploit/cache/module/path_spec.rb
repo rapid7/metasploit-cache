@@ -564,10 +564,6 @@ RSpec.describe Metasploit::Cache::Module::Path do
         existing_module_ancestors.map(&:real_path)
       end
 
-      let(:module_ancestors) do
-        existing_module_ancestors + new_module_ancestors
-      end
-
       let(:module_ancestor_real_paths) do
         existing_module_ancestor_real_paths + new_module_ancestor_real_paths
       end
