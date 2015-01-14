@@ -554,6 +554,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'without 1 ancestor' do
             let(:ancestors) do
+              []
+            end
+
+            it 'records error on ancestors' do
               expect(module_class.errors[:ancestors]).to include(error)
             end
           end
@@ -1261,6 +1265,8 @@ RSpec.describe Metasploit::Cache::Module::Class do
       let(:module_type) do
         FactoryGirl.generate :metasploit_cache_non_payload_module_type
       end
+
+      it { is_expected.to eq(nil) }
     end
   end
 
@@ -1404,8 +1410,9 @@ RSpec.describe Metasploit::Cache::Module::Class do
           let(:reference_name) do
             nil
           end
-        end
 
+          it { is_expected.to be_nil }
+        end
       end
 
       context 'without single' do
