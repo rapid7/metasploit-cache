@@ -833,14 +833,6 @@ RSpec.describe Metasploit::Cache::Module::Path do
 
                 expect(progress_bar).to be_finished
               end
-
-              it 'should finish progress bar only after return' do
-                path.each_changed_module_ancestor(options) { |_|
-                  expect(progress_bar).not_to be_finished
-                }
-
-                expect(progress_bar).to be_finished
-              end
             end
           end
 
