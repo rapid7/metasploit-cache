@@ -372,6 +372,10 @@ RSpec.describe Metasploit::Cache::Module::Path do
 
     context 'validate unique of name scoped to gem' do
       context 'with different real_paths' do
+        #
+        # lets
+        #
+
         let(:duplicate) do
           FactoryGirl.build(
               :named_metasploit_cache_module_path,
@@ -380,6 +384,10 @@ RSpec.describe Metasploit::Cache::Module::Path do
           )
         end
 
+        #
+        # let!s
+        #
+
         # let! so it exists in database for duplicate to validate against
         let!(:original) do
           FactoryGirl.create(
@@ -387,24 +395,53 @@ RSpec.describe Metasploit::Cache::Module::Path do
           )
         end
 
-        it 'should validate uniqueness of name scoped to gem' do
-          expect(duplicate).not_to be_valid
-          expect(duplicate.errors[:name]).to include('has already been taken')
+        context 'with default validation context' do
+          it 'validates uniqueness of name scoped to gem' do
+            expect(duplicate).not_to be_valid
+            expect(duplicate.errors[:name]).to include('has already been taken')
+          end
+        end
+
+        context 'with :add validation context' do
+          it 'skips validating uniqueness of name scoped to gem' do
+            expect(duplicate).to be_valid(:add)
+          end
         end
       end
     end
 
     context 'real_path' do
+      #
+      # lets
+      #
+
+      let(:duplicate) {
+        FactoryGirl.build(:metasploit_cache_module_path, real_path: real_path)
+      }
+
       let(:real_path) do
         FactoryGirl.generate :metasploit_cache_module_path_real_path
       end
 
-      it 'should validate uniqueness of real path' do
-        original = FactoryGirl.create(:metasploit_cache_module_path, :real_path => real_path)
-        duplicate = FactoryGirl.build(:metasploit_cache_module_path, :real_path => real_path)
+      #
+      # let!s
+      #
 
-        expect(duplicate).not_to be_valid
-        expect(duplicate.errors[:real_path]).to include('has already been taken')
+      let!(:original) {
+        FactoryGirl.create(:metasploit_cache_module_path, real_path: real_path)
+      }
+
+      context 'with default validation context' do
+        it 'should validate uniqueness of real path' do
+          expect(duplicate).not_to be_valid
+          expect(duplicate.errors[:real_path]).to include('has already been taken')
+        end
+      end
+
+      context 'with :add validation context' do
+        it 'skips validating uniqueness of real path' do
+          expect(duplicate).to be_valid(:add)
+        end
       end
     end
   end
