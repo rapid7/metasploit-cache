@@ -331,13 +331,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
               it { should_not be_a Class }
 
               it 'should define #initalize that takes an option hash' do
-                begin
-                  unbound_method = metasploit_module.instance_method(:initialize)
-                rescue NameError
-                  unbound_method = nil
-                end
+                unbound_method = metasploit_module.instance_method(:initialize)
 
-                expect(unbound_method).not_to be_nil
                 expect(unbound_method.parameters.length).to eq(1)
                 expect(unbound_method.parameters[0][0]).to eq(:opt)
               end
