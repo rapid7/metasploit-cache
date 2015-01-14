@@ -1157,10 +1157,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       nil
     end
 
-    let(:parent_path) do
-      nil
-    end
-
     let(:reference_name) do
       nil
     end
