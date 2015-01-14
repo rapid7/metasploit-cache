@@ -1381,8 +1381,20 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
 
     context 'without empty #relative_file_names' do
       context 'with one element' do
-        let(:relative_file_names) do
-          ['a'].each
+        context 'with EXTENSION' do
+          let(:relative_file_names) do
+            ["a#{described_class::EXTENSION}"].each
+          end
+
+          it { is_expected.to be_nil }
+        end
+
+        context 'without EXTENSION' do
+          let(:relative_file_names) do
+            ['a'].each
+          end
+
+          it { is_expected.to be_nil }
         end
       end
 
