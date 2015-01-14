@@ -279,11 +279,7 @@ RSpec.describe Metasploit::Cache::Module::Action do
           #
 
           before(:each) do
-            begin
-              second_module_instance.save!
-            rescue ActiveRecord::RecordInvalid => error
-              raise
-            end
+            second_module_instance.save!
           end
 
           context 'with same #name' do
