@@ -1201,9 +1201,11 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       end
 
       it 'calls intersecting_platforms with Metasploit::Cache::Platforms with platform_fully_qualified_names' do
-        expect(described_class).to receive(:intersecting_platforms) { |platforms|
-          expect(platforms).to match_array([platform])
-        }.and_call_original
+        expect(described_class).to receive(
+                                       :intersecting_platforms
+                                   ).with(
+                                       array_including(platform)
+                                   ).and_call_original
 
         intersecting_platform_fully_qualified_names
       end
@@ -1250,9 +1252,11 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       it_should_behave_like 'intersecting platforms'
 
       it 'calls #intersecting_platforms with module_target.platforms' do
-        expect(described_class).to receive(:intersecting_platforms) { |platforms|
-          expect(platforms).to match_array(module_target.platforms)
-        }.and_call_original
+        expect(described_class).to receive(
+                                       :intersecting_platforms
+                                   ).with(
+                                       array_including(module_target.platforms.to_a)
+                                   ).and_call_original
 
         intersecting_platforms_with
       end
