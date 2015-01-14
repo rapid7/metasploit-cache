@@ -596,13 +596,13 @@ RSpec.describe Metasploit::Cache::Module::Path do
       end
 
       it 'uses one query to find all updatable Metasploit::Cache::Module::Ancestors' do
-        expect(path.module_ancestors).to receive(:where) { |hash|
-          expect(hash).to have_key(:real_path)
-          actual_real_paths = hash[:real_path]
-          expect(actual_real_paths).to be_an Array
-
-          expect(actual_real_paths).to match_array(module_ancestor_real_paths)
-        }.and_call_original
+        expect(path.module_ancestors).to receive(
+                                             :where
+                                         ).with(
+                                             hash_including(
+                                                 real_path: module_ancestor_real_paths
+                                             )
+                                         ).and_call_original
 
         each_changed_module_ancestor
       end
