@@ -34,6 +34,16 @@ RSpec.describe Metasploit::Cache::Spec::Template do
     end
   end
 
+  context 'factories' do
+    context 'metasploit_cache_spec_template' do
+      subject(:metasploit_cache_spec_template) {
+        FactoryGirl.build(:metasploit_cache_spec_template)
+      }
+
+      it { is_expected.to be_valid }
+    end
+  end
+
   context '.render_super' do
     subject(:render_super) {
       template.render_super
