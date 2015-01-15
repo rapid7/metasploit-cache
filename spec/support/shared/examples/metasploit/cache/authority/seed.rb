@@ -40,10 +40,6 @@ shared_examples_for 'Metasploit::Cache::Authority seed' do |attributes={}|
 
         extension = extension_name.constantize
 
-        let(:extension) do
-          extension
-        end
-
         it "has extension #{extension}" do
           expect(seed.extension).to eq(extension)
         end
