@@ -1,3 +1,4 @@
+# Seeds {Metasploit::Cache::Architecture Metasploit::Cache::Architectures}.
 module Metasploit::Cache::Architecture::Seed
   # Attributes for seeds.
   ATTRIBUTES = [
@@ -147,6 +148,9 @@ module Metasploit::Cache::Architecture::Seed
   # Module Methods
   #
 
+  # Seed {Metasploit::Cache::Architecture Metasploit::Cache::Architectures}.
+  #
+  # @return [void]
   def self.seed
     ATTRIBUTES.each do |attributes|
       parent.where(attributes).first_or_create!

@@ -1,3 +1,4 @@
+# Seeds {Metasploit::Cache::Platform Metasploit::Cache::Platforms}.
 module Metasploit::Cache::Platform::Seed
   #
   # CONSTANTS
@@ -120,6 +121,9 @@ module Metasploit::Cache::Platform::Seed
     end
   end
 
+  # Seeds {Metasploit::Cache::Platform Metasploit::Cache::Platforms}.
+  #
+  # @return [void]
   def self.seed
     each_attributes do |attributes|
       parent = attributes.fetch(:parent)

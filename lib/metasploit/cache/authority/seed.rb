@@ -1,3 +1,4 @@
+# Seeds {Metasploit::Cache::Authority Metasploit::Cache::Authority}.
 module Metasploit::Cache::Authority::Seed
   #
   # CONSTANTS
@@ -70,6 +71,9 @@ module Metasploit::Cache::Authority::Seed
   # Module Functions
   #
 
+  # Seeds {Metasploit::Cache::Authority Metasploit::Cache::Authorities}.
+  #
+  # @return [void]
   def self.seed
     ATTRIBUTES.each do |attributes|
       abbreviation = attributes.fetch(:abbreviation)
