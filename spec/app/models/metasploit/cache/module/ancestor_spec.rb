@@ -295,7 +295,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
   end
 
   context 'factories' do
-    context :metasploit_cache_module_ancestor do
+    context 'metasploit_cache_module_ancestor' do
       subject(:metasploit_cache_module_ancestor) do
         FactoryGirl.build(:metasploit_cache_module_ancestor)
       end
