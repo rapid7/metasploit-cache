@@ -12,6 +12,7 @@ class Metasploit::Cache::Authority < ActiveRecord::Base
   autoload :Osvdb
   autoload :Pmasa
   autoload :Secunia
+  autoload :Seed
   autoload :UsCertVu
   autoload :Waraxe
   autoload :Zdi
