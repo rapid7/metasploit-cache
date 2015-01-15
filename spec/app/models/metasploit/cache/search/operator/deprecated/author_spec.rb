@@ -65,7 +65,7 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Author do
     let(:name_operator) do
       Metasploit::Model::Search::Operator::Attribute.new(
           :attribute => :name,
-          :klass => :author_class,
+          :klass => author_class,
           :type => :string
       )
     end
