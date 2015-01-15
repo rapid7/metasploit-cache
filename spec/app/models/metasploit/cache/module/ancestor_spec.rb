@@ -370,6 +370,35 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
           end
         end
       end
+
+      context 'module_type' do
+        subject(:metasploit_cache_module_ancestor) {
+          FactoryGirl.build(
+                         :metasploit_cache_module_ancestor,
+                         module_type: module_type
+          )
+        }
+
+        context 'with payload' do
+          let(:module_type) {
+            'payload'
+          }
+
+          it 'has derived payload type' do
+            expect(described_class::PAYLOAD_TYPES).to include(metasploit_cache_module_ancestor.derived_payload_type)
+          end
+        end
+
+        context 'without payload' do
+          let(:module_type) {
+            FactoryGirl.generate :metasploit_cache_non_payload_module_type
+          }
+
+          it 'does not have payload type' do
+            expect(metasploit_cache_module_ancestor.derived_payload_type).to eq(nil)
+          end
+        end
+      end
     end
 
     context :payload_metasploit_cache_module_ancestor do
