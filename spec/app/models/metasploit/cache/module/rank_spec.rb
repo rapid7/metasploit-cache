@@ -107,6 +107,39 @@ RSpec.describe Metasploit::Cache::Module::Rank do
     end
   end
 
+  context 'sequences' do
+    context 'metasploit_cache_module_rank' do
+      subject(:metasploit_cache_module_rank) {
+        FactoryGirl.generate :metasploit_cache_module_rank
+      }
+
+      context 'with seeded' do
+        it 'does not create a new Metasploit::Cache::Module::Rank' do
+          expect {
+            metasploit_cache_module_rank
+          }.not_to change(Metasploit::Cache::Module::Rank, :count)
+        end
+
+        it { is_expected.to be_a(Metasploit::Cache::Module::Rank) }
+        it { is_expected.to be_persisted }
+      end
+
+      context 'without seeded' do
+        before(:each) do
+          Metasploit::Cache::Module::Rank.delete_all
+        end
+
+        it 'raises ArgumentError with the name of the unseeded rank' do
+          expect {
+            metasploit_cache_module_rank
+          }.to raise_error(ArgumentError) do |error|
+            expect(error.to_s).to match(/Metasploit::Cache::Module::Rank with name \(\S+\) has not been seeded/)
+          end
+        end
+      end
+    end
+  end
+
   context 'mass assignment security' do
     it { should allow_mass_assignment_of(:name) }
     it { should allow_mass_assignment_of(:number) }
