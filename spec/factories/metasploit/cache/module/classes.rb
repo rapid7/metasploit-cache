@@ -15,8 +15,6 @@ FactoryGirl.define do
         # module_type is factory attribute, not model attribute
         if module_type == Metasploit::Cache::Module::Type::PAYLOAD
           generate :metasploit_cache_module_class_payload_type
-        else
-          nil
         end
       }
 

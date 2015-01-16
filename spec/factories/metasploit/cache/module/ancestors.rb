@@ -6,8 +6,6 @@ FactoryGirl.define do
       payload_type {
         if payload?
           generate :metasploit_cache_module_ancestor_payload_type
-        else
-          nil
         end
       }
 
