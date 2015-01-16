@@ -57,6 +57,39 @@ RSpec.describe Metasploit::Cache::Authority do
       end
     end
   end
+  
+  context 'sequences' do
+    context 'seeded_metasploit_cache_authority' do
+      subject(:seeded_metasploit_cache_authority) {
+        FactoryGirl.generate :seeded_metasploit_cache_authority
+      }
+      
+      context 'with seeded' do
+        it 'does not create a new Metasploit::Cache::Authority' do
+          expect {
+            seeded_metasploit_cache_authority
+          }.not_to change(Metasploit::Cache::Authority, :count)
+        end
+
+        it { is_expected.to be_a(Metasploit::Cache::Authority) }
+        it { is_expected.to be_persisted }
+      end
+
+      context 'without seeded' do
+        before(:each) do
+          Metasploit::Cache::Authority.delete_all
+        end
+
+        it 'raises ArgumentError with the abbreviation of the unseeded authority' do
+          expect {
+            seeded_metasploit_cache_authority
+          }.to raise_error(ArgumentError) do |error|
+            expect(error.to_s).to match(/Metasploit::Cache::Authority with abbreviation \(\S+\) has not been seeded/)
+          end
+        end
+      end
+    end
+  end
 
   context 'mass assignment security' do
     it { should allow_mass_assignment_of(:abbreviation) }
