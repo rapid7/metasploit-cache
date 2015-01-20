@@ -19,7 +19,13 @@ Dir.glob(rakefile_glob) do |rakefile|
   load rakefile
 end
 
+require 'cucumber'
+require 'cucumber/rake/task'
 require 'rspec/core/rake_task'
+
+Cucumber::Rake::Task.new do |t|
+  t.cucumber_opts = 'features --format pretty'
+end
 
 # Depend on app:db:test:prepare so that test database is recreated just like in a full rails app
 # @see http://viget.com/extend/rails-engine-testing-with-rspec-capybara-and-factorygirl

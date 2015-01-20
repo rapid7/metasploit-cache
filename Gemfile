@@ -40,6 +40,8 @@ group :test do
 
   # Dummy app uses actionpack for ActionController, but not rails since it doesn't use activerecord.
   gem 'actionpack', *rails_version_constraint
+  # Test the shared examples and matchers
+  gem 'aruba', github: 'rapid7/aruba', tag: 'v0.6.3.pre.metasploit.pre.yard.pre.port'
   # used for building markup for webpage factories
   gem 'builder'
   # simplecov test formatter and uploader for CodeClimate
