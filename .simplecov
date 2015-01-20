@@ -1,3 +1,11 @@
+require 'pathname'
+root = Pathname.new(__FILE__).expand_path.parent
+
+SimpleCov.configure do
+  # ignore this file
+  add_filter root.join('.simplecov').to_path
+end
+
 if ENV['TRAVIS'] == 'true'
   require 'coveralls'
 
@@ -12,13 +20,6 @@ else
   end
 
   SimpleCov.configure do
-    require 'pathname'
-
-    root = Pathname.new(__FILE__).expand_path.parent
-
-    # ignore this file
-    add_filter root.join('.simplecov').to_path
-
     # Rake tasks aren't tested with rspec
     add_filter root.join('Rakefile').to_path
     add_filter root.join('lib/tasks').to_path
