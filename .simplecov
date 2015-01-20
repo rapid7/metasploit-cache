@@ -1,24 +1,7 @@
 if ENV['TRAVIS'] == 'true'
-  require 'codeclimate-test-reporter'
   require 'coveralls'
 
-  Coveralls.wear! do
-    formatters = []
-
-    # don't use `CodeClimate::TestReporter.start` as it will overwrite some .simplecov settings
-    if CodeClimate::TestReporter.run?
-      formatters << CodeClimate::TestReporter::Formatter
-    end
-
-    formatters << Coveralls::SimpleCov::Formatter
-
-    formatter SimpleCov::Formatter::MultiFormatter[
-        *formatters
-    ]
-
-    minimum_coverage 98.88
-    refuse_coverage_drop
-  end
+  Coveralls.wear_merged!
 else
   # RM_INFO is set when using Rubymine.  In Rubymine, starting SimpleCov is
   # controlled by running with coverage, so don't explicitly start coverage (and
@@ -92,7 +75,6 @@ else
       } && source_path.start_with?(spec_path)
     }
 
-    minimum_coverage 99.52
-    refuse_coverage_drop
+    # NOTE: configure `minimum_coverage` in `Rakefile` for the `coverage` task
   end
 end

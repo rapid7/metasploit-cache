@@ -31,7 +31,29 @@ end
 # @see http://viget.com/extend/rails-engine-testing-with-rspec-capybara-and-factorygirl
 RSpec::Core::RakeTask.new(spec: 'app:db:test:prepare')
 
-task default: :spec
+
+require 'coveralls/rake/task'
+Coveralls::RakeTask.new
+
+task coverage: [:spec, :cucumber] do
+  require 'simplecov'
+
+  SimpleCov.configure do
+    minimum_coverage 100
+    refuse_coverage_drop
+  end
+
+  if ENV['TRAVIS'] == 'true'
+    Rake.application['coveralls:push'].invoke
+  else
+    require 'simplecov-html'
+
+    result = SimpleCov::ResultMerger.merged_result
+    SimpleCov::Formatter::HTMLFormatter.new.format result
+  end
+end
+
+task default: :coverage
 
 # Use find_all_by_name instead of find_by_name as find_all_by_name will return pre-release versions
 gem_specification = Gem::Specification.find_all_by_name('metasploit-yard').first
