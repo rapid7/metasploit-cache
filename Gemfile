@@ -44,8 +44,6 @@ group :test do
   gem 'aruba', github: 'rapid7/aruba', tag: 'v0.6.3.pre.metasploit.pre.yard.pre.port'
   # used for building markup for webpage factories
   gem 'builder'
-  # simplecov test formatter and uploader for CodeClimate
-  gem 'codeclimate-test-reporter', require: false
   # simplecov test formatter and uploader for Coveralls.io
   gem 'coveralls', require: false
   # for cleaning the database before suite in case previous run was aborted without clean up
