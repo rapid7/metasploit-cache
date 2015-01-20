@@ -39,3 +39,7 @@ if defined? SimpleCov
     set_env('RUBYOPT', "-r#{simplecov_setup_pathname} #{ENV['RUBYOPT']}")
   end
 end
+
+Before do
+  @aruba_timeout_seconds = 6
+end
