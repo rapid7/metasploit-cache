@@ -41,5 +41,5 @@ if defined? SimpleCov
 end
 
 Before do
-  @aruba_timeout_seconds = 6
+  @aruba_timeout_seconds = 12
 end
