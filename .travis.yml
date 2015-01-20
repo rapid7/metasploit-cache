@@ -4,7 +4,7 @@ before_script:
 cache: bundler
 env:
   matrix:
-  - RAKE_TASKS="spec cucumber"
+  - RAKE_TASK="coverage"
   global:
     secure: cOCoUB1zTvnl274EftNxbbmkL8MIlXa9a2/NLXpJFfJaL39JLYLCvrj85ndLO75fl8W5j7Xnx1w3kyNCL0FUumWzrIfcJFwTADv20EggrmrrJaEJDdqi3+oxFA8/AHQK7GUXws2AEhbs1ujXO7wA44qeQmO1daWdbXmN5t2qoxc=
 language: ruby
@@ -12,10 +12,10 @@ matrix:
   fast_finish: true
   include:
   - rvm: 2.1
-    env: RAKE_TASKS="yard"
+    env: RAKE_TASK="yard"
 rvm:
 - 1.9.3
 - 2.0
 - 2.1
-script: bundle exec rake $RAKE_TASKS
+script: bundle exec rake $RAKE_TASK
 sudo: false
