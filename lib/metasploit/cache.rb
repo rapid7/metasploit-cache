@@ -2,6 +2,7 @@
 # Gems
 #
 
+require 'active_support'
 require 'awesome_nested_set'
 require 'metasploit/concern'
 require 'metasploit/model'
