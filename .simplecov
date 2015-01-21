@@ -7,9 +7,11 @@ SimpleCov.configure do
 end
 
 if ENV['TRAVIS'] == 'true'
-  require 'coveralls'
+  unless ENV['SIMPLECOV_MERGE']
+    require 'coveralls'
 
-  Coveralls.wear_merged!
+    Coveralls.wear_merged!
+  end
 else
   # RM_INFO is set when using Rubymine.  In Rubymine, starting SimpleCov is
   # controlled by running with coverage, so don't explicitly start coverage (and
