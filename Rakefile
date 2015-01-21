@@ -36,6 +36,8 @@ require 'coveralls/rake/task'
 Coveralls::RakeTask.new
 
 task :coverage do
+  # disable SimpleCov.start in `.simplecov`
+  ENV['SIMPLECOV_MERGE'] = 'true'
   require 'simplecov'
 
   SimpleCov.configure do

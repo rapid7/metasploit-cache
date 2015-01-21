@@ -15,7 +15,7 @@ else
   # controlled by running with coverage, so don't explicitly start coverage (and
   # therefore generate a report) when in Rubymine.  This _will_ generate a report
   # whenever `rake spec` is run.
-  unless ENV['RM_INFO']
+  unless ENV['RM_INFO'] || ENV['SIMPLECOV_MERGE']
     SimpleCov.start
   end
 
