@@ -35,7 +35,7 @@ RSpec::Core::RakeTask.new(spec: 'app:db:test:prepare')
 require 'coveralls/rake/task'
 Coveralls::RakeTask.new
 
-task coverage: [:spec, :cucumber] do
+task :coverage do
   require 'simplecov'
 
   SimpleCov.configure do
