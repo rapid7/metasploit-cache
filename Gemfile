@@ -3,9 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in metasploit-cache.gemspec
 gemspec
 
-gem 'metasploit-model',
-    github: 'rapid7/metasploit-model',
-    ref: 'ee4d06009811c21c36ace781b27509f816ef7fee'
 # TODO remove once metasploit-version has owners besides Trevor and I can prerelease the gem.
 gem 'metasploit-version',
     branch: 'v0.1.3.pre.changelog.pre.template',
