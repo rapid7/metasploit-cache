@@ -15,6 +15,10 @@ And then execute:
 
     $ bundle
 
+**This gem's `Rails::Engine` is not required automatically.** You'll need to also add the following to your `config/application.rb`:
+
+    require 'metasploit/cache/engine'
+
 Or install it yourself as:
 
     $ gem install metasploit-cache

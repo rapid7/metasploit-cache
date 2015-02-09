@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib"]
+  spec.require_paths = %w{app/models app/validators lib}
 
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency 'codeclimate-test-reporter'
@@ -26,4 +26,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'metasploit-yard', '~> 1.0'
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency 'simplecov'
+
+  spec.add_runtime_dependency 'metasploit-model', '~> 0.29.0'
 end

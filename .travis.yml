@@ -1,3 +1,4 @@
+cache: bundler
 env:
   matrix:
   - RAKE_TASK=spec
@@ -5,14 +6,13 @@ env:
     secure: cOCoUB1zTvnl274EftNxbbmkL8MIlXa9a2/NLXpJFfJaL39JLYLCvrj85ndLO75fl8W5j7Xnx1w3kyNCL0FUumWzrIfcJFwTADv20EggrmrrJaEJDdqi3+oxFA8/AHQK7GUXws2AEhbs1ujXO7wA44qeQmO1daWdbXmN5t2qoxc=
 language: ruby
 matrix:
+  fast_finish: true
   include:
   - rvm: 2.1
     env: RAKE_TASK=yard
 rvm:
 - 1.9.3
-- '2.0'
-- '2.1'
-- ruby-head
-- jruby-19mode
-- rbx
+- 2.0
+- 2.1
 script: bundle exec rake $RAKE_TASK
+sudo: false
