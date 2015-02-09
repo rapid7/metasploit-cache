@@ -13,7 +13,7 @@ module Metasploit
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 3
       # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'full-coverage'
+      PRERELEASE = 'load-metasploit-cache-module-ancestor'
 
       #
       # Module Methods
