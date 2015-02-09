@@ -38,3 +38,9 @@
 *.o
 *.a
 mkmf.log
+
+#RVM
+.rvmrc
+.ruby-version
+.ruby-gemset
+.versions.conf
