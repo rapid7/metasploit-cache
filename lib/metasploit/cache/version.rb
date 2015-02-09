@@ -12,8 +12,6 @@ module Metasploit
       MINOR = 28
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 0
-      # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'extract-cache-from-metasploit-model'
 
       #
       # Module Methods
