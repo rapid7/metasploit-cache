@@ -12,7 +12,7 @@ RSpec.describe Metasploit::Cache::Module::Instance,
                         namespace_name: 'Dummy'
 
   it_should_behave_like 'Metasploit::Cache::Module::Instance::ClassMethods' do
-    let(:singleton_class) do
+    let(:singleton_klass) do
       described_class
     end
   end

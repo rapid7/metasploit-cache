@@ -19,7 +19,7 @@ Metasploit::Cache::Spec.shared_examples_for 'Module::Instance' do
   module_target_factory = "#{factory_namespace}_module_target"
 
   it_should_behave_like 'Metasploit::Cache::Module::Instance::ClassMethods' do
-    let(:singleton_class) do
+    let(:singleton_klass) do
       base_class
     end
   end

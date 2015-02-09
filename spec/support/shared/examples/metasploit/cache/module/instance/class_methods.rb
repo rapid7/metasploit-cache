@@ -1,7 +1,7 @@
 shared_examples_for 'Metasploit::Cache::Module::Instance::ClassMethods' do
   context '#allows?' do
     subject(:allows?) do
-      singleton_class.allows?(options)
+      singleton_klass.allows?(options)
     end
 
     let(:options) do
@@ -300,7 +300,7 @@ shared_examples_for 'Metasploit::Cache::Module::Instance::ClassMethods' do
       end
 
       before(:each) do
-        allow(singleton_class).to receive(:dynamic_length_validation_options).and_return(dynamic_length_validation_options)
+        allow(singleton_klass).to receive(:dynamic_length_validation_options).and_return(dynamic_length_validation_options)
       end
 
       context 'with :is' do
@@ -365,7 +365,7 @@ shared_examples_for 'Metasploit::Cache::Module::Instance::ClassMethods' do
 
   context '#dynamic_length_validation_options' do
     subject(:dynamic_length_validation_options) do
-      singleton_class.dynamic_length_validation_options(options)
+      singleton_klass.dynamic_length_validation_options(options)
     end
 
     let(:attribute) do
@@ -473,7 +473,7 @@ shared_examples_for 'Metasploit::Cache::Module::Instance::ClassMethods' do
 
   context '#stanced?' do
     subject(:stanced?) do
-      singleton_class.stanced?(module_type)
+      singleton_klass.stanced?(module_type)
     end
 
     context '#module_type' do
