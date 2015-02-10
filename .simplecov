@@ -1,41 +1,27 @@
+require 'pathname'
+root = Pathname.new(__FILE__).expand_path.parent
+
+SimpleCov.configure do
+  # ignore this file
+  add_filter root.join('.simplecov').to_path
+end
+
 if ENV['TRAVIS'] == 'true'
-  require 'codeclimate-test-reporter'
-  require 'coveralls'
+  unless ENV['SIMPLECOV_MERGE']
+    require 'coveralls'
 
-  Coveralls.wear! do
-    formatters = []
-
-    # don't use `CodeClimate::TestReporter.start` as it will overwrite some .simplecov settings
-    if CodeClimate::TestReporter.run?
-      formatters << CodeClimate::TestReporter::Formatter
-    end
-
-    formatters << Coveralls::SimpleCov::Formatter
-
-    formatter SimpleCov::Formatter::MultiFormatter[
-        *formatters
-    ]
-
-    minimum_coverage 98.88
-    refuse_coverage_drop
+    Coveralls.wear_merged!
   end
 else
   # RM_INFO is set when using Rubymine.  In Rubymine, starting SimpleCov is
   # controlled by running with coverage, so don't explicitly start coverage (and
   # therefore generate a report) when in Rubymine.  This _will_ generate a report
   # whenever `rake spec` is run.
-  unless ENV['RM_INFO']
+  unless ENV['RM_INFO'] || ENV['SIMPLECOV_MERGE']
     SimpleCov.start
   end
 
   SimpleCov.configure do
-    require 'pathname'
-
-    root = Pathname.new(__FILE__).expand_path.parent
-
-    # ignore this file
-    add_filter root.join('.simplecov').to_path
-
     # Rake tasks aren't tested with rspec
     add_filter root.join('Rakefile').to_path
     add_filter root.join('lib/tasks').to_path
@@ -92,7 +78,6 @@ else
       } && source_path.start_with?(spec_path)
     }
 
-    minimum_coverage 99.52
-    refuse_coverage_drop
+    # NOTE: configure `minimum_coverage` in `Rakefile` for the `coverage` task
   end
 end

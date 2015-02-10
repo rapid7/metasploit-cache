@@ -11,17 +11,7 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Authority do
   end
 
   let(:klass) do
-    search_i18n_scope = self.search_i18n_scope
-
-    Class.new do
-      define_singleton_method(:search_i18n_scope) do
-        search_i18n_scope
-      end
-    end
-  end
-
-  let(:search_i18n_scope) do
-    'search.i18n.scope'
+    Class.new
   end
 
   it { should be_a Metasploit::Model::Search::Operator::Delegation }

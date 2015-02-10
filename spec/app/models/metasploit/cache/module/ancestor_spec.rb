@@ -295,7 +295,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
   end
 
   context 'factories' do
-    context :metasploit_cache_module_ancestor do
+    context 'metasploit_cache_module_ancestor' do
       subject(:metasploit_cache_module_ancestor) do
         FactoryGirl.build(:metasploit_cache_module_ancestor)
       end
@@ -331,13 +331,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
               it { should_not be_a Class }
 
               it 'should define #initalize that takes an option hash' do
-                begin
-                  unbound_method = metasploit_module.instance_method(:initialize)
-                rescue NameError
-                  unbound_method = nil
-                end
+                unbound_method = metasploit_module.instance_method(:initialize)
 
-                expect(unbound_method).not_to be_nil
                 expect(unbound_method.parameters.length).to eq(1)
                 expect(unbound_method.parameters[0][0]).to eq(:opt)
               end
@@ -372,6 +367,35 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
                 end
               end
             end
+          end
+        end
+      end
+
+      context 'module_type' do
+        subject(:metasploit_cache_module_ancestor) {
+          FactoryGirl.build(
+                         :metasploit_cache_module_ancestor,
+                         module_type: module_type
+          )
+        }
+
+        context 'with payload' do
+          let(:module_type) {
+            'payload'
+          }
+
+          it 'has derived payload type' do
+            expect(described_class::PAYLOAD_TYPES).to include(metasploit_cache_module_ancestor.derived_payload_type)
+          end
+        end
+
+        context 'without payload' do
+          let(:module_type) {
+            FactoryGirl.generate :metasploit_cache_non_payload_module_type
+          }
+
+          it 'does not have payload type' do
+            expect(metasploit_cache_module_ancestor.derived_payload_type).to eq(nil)
           end
         end
       end
@@ -1162,10 +1186,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       nil
     end
 
-    let(:parent_path) do
-      nil
-    end
-
     let(:reference_name) do
       nil
     end
@@ -1390,8 +1410,20 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
 
     context 'without empty #relative_file_names' do
       context 'with one element' do
-        let(:relative_file_names) do
-          ['a'].each
+        context 'with EXTENSION' do
+          let(:relative_file_names) do
+            ["a#{described_class::EXTENSION}"].each
+          end
+
+          it { is_expected.to be_nil }
+        end
+
+        context 'without EXTENSION' do
+          let(:relative_file_names) do
+            ['a'].each
+          end
+
+          it { is_expected.to be_nil }
         end
       end
 

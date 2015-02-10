@@ -1,8 +1,12 @@
 # The architecture of a host's cpu or that is targeted by the shellcode for a
 # {Metasploit::Cache::Module::Instance module}.
 class Metasploit::Cache::Architecture < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
   include Metasploit::Model::Translation
   include Metasploit::Model::Search
+
+  autoload :Seed
 
   #
   # CONSTANTS
@@ -50,149 +54,6 @@ class Metasploit::Cache::Architecture < ActiveRecord::Base
       'ppc',
       'sparc',
       'x86'
-  ]
-  # Attributes for seeds.
-  SEED_ATTRIBUTES = [
-      {
-          :abbreviation => 'armbe',
-          :bits => 32,
-          :endianness => 'big',
-          :family => 'arm',
-          :summary => 'Little-endian ARM'
-      },
-      {
-          :abbreviation => 'armle',
-          :bits => 32,
-          :endianness => 'little',
-          :family => 'arm',
-          :summary => 'Big-endian ARM'
-      },
-      {
-          :abbreviation => 'cbea',
-          :bits => 32,
-          :endianness => 'big',
-          :family => 'cbea',
-          :summary => '32-bit Cell Broadband Engine Architecture'
-      },
-      {
-          :abbreviation => 'cbea64',
-          :bits => 64,
-          :endianness => 'big',
-          :family => 'cbea',
-          :summary => '64-bit Cell Broadband Engine Architecture'
-      },
-      {
-          :abbreviation => 'cmd',
-          :bits => nil,
-          :endianness => nil,
-          :family => nil,
-          :summary => 'Command Injection'
-      },
-      {
-          :abbreviation => 'dalvik',
-          :bits => nil,
-          :endianness => nil,
-          :family => nil,
-          :summary => 'Dalvik process virtual machine used in Google Android'
-      },
-      {
-          abbreviation: 'firefox',
-          bits: nil,
-          endianness: nil,
-          family: 'javascript',
-          summary: "Firefox's privileged javascript API"
-      },
-      {
-          :abbreviation => 'java',
-          :bits => nil,
-          :endianness => 'big',
-          :family => nil,
-          :summary => 'Java'
-      },
-      {
-          :abbreviation => 'mipsbe',
-          :bits => 32,
-          :endianness => 'big',
-          :family => 'mips',
-          :summary => 'Big-endian MIPS'
-      },
-      {
-          :abbreviation => 'mipsle',
-          :bits => 32,
-          :endianness => 'little',
-          :family => 'mips',
-          :summary => 'Little-endian MIPS'
-      },
-      {
-          abbreviation: 'nodejs',
-          bits: nil,
-          endianness: nil,
-          family: 'javascript',
-          summary: 'NodeJS'
-      },
-      {
-          :abbreviation => 'php',
-          :bits => nil,
-          :endianness => nil,
-          :family => nil,
-          :summary => 'PHP'
-      },
-      {
-          :abbreviation => 'ppc',
-          :bits => 32,
-          :endianness => 'big',
-          :family => 'ppc',
-          :summary => '32-bit Peformance Optimization With Enhanced RISC - Performance Computing'
-      },
-      {
-          :abbreviation => 'ppc64',
-          :bits => 64,
-          :endianness => 'big',
-          :family => 'ppc',
-          :summary => '64-bit Performance Optimization With Enhanced RISC - Performance Computing'
-      },
-      {
-          :abbreviation => 'python',
-          :bits => nil,
-          :endianness => nil,
-          :family => nil,
-          :summary => 'Python'
-      },
-      {
-          :abbreviation => 'ruby',
-          :bits => nil,
-          :endianness => nil,
-          :family => nil,
-          :summary => 'Ruby'
-      },
-      {
-          :abbreviation => 'sparc',
-          :bits => nil,
-          :endianness => nil,
-          :family => 'sparc',
-          :summary => 'Scalable Processor ARChitecture'
-      },
-      {
-          :abbreviation => 'tty',
-          :bits => nil,
-          :endianness => nil,
-          :family => nil,
-          :summary => '*nix terminal'
-      },
-      {
-          :abbreviation => 'x86',
-          :bits => 32,
-          :endianness => 'little',
-          :family => 'x86',
-          :summary => '32-bit x86'
-      },
-      {
-          :abbreviation => 'x86_64',
-          :bits => 64,
-          :endianness => 'little',
-          :family => 'x86',
-          :summary => '64-bit x86'
-      }
   ]
 
   #
@@ -326,7 +187,7 @@ class Metasploit::Cache::Architecture < ActiveRecord::Base
   # @param attribute [Symbol] attribute name.
   # @return [Set]
   def self.set(attribute)
-    SEED_ATTRIBUTES.each_with_object(Set.new) { |attributes, set|
+    self::Seed::ATTRIBUTES.each_with_object(Set.new) { |attributes, set|
       value = attributes.fetch(attribute)
 
       unless value.nil?

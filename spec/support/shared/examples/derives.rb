@@ -1,10 +1,12 @@
 shared_examples_for 'derives' do |attribute, options={}|
+  require 'active_support/core_ext/hash/keys'
+
   options.assert_valid_keys(:validates)
 
   derived = "derived_#{attribute}"
   validates = options.fetch(:validates)
 
-  context attribute do
+  context attribute.to_s do
     it { should be_a Metasploit::Cache::Derivation }
 
     let(:validate) do

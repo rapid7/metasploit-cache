@@ -1,8 +1,12 @@
 # The reliability of the module and likelyhood that the module won't knock over the service or host being exploited.
 # Bigger {#number values} are better.
 class Metasploit::Cache::Module::Rank < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
+
+  autoload :Seed
 
   #
   # CONSTANTS

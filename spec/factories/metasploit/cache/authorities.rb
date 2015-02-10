@@ -13,23 +13,23 @@ FactoryGirl.define do
     end
   end
 
-  seeded_abbreviations = [
-      'BID',
-      'CVE',
-      'MIL',
-      'MSB',
-      'OSVDB',
-      'PMASA',
-      'SECUNIA',
-      'US-CERT-VU',
-      'waraxe'
-  ]
+  seeded_abbreviations = Metasploit::Cache::Authority::Seed::ATTRIBUTES.map { |attributes|
+    attributes[:abbreviation]
+  }
+
   seeded_abbreviation_count = seeded_abbreviations.length
 
   sequence :seeded_metasploit_cache_authority do |n|
     abbreviation = seeded_abbreviations[n % seeded_abbreviation_count]
 
-    Metasploit::Cache::Authority.where(:abbreviation => abbreviation).first
+    authority = Metasploit::Cache::Authority.where(:abbreviation => abbreviation).first
+
+    unless authority
+      raise ArgumentError,
+            "Metasploit::Cache::Authority with abbreviation (#{abbreviation}) has not been seeded."
+    end
+
+    authority
   end
 
   sequence :metasploit_cache_authority_abbreviation do |n|

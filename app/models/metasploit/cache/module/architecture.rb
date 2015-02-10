@@ -23,7 +23,8 @@ class Metasploit::Cache::Module::Architecture < ActiveRecord::Base
   # Mass Assignment Security
   #
 
-  attr_accessible
+  attr_accessible :architecture
+  attr_accessible :module_instance
 
   #
   # Validations

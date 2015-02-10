@@ -278,6 +278,141 @@ RSpec.describe Metasploit::Cache::Module::Class do
     end
   end
 
+  context 'scopes' do
+    context 'non_generic_payloads' do
+      subject(:non_generic_payloads) {
+        described_class.non_generic_payloads.to_a
+      }
+
+      let!(:generic_payload) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            ancestors: [
+                generic_payload_ancestor
+            ]
+        )
+      }
+
+      let!(:generic_payload_ancestor) {
+        FactoryGirl.create(
+                       :single_payload_metasploit_cache_module_ancestor,
+                       reference_name: 'singles/generic/shell_bind_tcp'
+        )
+      }
+
+      let!(:non_generic_payload) {
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            module_type: 'payload'
+        )
+      }
+
+      it 'does not return generic payloads' do
+        expect(non_generic_payloads).not_to include(generic_payload)
+      end
+
+      it 'returns generic payloads' do
+        expect(non_generic_payloads).to include(non_generic_payload)
+      end
+    end
+
+    context 'ranked' do
+      subject(:ranked) {
+        described_class.ranked.to_a
+      }
+
+      #
+      # Methods
+      #
+
+      def ranked_class(rank_name)
+        FactoryGirl.create(
+            :metasploit_cache_module_class,
+            rank: Metasploit::Cache::Module::Rank.where(name: rank_name).first
+        )
+      end
+
+      #
+      # let!s
+      #
+
+      let!(:average) {
+        ranked_class('Average')
+      }
+
+      let!(:excellent) {
+        ranked_class('Excellent')
+      }
+
+      let!(:good) {
+        ranked_class('Good')
+      }
+
+      let!(:great) {
+        ranked_class('Great')
+      }
+
+      let!(:low) {
+        ranked_class('Low')
+      }
+
+      let!(:manaual) {
+        ranked_class('Manual')
+      }
+
+      let!(:normal) {
+        ranked_class('Normal')
+      }
+
+      it 'returns Metasploit::Cache::Module::Classes sorted by Metasploit::Cache::Module::Rank.number descending' do
+        expect(ranked).to eq([excellent, great, good, normal, average, low, manaual])
+      end
+    end
+
+    context 'with_module_instances' do
+      subject(:with_module_instances) {
+        described_class.with_module_instances(queried_module_instance_relation).to_a
+      }
+
+      #
+      # lets
+      #
+
+      let(:expected_module_classes) {
+        queried_module_instances.map(&:module_class)
+      }
+
+      let(:other_module_classes) {
+        other_module_instances.map(&:module_class)
+      }
+
+      let(:queried_module_instance_relation) {
+        Metasploit::Cache::Module::Instance.where(id: queried_module_instances.map(&:id))
+      }
+
+      #
+      # let!s
+      #
+
+      let!(:other_module_instances) {
+        FactoryGirl.create_list(:metasploit_cache_module_instance, 2)
+      }
+
+      let!(:queried_module_instances) {
+        FactoryGirl.create_list(:metasploit_cache_module_instance, 2)
+      }
+
+      it 'returns Metasploit::Cache::Module::Classes correspond to Metasploit::Cache::Module::Instance#module_class' do
+        expect(with_module_instances).to match_array(expected_module_classes)
+      end
+
+      it 'does not return other Metasploit::Cache::Module::Classes' do
+        expect(with_module_instances).not_to include(other_module_classes[0])
+        expect(with_module_instances).not_to include(other_module_classes[1])
+      end
+    end
+  end
+
   context 'search' do
     let(:base_class) {
       Metasploit::Cache::Module::Class
@@ -419,6 +554,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'without 1 ancestor' do
             let(:ancestors) do
+              []
+            end
+
+            it 'records error on ancestors' do
               expect(module_class.errors[:ancestors]).to include(error)
             end
           end
@@ -1126,6 +1265,8 @@ RSpec.describe Metasploit::Cache::Module::Class do
       let(:module_type) do
         FactoryGirl.generate :metasploit_cache_non_payload_module_type
       end
+
+      it { is_expected.to eq(nil) }
     end
   end
 
@@ -1269,8 +1410,9 @@ RSpec.describe Metasploit::Cache::Module::Class do
           let(:reference_name) do
             nil
           end
-        end
 
+          it { is_expected.to be_nil }
+        end
       end
 
       context 'without single' do
