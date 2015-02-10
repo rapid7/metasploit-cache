@@ -105,4 +105,52 @@ RSpec.describe Metasploit::Cache::Spec::Template do
       }.to change(Metasploit::Cache::Module::Ancestor::Spec::Template, :root).to(expected)
     end
   end
+
+  context '#search_real_pathname' do
+    subject(:search_real_pathnames) {
+      template.send(:search_real_pathnames)
+    }
+
+    let(:search_real_pathname) {
+      search_real_pathnames.first
+    }
+
+    let(:template) {
+      FactoryGirl.build(
+          :metasploit_cache_spec_template,
+          search_pathnames: [
+              search_pathname
+          ]
+      )
+    }
+
+    context 'with relative Pathname' do
+      let(:search_pathname) {
+        Pathname.new('relative/path')
+      }
+
+      it 'is no longer relative' do
+        expect(search_real_pathname).not_to be_relative
+      end
+
+      it 'is scoped to root' do
+        expect(search_real_pathname).to eq(Pathname.new(described_class.root).join(search_pathname))
+      end
+    end
+
+    context 'without relative Pathname' do
+      let(:search_pathname) {
+        Pathname.new('/absolute/path')
+      }
+
+      it 'is still not relative' do
+        expect(search_pathname).not_to be_relative
+        expect(search_real_pathname).not_to be_relative
+      end
+
+      it 'is passed through without scoping to root' do
+        expect(search_real_pathname).to eq(search_pathname)
+      end
+    end
+  end
 end
