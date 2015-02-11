@@ -64,9 +64,9 @@ RSpec.describe Metasploit::Cache::Module::Instance do
         platform
       end
 
-      it 'includes the Metasploit::Cache::Module::Instance' do
-        expect(subject).to include(other_module_instance)
-      end
+  it_should_behave_like 'Metasploit::Cache::Module::Instance::ClassMethods' do
+    let(:singleton_klass) do
+      base_class
     end
 
     context 'with ancestor platform' do
@@ -2748,4 +2748,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       end
     end
   end
+end
+end
 end
