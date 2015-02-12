@@ -30,9 +30,11 @@ module Metasploit
       def self.full
         version = "#{MAJOR}.#{MINOR}.#{PATCH}"
 
+        # :nocov:
         if defined? PRERELEASE
           version = "#{version}-#{PRERELEASE}"
         end
+        # :nocov:
 
         version
       end
