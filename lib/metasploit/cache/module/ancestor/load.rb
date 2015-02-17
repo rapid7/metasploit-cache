@@ -4,6 +4,12 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
   # Attributes
   #
 
+  # @!attribute logger
+  #   Tagged logger to which to log loading errors.
+  #
+  #   @return [ActiveSupport::TaggedLogging]
+  attr_accessor :logger
+
   # @!attribute maximum_version
   #   The maximum version number that should be allowed to load as indicated by the *N* in `MetasploitN` class
   #   or module name.
@@ -29,6 +35,8 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
   # Attribute Validations
   #
 
+  validates :logger,
+            presence: true
   validates :maximum_version,
             numericality: {
                 greater_than_or_equal_to: 1,
@@ -83,6 +91,7 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
           @namespace_module = nil
 
           namespace_module_load = namespace_module.load
+          namespace_module_load.logger = logger
           namespace_module_load.maximum_version = maximum_version
 
           if namespace_module_load.module_ancestor_eval(module_ancestor)

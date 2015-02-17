@@ -7,9 +7,22 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
     described_class.new(
         # This should match the major version number of metasploit-framework
         maximum_version: 4,
-        module_ancestor: module_ancestor
+        module_ancestor: module_ancestor,
+        logger: logger
     )
   end
+
+  let(:logger) {
+    ActiveSupport::TaggedLogging.new(
+        Logger.new(logger_string_io)
+    ).tap { |logger|
+      logger.level = Logger::DEBUG
+    }
+  }
+
+  let(:logger_string_io) {
+    StringIO.new
+  }
 
   let(:module_ancestor) do
     FactoryGirl.create(:metasploit_cache_module_ancestor)
