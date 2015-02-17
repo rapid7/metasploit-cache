@@ -13,6 +13,10 @@ gem 'metasploit-version',
     github: 'rapid7/metasploit-version',
     group: :development
 
+if ENV['METASPLOIT_FRAMEWORK_ROOT']
+  gemspec name: 'metasploit-framework-full', path: ENV['METASPLOIT_FRAMEWORK_ROOT']
+end
+
 # used by dummy application
 group :development, :test do
   # supplies factories for producing model instance for specs
