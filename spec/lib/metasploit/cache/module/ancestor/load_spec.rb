@@ -597,7 +597,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
       let(:module_path) do
         FactoryGirl.create(
-            :mdm_module_path,
+            :metasploit_cache_module_path,
             gem: 'metasploit-framework',
             name: 'modules',
             real_path: module_path_real_path
@@ -606,7 +606,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
       rule = File::Find.new(
           ftype: 'file',
-          pattern: "*#{Metasploit::Model::Module::Ancestor::EXTENSION}",
+          pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}",
           path: module_path_real_path
       )
 
