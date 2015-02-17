@@ -593,6 +593,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
   context 'files', :content do
     # Can't just use the tag on the context because the below code will still run even if tag is filtered out
     if ENV['METASPLOIT_FRAMEWORK_ROOT']
+      require 'metasploit/framework'
+      require 'metasploit/framework/engine'
+
       module_path_real_path = Pathname.new(ENV['METASPLOIT_FRAMEWORK_ROOT']).realpath.join('modules').to_path
 
       let(:module_path) do
@@ -612,7 +615,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
       rule.find { |real_path|
         real_pathname = Pathname.new(real_path)
-        relative_pathname = real_pathname.relative_path_from(Metasploit::Framework.root)
+        relative_pathname = real_pathname.relative_path_from(Metasploit::Framework::Engine.root)
 
         # have context be path relative to project root so context name is consistent no matter where the specs run
         context "#{relative_pathname}" do
