@@ -13,6 +13,9 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   include Metasploit::Cache::RealPathname
   include Metasploit::Model::Translation
 
+  autoload :Cache
+  autoload :Cacheable
+  autoload :Load
   autoload :Spec
 
   #

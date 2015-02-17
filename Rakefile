@@ -105,3 +105,5 @@ task 'yard:doc' => :eager_load
 task eager_load: :environment do
   Rails.application.eager_load!
 end
+
+Metasploit::Cache::Module::Ancestor::Spec::Unload.define_task
