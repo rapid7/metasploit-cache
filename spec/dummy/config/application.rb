@@ -9,6 +9,11 @@ Bundler.require(*Rails.groups(documentation: [:development]))
 require 'metasploit/cache'
 require 'metasploit/cache/engine'
 
+if ENV['METASPLOIT_FRAMEWORK_ROOT']
+  require 'metasploit/framework'
+  require 'metasploit/framework/engine'
+end
+
 module Dummy
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
