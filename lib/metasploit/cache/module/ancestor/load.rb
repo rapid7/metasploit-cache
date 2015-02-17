@@ -92,8 +92,8 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
           else
             # since namespace_module is being reverted, we need to keep a copy of the validation errors without a copy
             # of namespace_module.
-            namespace_module.valid?
-            @namespace_module_errors = namespace_module.errors
+            namespace_module_load.valid?
+            @namespace_module_load_errors = namespace_module_load.errors
           end
 
           commit
@@ -104,21 +104,21 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
     @namespace_module
   end
 
-  # Caches {#namespace_module} validation errors in case {#namespace_module} is `nil` because its construction or
-  # the {#metasploit_module} construction is invalid.
+  # Caches {#namespace_module} {Metasploit::Cache::Module::Namespace::Loadable#load} validation errors in case
+  # {#namespace_module} is `nil` because its construction or the {#metasploit_module} construction is invalid.
   #
   # @return [ActiveModel::Errors]
-  def namespace_module_errors
-    unless instance_variable_defined? :@namespace_module_errors
-      @namespace_module_errors = nil
+  def namespace_module_load_errors
+    unless instance_variable_defined? :@namespace_module_load_errors
+      @namespace_module_load_errors = nil
       namespace_module = self.namespace_module
 
       if namespace_module
-        @namespace_module_errors = namespace_module.errors
+        @namespace_module_load_errors = namespace_module.errors
       end
     end
 
-    @namespace_module_errors
+    @namespace_module_load_errors
   end
 
   private

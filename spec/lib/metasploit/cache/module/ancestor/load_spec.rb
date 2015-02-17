@@ -428,8 +428,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
             )
             allow(namespace_module).to receive(:errors).and_return(load.errors)
             allow(namespace_module).to receive(:load).and_return(load)
+
             allow(load).to receive(:module_ancestor_eval).with(module_ancestor).and_return(success)
-            allow(namespace_module).to receive(:valid?)
+            allow(load).to receive(:valid?)
           }
         end
 
@@ -462,14 +463,15 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
           it 'validates the namespace_module' do
             expect(Metasploit::Cache::Module::Namespace).to receive(:transaction) do |&block|
-              expect(transaction_namespace_module).to receive(:valid?)
+              expect(transaction_namespace_module.load).to receive(:valid?)
+
               block.call(module_ancestor, transaction_namespace_module)
             end
 
             namespace_module
           end
 
-          it 'sets @namespace_module_errors' do
+          it 'sets @namespace_module_load_errors' do
             expect(Metasploit::Cache::Module::Namespace).to receive(:transaction) do |&block|
               block.call(module_ancestor, transaction_namespace_module)
             end
@@ -477,7 +479,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
             expect {
               namespace_module
             }.to change {
-                   module_ancestor_load.instance_variable_get :@namespace_module_errors
+                   module_ancestor_load.instance_variable_get :@namespace_module_load_errors
                  }
           end
 
@@ -513,9 +515,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
     end
   end
 
-  context '#namespace_module_errors' do
-    subject(:namespace_module_errors) do
-      module_ancestor_load.namespace_module_errors
+  context '#namespace_module_load_errors' do
+    subject(:namespace_module_load_errors) do
+      module_ancestor_load.namespace_module_load_errors
     end
 
     context 'with defined' do
@@ -524,17 +526,17 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
       end
 
       before(:each) do
-        module_ancestor_load.instance_variable_set :@namespace_module_errors, expected_namespace_module_errors
+        module_ancestor_load.instance_variable_set :@namespace_module_load_errors, expected_namespace_module_errors
       end
 
       it 'should not call #namespace_module' do
         expect(module_ancestor_load).not_to receive(:namespace_module)
 
-        namespace_module_errors
+        namespace_module_load_errors
       end
 
-      it 'should return already defined namespace_module_errors' do
-        expect(namespace_module_errors).to eq(expected_namespace_module_errors)
+      it 'should return already defined namespace_module_load_errors' do
+        expect(namespace_module_load_errors).to eq(expected_namespace_module_errors)
       end
     end
 
@@ -542,7 +544,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
       it 'should call #namespace_module' do
         expect(module_ancestor_load).to receive(:namespace_module)
 
-        namespace_module_errors
+        namespace_module_load_errors
       end
 
       context '#namespace_module' do
@@ -568,7 +570,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
           end
 
           it 'should return namespace_modules.errors' do
-            expect(namespace_module_errors).to eq(errors)
+            expect(namespace_module_load_errors).to eq(errors)
           end
         end
       end
