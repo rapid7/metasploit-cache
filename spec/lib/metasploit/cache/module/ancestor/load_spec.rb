@@ -623,7 +623,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
             module_path.module_ancestors.build(real_path: real_path)
           end
 
-          it { should load_metasploit_module }
+          it { is_expected.to load_metasploit_module }
         end
       }
     end
