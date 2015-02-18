@@ -591,50 +591,58 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
   end
 
   # :nocov:
-  context 'files', :content do
-    # Can't just use the tag on the context because the below code will still run even if tag is filtered out
-    if ENV['METASPLOIT_FRAMEWORK_ROOT']
-      module_path_real_path = Pathname.new(ENV['METASPLOIT_FRAMEWORK_ROOT']).realpath.join('modules').to_path
+  # Can't just use the tag on the context because the below code will still run even if tag is filtered out
+  unless Bundler.settings.without.include? 'content'
+    context 'metasploit-framework', :content do
+      module_path_real_paths = Metasploit::Framework::Engine.paths['modules'].existent_directories
 
-      let(:module_path) do
-        FactoryGirl.create(
-            :metasploit_cache_module_path,
-            gem: 'metasploit-framework',
-            name: 'modules',
-            real_path: module_path_real_path
-        )
-      end
+      module_path_real_paths.each do |module_path_real_path|
+        module_path_real_pathname = Pathname.new(module_path_real_path)
+        module_path_relative_pathname = module_path_real_pathname.relative_path_from(Metasploit::Framework::Engine.root)
 
-      rule = File::Find.new(
-          ftype: 'file',
-          pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}",
-          path: module_path_real_path
-      )
-
-      rule.find { |real_path|
-        real_pathname = Pathname.new(real_path)
-        relative_pathname = real_pathname.relative_path_from(Metasploit::Framework::Engine.root)
-
-        # have context be path relative to project root so context name is consistent no matter where the specs run
-        context "#{relative_pathname}" do
-          let(:module_ancestor) do
-            module_path.module_ancestors.build(real_path: real_path)
+        # use relative pathname so that context name is not dependent on build directory
+        context module_path_relative_pathname.to_s do
+          let(:module_path) do
+            FactoryGirl.create(
+                :metasploit_cache_module_path,
+                gem: 'metasploit-framework',
+                name: 'modules',
+                real_path: module_path_real_path
+            )
           end
 
-          it 'loads Metasploit Module' do
-            expect(module_ancestor.derived_module_type).not_to be_nil
+          rule = File::Find.new(
+              ftype: 'file',
+              pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}",
+              path: module_path_real_path
+          )
 
-            if module_ancestor.derived_module_type == Metasploit::Cache::Module::Type::PAYLOAD
-              pending(
-                  "Current Metasploit::Cache::Module::Ancestor expects handler_type to be accessible from payload" \
+          rule.find do |real_path|
+            real_pathname = Pathname.new(real_path)
+            relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
+
+            # have context be path relative to project root so context name is consistent no matter where the specs run
+            context "#{relative_pathname}" do
+              let(:module_ancestor) do
+                module_path.module_ancestors.build(real_path: real_path)
+              end
+
+              it 'loads Metasploit Module' do
+                expect(module_ancestor.derived_module_type).not_to be_nil
+
+                if module_ancestor.derived_module_type == Metasploit::Cache::Module::Type::PAYLOAD
+                  pending(
+                      "Current Metasploit::Cache::Module::Ancestor expects handler_type to be accessible from payload" \
                   "ancestor, but metasploit-framework does not implement that API"
-              )
-            end
+                  )
+                end
 
-            expect(module_ancestor_load).to load_metasploit_module
+                expect(module_ancestor_load).to load_metasploit_module
+              end
+            end
           end
         end
-      }
+      end
     end
   end
   # :nocov:
