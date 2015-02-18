@@ -1,8 +1,6 @@
 before_script:
 - cp spec/dummy/config/database.yml.travis spec/dummy/config/database.yml
-- mkdir -p spec/dummy/db
-- touch spec/dummy/db/schema.rb
-- bundle exec rake db:create db:migrate db:seed
+- bundle exec rake db:setup
 cache: bundler
 env:
   matrix:
