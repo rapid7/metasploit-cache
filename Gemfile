@@ -15,11 +15,11 @@ gem 'metasploit-version',
 
 group :content do
   gem 'metasploit-framework',
-      branch: 'master',
-      github: 'rapid7/metasploit-framework'
+      github: 'rapid7/metasploit-framework',
+      ref: '1099084fb04164034e5520564828d57915d3a63a'
   gem 'metasploit-framework-db',
-      branch: 'master',
-      github: 'rapid7/metasploit-framework'
+      github: 'rapid7/metasploit-framework',
+      ref: '1099084fb04164034e5520564828d57915d3a63a'
 end
 
 # used by dummy application

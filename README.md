@@ -35,8 +35,6 @@ using [metasploit-concern](https://github.com/rapid7/metasploit-concern).
 ### With metasploit-framework
 
     rm Gemfile.lock
-    bundle config --local local.metasploit-framework ${HOME}/git/${GITHUB_USERNAME}/metasploit-framework
-    bundle config --local local.metasploit-framework-db ${HOME}/git/${GITHUB_USERNAME}/metasploit-framework
     bundle install
     rake spec
 
