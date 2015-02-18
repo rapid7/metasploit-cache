@@ -32,10 +32,17 @@ using [metasploit-concern](https://github.com/rapid7/metasploit-concern).
 
 ## Testing
 
-### Against metasploit-framework
+### With metasploit-framework
 
     rm Gemfile.lock
-    METASPLOIT_FRAMEWORK_ROOT=/home/username/git/username/metasploit-framework bundle install
+    bundle config --local local.metasploit-framework-full ${HOME}/git/${GITHUB_USERNAME}/metasploit-framework
+    bundle install
+    rake spec
+
+### Without metasploit-framework
+
+    rm Gemfile.lock
+    bundle install --without content
     rake spec
 
 ## Contributing
