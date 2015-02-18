@@ -590,6 +590,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
     end
   end
 
+  # :nocov:
   context 'files', :content do
     # Can't just use the tag on the context because the below code will still run even if tag is filtered out
     if ENV['METASPLOIT_FRAMEWORK_ROOT']
@@ -636,4 +637,5 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
       }
     end
   end
+  # :nocov:
 end
