@@ -1,3 +1,5 @@
+# {#module_ancestor_eval Loads} {Metasploit::Cache::Module::Ancestor#content} into a
+# {Metasploit::Cache::Module::Namespace::CONTENT module namespace}.
 class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
   #
   # Attributes
@@ -109,10 +111,37 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
     @metasploit_module
   end
 
+  # @deprecated API is not versioned properly and has never been changed from `1.0`, so do not define `RequiredVersions`
+  #   to signal compatibility.
+  #
+  # The required version of API as defined in `RequiredVersion` constant at the top level of the
+  # {Metasploit::Cache::Module::Ancestor#content}.
+  #
+  # @example Defining `RequiredVersions`
+  #   RequiredVersions = [4.11, 1.0]
+  #
+  #   module Metasploit4
+  #
+  # @return [nil] if `RequiredVersions` is not defined
+  # @return [Float] if `RequiredVersion` is defined
   def minimum_api_version
     required_versions[1]
   end
 
+  # @deprecated Core is a marketing version and does not indicate compatibility, so do not define `RequiredVersions` to
+  #   signal compatibility.
+  #
+  # The required version of metasploit-framework Core as defined in `RequiredVersion` constant at the top level of the
+  # {Metasploit::Cache::Module::Ancestor#content}.
+  #
+  #
+  # @example Defining `RequiredVersions`
+  #   RequiredVersions = [4.11, 1.0]
+  #
+  #   module Metasploit4
+  #
+  # @return [nil] if `RequiredVersions` is not defined
+  # @return [Float] if `RequiredVersion` is defined
   def minimum_core_version
     required_versions[0]
   end
@@ -148,6 +177,19 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
     success
   end
 
+  # @deprecated API is not versioned properly and Core is a marketing version and does not indicate compatibility, so
+  #   do not define `RequiredVersions` to signal compatibility.
+  #
+  # The required versions of the API and metasploit-framework Core as defined in `RequiredVersions` constant at the
+  # top level of the {Metasploit::Cache::Module::Ancestor#content}.
+  #
+  # @example Defining `RequiredVersions`
+  #   RequiredVersions = [4.11, 1.0]
+  #
+  #   module Metasploit4
+  #
+  # @return [[nil, nil]] if `RequiredVersions` is not defined
+  # @return [[Float, Float]] if `RequiredVersion` is defined
   def required_versions
     unless instance_variable_defined? :@required_versions
       if module_namespace.const_defined?(:RequiredVersions)
@@ -162,6 +204,9 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
 
   private
 
+  # Copies error in {#module_ancestor_eval_exception} to validation error on `:module_ancestor_eval`.
+  #
+  # @return [void]
   def module_ancestor_eval_valid
     if module_ancestor_eval_exception
       errors.add(

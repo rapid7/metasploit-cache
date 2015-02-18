@@ -1,6 +1,44 @@
 require 'weakref'
 
+# Adds {#resurrecting_attr_accessor} DSL to extending `Module`.  Resurrecting attributes are held in weak references
+# that can be garbage collected.  If the a resurrecting attribute has been garbage collected, then it is resurrected
+# using the supplied block.  The block should use less memory-intensive attributes to return the original attribute from
+# the block.
+#
+# @example Defining a resurrecting attribute
+#   class Metasploit::Cache::Module::Ancestor::Cache
+#     extend Metasploit::Cache::ResurrectingAttribute
+#
+#     #
+#     # Attributes
+#     #
+#
+#     # The SHA1 hexdigest of the path where the Metasploti Module is defined on disk.
+#     #
+#     # @return [String]
+#     attr_accessor :real_path_sha1_hex_digest
+#
+#     #
+#     # Resurrecting Attributes
+#     #
+#
+#     resurrecting_attr_accessor :module_ancestor do
+#        ActiveRecord::Base.connection_pool.with_connection {
+#          Metasploit::Cache::Module::Ancestor.where(real_path_sha1_hex_digest: real_path_sha1_hex_digest).first
+#        }
+#      end
+#   end
 module Metasploit::Cache::ResurrectingAttribute
+  # Defines a reader and writer for `attribute_name`.
+  #
+  # Resurrecting attributes are held in weak references that can be garbage collected.  If the a resurrecting attribute
+  # has been garbage collected, then it is resurrected using the supplied block.  The block should use less
+  # memory-intensive attributes to return the original attribute from the block.
+  #
+  # @param attribute_name [Symbol] name of the attribute.
+  # @yield Block called when attribute value has been garbage collected and `attribute_name` reader is called.
+  # @yieldreturn [Object] Strong reference to be returned from `attribute_name` reader and to be stored weakly for later
+  #   use.
   def resurrecting_attr_accessor(attribute_name, &block)
     instance_variable_name = "@#{attribute_name}".to_sym
     getter_name = attribute_name

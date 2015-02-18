@@ -1,3 +1,4 @@
+# Ephemeral cache for connecting an in-memory Metasploit Module to its persisted {Metasploit::Cache::Module::Ancestor}.
 class Metasploit::Cache::Module::Ancestor::Cache < Metasploit::Model::Base
   extend Metasploit::Cache::ResurrectingAttribute
 
@@ -24,10 +25,9 @@ class Metasploit::Cache::Module::Ancestor::Cache < Metasploit::Model::Base
   # Resurrecting Attributes
   #
 
-  # @!attribute module_ancestor
-  #   Cached metadata for this Module.
+  # Cached metadata for this Module.
   #
-  #   @return [Metasploit::Cache::Module::Ancestor]
+  # @return [Metasploit::Cache::Module::Ancestor]
   resurrecting_attr_accessor :module_ancestor do
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Module::Ancestor.where(real_path_sha1_hex_digest: real_path_sha1_hex_digest).first
