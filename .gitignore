@@ -21,6 +21,9 @@
 /pkg/
 # Database configuration (with passwords) for specs
 /spec/dummy/config/database.yml
+# Database schema contains migrations from metasploit-framework dependencies
+# that are optional
+/spec/dummy/db/schema.rb
 /spec/reports/
 # Files and directories created by Metasploit::Model::Spec.temporary_pathname
 /spec/tmp
