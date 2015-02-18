@@ -620,7 +620,18 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
             module_path.module_ancestors.build(real_path: real_path)
           end
 
-          it { is_expected.to load_metasploit_module }
+          it 'loads Metasploit Module' do
+            expect(module_ancestor.derived_module_type).not_to be_nil
+
+            if module_ancestor.derived_module_type == Metasploit::Cache::Module::Type::PAYLOAD
+              pending(
+                  "Current Metasploit::Cache::Module::Ancestor expects handler_type to be accessible from payload" \
+                  "ancestor, but metasploit-framework does not implement that API"
+              )
+            end
+
+            expect(module_ancestor_load).to load_metasploit_module
+          end
         end
       }
     end
