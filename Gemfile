@@ -14,7 +14,10 @@ gem 'metasploit-version',
     group: :development
 
 group :content do
-  gem 'metasploit-framework-full',
+  gem 'metasploit-framework',
+      branch: 'master',
+      github: 'rapid7/metasploit-framework'
+  gem 'metasploit-framework-db',
       branch: 'master',
       github: 'rapid7/metasploit-framework'
 end
