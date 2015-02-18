@@ -1,5 +1,6 @@
 before_script:
 - cp spec/dummy/config/database.yml.travis spec/dummy/config/database.yml
+- bundle exec touch spec/dummy/db/schema.rb
 - bundle exec rake db:create db:migrate db:seed
 cache: bundler
 env:
