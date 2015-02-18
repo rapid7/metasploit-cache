@@ -312,7 +312,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
       context 'without log/metasploit/cache/module/ancestor/spec/unload/each.log' do
         before(:each) do
           if log_pathname.exist?
+            # :nocov:
             log_pathname.delete
+            # :nocov:
           end
         end
 
@@ -390,8 +392,10 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
         leaks_cleaned_defined = false
 
         if described_class.instance_variable_defined? :@leaks_cleaned
+          # :nocov:
           leaks_cleaned_defined = true
           leaks_cleaned_before = described_class.remove_instance_variable(:@leaks_cleaned)
+          # :nocov:
         end
 
         begin
