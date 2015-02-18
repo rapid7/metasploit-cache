@@ -228,7 +228,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
             expect(log_pathname).to exist
             expect(log_pathname.read).to eq(
                                              "No leaks were cleaned by " \
-                                             "`Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configured!`. " \
+                                             "`Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure!`. " \
                                              "Remove it from `spec/spec_helper.rb` so it does not interfere with " \
                                              "contexts that persist loaded modules for entire context and clean up " \
                                              "modules in `after(:all)`\n"
