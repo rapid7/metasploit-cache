@@ -81,8 +81,9 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
   #
   # @return [nil] if this module ancestor load is not valid for loading.
   # @return [nil] if {#module_ancestor} could not be
-  #   {Metasploit::Cache::Module::Namespace#module_ancestor_eval evaluated} into the namespace `Module`.
-  # @return [Module<Metasploit::Cache::Module::Namespace::Cacheable, Metasploit::Cache::Module::Namespace::Loadable>] otherwise
+  #   {Metasploit::Cache::Module::Namespace::Load#module_ancestor_eval evaluated} into the namespace `Module`.
+  # @return [Module<Metasploit::Cache::Module::Namespace::Cacheable, Metasploit::Cache::Module::Namespace::Loadable>]
+  #   otherwise
   def namespace_module
     unless instance_variable_defined? :@namespace_module
       if valid?(:loading)

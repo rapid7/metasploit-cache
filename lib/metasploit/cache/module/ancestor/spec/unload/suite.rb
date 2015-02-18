@@ -54,7 +54,7 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite
     end
   end
 
-  # Logs leaked constants to {LOG_PATHNAME} and prints `message` to stderr.
+  # Logs leaked constants to {LOGS_PATHNAME} and prints `message` to stderr.
   #
   # @param hook (see log_pathname)
   # @param message [String] additional message printed to stderr when there is at least one leaked constant.

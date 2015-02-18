@@ -1,4 +1,4 @@
-# Adds {#loadable Metasploit Module loading} to {Metasploit::Cache::Module::Namespace::CONTENT module namespace}.
+# Adds {#load Metasploit Module loading} to {Metasploit::Cache::Module::Namespace::CONTENT module namespace}.
 module Metasploit::Cache::Module::Namespace::Loadable
   # @return [Metasploit::Cache::Module::Ancestor::Load]
   def load

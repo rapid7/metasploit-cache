@@ -1,5 +1,5 @@
 # @note This should only temporarily be used in `spec/spec_helper.rb` when
-#   {Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite.configure!` detects a leak.  Permanently having
+#   {Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite.configure!} detects a leak.  Permanently having
 #   {Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure!} can lead to false positives when modules are
 #   purposely loaded in a `before(:all)` and cleaned up in a `after(:all)`.
 #
@@ -61,7 +61,7 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Each
           else
             LOG_PATHNAME.open('w') { |f|
               f.puts(
-                  "No leaks were cleaned by `Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configured!`. " \
+                  "No leaks were cleaned by `Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure!`. " \
                   "Remove it from `spec/spec_helper.rb` so it does not interfere with contexts that persist loaded " \
                   "modules for entire context and clean up modules in `after(:all)`"
               )
@@ -81,7 +81,7 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Each
     !!@configured
   end
 
-  # Adds action to `spec` task so that `rake spec` fails if {configured!} is unnecessary in `spec/spec_helper.rb` and
+  # Adds action to `spec` task so that `rake spec` fails if {configure!} is unnecessary in `spec/spec_helper.rb` and
   # should be removed
   #
   # @return [void]

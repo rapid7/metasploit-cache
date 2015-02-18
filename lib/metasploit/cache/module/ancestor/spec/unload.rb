@@ -25,7 +25,7 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload
   # Adds actions to `spec` task so that `rake spec` fails if any of the following:
   #
   # # `log/leaked-constants.log` exists after printing out the leaked constants.
-  # # {Each.configured!} is unnecessary in `spec/spec_helper.rb` and should be removed.
+  # # {Each.configure!} is unnecessary in `spec/spec_helper.rb` and should be removed.
   #
   # @return [void]
   def self.define_task

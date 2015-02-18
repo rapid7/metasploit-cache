@@ -11,7 +11,7 @@ module Metasploit::Cache::Module::Namespace
   # CONSTANTS
   #
 
-  # Path for {NAMESPACE_MODULE_CONTENT} evaluation so that errors are reported correctly.
+  # Path for {CONTENT} evaluation so that errors are reported correctly.
   CONTENT_FILE = __FILE__
   # This must calculate the first line of the NAMESPACE_MODULE_CONTENT string so that errors are reported correctly
   CONTENT_LINE = __LINE__ + 4
@@ -41,7 +41,7 @@ module Metasploit::Cache::Module::Namespace
   # @note The namespace must start with `Msf` as some modules in metasploit-framework do not fully-qualify their
   # constant names and are dependant on the loader leaking the `Msf` lexical scope.
   #
-  # The base namespace name under which {#create namespace modules are created}.
+  # The base namespace name under which {create namespace modules are created}.
   NAMES = ['Msf', 'Modules']
 
   #
@@ -85,7 +85,7 @@ module Metasploit::Cache::Module::Namespace
   # module's `Module`s.  The wrapper `Module` must be named so that active_support's autoloading code doesn't break when
   # searching constants from inside the `Metasploit<n>` `Module`.
   #
-  # @param names [Array<String>] {#namespace_module_names}
+  # @param names [Array<String>] {names}
   # @return [Module, #module_eval_with_lexical_scope] `Module` that can wrap
   #   `Metasploit::Model::Module::Ancestor#contents` using `#module_eval_with_lexical_scope`.
   #
@@ -121,7 +121,7 @@ module Metasploit::Cache::Module::Namespace
   # Returns the module with `module_names` if it exists.
   #
   # @param [Array<String>] module_names a list of module names to resolve from Object downward.
-  # @return [Module] module that wraps the previously loaded content from {#read_module_content}.
+  # @return [Module] module that wraps the previously loaded content from {Metasploit::Cache::Module::Ancestor#content}.
   # @return [nil] if any module name along the chain does not exist.
   def self.current(module_names)
     # dont' look at ancestor for constant for faster const_defined? calls.
@@ -145,7 +145,7 @@ module Metasploit::Cache::Module::Namespace
   # @param module_ancestor [Metasploit::Model::Module::Ancestor] The `Metasploit::Model::Module::Ancestor` whose
   #   `Metasploit::Model::Module::Ancestor#contents` will be evaluated inside the nested `module` declarations of
   #   this array of `Module#name`s.
-  # @return [Array<String>] {NAMESPACE_MODULE_NAMES} + <derived-constant-safe names>
+  # @return [Array<String>] {NAMES} + <derived-constant-safe names>
   #
   # @see namespace_module
   def self.names(module_ancestor)
