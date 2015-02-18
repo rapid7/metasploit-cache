@@ -1,4 +1,6 @@
 RSpec::Matchers.define :load_metasploit_module do
+  # Falsely reported as uncovered because matchers load prior to simplecov
+  # :nocov:
   match do |module_ancestor_load|
     module_ancestor_load.valid?
   end
@@ -32,4 +34,5 @@ RSpec::Matchers.define :load_metasploit_module do
   description do
     'load metasploit_model'
   end
+  # :nocov:
 end
