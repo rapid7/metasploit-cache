@@ -47,12 +47,23 @@ task :coverage do
 
   merged_results = SimpleCov::ResultMerger.merged_result
 
-  if ENV['TRAVIS'] == 'true'
-    Rake.application['coveralls:push'].invoke
-  else
-    require 'simplecov-html'
+  default_external_encoding_before = Encoding.default_external
+  default_internal_encoding_before = Encoding.default_internal
 
-    SimpleCov::Formatter::HTMLFormatter.new.format merged_results
+  Encoding.default_external = Encoding::UTF_8
+  Encoding.default_internal = Encoding::UTF_8
+
+  begin
+    if ENV['TRAVIS'] == 'true'
+      Rake.application['coveralls:push'].invoke
+    else
+      require 'simplecov-html'
+
+      SimpleCov::Formatter::HTMLFormatter.new.format merged_results
+    end
+  ensure
+    Encoding.default_external = default_external_encoding_before
+    Encoding.default_internal = default_internal_encoding_before
   end
 
   #
