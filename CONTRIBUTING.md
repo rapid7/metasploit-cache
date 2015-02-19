@@ -76,7 +76,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 
 You should also include at least one scenario to manually check the changes outside of specs.
 
-* Add a Post-merge Steps comment
+* Add Post-merge Steps to the description comment
 
 The 'Post-merge Steps' are a reminder to the reviewer of the Pull Request of how to update the [`PRERELEASE`](lib/metasploit/cache/version.rb) so that [version_spec.rb](spec/lib/metasploit/cache/version.rb_spec.rb) passes on the target branch after the merge.
 
