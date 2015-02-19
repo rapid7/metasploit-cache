@@ -11,9 +11,9 @@ module Metasploit
       # The minor version number, scoped to the {MAJOR} version number.
       MINOR = 61
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-      PATCH = 3
+      PATCH = 4
       # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'full-coverage'
+      PRERELEASE = 'update-contributing'
 
       #
       # Module Methods
