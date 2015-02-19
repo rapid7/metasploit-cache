@@ -90,7 +90,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
           end
 
           it 'sets Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.leaks_cleaned' do |example|
-            @before_each_block.call(example)
+            silence(:stderr) {
+              @before_each_block.call(example)
+            }
 
             expect(Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.leaks_cleaned).to eq(true)
           end
@@ -353,6 +355,10 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
           log_pathname.open('w') do |f|
             f.write expected_log_content
           end
+        end
+
+        after(:each) do
+          log_pathname.delete
         end
 
         it 'prints log to stderr before exiting with non-zero status' do

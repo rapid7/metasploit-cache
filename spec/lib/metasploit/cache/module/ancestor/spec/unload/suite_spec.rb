@@ -156,7 +156,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
 
       it 'exits with 1' do
         expect {
-          @spec_block.call
+          silence(:stderr) {
+            @spec_block.call
+          }
         }.to raise_error(SystemExit) { |error|
                expect(error.status).to eq(1)
              }
@@ -237,7 +239,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
       end
 
       it 'prints leaked constants to hook log' do
-        log_leaked_constants
+        silence(:stderr) {
+          log_leaked_constants
+        }
 
         expect(log_pathname.read).to eq(
                                          "FirstLeakedConstant\n" \
@@ -334,7 +338,11 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
                )
       end
 
-      it { is_expected.to eq(true) }
+      it 'returns true' do
+        silence(:stderr) {
+          expect(print_leaked_constants).to eq(true)
+        }
+      end
     end
 
     context 'without log' do
