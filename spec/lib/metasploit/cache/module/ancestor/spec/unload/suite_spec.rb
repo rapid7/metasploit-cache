@@ -212,16 +212,20 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
       log_content_before = nil
 
       if log_pathname.exist?
+        # :nocov:
         log_content_before = log_pathname.read
+        # :nocov:
       end
 
       begin
         example.run
       ensure
         if log_content_before
+          # :nocov:
           log_pathname.open('w') do |f|
             f.write log_content_before
           end
+          # :nocov:
         end
       end
     end

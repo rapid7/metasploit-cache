@@ -184,16 +184,20 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
             log_content = nil
 
             if log_pathname.exist?
+              # :nocov:
               log_content = log_pathname.read
+              # :nocov:
             end
 
             begin
               example.run
             ensure
               if log_content
+                # :nocov:
                 log_pathname.open('w') do |f|
                   f.write log_content
                 end
+                # :nocov:
               end
             end
           end
@@ -215,7 +219,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
           context 'without log/metasploit/cache/module/ancestor/spec/unload/each.log' do
             before(:each) do
               if log_pathname.exist?
+                # :nocov:
                 log_pathname.delete
+                # :nocov:
               end
             end
 
@@ -270,16 +276,20 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
       log_content = nil
 
       if log_pathname.exist?
+        # :nocov:
         log_content = log_pathname.read
+        # :nocov:
       end
 
       begin
         example.run
       ensure
         if log_content
+          # :nocov:
           log_pathname.open('w') do |f|
             f.write log_content
           end
+          # :nocov:
         end
       end
     end
@@ -377,7 +387,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
       context 'without log/metasploit/cache/module/ancestor/spec/unload/each.log' do
         before(:each) do
           if log_pathname.exist?
+            # :nocov:
             log_pathname.delete
+            # :nocov:
           end
         end
 
