@@ -224,6 +224,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
       end
     end
 
+    after(:each) do
+      if log_pathname.exist?
+        log_pathname.delete
+      end
+    end
+
     context 'with leaks' do
       before(:each) do
         stub_const('Msf::Modules::FirstLeakedConstant', Module.new)

@@ -39,6 +39,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
     end
 
     it 'sets configured?' do
+      allow(RSpec).to receive(:configure)
+
       expect {
         configure!
       }.to change(described_class, :configured?).from(false).to(true)
@@ -155,6 +157,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Each do
 
         before(:each) do
           Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.leaks_cleaned = leaks_cleaned
+        end
+
+        after(:each) do
+          if log_pathname.exist?
+            log_pathname.delete
+          end
         end
 
         context 'with leaks cleaned' do
