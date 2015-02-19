@@ -828,7 +828,7 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       subject(:encoders_compatible_with) {
         described_class.encoders_compatible_with(payload_instance)
       }
-      
+
       #
       # lets
       #
@@ -2320,7 +2320,7 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     #
     # Callbacks
     #
-    
+
     before(:each) do
       expect(described_class).to receive(:dynamic_length_validation_options)
                                      .with(options)
@@ -2467,10 +2467,10 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
       before(:each) do
         expect(described_class::DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE).to receive(:fetch).with(
-            attribute
-        ).and_return(
-            dynamic_length_validation_options_by_module_type
-        )
+                                                                                                      attribute
+                                                                                                  ).and_return(
+                                                                                                      dynamic_length_validation_options_by_module_type
+                                                                                                  )
       end
 
       context 'with :is' do
@@ -2574,11 +2574,11 @@ RSpec.describe Metasploit::Cache::Module::Instance do
         module_instance
 
         expect(described_class).to receive(:allows?).with(
-            hash_including(
-                attribute: attribute,
-                module_type: module_type
-            )
-        )
+                                       hash_including(
+                                           attribute: attribute,
+                                           module_type: module_type
+                                       )
+                                   )
 
         allows?
       end
@@ -2624,11 +2624,11 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
       it 'should call dynamic_length_validation_options on class' do
         expect(described_class).to receive(:dynamic_length_validation_options).with(
-            hash_including(
-                attribute: attribute,
-                module_type: module_type
-            )
-        )
+                                       hash_including(
+                                           attribute: attribute,
+                                           module_type: module_type
+                                       )
+                                   )
 
         dynamic_length_validation_options
       end
