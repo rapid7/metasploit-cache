@@ -38,7 +38,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Ancestor STI"
 
       "Metasploit::Cache::Module::Ancestor" [
-        label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | id | full_name | parent_path_id | reference_name | real_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
+        label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | id | parent_path_id | reference_name | real_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
         style = "dashed"
       ]
 
@@ -114,7 +114,7 @@ digraph "metasploit-cache" {
         label = "Metasploit::Cache::Direct::Class STI"
 
         "Metasploit::Cache::Direct::Class" [
-          label = "Metasploit::Cache::Direct::Class | mc_direct_classes | <ancestor_id>ancestor_id | full_name | <rank_id>rank_id | reference_name | type = 'Metasploit::Cache::Direct::Class'"
+          label = "Metasploit::Cache::Direct::Class | mc_direct_classes | <ancestor_id>ancestor_id | <rank_id>rank_id | reference_name | type = 'Metasploit::Cache::Direct::Class'"
           style = "dashed"
         ]
 
@@ -221,7 +221,7 @@ digraph "metasploit-cache" {
       }
 
       "Metasploit::Cache::Payload::Staged::Class" [
-        label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | full_name | reference_name | <rank_id>rank_id | <stage_ancestor_id>stage_ancestor_id | <stager_ancestor_id>stager_ancestor_id"
+        label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | reference_name | <rank_id>rank_id | <stage_ancestor_id>stage_ancestor_id | <stager_ancestor_id>stager_ancestor_id"
       ]
       
       "Metasploit::Cache::Payload::Staged::Class":stage_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
