@@ -141,7 +141,7 @@ digraph "metasploit-cache" {
         label = "Metasploit::Cache::Direct::Class STI"
 
         "Metasploit::Cache::Direct::Class" [
-          label = "Metasploit::Cache::Direct::Class | mc_direct_classes | <ancestor_id>ancestor_id | <rank_id>rank_id | reference_name | type = 'Metasploit::Cache::Direct::Class'"
+          label = "Metasploit::Cache::Direct::Class | mc_direct_classes | <ancestor_id>ancestor_id | <rank_id>rank_id | type = 'Metasploit::Cache::Direct::Class'"
           style = "dashed"
         ]
 
