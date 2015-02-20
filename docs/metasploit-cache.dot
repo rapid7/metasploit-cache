@@ -58,7 +58,12 @@ digraph "metasploit-cache" {
     label = "module_type + payload_type STI"
 
     "Metasploit::Cache::Auxiliary::Action" [
+      label = "Metasploit::Cache::Auxiliary::Action | mc_auxiliary_actions | <id>id | <auxiliary_instance_id>auxiliary_instance_id | name"
+    ]
 
+    "Metasploit::Cache::Auxiliary::Action":auxiliary_instance_id -> "Metasploit::Cache::Auxiliary::Instance":id [
+      headlabel = "has_many :auxiliary_actions,\nclass_name: 'Metasploit::Cache::Auxiliary::Action'"
+      taillabel = "belongs_to :auxiliary_instance,\nclass_name: 'Metasploit::Cache::Auxiliary::Instance'"
     ]
 
     subgraph cluster_mc_module_ancestors {
@@ -279,12 +284,16 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::*::Instance"
 
       "Metasploit::Cache::Auxiliary::Instance" [
-        label = "Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_action_id>default_action_id | description | disclosed_on | license | name | stance"
+        label = "Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_auxiliary_action_id>default_auxiliary_action_id | description | disclosed_on | license | name | stance"
       ]
 
       "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
         headlabel = "has_one :auxiliary_instance,\nclass_name: 'Metasploit::Cache::Auxiliary::Instance'"
         taillabel = "belongs :auxiliary_class,\nclass_name: 'Metasploit::Cache::Auxiliary::Class"
+      ]
+
+      "Metasploit::Cache::Auxiliary::Instance":default_auxiliary_action_id -> "Metasploit::Cache::Auxiliary::Action":id [
+        taillabel = "belongs_to :default_auxiliary_action,\nclass_name: 'Metasploit::Cache::Auxiliary::Action'"
       ]
     }
   }
