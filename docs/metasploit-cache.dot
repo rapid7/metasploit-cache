@@ -10,6 +10,10 @@ digraph "metasploit-cache" {
   subgraph cluster_common {
     label = "Common and Unchanged"
 
+    "Metasploit::Cache::Module::Action" [
+      label = "Metasploit::Cache::Module::Action | mc_module_actions | <id>id | <module_instance_id>module_instance_id | name"
+    ]
+
     "Metasploit::Cache::Module::Rank" [
       label = "Metasploit::Cache::Module::Rank | mc_module_ranks | <id>id | name | number"
     ]
@@ -31,7 +35,15 @@ digraph "metasploit-cache" {
     ]
 
     "Before/Metasploit::Cache::Module::Instance" [
-       label = "Metasploit::Cache::Module::Instance | mc_module_instances | default_action_id | default_target_id | description | disclosed_on | license | <module_class_id>module_class_id | name | privileged | stance"
+       label = "Metasploit::Cache::Module::Instance | mc_module_instances | <id>id | <default_action_id>default_action_id | default_target_id | description | disclosed_on | license | <module_class_id>module_class_id | name | privileged | stance"
+    ]
+
+    "Metasploit::Cache::Module::Action":module_instance_id -> "Before/Metasploit::Cache::Module::Instance":id [
+      label = "belongs_to :module_instance"
+    ]
+
+    "Before/Metasploit::Cache::Module::Instance":default_action_id -> "Metasploit::Cache::Module::Action":id [
+      label = "belongs_to :default_action"
     ]
 
     "Before/Metasploit::Cache::Module::Instance":module_class_id -> "Before/Metasploit::Cache::Module::Class":id [
