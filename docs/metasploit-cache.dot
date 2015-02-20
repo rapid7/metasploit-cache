@@ -27,8 +27,9 @@ digraph "metasploit-cache" {
     ]
 
     "Before/Metasploit::Cache::Module::Ancestor":parent_path_id -> "Metasploit::Cache::Module::Path":id [
-      headlabel = "has_many :module_ancestors"
-      taillabel = "belongs_to :parent_path"
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      dir = "both"
     ]
 
     "Before/Metasploit::Cache::Module::Class" [
@@ -36,8 +37,9 @@ digraph "metasploit-cache" {
     ]
 
     "Before/Metasploit::Cache::Module::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
-      headlabel = "has_many :module_classes"
-      taillabel = "belongs_to :rank"
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      dir = "both"
     ]
 
     "Before/Metasploit::Cache::Module::Instance" [
@@ -45,8 +47,9 @@ digraph "metasploit-cache" {
     ]
 
     "Before/Metasploit::Cache::Module::Instance":module_class_id -> "Before/Metasploit::Cache::Module::Class":id [
-      headlabel = "has_one :module_instance"
-      taillabel = "belongs_to :module_class"
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      dir = "both"
     ]
 
     "Before/Metasploit::Cache::Module::Action" [
@@ -54,12 +57,15 @@ digraph "metasploit-cache" {
     ]
 
     "Before/Metasploit::Cache::Module::Instance":default_action_id -> "Before/Metasploit::Cache::Module::Action":id [
-      taillabel = "belongs_to :default_action"
+      arrowhead = "teetee"
+      arrowtail = "teetee"
+      dir = "both"
     ]
 
     "Before/Metasploit::Cache::Module::Action":module_instance_id -> "Before/Metasploit::Cache::Module::Instance":id [
-      headlabel = "has_many :actions"
-      taillabel = "belongs_to :module_instance"
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      dir = "both"
     ]
   }
 
