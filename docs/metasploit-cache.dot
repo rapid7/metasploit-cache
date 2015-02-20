@@ -100,8 +100,17 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Module::Reference":module_instance_id, "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":id [
       headlabel = "has_many :module_references,\nclass_name: 'Metasploit::Cache::Module::Reference'"
       taillabel = "belongs_to :module_instance, polymorphic: true"
-    ]   
-    
+    ]
+
+    "Metasploit::Cache::Exploit::Target" [
+      label = "Metasploit::Cache::Exploit::Target | mc_exploit_targets | <id>id | <exploit_instance_id>exploit_instance_id | index | name"
+    ]
+
+    "Metasploit::Cache::Exploit::Target":exploit_instance_id -> "Metasploit::Cache::Exploit::Instance":id [
+      headlabel = "has_many :targets, class_name: 'Metasploit::Cache::Exploit::Target'"
+      taillabel = "belongs_to :exploit_instance, class_name: 'Metasploit::Cache::Exploit::Instance'"
+    ]
+
     subgraph cluster_mc_module_ancestors {
       label = "Metasploit::Cache::Module::Ancestor STI"
 
@@ -347,7 +356,11 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Exploit::Instance" [
-        label = "Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id>id\n\n\n\n\n\n\n\n | <default_target_index>default_target_index | description | disclosed_on | <exploit_class_id>exploit_class_id | license | name | privileged | stance"
+        label = "Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id>id\n\n\n\n\n\n\n\n | <default_target_id>default_target_id | description | disclosed_on | <exploit_class_id>exploit_class_id | license | name | privileged | stance"
+      ]
+
+      "Metasploit::Cache::Exploit::Instance":default_target_id -> "Metasploit::Cache::Exploit::Target":id [
+        taillabel = "belongs_to :default_target, class_name: 'Metasploit::Cache::Exploit::Target"
       ]
       
       "Metasploit::Cache::Exploit::Instance":exploit_class_id -> "Metasploit::Cache::Exploit::Class":id [
