@@ -1,0 +1,240 @@
+digraph "metasploit-cache" {
+  graph [
+    rankdir = "LR"
+    ranksep = "10.0"
+  ]
+  node [
+    shape = "record"
+  ]
+
+  subgraph cluster_common {
+    label = "Common and Unchanged"
+
+    "Metasploit::Cache::Module::Rank" [
+      label = "Metasploit::Cache::Module::Rank | mc_module_ranks | <id>id | name | number"
+    ]
+  }
+
+  subgraph cluster_before {
+    label = "Before"
+
+    "Before/Metasploit::Cache::Module::Ancestor" [
+      label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | full_name | module_type | parent_path_id | payload_type | reference_name | real_path | real_path_modified_at | real_path_sha1_hex_digest"
+    ]
+
+    "Before/Metasploit::Cache::Module::Class" [
+      label = "Metasploit::Cache::Module::Class | mc_module_classes | full_name | module_type | payload_type | <rank_id>rank_id | reference_name"
+    ]
+
+    "Before/Metasploit::Cache::Module::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
+      label = "belongs_to :rank"
+    ]
+  }
+
+  subgraph cluster_type_sti {
+    label = "module_type + payload_type STI"
+
+    subgraph cluster_mc_module_ancestors {
+      label = "Metasploit::Cache::Module::Ancestor STI"
+
+      "Metasploit::Cache::Module::Ancestor" [
+        label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | id | full_name | parent_path_id | reference_name | real_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
+        style = "dashed"
+      ]
+
+      "Metasploit::Cache::Auxiliary::Ancestor" [
+        label = "Metasploit::Cache::Auxiliary::Ancestor | <id>id | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
+      ]
+
+      "Metasploit::Cache::Auxiliary::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Encoder::Ancestor" [
+        label = "Metasploit::Cache::Encoder::Ancestor | <id>id | type = 'Metasploit::Cache::Encoder::Ancestor'"
+      ]
+
+      "Metasploit::Cache::Encoder::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Exploit::Ancestor" [
+        label = "Metasploit::Cache::Exploit::Ancestor | <id>id | type = 'Metasploit::Cache::Exploit::Ancestor"
+      ]
+
+      "Metasploit::Cache::Exploit::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Nop::Ancestor" [
+        label = "Metasploit::Cache::Nop::Ancestor | <id>id | type = 'Metasploit::Cache::Nop::Ancestor'"
+      ]
+
+      "Metasploit::Cache::Nop::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Payload::Single::Ancestor" [
+        label = "Metasploit::Cache::Payload::Single::Ancestor | <id>id | type = 'Metasploit::Cache::Payload::Single::Ancestor'"
+      ]
+
+      "Metasploit::Cache::Payload::Single::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        label = "subclasses"
+      ]
+      
+      "Metasploit::Cache::Payload::Stage::Ancestor" [
+        label = "Metasploit::Cache::Payload::Stage::Ancestor | <id>id | type = 'Metasploit::Cache::Payload::Stage::Ancestor'"
+      ]
+
+      "Metasploit::Cache::Payload::Stage::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        label = "subclasses"
+      ]
+      
+      "Metasploit::Cache::Payload::Stager::Ancestor" [
+        label = "Metasploit::Cache::Payload::Stager::Ancestor | <id>id | type = 'Metasploit::Cache::Payload::Stager::Ancestor'"
+      ]
+
+      "Metasploit::Cache::Payload::Stager::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        label = "subclasses"
+      ]
+      
+      "Metasploit::Cache::Post::Ancestor" [
+        label = "Metasploit::Cache::Post::Ancestor | <id>id | type = 'Metasploit::Cache::Post::Ancestor'"
+      ]
+
+      "Metasploit::Cache::Post::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        label = "subclasses"
+      ]
+    }
+
+    subgraph cluster_metasploit_cache_class {
+      label = "Metasploit::Cache::*::Class"
+
+      subgraph cluster_metasploit_cache_direct_class {
+        label = "Metasploit::Cache::Direct::Class STI"
+
+        "Metasploit::Cache::Direct::Class" [
+          label = "Metasploit::Cache::Direct::Class | mc_direct_classes | <ancestor_id>ancestor_id | full_name | <rank_id>rank_id | reference_name | type = 'Metasploit::Cache::Direct::Class'"
+          style = "dashed"
+        ]
+
+        "Metasploit::Cache::Direct::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
+          label = "belongs_to :rank"
+        ]
+
+        "Metasploit::Cache::Auxiliary::Class" [
+          label = "Metasploit::Cache::Auxiliary::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Auxiliary::Class'"
+        ]
+
+        "Metasploit::Cache::Auxiliary::Class" -> "Metasploit::Cache::Direct::Class" [
+          label = "subclasses"
+        ]
+
+        "Metasploit::Cache::Auxiliary::Class":ancestor_id -> "Metasploit::Cache::Auxiliary::Ancestor":id [
+          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Auxiliary::Ancestor"
+        ]
+        
+        "Metasploit::Cache::Encoder::Class" [
+          label = "Metasploit::Cache::Encoder::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Encoder::Class'"
+        ]
+
+        "Metasploit::Cache::Encoder::Class" -> "Metasploit::Cache::Direct::Class" [
+          label = "subclasses"
+        ]
+
+        "Metasploit::Cache::Encoder::Class":ancestor_id -> "Metasploit::Cache::Encoder::Ancestor":id [
+          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Encoder::Ancestor"
+        ]
+                
+        "Metasploit::Cache::Exploit::Class" [
+          label = "Metasploit::Cache::Exploit::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Exploit::Class'"
+        ]
+
+        "Metasploit::Cache::Exploit::Class" -> "Metasploit::Cache::Direct::Class" [
+          label = "subclasses"
+        ]
+
+        "Metasploit::Cache::Exploit::Class":ancestor_id -> "Metasploit::Cache::Exploit::Ancestor":id [
+          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Exploit::Ancestor"
+        ]
+        
+        "Metasploit::Cache::Nop::Class" [
+          label = "Metasploit::Cache::Nop::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Nop::Class'"
+        ]
+
+        "Metasploit::Cache::Nop::Class" -> "Metasploit::Cache::Direct::Class" [
+          label = "subclasses"
+        ]
+
+        "Metasploit::Cache::Nop::Class":ancestor_id -> "Metasploit::Cache::Nop::Ancestor":id [
+          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Nop::Ancestor"
+        ]
+        
+        "Metasploit::Cache::Payload::Single::Class" [
+          label = "Metasploit::Cache::Payload::Single::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Single::Class'"
+        ]
+
+        "Metasploit::Cache::Payload::Single::Class" -> "Metasploit::Cache::Direct::Class" [
+          label = "subclasses"
+        ]
+
+        "Metasploit::Cache::Payload::Single::Class":ancestor_id -> "Metasploit::Cache::Payload::Single::Ancestor":id [
+          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Payload::Single::Ancestor"
+        ]
+        
+        "Metasploit::Cache::Payload::Stage::Class" [
+          label = "Metasploit::Cache::Payload::Stage::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Stage::Class'"
+        ]
+
+        "Metasploit::Cache::Payload::Stage::Class" -> "Metasploit::Cache::Direct::Class" [
+          label = "subclasses"
+        ]
+
+        "Metasploit::Cache::Payload::Stage::Class":ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
+          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Payload::Stage::Ancestor"
+        ]
+        
+                
+        "Metasploit::Cache::Payload::Stager::Class" [
+          label = "Metasploit::Cache::Payload::Stager::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Stager::Class'"
+        ]
+
+        "Metasploit::Cache::Payload::Stager::Class" -> "Metasploit::Cache::Direct::Class" [
+          label = "subclasses"
+        ]
+
+        "Metasploit::Cache::Payload::Stager::Class":ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id [
+          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Payload::Stager::Ancestor"
+        ]
+        
+        "Metasploit::Cache::Post::Class" [
+          label = "Metasploit::Cache::Post::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Post::Class'"
+        ]
+
+        "Metasploit::Cache::Post::Class" -> "Metasploit::Cache::Direct::Class" [
+          label = "subclasses"
+        ]
+
+        "Metasploit::Cache::Post::Class":ancestor_id -> "Metasploit::Cache::Post::Ancestor":id [
+          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Post::Ancestor"
+        ]
+      }
+
+      "Metasploit::Cache::Payload::Staged::Class" [
+        label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | full_name | reference_name | <rank_id>rank_id | <stage_ancestor_id>stage_ancestor_id | <stager_ancestor_id>stager_ancestor_id"
+      ]
+      
+      "Metasploit::Cache::Payload::Staged::Class":stage_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
+        label = "belongs_to :stage_ancestor, class_name: 'Metasploit::Cache::Payload::Stage::Ancestor'"
+      ]
+
+      "Metasploit::Cache::Payload::Staged::Class":stager_ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id [
+        label = "belongs_to :stager_ancestor, class_name: 'Metasploit::Cache::Payload::Stager::Ancestor't s"
+      ]
+
+      "Metasploit::Cache::Payload::Staged::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
+        label = "belongs_to :rank"
+      ]
+    }
+  }
+}
