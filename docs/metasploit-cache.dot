@@ -79,7 +79,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Architecture | mc_module_architectures | <architecture_id>architecture_id | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type"
     ]
 
-    "Metasploit::Cache::Module::Architecture":module_instance_id, "Metasploit::Cache::Module::Architecture":module_instance_type -> "Metasploit::Cache::Encoder::Instance":id [
+    "Metasploit::Cache::Module::Architecture":module_instance_id, "Metasploit::Cache::Module::Architecture":module_instance_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Instance":id [
       headlable = "has_many :module_architectures,\nclass_name: 'Metasploit::Cache::Module::Architecture'"
       taillabel = "belongs_to :module_instance, polymorphic: true"
     ]
