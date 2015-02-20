@@ -347,7 +347,7 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Exploit::Instance" [
-        label = "Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id>id | <default_target_index>default_target_index | description | disclosed_on | <exploit_class_id>exploit_class_id | license | name | privileged | stance"
+        label = "Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id>id\n\n\n\n\n\n\n\n | <default_target_index>default_target_index | description | disclosed_on | <exploit_class_id>exploit_class_id | license | name | privileged | stance"
       ]
       
       "Metasploit::Cache::Exploit::Instance":exploit_class_id -> "Metasploit::Cache::Exploit::Class":id [
