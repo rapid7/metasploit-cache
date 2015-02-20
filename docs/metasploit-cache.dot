@@ -10,6 +10,10 @@ digraph "metasploit-cache" {
   subgraph cluster_common {
     label = "Common and Unchanged"
 
+    "Metasploit::Cache::Module::Path" [
+      label = "Metasploit::Cache::Module::Path | mc_module_paths | <id>id | gem | name | real_path"
+    ]
+
     "Metasploit::Cache::Module::Rank" [
       label = "Metasploit::Cache::Module::Rank | mc_module_ranks | <id>id | name | number"
     ]
@@ -70,8 +74,13 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Ancestor STI"
 
       "Metasploit::Cache::Module::Ancestor" [
-        label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | id | parent_path_id | relative_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
+        label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | id | <parent_path_id>parent_path_id | relative_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
         style = "dashed"
+      ]
+
+      "Metasploit::Cache::Module::Ancestor":parent_path_id -> "Metasploit::Cache::Module::Path":id [
+        headlabel = "has_many :module_ancestors,\nclass_name: 'Metasploit::Cache::Module::Ancestor'"
+        taillabel = "belongs_to :parent_path,\nclass_name: 'Metasploit::Cache::Module::Path'"
       ]
 
       "Metasploit::Cache::Auxiliary::Ancestor" [
