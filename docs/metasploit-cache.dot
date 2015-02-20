@@ -264,7 +264,7 @@ digraph "metasploit-cache" {
         taillabel = "belongs_to :stage_payload_ancestor,\nclass_name: 'Metasploit::Cache::Payload::Stage::Ancestor'"
       ]
 
-      "Metasploit::Cache::Payload::Staged::Class":stager_ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id [
+      "Metasploit::Cache::Payload::Staged::Class":stager_payload_ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id [
         headlabel = "has_many :staged_payload_classes,\nclass_name: 'Metasploit::Cache::Payload::Staged::Class'"
         taillabel = "belongs_to :stager_payload_ancestor,\nclass_name: 'Metasploit::Cache::Payload::Stager::Ancestor'"
       ]
