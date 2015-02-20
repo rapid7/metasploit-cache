@@ -89,7 +89,7 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Module::Platform":module_instance_id, "Metasploit::Cache::Module::Platform":module_instance_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Instance":id [
-      headlabel = "has_many :module_platforms,\nclass_name: 'Metasploit::Cache::Module::Platform'"
+      headlabel = "has_many :module_platforms, class_name: 'Metasploit::Cache::Module::Platform'"
       taillabel = "belongs_to :module_instance, polymorphic: true"
     ]
 
@@ -98,7 +98,7 @@ digraph "metasploit-cache" {
     ]
  
     "Metasploit::Cache::Module::Reference":module_instance_id, "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":id [
-      headlabel = "has_many :module_references,\nclass_name: 'Metasploit::Cache::Module::Reference'"
+      headlabel = "has_many :module_references, class_name: 'Metasploit::Cache::Module::Reference'"
       taillabel = "belongs_to :module_instance, polymorphic: true"
     ]
 
