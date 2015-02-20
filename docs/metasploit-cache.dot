@@ -213,7 +213,7 @@ digraph "metasploit-cache" {
         ]
                 
         "Metasploit::Cache::Exploit::Class" [
-          label = "Metasploit::Cache::Exploit::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Exploit::Class'"
+          label = "Metasploit::Cache::Exploit::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Exploit::Class'"
         ]
 
         "Metasploit::Cache::Exploit::Class" -> "Metasploit::Cache::Direct::Class" [
@@ -335,6 +335,15 @@ digraph "metasploit-cache" {
       "Metasploit::Cache::Encoder::Instance":encoder_class_id -> "Metasploit::Cache::Encoder::Class":id [
         headlabel = "has_one :encoder_instance,\nclass_name: 'Metasploit::Cache::Encoder::Instance"
         taillabel = "belongs_to :encoder_class,\nclass_name: 'Metasploit::Cache::Encoder::Class'"
+      ]
+
+      "Metasploit::Cache::Exploit::Instance" [
+        label = "Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id>id | <default_target_index>default_target_index | description | disclosed_on | <exploit_class_id>exploit_class_id | license | name | privileged | stance"
+      ]
+      
+      "Metasploit::Cache::Exploit::Instance":exploit_class_id -> "Metasploit::Cache::Exploit::Class":id [
+        headlabel = "has_one :exploit_instance,\nclass_name: 'Metasploit::Cache::Exploit::Instance"
+        taillabel = "belongs_to :exploit_class,\nclass_name: 'Metasploit::Cache::Exploit::Class'"
       ]
     }
   }
