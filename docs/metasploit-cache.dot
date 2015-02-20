@@ -10,10 +10,6 @@ digraph "metasploit-cache" {
   subgraph cluster_common {
     label = "Common and Unchanged"
 
-    "Metasploit::Cache::Module::Action" [
-      label = "Metasploit::Cache::Module::Action | mc_module_actions | <id>id | <module_instance_id>module_instance_id | name"
-    ]
-
     "Metasploit::Cache::Module::Rank" [
       label = "Metasploit::Cache::Module::Rank | mc_module_ranks | <id>id | name | number"
     ]
@@ -39,23 +35,31 @@ digraph "metasploit-cache" {
        label = "Metasploit::Cache::Module::Instance | mc_module_instances | <id>id | <default_action_id>default_action_id | default_target_id | description | disclosed_on | license | <module_class_id>module_class_id | name | privileged | stance"
     ]
 
-    "Metasploit::Cache::Module::Action":module_instance_id -> "Before/Metasploit::Cache::Module::Instance":id [
-      headlabel = "has_many :actions"
-      taillabel = "belongs_to :module_instance"
-    ]
-
-    "Before/Metasploit::Cache::Module::Instance":default_action_id -> "Metasploit::Cache::Module::Action":id [
-      taillabel = "belongs_to :default_action"
-    ]
-
     "Before/Metasploit::Cache::Module::Instance":module_class_id -> "Before/Metasploit::Cache::Module::Class":id [
       headlabel = "has_one :module_instance"
       taillabel = "belongs_to :module_class"
+    ]
+
+    "Before/Metasploit::Cache::Module::Action" [
+      label = "Metasploit::Cache::Module::Action | mc_module_actions | <id>id | <module_instance_id>module_instance_id | name"
+    ]
+
+    "Before/Metasploit::Cache::Module::Instance":default_action_id -> "Before/Metasploit::Cache::Module::Action":id [
+      taillabel = "belongs_to :default_action"
+    ]
+
+    "Before/Metasploit::Cache::Module::Action":module_instance_id -> "Before/Metasploit::Cache::Module::Instance":id [
+      headlabel = "has_many :actions"
+      taillabel = "belongs_to :module_instance"
     ]
   }
 
   subgraph cluster_type_sti {
     label = "module_type + payload_type STI"
+
+    "Metasploit::Cache::Auxiliary::Action" [
+
+    ]
 
     subgraph cluster_mc_module_ancestors {
       label = "Metasploit::Cache::Module::Ancestor STI"
