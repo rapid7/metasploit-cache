@@ -244,7 +244,7 @@ digraph "metasploit-cache" {
         ]
         
         "Metasploit::Cache::Nop::Class" [
-          label = "Metasploit::Cache::Nop::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Nop::Class'"
+          label = "Metasploit::Cache::Nop::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Nop::Class'"
         ]
 
         "Metasploit::Cache::Nop::Class" -> "Metasploit::Cache::Direct::Class" [
@@ -366,6 +366,15 @@ digraph "metasploit-cache" {
       "Metasploit::Cache::Exploit::Instance":exploit_class_id -> "Metasploit::Cache::Exploit::Class":id [
         headlabel = "has_one :exploit_instance,\nclass_name: 'Metasploit::Cache::Exploit::Instance"
         taillabel = "belongs_to :exploit_class,\nclass_name: 'Metasploit::Cache::Exploit::Class'"
+      ]
+
+      "Metasploit::Cache::Nop::Instance" [
+        label = "Metasploit::Cache::Nop::Instance | mc_nop_instances | <id>id | description | disclosed_on | license | <nop_class_id>nop_class_id | name"
+      ]
+
+      "Metasploit::Cache::Nop::Instance":nop_class_id -> "Metasploit::Cache::Nop::Class":id [
+        headlabel = "has_one :nop_instance"
+        taillabel = "belongs_to :nop_class"
       ]
     }
   }
