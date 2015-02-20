@@ -182,7 +182,7 @@ digraph "metasploit-cache" {
         ]
         
         "Metasploit::Cache::Encoder::Class" [
-          label = "Metasploit::Cache::Encoder::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Encoder::Class'"
+          label = "Metasploit::Cache::Encoder::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Encoder::Class'"
         ]
 
         "Metasploit::Cache::Encoder::Class" -> "Metasploit::Cache::Direct::Class" [
@@ -303,11 +303,20 @@ digraph "metasploit-cache" {
 
       "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
         headlabel = "has_one :auxiliary_instance,\nclass_name: 'Metasploit::Cache::Auxiliary::Instance'"
-        taillabel = "belongs :auxiliary_class,\nclass_name: 'Metasploit::Cache::Auxiliary::Class"
+        taillabel = "belongs :auxiliary_class,\nclass_name: 'Metasploit::Cache::Auxiliary::Class'"
       ]
 
       "Metasploit::Cache::Auxiliary::Instance":default_auxiliary_action_id -> "Metasploit::Cache::Auxiliary::Action":id [
         taillabel = "belongs_to :default_auxiliary_action,\nclass_name: 'Metasploit::Cache::Auxiliary::Action'"
+      ]
+
+      "Metasploit::Cache::Encoder::Instance" [
+        label = "Metasploit::Cache::Encoder::Instance | mc_encoder_instances | description | disclosed_on | <encoder_class_id>encoder_class_id | license | name"
+      ]
+
+      "Metasploit::Cache::Encoder::Instance":encoder_class_id -> "Metasploit::Cache::Encoder::Class":id [
+        headlabel = "has_one :encoder_instance,\nclass_name: 'Metasploit::Cache::Encoder::Instance"
+        taillabel = "belongs_to :encoder_class,\nclass_name: 'Metasploit::Cache::Encoder::Class'"
       ]
     }
   }
