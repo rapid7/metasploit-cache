@@ -85,14 +85,23 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Module::Platform" [
-      label = "Metasploit::Cache::Module::Platform | mc_module_platforms | <platform_id>platform_id | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type"
+      label = "Metasploit::Cache::Module::Platform | mc_module_platforms | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type | <platform_id>platform_id"
     ]
 
     "Metasploit::Cache::Module::Platform":module_instance_id, "Metasploit::Cache::Module::Platform":module_instance_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Instance":id [
-      headlable = "has_many :module_platforms,\nclass_name: 'Metasploit::Cache::Module::Platform'"
+      headlabel = "has_many :module_platforms,\nclass_name: 'Metasploit::Cache::Module::Platform'"
       taillabel = "belongs_to :module_instance, polymorphic: true"
     ]
 
+    "Metasploit::Cache::Module::Reference" [
+      label = "Metasploit::Cache::Module::Reference | mc_module_references | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type | <module_reference_id>reference_id"
+    ]
+ 
+    "Metasploit::Cache::Module::Reference":module_instance_id, "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":id [
+      headlabel = "has_many :module_references,\nclass_name: 'Metasploit::Cache::Module::Reference'"
+      taillabel = "belongs_to :module_instance, polymorphic: true"
+    ]   
+    
     subgraph cluster_mc_module_ancestors {
       label = "Metasploit::Cache::Module::Ancestor STI"
 
