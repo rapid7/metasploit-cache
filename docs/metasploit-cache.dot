@@ -131,7 +131,7 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Auxiliary::Class" [
-          label = "Metasploit::Cache::Auxiliary::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Auxiliary::Class'"
+          label = "Metasploit::Cache::Auxiliary::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Auxiliary::Class'"
         ]
 
         "Metasploit::Cache::Auxiliary::Class" -> "Metasploit::Cache::Direct::Class" [
@@ -242,6 +242,18 @@ digraph "metasploit-cache" {
 
       "Metasploit::Cache::Payload::Staged::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
         label = "belongs_to :rank"
+      ]
+    }
+
+    subgraph cluster_metasploit_cache_instance {
+      label = "Metasploit::Cache::*::Instance"
+
+      "Metasploit::Cache::Auxiliary::Instance" [
+        label = "Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_action_id>default_action_id | description | disclosed_on | license | name | stance"
+      ]
+
+      "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
+        label = "belongs :auxiliary_class"
       ]
     }
   }
