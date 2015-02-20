@@ -71,7 +71,7 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Module::Action":module_instance_id, "Metasploit::Cache::Module::Action":module_instance_type -> "Metasploit::Cache::Auxiliary::Instance":id [
-      headlable = "has_many :module_actions"
+      headlabel = "has_many :module_actions"
       taillabel = "belongs_to :module_instance, polymorphic: true"
     ]
 
@@ -79,8 +79,8 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Architecture | mc_module_architectures | <architecture_id>architecture_id | <architecturable_id>architecturable_id | <architecturable_type>architecturable_type"
     ]
 
-    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id [
-      headlable = "has_many :module_architectures"
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Nop::Instance":id [
+      headlabel = "has_many :module_architectures"
       taillabel = "belongs_to :architecturable, polymorphic: true"
     ]
 
