@@ -1,7 +1,7 @@
 digraph "metasploit-cache" {
   graph [
     rankdir = "LR"
-    ranksep = "10.0"
+    ranksep = "20.0"
   ]
   node [
     shape = "record"
@@ -31,7 +31,8 @@ digraph "metasploit-cache" {
     ]
 
     "Before/Metasploit::Cache::Module::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
-      label = "belongs_to :rank"
+      headlabel = "has_many :module_classes"
+      taillabel = "belongs_to :rank"
     ]
 
     "Before/Metasploit::Cache::Module::Instance" [
@@ -39,15 +40,17 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Module::Action":module_instance_id -> "Before/Metasploit::Cache::Module::Instance":id [
-      label = "belongs_to :module_instance"
+      headlabel = "has_many :actions"
+      taillabel = "belongs_to :module_instance"
     ]
 
     "Before/Metasploit::Cache::Module::Instance":default_action_id -> "Metasploit::Cache::Module::Action":id [
-      label = "belongs_to :default_action"
+      taillabel = "belongs_to :default_action"
     ]
 
     "Before/Metasploit::Cache::Module::Instance":module_class_id -> "Before/Metasploit::Cache::Module::Class":id [
-      label = "belongs_to :module_class"
+      headlabel = "has_one :module_instance"
+      taillabel = "belongs_to :module_class"
     ]
   }
 
@@ -139,7 +142,7 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Direct::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
-          label = "belongs_to :rank"
+          taillabel = "belongs_to :rank"
         ]
 
         "Metasploit::Cache::Auxiliary::Class" [
@@ -151,7 +154,8 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Auxiliary::Class":ancestor_id -> "Metasploit::Cache::Auxiliary::Ancestor":id [
-          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Auxiliary::Ancestor"
+          headlabel = "has_one :auxiliary_class,\nclass_name: 'Metasploit::Cache::Auxiliary::Class'"
+          taillabel = "belongs_to :auxiliary_ancestor,\nclass_name: 'Metasploit::Cache::Auxiliary::Ancestor'"
         ]
         
         "Metasploit::Cache::Encoder::Class" [
@@ -163,7 +167,8 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Encoder::Class":ancestor_id -> "Metasploit::Cache::Encoder::Ancestor":id [
-          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Encoder::Ancestor"
+          headlabel = "has_one :encoder_class,\nclass_name: 'Metasploit::Cache::Encoder::Class'"
+          taillabel = "belongs_to :encoder_ancestor,\nclass_name: 'Metasploit::Cache::Encoder::Ancestor'"
         ]
                 
         "Metasploit::Cache::Exploit::Class" [
@@ -175,7 +180,8 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Exploit::Class":ancestor_id -> "Metasploit::Cache::Exploit::Ancestor":id [
-          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Exploit::Ancestor"
+          headlabel = "has_one :exploit_class,\nclass_name: 'Metasploit::Cache::Module::Exploit'"
+          taillabel = "belongs_to :exploit_ancestor,\nclass_name: 'Metasploit::Cache::Exploit::Ancestor'"
         ]
         
         "Metasploit::Cache::Nop::Class" [
@@ -187,7 +193,8 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Nop::Class":ancestor_id -> "Metasploit::Cache::Nop::Ancestor":id [
-          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Nop::Ancestor"
+          headlabel = "has_one :nop_class,\nclass_name: 'Metasploit::Cache::Nop::Class'"
+          taillabel = "belongs_to :nop_ancestor,\nclass_name: 'Metasploit::Cache::Nop::Ancestor'"
         ]
         
         "Metasploit::Cache::Payload::Single::Class" [
@@ -199,7 +206,8 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Payload::Single::Class":ancestor_id -> "Metasploit::Cache::Payload::Single::Ancestor":id [
-          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Payload::Single::Ancestor"
+          headlabel = "has_one :single_payload_class,\nclass_name: 'Metasploit::Cache::Payload::Single::Class'"
+          taillabel = "belongs_to :single_payload_ancestor,\nclass_name: 'Metasploit::Cache::Payload::Single::Ancestor'"
         ]
         
         "Metasploit::Cache::Payload::Stage::Class" [
@@ -211,7 +219,8 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Payload::Stage::Class":ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
-          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Payload::Stage::Ancestor"
+          headlabel = "has_one :stage_payload_class,\nclass_name: 'Metasploit::Cache::Payload::Stage::Ancestor'"
+          taillabel = "belongs_to :stage_payload_ancestor,\nclass_name: 'Metasploit::Cache::Payload::Stage::Ancestor'"
         ]
         
                 
@@ -224,7 +233,8 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Payload::Stager::Class":ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id [
-          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Payload::Stager::Ancestor"
+          headlabel = "has_one :stager_payload_class\nclass_name: 'Metasploit::Cache::Payload::Stager::Class'"
+          taillabel = "belongs_to :ancestor,\nclass_name: 'Metasploit::Cache::Payload::Stager::Ancestor'"
         ]
         
         "Metasploit::Cache::Post::Class" [
@@ -236,24 +246,28 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Post::Class":ancestor_id -> "Metasploit::Cache::Post::Ancestor":id [
-          label = "belongs_to :ancestor, class_name: 'Metasploit::Cache::Post::Ancestor"
+          headlabel = "has_one :post_class,\nclass_name: 'Metasploit::Cache::Post::Class'"
+          taillabel = "belongs_to :post_ancestor,\nclass_name: 'Metasploit::Cache::Post::Ancestor'"
         ]
       }
 
       "Metasploit::Cache::Payload::Staged::Class" [
-        label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | reference_name | <rank_id>rank_id | <stage_ancestor_id>stage_ancestor_id | <stager_ancestor_id>stager_ancestor_id"
+        label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | reference_name | <rank_id>rank_id | <stage_payload_ancestor_id>stage_ancestor_id | <stager_payload_ancestor_id>stager_payload_ancestor_id"
       ]
       
-      "Metasploit::Cache::Payload::Staged::Class":stage_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
-        label = "belongs_to :stage_ancestor, class_name: 'Metasploit::Cache::Payload::Stage::Ancestor'"
+      "Metasploit::Cache::Payload::Staged::Class":stage_payload_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
+        headlabel = "has_many :staged_payload_classes,\nclass_name: 'Metasploit::Cache::Payload::Staged::Class'"
+        taillabel = "belongs_to :stage_payload_ancestor,\nclass_name: 'Metasploit::Cache::Payload::Stage::Ancestor'"
       ]
 
       "Metasploit::Cache::Payload::Staged::Class":stager_ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id [
-        label = "belongs_to :stager_ancestor, class_name: 'Metasploit::Cache::Payload::Stager::Ancestor't s"
+        headlabel = "has_many :staged_payload_classes,\nclass_name: 'Metasploit::Cache::Payload::Staged::Class'"
+        taillabel = "belongs_to :stager_payload_ancestor,\nclass_name: 'Metasploit::Cache::Payload::Stager::Ancestor'"
       ]
 
       "Metasploit::Cache::Payload::Staged::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
-        label = "belongs_to :rank"
+        headlabel = "has_many :staged_payload_classes,\nclass_name: 'Metasploit::Cache::Payload::Staged::Class'"
+        taillabel = "belongs_to :rank"
       ]
     }
 
@@ -265,7 +279,8 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
-        label = "belongs :auxiliary_class"
+        headlabel = "has_one :auxiliary_instance,\nclass_name: 'Metasploit::Cache::Auxiliary::Instance'"
+        taillabel = "belongs :auxiliary_class,\nclass_name: 'Metasploit::Cache::Auxiliary::Class"
       ]
     }
   }
