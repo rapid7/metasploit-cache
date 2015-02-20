@@ -66,8 +66,13 @@ digraph "metasploit-cache" {
   subgraph cluster_type_sti {
     label = "module_type + payload_type STI"
 
-    "Metasploit::Cache::Auxiliary::Action" [
-      label = "Metasploit::Cache::Auxiliary::Action | mc_auxiliary_actions | <id>id | <auxiliary_instance_id>auxiliary_instance_id | name"
+    "Metasploit::Cache::Module::Action" [
+      label = "Metasploit::Cache::Module::Action | mc_module_actions | <id>id | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type | name"
+    ]
+
+    "Metasploit::Cache::Module::Action":module_instance_id, "Metasploit::Cache::Module::Action":module_instance_type -> "Metasploit::Cache::Auxiliary::Instance":id [
+      headlable = "has_many :module_actions,\nclass_name: 'Metasploit::Cache::Module::Actions'"
+      taillabel = "belongs_to :module_instance, polymorphic: true"
     ]
 
     "Metasploit::Cache::Module::Architecture" [
@@ -77,11 +82,6 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Module::Architecture":module_instance_id, "Metasploit::Cache::Module::Architecture":module_instance_type -> "Metasploit::Cache::Encoder::Instance":id [
       headlable = "has_many :module_architectures,\nclass_name: 'Metasploit::Cache::Module::Architecture'"
       taillabel = "belongs_to :module_instance, polymorphic: true"
-    ]
-
-    "Metasploit::Cache::Auxiliary::Action":auxiliary_instance_id -> "Metasploit::Cache::Auxiliary::Instance":id [
-      headlabel = "has_many :auxiliary_actions,\nclass_name: 'Metasploit::Cache::Auxiliary::Action'"
-      taillabel = "belongs_to :auxiliary_instance,\nclass_name: 'Metasploit::Cache::Auxiliary::Instance'"
     ]
 
     "Metasploit::Cache::Module::Platform" [
@@ -316,7 +316,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::*::Instance"
 
       "Metasploit::Cache::Auxiliary::Instance" [
-        label = "Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_auxiliary_action_id>default_auxiliary_action_id | description | disclosed_on | license | name | stance"
+        label = "Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | license | name | stance"
       ]
 
       "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
@@ -324,8 +324,8 @@ digraph "metasploit-cache" {
         taillabel = "belongs :auxiliary_class,\nclass_name: 'Metasploit::Cache::Auxiliary::Class'"
       ]
 
-      "Metasploit::Cache::Auxiliary::Instance":default_auxiliary_action_id -> "Metasploit::Cache::Auxiliary::Action":id [
-        taillabel = "belongs_to :default_auxiliary_action,\nclass_name: 'Metasploit::Cache::Auxiliary::Action'"
+      "Metasploit::Cache::Auxiliary::Instance":default_module_action_id -> "Metasploit::Cache::Module::Action":id [
+        taillabel = "belongs_to :default_module_action,\nclass_name: 'Metasploit::Cache::Module::Action'"
       ]
 
       "Metasploit::Cache::Encoder::Instance" [
