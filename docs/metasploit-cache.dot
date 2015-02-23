@@ -177,7 +177,7 @@ digraph "metasploit-cache" {
       ]
       
       "Metasploit::Cache::Payload::Stage::Ancestor" [
-        label = "Metasploit::Cache::Payload::Stage::Ancestor | <id>id | type = 'Metasploit::Cache::Payload::Stage::Ancestor'"
+        label = "Metasploit::Cache::Payload::Stage::Ancestor | <id_to_ancestor_id>id | <id_to_stage_payload_ancestor_id>id | type = 'Metasploit::Cache::Payload::Stage::Ancestor'"
       ]
 
       "Metasploit::Cache::Payload::Stage::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
@@ -296,7 +296,7 @@ digraph "metasploit-cache" {
           label = "subclasses"
         ]
 
-        "Metasploit::Cache::Payload::Stage::Class":ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
+        "Metasploit::Cache::Payload::Stage::Class":ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id_to_ancestor_id [
           arrowhead = "teeodot"
           arrowtail = "teetee"
           dir = "both"
@@ -336,7 +336,7 @@ digraph "metasploit-cache" {
         label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | reference_name | <rank_id>rank_id | <stage_payload_ancestor_id>stage_ancestor_id | <stager_payload_ancestor_id>stager_payload_ancestor_id"
       ]
       
-      "Metasploit::Cache::Payload::Staged::Class":stage_payload_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
+      "Metasploit::Cache::Payload::Staged::Class":stage_payload_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id_to_stage_payload_ancestor_id [
         arrowhead = "crowodot"
         arrowtail = "teetee"
         dir = "both"
