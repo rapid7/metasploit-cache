@@ -106,7 +106,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Reference | mc_module_references | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type | <module_reference_id>reference_id"
     ]
  
-    "Metasploit::Cache::Module::Reference":module_instance_id, "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":id [
+    "Metasploit::Cache::Module::Reference":module_instance_id, "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":id_to_module_instance [
       arrowhead = "crowtee"
       arrowhead = "teetee"
       dir = "both"
@@ -116,7 +116,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Exploit::Target | mc_exploit_targets | <id>id | <exploit_instance_id>exploit_instance_id | index | name"
     ]
 
-    "Metasploit::Cache::Exploit::Target":exploit_instance_id -> "Metasploit::Cache::Exploit::Instance":id [
+    "Metasploit::Cache::Exploit::Target":exploit_instance_id -> "Metasploit::Cache::Exploit::Instance":id_to_exploit_instance_id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -385,7 +385,7 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Exploit::Instance" [
-        label = "Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id>id\n\n\n\n\n\n\n\n | <default_target_id>default_target_id | description | disclosed_on | <exploit_class_id>exploit_class_id | license | name | privileged | stance"
+        label = "Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id_to_module_instance>id | <id_to_exploit_instance_id>id | <default_target_id>default_target_id | description | disclosed_on | <exploit_class_id>exploit_class_id | license | name | privileged | stance"
       ]
 
       "Metasploit::Cache::Exploit::Instance":default_target_id -> "Metasploit::Cache::Exploit::Target":id [
