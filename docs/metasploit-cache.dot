@@ -77,8 +77,9 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Module::Action":module_instance_id, "Metasploit::Cache::Module::Action":module_instance_type -> "Metasploit::Cache::Auxiliary::Instance":id [
-      headlabel = "has_many :module_actions"
-      taillabel = "belongs_to :module_instance, polymorphic: true"
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      dir = "both"
     ]
 
     "Metasploit::Cache::Module::Architecture" [
@@ -86,8 +87,9 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Nop::Instance":id [
-      headlabel = "has_many :module_architectures"
-      taillabel = "belongs_to :architecturable, polymorphic: true"
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      dir = "both"
     ]
 
     "Metasploit::Cache::Module::Platform" [
@@ -95,8 +97,9 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id [
-      headlabel = "has_many :module_platforms"
-      taillabel = "belongs_to :platformable, polymorphic: true"
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      dir = "both"
     ]
 
     "Metasploit::Cache::Module::Reference" [
@@ -104,8 +107,9 @@ digraph "metasploit-cache" {
     ]
  
     "Metasploit::Cache::Module::Reference":module_instance_id, "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":id [
-      headlabel = "has_many :module_references"
-      taillabel = "belongs_to :module_instance, polymorphic: true"
+      arrowhead = "crowtee"
+      arrowhead = "teetee"
+      dir = "both"
     ]
 
     "Metasploit::Cache::Exploit::Target" [
@@ -113,8 +117,9 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Exploit::Target":exploit_instance_id -> "Metasploit::Cache::Exploit::Instance":id [
-      headlabel = "has_many :targets"
-      taillabel = "belongs_to :exploit_instance"
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      dir = "both"
     ]
 
     subgraph cluster_mc_module_ancestors {
@@ -126,8 +131,9 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Module::Ancestor":parent_path_id -> "Metasploit::Cache::Module::Path":id [
-        headlabel = "has_many :module_ancestors"
-        taillabel = "belongs_to :parent_path"
+        arrowhead = "crowodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
 
       "Metasploit::Cache::Auxiliary::Ancestor" [
@@ -207,7 +213,9 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Direct::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
-          taillabel = "belongs_to :rank"
+          arrowhead = "crowodot"
+          arrowtail = "teetee"
+          dir = "both"
         ]
 
         "Metasploit::Cache::Auxiliary::Class" [
@@ -219,8 +227,9 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Auxiliary::Class":ancestor_id -> "Metasploit::Cache::Auxiliary::Ancestor":id [
-          headlabel = "has_one :auxiliary_class"
-          taillabel = "belongs_to :auxiliary_ancestor"
+          arrowhead = "teeodot"
+          arrowtail = "teetee"
+          dir = "both"
         ]
         
         "Metasploit::Cache::Encoder::Class" [
@@ -232,8 +241,9 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Encoder::Class":ancestor_id -> "Metasploit::Cache::Encoder::Ancestor":id [
-          headlabel = "has_one :encoder_class"
-          taillabel = "belongs_to :encoder_ancestor"
+          arrowhead = "teeodot"
+          arrowtail = "teetee"
+          dir = "both"
         ]
                 
         "Metasploit::Cache::Exploit::Class" [
@@ -245,8 +255,9 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Exploit::Class":ancestor_id -> "Metasploit::Cache::Exploit::Ancestor":id [
-          headlabel = "has_one :exploit_class"
-          taillabel = "belongs_to :exploit_ancestor"
+          arrowhead = "teeodot"
+          arrowtail = "teetee"
+          dir = "both"
         ]
         
         "Metasploit::Cache::Nop::Class" [
@@ -258,8 +269,9 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Nop::Class":ancestor_id -> "Metasploit::Cache::Nop::Ancestor":id [
-          headlabel = "has_one :nop_class"
-          taillabel = "belongs_to :nop_ancestor"
+          arrowhead = "teeodot"
+          arrowtail = "teetee"
+          dir = "both"
         ]
         
         "Metasploit::Cache::Payload::Single::Class" [
@@ -271,8 +283,9 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Payload::Single::Class":ancestor_id -> "Metasploit::Cache::Payload::Single::Ancestor":id [
-          headlabel = "has_one :single_payload_class"
-          taillabel = "belongs_to :single_payload_ancestor"
+          arrowhead = "teeodot"
+          arrowtail = "teetee"
+          dir = "both"
         ]
         
         "Metasploit::Cache::Payload::Stage::Class" [
@@ -284,8 +297,9 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Payload::Stage::Class":ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
-          headlabel = "has_one :stage_payload_class"
-          taillabel = "belongs_to :stage_payload_ancestor"
+          arrowhead = "teeodot"
+          arrowtail = "teetee"
+          dir = "both"
         ]
         
                 
@@ -298,8 +312,9 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Payload::Stager::Class":ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id [
-          headlabel = "has_one :stager_payload_class"
-          taillabel = "belongs_to :stager_payload_ancestor"
+          arrowhead = "teeodot"
+          arrowtail = "teetee"
+          dir = "both"
         ]
         
         "Metasploit::Cache::Post::Class" [
@@ -311,8 +326,9 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Post::Class":ancestor_id -> "Metasploit::Cache::Post::Ancestor":id [
-          headlabel = "has_one :post_class"
-          taillabel = "belongs_to :post_ancestor"
+          arrowhead = "teeodot"
+          arrowtail = "teetee"
+          dir = "both"
         ]
       }
 
@@ -321,18 +337,21 @@ digraph "metasploit-cache" {
       ]
       
       "Metasploit::Cache::Payload::Staged::Class":stage_payload_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id [
-        headlabel = "has_many :staged_payload_classes"
-        taillabel = "belongs_to :stage_payload_ancestor"
+        arrowhead = "crowodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
 
       "Metasploit::Cache::Payload::Staged::Class":stager_payload_ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id [
-        headlabel = "has_many :staged_payload_classes"
-        taillabel = "belongs_to :stager_payload_ancestor"
+          arrowhead = "crowodot"
+          arrowtail = "teetee"
+          dir = "both"
       ]
 
       "Metasploit::Cache::Payload::Staged::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
-        headlabel = "has_many :staged_payload_classes"
-        taillabel = "belongs_to :rank"
+          arrowhead = "crowodot"
+          arrowtail = "teetee"
+          dir = "both"
       ]
     }
 
@@ -344,12 +363,15 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
-        headlabel = "has_one :auxiliary_instance"
-        taillabel = "belongs :auxiliary_class"
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
 
       "Metasploit::Cache::Auxiliary::Instance":default_module_action_id -> "Metasploit::Cache::Module::Action":id [
-        taillabel = "belongs_to :default_module_action"
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
 
       "Metasploit::Cache::Encoder::Instance" [
@@ -357,8 +379,9 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Encoder::Instance":encoder_class_id -> "Metasploit::Cache::Encoder::Class":id [
-        headlabel = "has_one :encoder_instance"
-        taillabel = "belongs_to :encoder_class"
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
 
       "Metasploit::Cache::Exploit::Instance" [
@@ -366,12 +389,15 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Exploit::Instance":default_target_id -> "Metasploit::Cache::Exploit::Target":id [
-        taillabel = "belongs_to :default_target"
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
       
       "Metasploit::Cache::Exploit::Instance":exploit_class_id -> "Metasploit::Cache::Exploit::Class":id [
-        headlabel = "has_one :exploit_instance"
-        taillabel = "belongs_to :exploit_class"
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
 
       "Metasploit::Cache::Nop::Instance" [
@@ -379,8 +405,9 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Nop::Instance":nop_class_id -> "Metasploit::Cache::Nop::Class":id [
-        headlabel = "has_one :nop_instance"
-        taillabel = "belongs_to :nop_class"
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
     }
   }
