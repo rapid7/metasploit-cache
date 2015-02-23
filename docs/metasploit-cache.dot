@@ -86,7 +86,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Architecture | mc_module_architectures | <architecture_id>architecture_id | <architecturable_id>architecturable_id | <architecturable_type>architecturable_type"
     ]
 
-    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Nop::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Nop::Instance":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -96,7 +96,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Platform | mc_module_platforms | <platformable_id>platformable_id | <platformable_type>platform_type | <platform_id>platform_id"
     ]
 
-    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -275,7 +275,7 @@ digraph "metasploit-cache" {
         ]
         
         "Metasploit::Cache::Payload::Single::Class" [
-          label = "Metasploit::Cache::Payload::Single::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Single::Class'"
+          label = "Metasploit::Cache::Payload::Single::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Single::Class'"
         ]
 
         "Metasploit::Cache::Payload::Single::Class" -> "Metasploit::Cache::Direct::Class" [
@@ -405,6 +405,16 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Nop::Instance":nop_class_id -> "Metasploit::Cache::Nop::Class":id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
+      ]
+
+      "Metasploit::Cache::Payload::Single::Instance" [
+        label = "Metasploit::Cache::Payload::Single::Instance | mc_payload_single_instances | <id>id | description | disclosed_on | license | name | privileged | <single_payload_class_id>single_payload_class_id"
+      ]
+
+      "Metasploit::Cache::Payload::Single::Instance":single_payload_class_id -> "Metasploit::Cache::Payload::Single::Class":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
         dir = "both"
