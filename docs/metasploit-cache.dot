@@ -76,7 +76,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Action | mc_module_actions | <id>id | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type | name"
     ]
 
-    "Metasploit::Cache::Module::Action":module_instance_id, "Metasploit::Cache::Module::Action":module_instance_type -> "Metasploit::Cache::Auxiliary::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Action":module_instance_id, "Metasploit::Cache::Module::Action":module_instance_type -> "Metasploit::Cache::Auxiliary::Instance":id, "Metasploit::Cache::Post::Instance":id_for_action [
       arrowhead = "crowodot"
       arrowtail = "teetee"
       dir = "both"
@@ -411,7 +411,7 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Post::Instance" [
-        label = "Metasploit::Cache::Post::Instance | mc_post_instances | <id>id | <default_module_action_id>default_module_action_id | description | disclosed_on | license | <post_class_id>post_class_id | name | privileged"
+        label = "Metasploit::Cache::Post::Instance | mc_post_instances | <id>id | <id_for_action>id | <default_module_action_id>default_module_action_id | description | disclosed_on | license | <post_class_id>post_class_id | name | privileged"
       ]
 
       "Metasploit::Cache::Post::Instance":default_module_action_id -> "Metasploit::Cache::Module::Action":id [
