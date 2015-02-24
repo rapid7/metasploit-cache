@@ -743,7 +743,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Payload::Staged::Class" [
       color = "/paired9/7"
       fontcolor = "/paired9/7"
-      label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | <id>id | reference_name | <rank_id>rank_id | <stage_payload_ancestor_id>stage_ancestor_id | <stager_payload_ancestor_id>stager_payload_ancestor_id"
+      label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | <id>id | <rank_id>rank_id | <stage_payload_ancestor_id>stage_ancestor_id | <stager_payload_ancestor_id>stager_payload_ancestor_id"
     ]
 
     "Metasploit::Cache::Payload::Staged::Class":stage_payload_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id_to_stage_payload_ancestor_id [
