@@ -32,6 +32,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Module::Action":module_instance_id, "Metasploit::Cache::Module::Action":module_instance_type -> "Metasploit::Cache::Post::Instance":id_for_action [
       arrowhead = "crowodot"
       arrowtail = "teetee"
+      color = "/paired9/9"
       dir = "both"
     ]
 
@@ -74,7 +75,14 @@ digraph "metasploit-cache" {
       dir = "both"
     ]
 
-    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Post::Instance":id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/paired9/9"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -109,7 +117,14 @@ digraph "metasploit-cache" {
       dir = "both"
     ]
 
-    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Post::Instance":id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/paired9/9"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Stager::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -236,10 +251,14 @@ digraph "metasploit-cache" {
       ]
       
       "Metasploit::Cache::Post::Ancestor" [
+        color = "/paired9/9"
+        fontcolor = "/paired9/9"
         label = "Metasploit::Cache::Post::Ancestor | <id>id | type = 'Metasploit::Cache::Post::Ancestor'"
       ]
 
       "Metasploit::Cache::Post::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        color = "/paired9/9"
+        fontcolor = "/paired9/9"
         label = "subclasses"
       ]
     }
@@ -396,16 +415,21 @@ digraph "metasploit-cache" {
         ]
         
         "Metasploit::Cache::Post::Class" [
+          color = "/paired9/9"
+          fontcolor = "/paired9/9"
           label = "Metasploit::Cache::Post::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Post::Class'"
         ]
 
         "Metasploit::Cache::Post::Class" -> "Metasploit::Cache::Direct::Class" [
+          color = "/paired9/9"
+          fontcolor = "/paired9/9"
           label = "subclasses"
         ]
 
         "Metasploit::Cache::Post::Class":ancestor_id -> "Metasploit::Cache::Post::Ancestor":id [
           arrowhead = "teeodot"
           arrowtail = "teetee"
+          color = "/paired9/9"
           dir = "both"
         ]
       }
@@ -587,18 +611,22 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Post::Instance" [
+        color = "/paired9/9"
+        fontcolor = "/paired9/9"
         label = "Metasploit::Cache::Post::Instance | mc_post_instances | <id>id | <id_for_action>id | <default_module_action_id>default_module_action_id | description | disclosed_on | license | <post_class_id>post_class_id | name | privileged"
       ]
 
       "Metasploit::Cache::Post::Instance":default_module_action_id -> "Metasploit::Cache::Module::Action":id [
         arrowhead = "teeodot"
         arrowtail = "teeodot"
+        color = "/paired9/9"
         dir = "both"
       ]
 
       "Metasploit::Cache::Post::Instance":post_class_id -> "Metasploit::Cache::Post::Class":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "/paired9/9"
         dir = "both"
       ]
     }
