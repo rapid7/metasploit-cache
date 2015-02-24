@@ -398,6 +398,20 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
+  "Metasploit::Cache::Referenceable::Reference":referenceable_id -> "Metasploit::Cache::Post::Instance":id_for_action [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Referenceable::Reference":referenceable_type -> "Metasploit::Cache::Post::Instance":type_for_actionable_type [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
   "Metasploit::Cache::Exploit::Target" [
     color = "/paired9/3"
     fontcolor = "/paired9/3"
