@@ -76,7 +76,14 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Action | mc_module_actions | <id>id | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type | name"
     ]
 
-    "Metasploit::Cache::Module::Action":module_instance_id, "Metasploit::Cache::Module::Action":module_instance_type -> "Metasploit::Cache::Auxiliary::Instance":id, "Metasploit::Cache::Post::Instance":id_for_action [
+    "Metasploit::Cache::Module::Action":module_instance_id, "Metasploit::Cache::Module::Action":module_instance_type -> "Metasploit::Cache::Auxiliary::Instance":id [
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      color = "red"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Module::Action":module_instance_id, "Metasploit::Cache::Module::Action":module_instance_type -> "Metasploit::Cache::Post::Instance":id_for_action [
       arrowhead = "crowodot"
       arrowtail = "teetee"
       dir = "both"
@@ -141,10 +148,14 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Auxiliary::Ancestor" [
+        fontcolor = "red"
         label = "Metasploit::Cache::Auxiliary::Ancestor | <id>id | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
+        color = "red"
       ]
 
       "Metasploit::Cache::Auxiliary::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        color = "red"
+        fontcolor = "red"
         label = "subclasses"
       ]
 
@@ -223,16 +234,21 @@ digraph "metasploit-cache" {
         ]
 
         "Metasploit::Cache::Auxiliary::Class" [
+          color = "red"
+          fontcolor = "red"
           label = "Metasploit::Cache::Auxiliary::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Auxiliary::Class'"
         ]
 
         "Metasploit::Cache::Auxiliary::Class" -> "Metasploit::Cache::Direct::Class" [
+          color = "red"
+          fontcolor = "red"
           label = "subclasses"
         ]
 
         "Metasploit::Cache::Auxiliary::Class":ancestor_id -> "Metasploit::Cache::Auxiliary::Ancestor":id [
           arrowhead = "teeodot"
           arrowtail = "teetee"
+          color = "red"
           dir = "both"
         ]
         
@@ -363,18 +379,22 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::*::Instance"
 
       "Metasploit::Cache::Auxiliary::Instance" [
+        color = "red"
+        fontcolor = "red"
         label = "Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | license | name | stance"
       ]
 
       "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "red"
         dir = "both"
       ]
 
       "Metasploit::Cache::Auxiliary::Instance":default_module_action_id -> "Metasploit::Cache::Module::Action":id [
         arrowhead = "teeodot"
         arrowtail = "teeodot"
+        color = "red"
         dir = "both"
       ]
 
