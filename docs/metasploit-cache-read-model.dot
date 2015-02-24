@@ -64,6 +64,20 @@ digraph "Metasploit::Cache Read Model" {
     label = "Metasploit::Cache::Referenceable::Reference | mc_referenceable_references | <referenceable_id>referenceable_id | <referenceable_type>referenceable_type | reference_id"
   ]
 
+  "Metasploit::Cache::Referenceable::Reference":referenceable_id -> "Metasploit::Cache::Auxiliary::Unified":id_for_referenceable_id [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Referenceable::Reference":referenceable_type -> "Metasploit::Cache::Auxiliary::Unified":type_for_referenceable_type [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
   subgraph cluster_metasploit_cache_unified {
     color = "white"
     fontcolor = "white"
@@ -72,7 +86,7 @@ digraph "Metasploit::Cache Read Model" {
     "Metasploit::Cache::Auxiliary::Unified" [
       color = "/paired9/1"
       fontcolor = "/paired9/1"
-      label = "<type_for_actionable_type>Metasploit::Cache::Auxiliary::Unified | <type_for_licensable_type>Metasploit::Cache;:Auxiliary::Unified | mc_auxiliary_unified | <default_action_id>default_action_id | description | disclosed_on | <id_for_actionable_id>id | <id_for_licensable_id>id | name | rank_id | stance"
+      label = "<type_for_actionable_type>Metasploit::Cache::Auxiliary::Unified | <type_for_licensable_type>Metasploit::Cache::Auxiliary::Unified | <type_for_referenceable_type>Metasploit::Cache::Auxiliary::Unified | mc_auxiliary_unified | <default_action_id>default_action_id | description | disclosed_on | <id_for_actionable_id>id | <id_for_licensable_id>id | <id_for_referenceable_id>id | name | rank_id | stance"
     ]
 
     "Metasploit::Cache::Auxiliary::Unified":default_action_id -> "Metasploit::Cache::Actionable::Action":id [
