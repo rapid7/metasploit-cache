@@ -185,7 +185,7 @@ digraph "Metasploit::Cache Read Model" {
     "Metasploit::Cache::Auxiliary::Unified" [
       color = "/paired9/1"
       fontcolor = "/paired9/1"
-      label = "<type_for_actionable_type>Metasploit::Cache::Auxiliary::Unified | <type_for_contributable_type>Metasploit::Cache::Auxiliary::Unified | <type_for_licensable_type>Metasploit::Cache::Auxiliary::Unified | <type_for_referenceable_type>Metasploit::Cache::Auxiliary::Unified | mc_auxiliary_unified | <auxiliary_ancestor_id>auxiliary_ancestor_id | <default_action_id>default_action_id | description | disclosed_on | full_name | <id_for_actionable_id>id | <id_for_contributable_id>id | <id_for_licensable_id>id | <id_for_referenceable_id>id | module_type | name | reference_name | rank_id | stance"
+      label = "<type_for_actionable_type>Metasploit::Cache::Auxiliary::Unified | <type_for_contributable_type>Metasploit::Cache::Auxiliary::Unified | <type_for_licensable_type>Metasploit::Cache::Auxiliary::Unified | <type_for_referenceable_type>Metasploit::Cache::Auxiliary::Unified | mc_auxiliary_unifieds | <auxiliary_ancestor_id>auxiliary_ancestor_id | <default_action_id>default_action_id | description | disclosed_on | full_name | <id_for_actionable_id>id | <id_for_contributable_id>id | <id_for_licensable_id>id | <id_for_referenceable_id>id | module_type | name | reference_name | rank_id | stance"
     ]
 
     "Metasploit::Cache::Auxiliary::Unified":auxiliary_ancestor_id -> "Metasploit::Cache::Auxiliary::Ancestor":id [
