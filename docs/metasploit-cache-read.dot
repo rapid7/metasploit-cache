@@ -1,0 +1,52 @@
+digraph "Metasploit::Cache Read Model" {
+  edge [
+    color = "white"
+    fontcolor = "white"
+  ]
+  graph [
+    bgcolor = "black"
+    rankdir = "LR"
+  ]
+  node [
+    color = "white"
+    fontcolor = "white"
+    shape = "record"
+  ]
+
+  "Metasploit::Cache::Actionable::Action" [
+    label = "Metasploit::Cache::Actionable::Action | mc_actionable_actions | <id>id | <actionable_id>actionable_id | <actionable_type>actionable_type | name"
+  ]
+
+  "Metasploit::Cache::Actionable::Action":actionable_id -> "Metasploit::Cache::Auxiliary::Unified":id_for_actionable_id [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Actionable::Action":actionable_type -> "Metasploit::Cache::Auxiliary::Unified":type_for_actionable_type [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  subgraph cluster_metasploit_cache_unified {
+    color = "white"
+    fontcolor = "white"
+    label = "Metasploit::Cache::*::Unified"
+
+    "Metasploit::Cache::Auxiliary::Unified" [
+      color = "/paired9/1"
+      fontcolor = "/paired9/1"
+      label = "<type_for_actionable_type>Metasploit::Cache::Auxiliary::Unified | mc_auxiliary_unified | <default_action_id>default_action_id | description | disclosed_on | <id_for_actionable_id>id | name | rank_id | stance"
+    ]
+
+    "Metasploit::Cache::Auxiliary::Unified":default_action_id -> "Metasploit::Cache::Actionable::Action":id [
+      arrowhead = "teeodot"
+      arrowtail = "teeodot"
+      color = "/paired9/1"
+      dir = "both"
+    ]
+  }
+}
