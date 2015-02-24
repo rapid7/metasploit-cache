@@ -27,7 +27,6 @@ class CreateMcModuleAncestors < ActiveRecord::Migration
       #
 
       t.text :full_name, null: false
-      t.string :handler_type, null: true
       t.string :module_type, null: false
       t.string :payload_type, null: true
       t.text :reference_name, null: false
