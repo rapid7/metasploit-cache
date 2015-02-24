@@ -229,6 +229,7 @@ digraph "metasploit-cache" {
   "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
+    color = "/paired9/8"
     dir = "both"
   ]
 
