@@ -415,7 +415,13 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Payload::Single::Instance" [
-        label = "Metasploit::Cache::Payload::Single::Instance | mc_payload_single_instances | <id>id | description | disclosed_on | license | name | privileged | <single_payload_class_id>single_payload_class_id"
+        label = "Metasploit::Cache::Payload::Single::Instance | mc_payload_single_instances | <id>id | description | disclosed_on | <handler_id>handler_id | license | name | privileged | <single_payload_class_id>single_payload_class_id"
+      ]
+
+      "Metasploit::Cache::Payload::Single::Instance":handler_id -> "Metasploit::Cache::Payload::Handler":id [
+        arrowhead = "crowodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
 
       "Metasploit::Cache::Payload::Single::Instance":single_payload_class_id -> "Metasploit::Cache::Payload::Single::Class":id [
