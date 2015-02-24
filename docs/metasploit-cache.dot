@@ -191,6 +191,20 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Post::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Post::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
   "Metasploit::Cache::Licensable::License":license_id -> "Metasploit::Cache::License":id [
     arrowhead = "crowodot"
     arrowtail = "teetee"
@@ -729,7 +743,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Post::Instance" [
       color = "/paired9/9"
       fontcolor = "/paired9/9"
-      label = "Metasploit::Cache::Post::Instance | mc_post_instances | <id>id | <id_for_action>id | <default_module_action_id>default_module_action_id | description | disclosed_on | license | <post_class_id>post_class_id | name | privileged"
+      label = "<type>Metasploit::Cache::Post::Instance | mc_post_instances | <id>id | <id_for_action>id | <default_module_action_id>default_module_action_id | description | disclosed_on | <post_class_id>post_class_id | name | privileged"
     ]
 
     "Metasploit::Cache::Post::Instance":default_module_action_id -> "Metasploit::Cache::Module::Action":id [
