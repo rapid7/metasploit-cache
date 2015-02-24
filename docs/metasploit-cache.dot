@@ -116,6 +116,20 @@ digraph "metasploit-cache" {
       dir = "both"
     ]
 
+    "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Exploit::Instance":id_for_licensable_id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/paired9/3"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Exploit::Instance":type [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/paired9/3"
+      dir = "both"
+    ]
+
     "Metasploit::Cache::Licensable::License":license_id -> "Metasploit::Cache::License":id [
       arrowhead = "crowodot"
       arrowtail = "teetee"
@@ -529,7 +543,7 @@ digraph "metasploit-cache" {
       "Metasploit::Cache::Exploit::Instance" [
         color = "/paired9/3"
         fontcolor = "/paired9/3"
-        label = "Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id_to_module_instance>id | <id_to_exploit_instance_id>id | <default_target_id>default_target_id | description | disclosed_on | <exploit_class_id>exploit_class_id | license | name | privileged | stance"
+        label = "<type>Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id_for_licensable_id>id | <id_to_module_instance>id | <id_to_exploit_instance_id>id | <default_target_id>default_target_id | description | disclosed_on | <exploit_class_id>exploit_class_id | name | privileged | stance"
       ]
 
       "Metasploit::Cache::Exploit::Instance":default_target_id -> "Metasploit::Cache::Exploit::Target":id [
