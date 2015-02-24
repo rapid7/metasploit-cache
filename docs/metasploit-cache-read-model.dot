@@ -60,6 +60,10 @@ digraph "Metasploit::Cache Read Model" {
     dir = "both"
   ]
 
+  "Metasploit::Cache::Referenceable::Reference" [
+    label = "Metasploit::Cache::Referenceable::Reference | mc_referenceable_references | <referenceable_id>referenceable_id | <referenceable_type>referenceable_type | reference_id"
+  ]
+
   subgraph cluster_metasploit_cache_unified {
     color = "white"
     fontcolor = "white"
