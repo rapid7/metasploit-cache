@@ -149,7 +149,21 @@ digraph "metasploit-cache" {
   ]
 
   "Metasploit::Cache::Contribution" [
-    label = "Metasploit::Cache::Contribution | author_id | contributable_id | contributable_type | email_address_id"
+    label = "Metasploit::Cache::Contribution | author_id | <contributable_id>contributable_id | <contributable_type>contributable_type | email_address_id"
+  ]
+
+  "Metasploit::Cache::Contribution":contributable_id -> "Metasploit::Cache::Auxiliary::Instance":id_for_contributable_id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Contribution":contributable_type -> "Metasploit::Cache::Auxiliary::Instance":type_for_contributable_type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
   ]
 
   "Metasploit::Cache::License" [
@@ -741,7 +755,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Auxiliary::Instance" [
       color = "/paired9/1"
       fontcolor = "/paired9/1"
-      label = "<type>Metasploit::Cache::Auxiliary::Instance | <type_for_actionable_type>Metasploit::Cache::Auxiliary::Instance | <type_for_referenceable_type>Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <id_for_action>id | <id_for_referenceable_id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | name | stance"
+      label = "<type>Metasploit::Cache::Auxiliary::Instance | <type_for_actionable_type>Metasploit::Cache::Auxiliary::Instance | <type_for_contributable_type>Metasploit::Cache::Auxiliary::Instance | <type_for_referenceable_type>Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <id_for_action>id | <id_for_contributable_id>id | <id_for_referenceable_id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | name | stance"
     ]
 
     "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
