@@ -159,7 +159,14 @@ digraph "Metasploit::Cache Read Model" {
     "Metasploit::Cache::Encoder::Unified" [
       color = "/paired9/2"
       fontcolor = "/paired9/2"
-      label = "Metasploit::Cache::Encoder::Unified | description | full_name | module_type | name | reference_name | rank_id"
+      label = "Metasploit::Cache::Encoder::Unified | description | <encoder_ancestor_id>encoder_ancestor_id | full_name | module_type | name | reference_name | rank_id"
+    ]
+
+    "Metasploit::Cache::Encoder::Unified":encoder_ancestor_id -> "Metasploit::Cache::Encoder::Ancestor":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/2"
+      dir = "both"
     ]
   }
 }
