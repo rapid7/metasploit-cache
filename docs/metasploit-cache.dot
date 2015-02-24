@@ -88,6 +88,20 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Licensable::License | mc_licensable_licenses | <licensable_id>licensable_id | <licensable_type>licensable_type | <license_id>license_id"
     ]
 
+    "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Auxiliary::Instance":id [
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      color = "/paired9/1"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Auxiliary::Instance":type [
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      color = "/paired9/1"
+      dir = "both"
+    ]
+
     "Metasploit::Cache::Licensable::License":license_id -> "Metasploit::Cache::License":id [
       arrowhead = "crowodot"
       arrowtail = "teetee"
@@ -468,8 +482,7 @@ digraph "metasploit-cache" {
       "Metasploit::Cache::Auxiliary::Instance" [
         color = "/paired9/1"
         fontcolor = "/paired9/1"
-        // TODO make license association for dual licensing
-        label = "Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | license | name | stance"
+        label = "<type>Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | name | stance"
       ]
 
       "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
