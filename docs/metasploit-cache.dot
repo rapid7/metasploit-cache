@@ -84,6 +84,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
+      color = "/paired9/3"
       dir = "both"
     ]
 
@@ -204,6 +205,8 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Exploit::Target" [
+      color = "/paired9/3"
+      fontcolor = "/paired9/3"
       label = "Metasploit::Cache::Exploit::Target | mc_exploit_targets | <id>id | <exploit_instance_id>exploit_instance_id | index | name"
     ]
 
