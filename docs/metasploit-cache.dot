@@ -86,7 +86,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Architecture | mc_module_architectures | <architecture_id>architecture_id | <architecturable_id>architecturable_id | <architecturable_type>architecturable_type"
     ]
 
-    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Nop::Instance":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Nop::Instance":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -96,7 +96,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Platform | mc_module_platforms | <platformable_id>platformable_id | <platformable_type>platform_type | <platform_id>platform_id"
     ]
 
-    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -304,7 +304,7 @@ digraph "metasploit-cache" {
         
                 
         "Metasploit::Cache::Payload::Stager::Class" [
-          label = "Metasploit::Cache::Payload::Stager::Class | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Stager::Class'"
+          label = "Metasploit::Cache::Payload::Stager::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Stager::Class'"
         ]
 
         "Metasploit::Cache::Payload::Stager::Class" -> "Metasploit::Cache::Direct::Class" [
@@ -435,6 +435,16 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Payload::Staged::Instance":staged_payload_class_id -> "Metasploit::Cache::Payload::Staged::Class":id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
+      ]
+
+      "Metasploit::Cache::Payload::Stager::Instance" [
+        label = "Metasploit::Cache::Payload::Stager::Instance | mc_payload_stager_instances | <id>id | description | license | name | privileged | <stager_payload_class_id>stager_payload_class_id"
+      ]
+
+      "Metasploit::Cache::Payload::Stager::Instance":stager_payload_class_id -> "Metasploit::Cache::Payload::Stager::Class":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
         dir = "both"
