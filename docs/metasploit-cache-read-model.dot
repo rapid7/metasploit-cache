@@ -87,6 +87,18 @@ digraph "Metasploit::Cache Read Model" {
       label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | parent_path_id | relative_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Module::Ancestor'"
       style = "dashed"
     ]
+
+    "Metasploit::Cache::Auxiliary::Ancestor" [
+      fontcolor = "/paired9/1"
+      label = "Metasploit::Cache::Auxiliary::Ancestor | <id>id | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
+      color = "/paired9/1"
+    ]
+
+    "Metasploit::Cache::Auxiliary::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/1"
+      fontcolor = "/paired9/1"
+      label = "subclasses"
+    ]
   }
 
   subgraph cluster_metasploit_cache_unified {
