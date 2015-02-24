@@ -89,16 +89,30 @@ digraph "metasploit-cache" {
     ]
 
     "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Auxiliary::Instance":id [
-      arrowhead = "crowodot"
+      arrowhead = "crowtee"
       arrowtail = "teetee"
       color = "/paired9/1"
       dir = "both"
     ]
 
     "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Auxiliary::Instance":type [
-      arrowhead = "crowodot"
+      arrowhead = "crowtee"
       arrowtail = "teetee"
       color = "/paired9/1"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Encoder::Instance":id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/paired9/2"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Encoder::Instance":type [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/paired9/2"
       dir = "both"
     ]
 
@@ -502,7 +516,7 @@ digraph "metasploit-cache" {
       "Metasploit::Cache::Encoder::Instance" [
         color = "/paired9/2"
         fontcolor = "/paired9/2"
-        label = "Metasploit::Cache::Encoder::Instance | mc_encoder_instances | <id>id | description | disclosed_on | <encoder_class_id>encoder_class_id | license | name"
+        label = "<type>Metasploit::Cache::Encoder::Instance | mc_encoder_instances | <id>id | description | disclosed_on | <encoder_class_id>encoder_class_id | name"
       ]
 
       "Metasploit::Cache::Encoder::Instance":encoder_class_id -> "Metasploit::Cache::Encoder::Class":id [
