@@ -67,7 +67,14 @@ digraph "metasploit-cache" {
       dir = "both"
     ]
 
-    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/paired9/8"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -217,10 +224,14 @@ digraph "metasploit-cache" {
       ]
       
       "Metasploit::Cache::Payload::Stager::Ancestor" [
+        color = "/paired9/8"
+        fontcolor = "/paired9/8"
         label = "Metasploit::Cache::Payload::Stager::Ancestor | <id_to_ancestor_id>id | <id_to_stager_payload_ancestor_id>id | type = 'Metasploit::Cache::Payload::Stager::Ancestor'"
       ]
 
       "Metasploit::Cache::Payload::Stager::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        color = "/paired9/8"
+        fontcolor = "/paired9/8"
         label = "subclasses"
       ]
       
@@ -366,16 +377,21 @@ digraph "metasploit-cache" {
         
                 
         "Metasploit::Cache::Payload::Stager::Class" [
+          color = "/paired9/8"
+          fontcolor = "/paired9/8"
           label = "Metasploit::Cache::Payload::Stager::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Stager::Class'"
         ]
 
         "Metasploit::Cache::Payload::Stager::Class" -> "Metasploit::Cache::Direct::Class" [
+          color = "/paired9/8"
+          fontcolor = "/paired9/8"
           label = "subclasses"
         ]
 
         "Metasploit::Cache::Payload::Stager::Class":ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id_to_ancestor_id [
           arrowhead = "teeodot"
           arrowtail = "teetee"
+          color = "/paired9/8"
           dir = "both"
         ]
         
@@ -551,18 +567,22 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Payload::Stager::Instance" [
+        color = "/paired9/8"
+        fontcolor = "/paired9/8"
         label = "Metasploit::Cache::Payload::Stager::Instance | mc_payload_stager_instances | <id>id | <id_for_stager_payload_instance_id>id | description | <handler_id>handler_id | handler_type_alias | license | name | privileged | <stager_payload_class_id>stager_payload_class_id"
       ]
 
       "Metasploit::Cache::Payload::Stager::Instance":handler_id -> "Metasploit::Cache::Payload::Handler":id [
         arrowhead = "crowodot"
         arrowtail = "teetee"
+        color = "/paired9/8"
         dir = "both"
       ]
 
       "Metasploit::Cache::Payload::Stager::Instance":stager_payload_class_id -> "Metasploit::Cache::Payload::Stager::Class":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "/paired9/8"
         dir = "both"
       ]
 
