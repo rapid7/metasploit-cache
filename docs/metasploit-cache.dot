@@ -177,6 +177,20 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Payload::Stager::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Payload::Stager::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
   "Metasploit::Cache::Licensable::License":license_id -> "Metasploit::Cache::License":id [
     arrowhead = "crowodot"
     arrowtail = "teetee"
@@ -695,7 +709,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Payload::Stager::Instance" [
       color = "/paired9/8"
       fontcolor = "/paired9/8"
-      label = "Metasploit::Cache::Payload::Stager::Instance | mc_payload_stager_instances | <id>id | <id_for_stager_payload_instance_id>id | description | <handler_id>handler_id | handler_type_alias | license | name | privileged | <stager_payload_class_id>stager_payload_class_id"
+      label = "<type>Metasploit::Cache::Payload::Stager::Instance | mc_payload_stager_instances | <id>id | <id_for_stager_payload_instance_id>id | description | <handler_id>handler_id | handler_type_alias | name | privileged | <stager_payload_class_id>stager_payload_class_id"
     ]
 
     "Metasploit::Cache::Payload::Stager::Instance":handler_id -> "Metasploit::Cache::Payload::Handler":id [
