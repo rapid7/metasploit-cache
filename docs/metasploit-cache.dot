@@ -134,6 +134,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Module::Reference":module_instance_id, "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":id_to_module_instance [
       arrowhead = "crowtee"
       arrowhead = "teetee"
+      color = "blue"
       dir = "both"
     ]
 
@@ -144,6 +145,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Exploit::Target":exploit_instance_id -> "Metasploit::Cache::Exploit::Instance":id_to_exploit_instance_id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
+      color = "blue"
       dir = "both"
     ]
 
@@ -186,10 +188,14 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Exploit::Ancestor" [
+        color = "blue"
+        fontcolor = "blue"
         label = "Metasploit::Cache::Exploit::Ancestor | <id>id | type = 'Metasploit::Cache::Exploit::Ancestor"
       ]
 
       "Metasploit::Cache::Exploit::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        color = "blue"
+        fontcolot = "blue"
         label = "subclasses"
       ]
 
@@ -290,16 +296,21 @@ digraph "metasploit-cache" {
         ]
                 
         "Metasploit::Cache::Exploit::Class" [
+          color = "blue"
+          fontcolor = "blue"
           label = "Metasploit::Cache::Exploit::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Exploit::Class'"
         ]
 
         "Metasploit::Cache::Exploit::Class" -> "Metasploit::Cache::Direct::Class" [
+          color = "blue"
+          fontcolor = "blue"
           label = "subclasses"
         ]
 
         "Metasploit::Cache::Exploit::Class":ancestor_id -> "Metasploit::Cache::Exploit::Ancestor":id [
           arrowhead = "teeodot"
           arrowtail = "teetee"
+          color = "blue"
           dir = "both"
         ]
         
@@ -435,18 +446,22 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Exploit::Instance" [
+        color = "blue"
+        fontcolor = "blue"
         label = "Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id_to_module_instance>id | <id_to_exploit_instance_id>id | <default_target_id>default_target_id | description | disclosed_on | <exploit_class_id>exploit_class_id | license | name | privileged | stance"
       ]
 
       "Metasploit::Cache::Exploit::Instance":default_target_id -> "Metasploit::Cache::Exploit::Target":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "blue"
         dir = "both"
       ]
       
       "Metasploit::Cache::Exploit::Instance":exploit_class_id -> "Metasploit::Cache::Exploit::Class":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "blue"
         dir = "both"
       ]
 
