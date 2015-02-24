@@ -50,52 +50,101 @@ digraph "metasploit-cache" {
     label = "Metasploit::Cache::Module::Architecture | mc_module_architectures | <architecture_id>architecture_id | <architecturable_id>architecturable_id | <architecturable_type>architecturable_type"
   ]
 
-  "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id [
+  "Metasploit::Cache::Module::Architecture":architecturable_id -> "Metasploit::Cache::Encoder::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/2"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Nop::Instance":id [
+  "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Module::Architecture":architecturable_id -> "Metasploit::Cache::Exploit::Target":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+ "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Module::Architecture":architecturable_id -> "Metasploit::Cache::Nop::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/4"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Single::Instance":id [
+  "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Nop::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/4"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Module::Architecture":architecturable_id -> "Metasploit::Cache::Payload::Single::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/5"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stage::Instance":id [
+ "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Single::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/5"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Module::Architecture":architecturable_id -> "Metasploit::Cache::Payload::Stage::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/6"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
+ "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stage::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Module::Architecture":architecturable_id -> "Metasploit::Cache::Payload::Stager::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/8"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Post::Instance":id [
+  "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stager::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Module::Architecture":architecturable_id -> "Metasploit::Cache::Post::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/9"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":id [
+ "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Post::Instance":type [
     arrowhead = "crowtee"
     arrowtail = "teetee"
-    color = "/paired9/3"
+    color = "/paired9/9"
     dir = "both"
   ]
 
@@ -289,7 +338,7 @@ digraph "metasploit-cache" {
   "Metasploit::Cache::Exploit::Target" [
     color = "/paired9/3"
     fontcolor = "/paired9/3"
-    label = "Metasploit::Cache::Exploit::Target | mc_exploit_targets | <id>id | <exploit_instance_id>exploit_instance_id | index | name"
+    label = "<type>Metasploit::Cache::Exploit::Target | mc_exploit_targets | <id>id | <exploit_instance_id>exploit_instance_id | index | name"
   ]
 
   "Metasploit::Cache::Exploit::Target":exploit_instance_id -> "Metasploit::Cache::Exploit::Instance":id_to_exploit_instance_id [
