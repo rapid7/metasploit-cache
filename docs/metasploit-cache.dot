@@ -130,7 +130,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Ancestor STI"
 
       "Metasploit::Cache::Module::Ancestor" [
-        label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | id | <parent_path_id>parent_path_id | relative_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
+        label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | id | <parent_path_id>parent_path_id | relative_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Module::Ancestor'"
         style = "dashed"
       ]
 
