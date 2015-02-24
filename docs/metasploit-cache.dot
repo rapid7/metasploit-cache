@@ -1,7 +1,7 @@
 digraph "metasploit-cache" {
   graph [
     rankdir = "LR"
-    ranksep = "20.0"
+    ranksep = "5.0"
   ]
   node [
     shape = "record"
