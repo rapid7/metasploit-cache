@@ -369,10 +369,17 @@ digraph "metasploit-cache" {
   "Metasploit::Cache::Module::Reference" [
     label = "Metasploit::Cache::Module::Reference | mc_module_references | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type | <module_reference_id>reference_id"
   ]
- 
-  "Metasploit::Cache::Module::Reference":module_instance_id, "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":id_to_module_instance [
+
+  "Metasploit::Cache::Module::Reference":module_instance_id -> "Metasploit::Cache::Exploit::Instance":id_for_referenceable_id [
     arrowhead = "crowtee"
-    arrowhead = "teetee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":type_for_referenceable_type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
     color = "/paired9/3"
     dir = "both"
   ]
@@ -735,7 +742,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Exploit::Instance" [
       color = "/paired9/3"
       fontcolor = "/paired9/3"
-      label = "<type>Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id_for_licensable_id>id | <id_to_module_instance>id | <id_to_exploit_instance_id>id | <default_target_id>default_target_id | description | disclosed_on | <exploit_class_id>exploit_class_id | name | privileged | stance"
+      label = "<type>Metasploit::Cache::Exploit::Instance | <type_for_referenceable_type>Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id_for_licensable_id>id | <id_for_referenceable_id>id | <id_to_exploit_instance_id>id | <default_target_id>default_target_id | description | disclosed_on | <exploit_class_id>exploit_class_id | name | privileged | stance"
     ]
 
     "Metasploit::Cache::Exploit::Instance":default_target_id -> "Metasploit::Cache::Exploit::Target":id [
