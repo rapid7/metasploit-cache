@@ -574,7 +574,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Encoder::Instance" [
       color = "/paired9/2"
       fontcolor = "/paired9/2"
-      label = "<type>Metasploit::Cache::Encoder::Instance | mc_encoder_instances | <id>id | description | disclosed_on | <encoder_class_id>encoder_class_id | name"
+      label = "<type>Metasploit::Cache::Encoder::Instance | mc_encoder_instances | <id>id | description | <encoder_class_id>encoder_class_id | name"
     ]
 
     "Metasploit::Cache::Encoder::Instance":encoder_class_id -> "Metasploit::Cache::Encoder::Class":id [
@@ -607,7 +607,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Nop::Instance" [
       color = "/paired9/4"
       fontcolor = "/paired9/4"
-      label = "<type>Metasploit::Cache::Nop::Instance | mc_nop_instances | <id>id | description | disclosed_on | <nop_class_id>nop_class_id | name"
+      label = "<type>Metasploit::Cache::Nop::Instance | mc_nop_instances | <id>id | description | <nop_class_id>nop_class_id | name"
     ]
 
     "Metasploit::Cache::Nop::Instance":nop_class_id -> "Metasploit::Cache::Nop::Class":id [
@@ -620,7 +620,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Payload::Single::Instance" [
       color = "/paired9/5"
       fontcolor = "/paired9/5"
-      label = "<type>Metasploit::Cache::Payload::Single::Instance | mc_payload_single_instances | <id>id | description | disclosed_on | <handler_id>handler_id | name | privileged | <single_payload_class_id>single_payload_class_id"
+      label = "<type>Metasploit::Cache::Payload::Single::Instance | mc_payload_single_instances | <id>id | description | <handler_id>handler_id | name | privileged | <single_payload_class_id>single_payload_class_id"
     ]
 
     "Metasploit::Cache::Payload::Single::Instance":handler_id -> "Metasploit::Cache::Payload::Handler":id [
