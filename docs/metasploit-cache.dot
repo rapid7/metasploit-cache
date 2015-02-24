@@ -135,6 +135,20 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Nop::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/4"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Nop::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/4"
+    dir = "both"
+  ]
+
   "Metasploit::Cache::Licensable::License":license_id -> "Metasploit::Cache::License":id [
     arrowhead = "crowodot"
     arrowtail = "teetee"
@@ -579,7 +593,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Nop::Instance" [
       color = "/paired9/4"
       fontcolor = "/paired9/4"
-      label = "Metasploit::Cache::Nop::Instance | mc_nop_instances | <id>id | description | disclosed_on | license | <nop_class_id>nop_class_id | name"
+      label = "<type>Metasploit::Cache::Nop::Instance | mc_nop_instances | <id>id | description | disclosed_on | <nop_class_id>nop_class_id | name"
     ]
 
     "Metasploit::Cache::Nop::Instance":nop_class_id -> "Metasploit::Cache::Nop::Class":id [
