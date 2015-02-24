@@ -278,46 +278,46 @@ digraph "metasploit-cache" {
     label = "Metasploit::Cache::Payload::Handler | mc_payload_handler | <id>id | handler_type | general_handler_type"
   ]
 
-  "Metasploit::Cache::Module::Platform" [
-    label = "Metasploit::Cache::Module::Platform | mc_module_platforms | <platformable_id>platformable_id | <platformable_type>platform_type | <platform_id>platform_id"
+  "Metasploit::Cache::Platformable::Platform" [
+    label = "Metasploit::Cache::Platformable::Platform | mc_platformable_platforms | <platformable_id>platformable_id | <platformable_type>platform_type | <platform_id>platform_id"
   ]
 
-  "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/2"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Payload::Single::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Single::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/5"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Payload::Stage::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stage::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/6"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/8"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Post::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Post::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/9"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/8"
