@@ -18,7 +18,7 @@ digraph "metasploit-cache" {
     label = "Metasploit::Cache::Actionable::Action | mc_module_actions | <id>id | <actionable_id>actionable_id | <actionable_type>actionable_type | name"
   ]
 
-  "Metasploit::Cache::Actionable::Action":actionable_id -> "Metasploit::Cache::Auxiliary::Instance":id [
+  "Metasploit::Cache::Actionable::Action":actionable_id -> "Metasploit::Cache::Auxiliary::Instance":id_for_action [
     arrowhead = "crowodot"
     arrowtail = "teetee"
     color = "/paired9/1"
@@ -660,7 +660,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Auxiliary::Instance" [
       color = "/paired9/1"
       fontcolor = "/paired9/1"
-      label = "<type>Metasploit::Cache::Auxiliary::Instance | <type_for_actionable_type>Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | name | stance"
+      label = "<type>Metasploit::Cache::Auxiliary::Instance | <type_for_actionable_type>Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <id_for_action>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | name | stance"
     ]
 
     "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
