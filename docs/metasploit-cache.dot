@@ -395,19 +395,22 @@ digraph "metasploit-cache" {
       }
 
       "Metasploit::Cache::Payload::Staged::Class" [
+        color = "/paired9/7"
+        fontcolor = "/paired9/7"
         label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | <id>id | reference_name | <rank_id>rank_id | <stage_payload_ancestor_id>stage_ancestor_id | <stager_payload_ancestor_id>stager_payload_ancestor_id"
       ]
       
       "Metasploit::Cache::Payload::Staged::Class":stage_payload_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id_to_stage_payload_ancestor_id [
         arrowhead = "crowodot"
         arrowtail = "teetee"
-        color = "/paired9/6"
+        color = "/paired9/7"
         dir = "both"
       ]
 
       "Metasploit::Cache::Payload::Staged::Class":stager_payload_ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id_to_stager_payload_ancestor_id [
           arrowhead = "crowodot"
           arrowtail = "teetee"
+          color = "/paired9/7"
           dir = "both"
       ]
 
@@ -521,25 +524,29 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Payload::Staged::Instance" [
+        color = "/paired9/7"
+        fontcolor = "/paired9/7"
         label = "Metasploit::Cache::Payload::Staged::Instance | mc_payload_staged_instances | <id>id | <stage_payload_instance_id>stage_payload_instance_id | <staged_payload_class_id>staged_payload_class_id | <stager_payload_instance_id>stager_payload_instance_id"
       ]
 
       "Metasploit::Cache::Payload::Staged::Instance":stage_payload_instance_id -> "Metasploit::Cache::Payload::Stage::Instance":id_for_stage_payload_instance_id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
-        color = "/paired9/6"
+        color = "/paired9/7"
         dir = "both"
       ]
 
       "Metasploit::Cache::Payload::Staged::Instance":staged_payload_class_id -> "Metasploit::Cache::Payload::Staged::Class":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "/paired9/7"
         dir = "both"
       ]
 
       "Metasploit::Cache::Payload::Staged::Instance":stager_payload_instance_id -> "Metasploit::Cache::Payload::Stager::Instance":id_for_stager_payload_instance_id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "/paired9/7"
         dir = "both"
       ]
 
