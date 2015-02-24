@@ -421,7 +421,7 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Payload::Stage::Instance" [
-        label = "Metasploit::Cache::Payload::Stage::Instance | mc_payload_stage_instances | <id>id | description | license | name | privileged | <stage_payload_class_id>stage_payload_class_id"
+        label = "Metasploit::Cache::Payload::Stage::Instance | mc_payload_stage_instances | <id>id | <id_for_stage_payload_instance_id>id | description | license | name | privileged | <stage_payload_class_id>stage_payload_class_id"
       ]
 
       "Metasploit::Cache::Payload::Stage::Instance":stage_payload_class_id -> "Metasploit::Cache::Payload::Stage::Class":id [
@@ -431,7 +431,13 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Payload::Staged::Instance" [
-        label = "Metasploit::Cache::Payload::Staged::Instance | mc_payload_staged_instances | <id>id | <staged_payload_class_id>staged_payload_class_id"
+        label = "Metasploit::Cache::Payload::Staged::Instance | mc_payload_staged_instances | <id>id | <stage_payload_instance_id>stage_payload_instance_id | <staged_payload_class_id>staged_payload_class_id | <stager_payload_instance_id>stager_payload_instance_id"
+      ]
+
+      "Metasploit::Cache::Payload::Staged::Instance":stage_payload_instance_id -> "Metasploit::Cache::Payload::Stage::Instance":id_for_stage_payload_instance_id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
       ]
 
       "Metasploit::Cache::Payload::Staged::Instance":staged_payload_class_id -> "Metasploit::Cache::Payload::Staged::Class":id [
@@ -440,8 +446,14 @@ digraph "metasploit-cache" {
         dir = "both"
       ]
 
+      "Metasploit::Cache::Payload::Staged::Instance":stager_payload_instance_id -> "Metasploit::Cache::Payload::Stager::Instance":id_for_stager_payload_instance_id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        dir = "both"
+      ]
+
       "Metasploit::Cache::Payload::Stager::Instance" [
-        label = "Metasploit::Cache::Payload::Stager::Instance | mc_payload_stager_instances | <id>id | description | license | name | privileged | <stager_payload_class_id>stager_payload_class_id"
+        label = "Metasploit::Cache::Payload::Stager::Instance | mc_payload_stager_instances | <id>id | <id_for_stager_payload_instance_id>id |description | license | name | privileged | <stager_payload_class_id>stager_payload_class_id"
       ]
 
       "Metasploit::Cache::Payload::Stager::Instance":stager_payload_class_id -> "Metasploit::Cache::Payload::Stager::Class":id [
