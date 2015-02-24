@@ -215,6 +215,8 @@ digraph "metasploit-cache" {
   ]
 
   subgraph cluster_mc_module_ancestors {
+    color = "white"
+    fontcolor = "white"
     label = "Metasploit::Cache::Module::Ancestor STI"
 
     "Metasploit::Cache::Module::Ancestor" [
@@ -320,9 +322,14 @@ digraph "metasploit-cache" {
   }
 
   subgraph cluster_metasploit_cache_class {
+    color = "white"
+    fontcolor = "white"
     label = "Metasploit::Cache::*::Class"
 
     subgraph cluster_metasploit_cache_direct_class {
+      color = "white"
+      fontcolor = "white"
+
       label = "Metasploit::Cache::Direct::Class STI"
 
       "Metasploit::Cache::Direct::Class" [
@@ -512,6 +519,8 @@ digraph "metasploit-cache" {
   }
 
   subgraph cluster_metasploit_cache_instance {
+    color = "white"
+    fontcolor = "white"
     label = "Metasploit::Cache::*::Instance"
 
     "Metasploit::Cache::Auxiliary::Instance" [
