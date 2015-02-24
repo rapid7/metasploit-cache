@@ -143,5 +143,11 @@ digraph "Metasploit::Cache Read Model" {
       color = "/paired9/1"
       dir = "both"
     ]
+
+    "Metasploit::Cache::Encoder::Unified" [
+      color = "/paired9/2"
+      fontcolor = "/paired9/2"
+      label = "Metasploit::Cache::Encoder::Unified | description | full_name | module_type | name | reference_name | rank_id"
+    ]
   }
 }
