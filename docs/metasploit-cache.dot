@@ -1,10 +1,17 @@
 digraph "metasploit-cache" {
   graph [
+    bgcolor = "black"
     rankdir = "LR"
     ranksep = "10"
   ]
   node [
+    color = "white"
+    fontcolor = "white"
     shape = "record"
+  ]
+  edge [
+    color = "white"
+    fontcolor = "white"
   ]
 
   subgraph cluster_type_sti {
