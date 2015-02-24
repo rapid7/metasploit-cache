@@ -72,6 +72,20 @@ digraph "Metasploit::Cache Read Model" {
     dir = "both"
   ]
 
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Encoder::Unified":id_for_licensable_id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Encoder::Unified":type_for_licensable_type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
   "Metasploit::Cache::Licensable::License":license_id -> "Metasploit::Cache::License":id [
     arrowhead = "crowodot"
     arrowtail = "teetee"
@@ -159,7 +173,7 @@ digraph "Metasploit::Cache Read Model" {
     "Metasploit::Cache::Encoder::Unified" [
       color = "/paired9/2"
       fontcolor = "/paired9/2"
-      label = "Metasploit::Cache::Encoder::Unified | description | <encoder_ancestor_id>encoder_ancestor_id | full_name | module_type | name | reference_name | rank_id"
+      label = "<type_for_licensable_type>Metasploit::Cache::Encoder::Unified | description | <encoder_ancestor_id>encoder_ancestor_id | full_name | <id_for_licensable_id>id | module_type | name | reference_name | rank_id"
     ]
 
     "Metasploit::Cache::Encoder::Unified":encoder_ancestor_id -> "Metasploit::Cache::Encoder::Ancestor":id [
