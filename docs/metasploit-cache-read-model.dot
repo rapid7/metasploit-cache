@@ -6,6 +6,7 @@ digraph "Metasploit::Cache Read Model" {
   graph [
     bgcolor = "black"
     rankdir = "LR"
+    ranksep = "2"
   ]
   node [
     color = "white"
