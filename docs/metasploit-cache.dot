@@ -155,7 +155,7 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Ancestor STI"
 
       "Metasploit::Cache::Module::Ancestor" [
-        label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | id | <parent_path_id>parent_path_id | relative_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Module::Ancestor'"
+        label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | <id>id | <parent_path_id>parent_path_id | relative_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Module::Ancestor'"
         style = "dashed"
       ]
 
@@ -264,6 +264,12 @@ digraph "metasploit-cache" {
 
         "Metasploit::Cache::Direct::Class" [
           label = "Metasploit::Cache::Direct::Class | mc_direct_classes | <ancestor_id>ancestor_id | <rank_id>rank_id | type = 'Metasploit::Cache::Direct::Class'"
+          style = "dashed"
+        ]
+
+        "Metasploit::Cache::Direct::Class":ancestor_id -> "Metasploit::Cache::Module::Ancestor":id [
+          arrowhead = "teeodot"
+          arrowtail = "teetee"
           style = "dashed"
         ]
 
