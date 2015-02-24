@@ -163,6 +163,20 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Payload::Stage::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Payload::Stage::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
   "Metasploit::Cache::Licensable::License":license_id -> "Metasploit::Cache::License":id [
     arrowhead = "crowodot"
     arrowtail = "teetee"
@@ -640,7 +654,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Payload::Stage::Instance" [
       color = "/paired9/6"
       fontcolor = "/paired9/6"
-      label = "Metasploit::Cache::Payload::Stage::Instance | mc_payload_stage_instances | <id>id | <id_for_stage_payload_instance_id>id | description | license | name | privileged | <stage_payload_class_id>stage_payload_class_id"
+      label = "<type>Metasploit::Cache::Payload::Stage::Instance | mc_payload_stage_instances | <id>id | <id_for_stage_payload_instance_id>id | description | name | privileged | <stage_payload_class_id>stage_payload_class_id"
     ]
 
     "Metasploit::Cache::Payload::Stage::Instance":stage_payload_class_id -> "Metasploit::Cache::Payload::Stage::Class":id [
