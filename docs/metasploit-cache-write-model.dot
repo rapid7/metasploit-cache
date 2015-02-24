@@ -149,7 +149,7 @@ digraph "metasploit-cache" {
   ]
 
   "Metasploit::Cache::Contribution" [
-    label = "Metasploit::Cache::Contribution | author_id | <contributable_id>contributable_id | <contributable_type>contributable_type | email_address_id"
+    label = "Metasploit::Cache::Contribution | mc_contributions | author_id | <contributable_id>contributable_id | <contributable_type>contributable_type | email_address_id"
   ]
 
   "Metasploit::Cache::Contribution":contributable_id -> "Metasploit::Cache::Auxiliary::Instance":id_for_contributable_id [
