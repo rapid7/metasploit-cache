@@ -214,5 +214,11 @@ digraph "Metasploit::Cache Read Model" {
       color = "/paired9/2"
       dir = "both"
     ]
+
+    "Metasploit::Cache::Exploit::Unified" [
+      color = "/paired9/3"
+      fontcolor = "/paired9/3"
+      label = "Metasploit::Cache::Exploit::Unified | mc_exploit_unifieds | description | full_name | module_type | name | reference_name | rank_id"
+    ]
   }
 }
