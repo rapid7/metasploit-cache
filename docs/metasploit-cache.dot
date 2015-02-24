@@ -71,7 +71,7 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
- "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":type [
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":type [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/3"
@@ -99,7 +99,7 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
- "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Single::Instance":type [
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Single::Instance":type [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/5"
@@ -113,7 +113,7 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
- "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stage::Instance":type [
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stage::Instance":type [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/6"
@@ -141,7 +141,7 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
- "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Post::Instance":type [
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Post::Instance":type [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/9"
@@ -282,42 +282,84 @@ digraph "metasploit-cache" {
     label = "Metasploit::Cache::Platformable::Platform | mc_platformable_platforms | <platformable_id>platformable_id | <platformable_type>platform_type | <platform_id>platform_id"
   ]
 
-  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Encoder::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/2"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Single::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Payload::Single::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/5"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stage::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Single::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/5"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Payload::Stage::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/6"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stage::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Payload::Stager::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/8"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Post::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Post::Instance":id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/9"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Platformable::Platform":platformable_id, "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Post::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Payload::Stager::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":type [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/8"
