@@ -93,7 +93,14 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Architecture | mc_module_architectures | <architecture_id>architecture_id | <architecturable_id>architecturable_id | <architecturable_type>architecturable_type"
     ]
 
-    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Nop::Instance":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "purple"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Nop::Instance":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -107,7 +114,14 @@ digraph "metasploit-cache" {
       label = "Metasploit::Cache::Module::Platform | mc_module_platforms | <platformable_id>platformable_id | <platformable_type>platform_type | <platform_id>platform_id"
     ]
 
-    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id, "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "purple"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Single::Instance":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -160,10 +174,14 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Encoder::Ancestor" [
+        color = "purple"
+        fontcolor = "purple"
         label = "Metasploit::Cache::Encoder::Ancestor | <id>id | type = 'Metasploit::Cache::Encoder::Ancestor'"
       ]
 
       "Metasploit::Cache::Encoder::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        color = "purple"
+        fontcolor = "purple"
         label = "subclasses"
       ]
 
@@ -253,16 +271,21 @@ digraph "metasploit-cache" {
         ]
         
         "Metasploit::Cache::Encoder::Class" [
+          color = "purple"
+          fontcolor = "purple"
           label = "Metasploit::Cache::Encoder::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Encoder::Class'"
         ]
 
         "Metasploit::Cache::Encoder::Class" -> "Metasploit::Cache::Direct::Class" [
+          color = "purple"
+          fontcolor = "purple"
           label = "subclasses"
         ]
 
         "Metasploit::Cache::Encoder::Class":ancestor_id -> "Metasploit::Cache::Encoder::Ancestor":id [
           arrowhead = "teeodot"
           arrowtail = "teetee"
+          color = "purple"
           dir = "both"
         ]
                 
@@ -399,12 +422,15 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Encoder::Instance" [
+        color = "purple"
+        fontcolor = "purple"
         label = "Metasploit::Cache::Encoder::Instance | mc_encoder_instances | <id>id | description | disclosed_on | <encoder_class_id>encoder_class_id | license | name"
       ]
 
       "Metasploit::Cache::Encoder::Instance":encoder_class_id -> "Metasploit::Cache::Encoder::Class":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "purple"
         dir = "both"
       ]
 
