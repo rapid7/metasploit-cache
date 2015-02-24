@@ -10,10 +10,6 @@ digraph "metasploit-cache" {
   subgraph cluster_type_sti {
     label = "module_type + payload_type STI"
 
-    "Metasploit::Cache::Module::Rank" [
-      label = "Metasploit::Cache::Module::Rank | mc_module_ranks | <id>id | name | number"
-    ]
-
     "Metasploit::Cache::Module::Action" [
       label = "Metasploit::Cache::Module::Action | mc_module_actions | <id>id | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type | name"
     ]
@@ -271,12 +267,6 @@ digraph "metasploit-cache" {
           style = "dashed"
         ]
 
-        "Metasploit::Cache::Direct::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
-          arrowhead = "crowodot"
-          arrowtail = "teetee"
-          dir = "both"
-        ]
-
         "Metasploit::Cache::Auxiliary::Class" [
           color = "/paired9/1"
           fontcolor = "/paired9/1"
@@ -448,12 +438,6 @@ digraph "metasploit-cache" {
           arrowhead = "crowodot"
           arrowtail = "teetee"
           color = "/paired9/7"
-          dir = "both"
-      ]
-
-      "Metasploit::Cache::Payload::Staged::Class":rank_id -> "Metasploit::Cache::Module::Rank":id [
-          arrowhead = "crowodot"
-          arrowtail = "teetee"
           dir = "both"
       ]
     }
