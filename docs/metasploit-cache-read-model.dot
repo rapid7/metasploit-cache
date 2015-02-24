@@ -50,6 +50,20 @@ digraph "Metasploit::Cache Read Model" {
     dir = "both"
   ]
 
+  "Metasploit::Cache::Contribution":contributable_id -> "Metasploit::Cache::Encoder::Unified":id_for_contributable_id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Contribution":contributable_type -> "Metasploit::Cache::Encoder::Unified":type_for_contributable_type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
   "Metasploit::Cache::License" [
     label = "Metasploit::Cache::License | mc_licenses | <id>id | abbreviation | summary | url"
   ]
@@ -173,7 +187,7 @@ digraph "Metasploit::Cache Read Model" {
     "Metasploit::Cache::Encoder::Unified" [
       color = "/paired9/2"
       fontcolor = "/paired9/2"
-      label = "<type_for_licensable_type>Metasploit::Cache::Encoder::Unified | description | <encoder_ancestor_id>encoder_ancestor_id | full_name | <id_for_licensable_id>id | module_type | name | reference_name | rank_id"
+      label = "<type_for_contributable_type>Metasploit::Cache::Encoder::Unified | <type_for_licensable_type>Metasploit::Cache::Encoder::Unified | description | <encoder_ancestor_id>encoder_ancestor_id | full_name | <id_for_contributable_id>id | <id_for_licensable_id>id | module_type | name | reference_name | rank_id"
     ]
 
     "Metasploit::Cache::Encoder::Unified":encoder_ancestor_id -> "Metasploit::Cache::Encoder::Ancestor":id [
