@@ -117,6 +117,18 @@ digraph "Metasploit::Cache Read Model" {
       fontcolor = "/paired9/1"
       label = "subclasses"
     ]
+
+    "Metasploit::Cache::Encoder::Ancestor" [
+      color = "/paired9/2"
+      fontcolor = "/paired9/2"
+      label = "Metasploit::Cache::Encoder::Ancestor | <id>id | type = 'Metasploit::Cache::Encoder::Ancestor'"
+    ]
+
+    "Metasploit::Cache::Encoder::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/2"
+      fontcolor = "/paired9/2"
+      label = "subclasses"
+    ]
   }
 
   subgraph cluster_metasploit_cache_unified {
