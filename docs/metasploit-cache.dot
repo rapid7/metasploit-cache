@@ -25,7 +25,21 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
-  "Metasploit::Cache::Actionable::Action":actionable_id, "Metasploit::Cache::Actionable::Action":actionable_type -> "Metasploit::Cache::Post::Instance":id_for_action [
+  "Metasploit::Cache::Actionable::Action":actionable_type -> "Metasploit::Cache::Auxiliary::Instance":type_for_actionable_type [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Actionable::Action":actionable_id -> "Metasploit::Cache::Post::Instance":id_for_action [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Actionable::Action":actionable_type -> "Metasploit::Cache::Post::Instance":type_for_actionable_type [
     arrowhead = "crowodot"
     arrowtail = "teetee"
     color = "/paired9/9"
@@ -597,7 +611,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Auxiliary::Instance" [
       color = "/paired9/1"
       fontcolor = "/paired9/1"
-      label = "<type>Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | name | stance"
+      label = "<type>Metasploit::Cache::Auxiliary::Instance | <type_for_actionable_type>Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | name | stance"
     ]
 
     "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
@@ -743,7 +757,7 @@ digraph "metasploit-cache" {
     "Metasploit::Cache::Post::Instance" [
       color = "/paired9/9"
       fontcolor = "/paired9/9"
-      label = "<type>Metasploit::Cache::Post::Instance | mc_post_instances | <id>id | <id_for_action>id | <default_module_action_id>default_module_action_id | description | disclosed_on | <post_class_id>post_class_id | name | privileged"
+      label = "<type>Metasploit::Cache::Post::Instance | <type_for_actionable_type>Metasploit::Cache::Post::Instance | mc_post_instances | <id>id | <id_for_action>id | <default_module_action_id>default_module_action_id | description | disclosed_on | <post_class_id>post_class_id | name | privileged"
     ]
 
     "Metasploit::Cache::Post::Instance":default_module_action_id -> "Metasploit::Cache::Actionable::Action":id [
