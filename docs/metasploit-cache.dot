@@ -114,7 +114,14 @@ digraph "metasploit-cache" {
       dir = "both"
     ]
 
-    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stage::Instance":id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/set19/6"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Module::Architecture":architecturable_id, "Metasploit::Cache::Module::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -142,7 +149,14 @@ digraph "metasploit-cache" {
       dir = "both"
     ]
 
-    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Stage::Instance":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Payload::Stage::Instance":id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/set19/6"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Stager::Instance":id, "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -245,10 +259,14 @@ digraph "metasploit-cache" {
       ]
       
       "Metasploit::Cache::Payload::Stage::Ancestor" [
+        color = "/set19/6"
+        fontcolor = "/set19/6"
         label = "Metasploit::Cache::Payload::Stage::Ancestor | <id_to_ancestor_id>id | <id_to_stage_payload_ancestor_id>id | type = 'Metasploit::Cache::Payload::Stage::Ancestor'"
       ]
 
       "Metasploit::Cache::Payload::Stage::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+        color = "/set19/6"
+        fontcolor = "/set19/6"
         label = "subclasses"
       ]
       
@@ -382,16 +400,21 @@ digraph "metasploit-cache" {
         ]
         
         "Metasploit::Cache::Payload::Stage::Class" [
+          color = "/set19/6"
+          fontcolor = "/set19/6"
           label = "Metasploit::Cache::Payload::Stage::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Stage::Class'"
         ]
 
         "Metasploit::Cache::Payload::Stage::Class" -> "Metasploit::Cache::Direct::Class" [
+          color = "/set19/6"
+          fontcolor = "/set19/6"
           label = "subclasses"
         ]
 
         "Metasploit::Cache::Payload::Stage::Class":ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id_to_ancestor_id [
           arrowhead = "teeodot"
           arrowtail = "teetee"
+          color = "/set19/6"
           dir = "both"
         ]
         
@@ -432,6 +455,7 @@ digraph "metasploit-cache" {
       "Metasploit::Cache::Payload::Staged::Class":stage_payload_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id_to_stage_payload_ancestor_id [
         arrowhead = "crowodot"
         arrowtail = "teetee"
+        color = "/set19/6"
         dir = "both"
       ]
 
@@ -538,12 +562,15 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Payload::Stage::Instance" [
+        color = "/set19/6"
+        fontcolor = "/set19/6"
         label = "Metasploit::Cache::Payload::Stage::Instance | mc_payload_stage_instances | <id>id | <id_for_stage_payload_instance_id>id | description | license | name | privileged | <stage_payload_class_id>stage_payload_class_id"
       ]
 
       "Metasploit::Cache::Payload::Stage::Instance":stage_payload_class_id -> "Metasploit::Cache::Payload::Stage::Class":id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "/set19/6"
         dir = "both"
       ]
 
@@ -554,6 +581,7 @@ digraph "metasploit-cache" {
       "Metasploit::Cache::Payload::Staged::Instance":stage_payload_instance_id -> "Metasploit::Cache::Payload::Stage::Instance":id_for_stage_payload_instance_id [
         arrowhead = "teeodot"
         arrowtail = "teetee"
+        color = "/set19/6"
         dir = "both"
       ]
 
