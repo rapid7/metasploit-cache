@@ -463,7 +463,7 @@ digraph "metasploit-cache" {
       ]
 
       "Metasploit::Cache::Payload::Stager::Instance" [
-        label = "Metasploit::Cache::Payload::Stager::Instance | mc_payload_stager_instances | <id>id | <id_for_stager_payload_instance_id>id | description | <handler_id>handler_id | license | name | privileged | <stager_payload_class_id>stager_payload_class_id"
+        label = "Metasploit::Cache::Payload::Stager::Instance | mc_payload_stager_instances | <id>id | <id_for_stager_payload_instance_id>id | description | <handler_id>handler_id | handler_type_alias | license | name | privileged | <stager_payload_class_id>stager_payload_class_id"
       ]
 
       "Metasploit::Cache::Payload::Stager::Instance":handler_id -> "Metasploit::Cache::Payload::Handler":id [
