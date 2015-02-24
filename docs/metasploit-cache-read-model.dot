@@ -205,7 +205,7 @@ digraph "Metasploit::Cache Read Model" {
     "Metasploit::Cache::Encoder::Unified" [
       color = "/paired9/2"
       fontcolor = "/paired9/2"
-      label = "<type_for_architecturable_type>Metasploit::Cache::Encoder::Unified | <type_for_contributable_type>Metasploit::Cache::Encoder::Unified | <type_for_licensable_type>Metasploit::Cache::Encoder::Unified | description | <encoder_ancestor_id>encoder_ancestor_id | full_name | <id_for_architecturable_id>id | <id_for_contributable_id>id | <id_for_licensable_id>id | module_type | name | reference_name | rank_id"
+      label = "<type_for_architecturable_type>Metasploit::Cache::Encoder::Unified | <type_for_contributable_type>Metasploit::Cache::Encoder::Unified | <type_for_licensable_type>Metasploit::Cache::Encoder::Unified | mc_encoder_unifieds | description | <encoder_ancestor_id>encoder_ancestor_id | full_name | <id_for_architecturable_id>id | <id_for_contributable_id>id | <id_for_licensable_id>id | module_type | name | reference_name | rank_id"
     ]
 
     "Metasploit::Cache::Encoder::Unified":encoder_ancestor_id -> "Metasploit::Cache::Encoder::Ancestor":id [
