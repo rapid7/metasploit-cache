@@ -32,6 +32,9 @@ digraph "Metasploit::Cache Read Model" {
     dir = "both"
   ]
 
+  "Metasploit::Cache::Contribution" [
+    label = "Metasploit::Cache::Contribution | author_id | <contributable_id>contributable_id | <contributable_type>contributable_type | email_address_id"
+  ]
 
   "Metasploit::Cache::License" [
     label = "Metasploit::Cache::License | mc_licenses | <id>id | abbreviation | summary | url"
