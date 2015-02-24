@@ -366,18 +366,18 @@ digraph "metasploit-cache" {
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Reference" [
-    label = "Metasploit::Cache::Module::Reference | mc_module_references | <module_instance_id>module_instance_id | <module_instance_type>module_instance_type | <module_reference_id>reference_id"
+  "Metasploit::Cache::Referenceable::Reference" [
+    label = "Metasploit::Cache::Referenceable::Reference | mc_referenceable_references | <referenceable_id>referenceable_id | <referenceable_type>referenceable_type | reference_id"
   ]
 
-  "Metasploit::Cache::Module::Reference":module_instance_id -> "Metasploit::Cache::Exploit::Instance":id_for_referenceable_id [
+  "Metasploit::Cache::Referenceable::Reference":referenceable_id -> "Metasploit::Cache::Exploit::Instance":id_for_referenceable_id [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/3"
     dir = "both"
   ]
 
-  "Metasploit::Cache::Module::Reference":module_instance_type -> "Metasploit::Cache::Exploit::Instance":type_for_referenceable_type [
+  "Metasploit::Cache::Referenceable::Reference":referenceable_type -> "Metasploit::Cache::Exploit::Instance":type_for_referenceable_type [
     arrowhead = "crowtee"
     arrowtail = "teetee"
     color = "/paired9/3"
