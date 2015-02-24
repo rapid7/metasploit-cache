@@ -10,10 +10,6 @@ digraph "metasploit-cache" {
   subgraph cluster_type_sti {
     label = "module_type + payload_type STI"
 
-    "Metasploit::Cache::Module::Path" [
-      label = "Metasploit::Cache::Module::Path | mc_module_paths | <id>id | gem | name | real_path"
-    ]
-
     "Metasploit::Cache::Module::Rank" [
       label = "Metasploit::Cache::Module::Rank | mc_module_ranks | <id>id | name | number"
     ]
@@ -117,6 +113,13 @@ digraph "metasploit-cache" {
       dir = "both"
     ]
 
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
+      arrowhead = "crowtee"
+      arrowtail = "teetee"
+      color = "/paired9/8"
+      dir = "both"
+    ]
+
     "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Post::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
@@ -124,7 +127,7 @@ digraph "metasploit-cache" {
       dir = "both"
     ]
 
-    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Exploit::Target":id, "Metasploit::Cache::Payload::Stager::Instance":id [
+    "Metasploit::Cache::Module::Platform":platformable_id, "Metasploit::Cache::Module::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":id [
       arrowhead = "crowtee"
       arrowtail = "teetee"
       dir = "both"
@@ -158,12 +161,6 @@ digraph "metasploit-cache" {
       "Metasploit::Cache::Module::Ancestor" [
         label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | id | <parent_path_id>parent_path_id | relative_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Module::Ancestor'"
         style = "dashed"
-      ]
-
-      "Metasploit::Cache::Module::Ancestor":parent_path_id -> "Metasploit::Cache::Module::Path":id [
-        arrowhead = "crowodot"
-        arrowtail = "teetee"
-        dir = "both"
       ]
 
       "Metasploit::Cache::Auxiliary::Ancestor" [
