@@ -12,7 +12,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
   context 'database' do
     context 'columns' do
       it { should have_db_column(:full_name).of_type(:text).with_options(:null => false) }
-      it { should have_db_column(:handler_type).of_type(:string).with_options(:null => true) }
       it { should have_db_column(:module_type).of_type(:string).with_options(:null => false) }
       it { should have_db_column(:real_path).of_type(:text).with_options(:null => false) }
       it { should have_db_column(:real_path_modified_at).of_type(:datetime).with_options(:null => false) }
@@ -108,8 +107,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
           subject(:same_real_path_ancestor) do
             # Don't use factory as it will try to write real_path, which cause a path collision
             original_ancestor.parent_path.module_ancestors.new(
-                # if a payload, then handler_type needs to be set or it won't save
-                handler_type: original_ancestor.handler_type,
                 real_path: original_ancestor.real_path
             )
           end

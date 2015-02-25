@@ -59,18 +59,6 @@ FactoryGirl.define do
       end
     }
 
-    # @note depends on derived_payload_type which depends on reference_name so this needs to be last because the order
-    #   of declaration is the order that these blocks are run
-    handler_type {
-      # can't use #handled? because it will check payload_type on model, not ignored field in factory, so use
-      # .handled?
-      if Metasploit::Cache::Module::Ancestor.handled?(:module_type => module_type, :payload_type => derived_payload_type)
-        generate :metasploit_cache_module_ancestor_handler_type
-      else
-        nil
-      end
-    }
-
     #
     # Child Factories
     #
@@ -119,17 +107,7 @@ FactoryGirl.define do
           payload_type 'stage'
         end
       end
-
-      factory :stager_payload_metasploit_cache_module_ancestor do
-        transient do
-          payload_type 'stager'
-        end
-      end
     end
-  end
-
-  sequence :metasploit_cache_module_ancestor_handler_type do |n|
-    "metasploit_cache_module_ancestor_handler_type#{n}"
   end
 
   minimum_version = 1

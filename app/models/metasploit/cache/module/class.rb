@@ -19,8 +19,7 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
 
   # Valid values for {#payload_type} when {#payload?} is `true`.
   PAYLOAD_TYPES = [
-      'single',
-      'staged'
+      'single'
   ]
 
   # The {Metasploit::Cache::Module::Ancestor#payload_type} when {#payload_type} is 'staged'.

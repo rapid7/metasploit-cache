@@ -39,8 +39,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
 
   # The {#payload_type payload types} that require {#handler_type}.
   HANDLED_TYPES = [
-      'single',
-      'stager'
+      'single'
   ]
 
   # Maps directory to {#module_type} for converting a {#real_path} into a {#module_type} and {#reference_name}
@@ -48,9 +47,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
 
   # Valid values for {#payload_type} if {#payload?} is `true`.
   PAYLOAD_TYPES = [
-      'single',
-      'stage',
-      'stager'
+      'single'
   ]
 
   # Regexp to keep '\' out of reference names
@@ -102,13 +99,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #   The full name of the module.  The full name is `"#{module_type}/#{reference_name}"`.
   #
   #   @return [String]
-
-  # @!attribute handler_type
-  #   The handler type (in the case of singles) or (in the case of stagers) the handler type alias.  Handler type is
-  #   appended to the end of the single's or stage's {#reference_name} to get the {Metasploit::Cache::Module::Class#reference_name}.
-  #
-  #   @return [String] if `Metasploit::Module::Module::Ancestor#handled?` is `true`.
-  #   @return [nil] if `Metasploit::Module::Module::Ancestor#handled?` is `false`.
 
   # @!attribute module_type
   #   The type of the module. This would be called #type, but #type is reserved for ActiveRecord's single table
@@ -175,8 +165,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
 
   # full_name is NOT accessible since it's derived and must match {#derived_full_name} so there's no reason for a
   # user to set it.
-  # handler_type is accessible because it's needed to derive {Metasploit::Cache::Module::Class#reference_name}.
-  attr_accessible :handler_type
   # module_type is accessible because it's needed to derive {#full_name} and {#real_path}.
   attr_accessible :module_type
   # parent_path_id is NOT accessible since it should be supplied from context
@@ -192,14 +180,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Validations
   #
 
-  validates :handler_type,
-            unless: :loading_context?,
-            nil: {
-                unless: :handled?
-            },
-            presence: {
-                if: :handled?
-            }
   validates :full_name,
             uniqueness: {
                 unless: :batched?
@@ -475,7 +455,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
             payload_name = reference_name.gsub(payload_type_directory_regexp, '')
           end
         when 'stager'
-          payload_name = handler_type
+          payload_name = nil
       end
     end
 

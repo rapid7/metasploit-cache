@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Module::Ancestor do
+RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
   subject(:module_ancestor) {
     FactoryGirl.build(:metasploit_cache_module_ancestor)
   }
@@ -64,8 +64,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       end
 
       it { should include('single') }
-      it { should_not include('stage') }
-      it { should include('stager') }
 
       it 'should be a subset of PAYLOAD_TYPES' do
         handled_type_set = Set.new(handled_types)
@@ -119,8 +117,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       end
 
       it { should include('single') }
-      it { should include('stage') }
-      it { should include('stager') }
     end
 
     # pattern is tested in validation tests below
@@ -189,39 +185,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
             expect(module_ancestor).to be_handled
           end
 
-          it { should_not be_valid }
-
-          it 'should be valid for loading' do
-            module_ancestor.valid?(:loading)
-          end
-        end
-
-        context 'with stage' do
-          let(:payload_type) do
-            'stage'
-          end
-
-          it 'should not be handled' do
-            expect(module_ancestor).not_to be_handled
-          end
-
           it { should be_valid }
-
-          it 'should be valid for loading' do
-            module_ancestor.valid?(:loading)
-          end
-        end
-
-        context 'with stager' do
-          let(:payload_type) do
-            'stager'
-          end
-
-          it 'should be handled' do
-            expect(module_ancestor).to be_handled
-          end
-
-          it { should_not be_valid }
 
           it 'should be valid for loading' do
             module_ancestor.valid?(:loading)
@@ -430,45 +394,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
         expect(single_payload_metasploit_cache_module_ancestor.derived_payload_type).to eq('single')
       end
 
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory', handler_type: true do
+      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory' do
         let(:module_ancestor) do
           single_payload_metasploit_cache_module_ancestor
-        end
-      end
-    end
-
-    context :stage_payload_metasploit_cache_module_ancestor do
-      subject(:stage_payload_metasploit_cache_module_ancestor) do
-        FactoryGirl.build(:stage_payload_metasploit_cache_module_ancestor)
-      end
-
-      it { should be_valid }
-
-      it "has a derived_payload_type of 'stage'" do
-        expect(stage_payload_metasploit_cache_module_ancestor.derived_payload_type).to eq('stage')
-      end
-
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory', handler_type: false do
-        let(:module_ancestor) do
-          stage_payload_metasploit_cache_module_ancestor
-        end
-      end
-    end
-
-    context :stager_payload_metasploit_cache_module_ancestor do
-      subject(:stager_payload_metasploit_cache_module_ancestor) do
-        FactoryGirl.build(:stager_payload_metasploit_cache_module_ancestor)
-      end
-
-      it { should be_valid }
-
-      it "has a derived_payload_type of 'stager'" do
-        expect(stager_payload_metasploit_cache_module_ancestor.derived_payload_type).to eq('stager')
-      end
-
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory', handler_type: true do
-        let(:module_ancestor) do
-          stager_payload_metasploit_cache_module_ancestor
         end
       end
     end
@@ -479,7 +407,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       expect(module_ancestor).not_to allow_mass_assignment_of(:full_name)
     end
 
-    it { should allow_mass_assignment_of(:handler_type) }
     it { should allow_mass_assignment_of(:module_type) }
 
     it 'should not allow mass assignment of payload_type since it must match derived_payload_type' do
@@ -505,258 +432,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
     subject(:module_ancestor) do
       # Don't use factory so that nil values can be tested without the nil being replaced with derived value
       described_class.new
-    end
-
-    context 'handler_type' do
-      subject(:module_ancestor) do
-        FactoryGirl.build(
-            :metasploit_cache_module_ancestor,
-            :handler_type => handler_type,
-            :module_type => module_type,
-            :payload_type => payload_type
-        )
-      end
-
-      context 'with payload' do
-        let(:module_type) do
-          'payload'
-        end
-
-        context 'with payload_type' do
-          context 'single' do
-            let(:payload_type) do
-              'single'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should be_valid }
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              context 'with :loading validation_context' do
-                let(:validation_context) do
-                  :loading
-                end
-
-                it 'should be valid' do
-                  expect(module_ancestor.valid?(validation_context)).to eq(true)
-                end
-              end
-
-              context 'without validation_context' do
-                it { should_not be_valid }
-
-                it 'should record error on handler_type' do
-                  module_ancestor.valid?
-
-                  expect(module_ancestor.errors[:handler_type]).to include(I18n.translate!('errors.messages.blank'))
-                end
-              end
-            end
-          end
-
-          context 'stage' do
-            let(:payload_type) do
-              'stage'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should_not be_valid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-              end
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it { should be_valid }
-            end
-          end
-
-          context 'stager' do
-            let(:payload_type) do
-              'stager'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should be_valid }
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it { should_not be_valid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include(I18n.translate!('errors.messages.blank'))
-              end
-            end
-          end
-        end
-      end
-
-      context 'without payload' do
-        let(:module_type) do
-          FactoryGirl.generate :metasploit_cache_non_payload_module_type
-        end
-
-        context 'with payload_type' do
-          # force payload_type to NOT be derived to check invalid setups
-          before(:each) do
-            module_ancestor.payload_type = payload_type
-          end
-
-          context 'single' do
-            let(:payload_type) do
-              'single'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should be_invalid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-              end
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it 'should not record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to be_empty
-              end
-            end
-          end
-
-          context 'stage' do
-            let(:payload_type) do
-              'stage'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should_not be_valid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-              end
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it 'should not record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to be_empty
-              end
-            end
-          end
-
-          context 'stager' do
-            let(:payload_type) do
-              'stager'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should_not be_valid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-              end
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it 'should not record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to be_empty
-              end
-            end
-          end
-        end
-
-        context 'without payload_type' do
-          let(:payload_type) do
-            nil
-          end
-
-          context 'with handler_type' do
-            let(:handler_type) do
-              FactoryGirl.generate :metasploit_cache_module_handler_type
-            end
-
-            it { should_not be_valid }
-
-            it 'should record error on handler_type' do
-              module_ancestor.valid?
-
-              expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-            end
-          end
-
-          context 'without handler_type' do
-            let(:handler_type) do
-              nil
-            end
-
-            it { should be_valid }
-          end
-        end
-      end
     end
 
     it { should validate_inclusion_of(:module_type).in_array(Metasploit::Cache::Module::Type::ALL) }
@@ -1484,22 +1159,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
 
             it { is_expected.to eq(true) }
           end
-
-          context 'stage' do
-            let(:payload_type) do
-              'stage'
-            end
-
-            it { is_expected.to eq(false) }
-          end
-
-          context 'stager' do
-            let(:payload_type) do
-              'stager'
-            end
-
-            it { is_expected.to eq(true) }
-          end
         end
 
         context 'without payload_type' do
@@ -1685,7 +1344,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
     let(:module_ancestor) do
       FactoryGirl.build(
           :metasploit_cache_module_ancestor,
-          handler_type: handler_type,
           module_type: module_type,
           payload_type: payload_type
       )
@@ -1698,10 +1356,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
         #
 
         shared_examples_for 'prefix payload_name' do
-          let(:handler_type) do
-            nil
-          end
-
           context 'with #reference_name' do
             #
             # lets
@@ -1775,30 +1429,10 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
               'stager'
             end
 
-            context 'with #handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it 'uses #handler_type' do
-                expect(payload_name).to eq(handler_type)
-              end
-            end
-
-            context 'without #handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it { should be_nil }
-            end
+            it { should be_nil }
           end
 
           context 'with other' do
-            let(:handler_type) do
-              nil
-            end
-
             let(:payload_type) do
               'unknown_payload_type'
             end
@@ -1809,10 +1443,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       end
 
       context 'without payload' do
-        let(:handler_type) do
-          nil
-        end
-
         let(:module_type) do
           FactoryGirl.generate :metasploit_cache_non_payload_module_type
         end

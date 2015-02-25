@@ -47,9 +47,6 @@ FactoryGirl.define do
         case payload_type
         when 'single'
           ancestors << FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
-        when 'staged'
-          ancestors << FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor)
-          ancestors << FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor)
         else
           raise ArgumentError,
                 "Don't know how to create Metasploit::Cache::Module::Class#ancestors " \
