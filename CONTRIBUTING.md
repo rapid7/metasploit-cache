@@ -87,7 +87,7 @@ When merging to `master`:
 ```
 # Post-merge Steps
 
-Perform these steps prior to pushing to master or the build will be broke on master.
+Perform these steps prior to pushing to master or the build will be broken on master.
 
 ## Version
 - [ ] Edit `lib/metasploit/cache/version.rb`
@@ -111,7 +111,7 @@ When merging to DESTINATION other than `master`:
 ```
 # Post-merge Steps
 
-Perform these steps prior to pushing to DESTINATION or the build will be broke on DESTINATION.
+Perform these steps prior to pushing to DESTINATION or the build will be broken on DESTINATION.
 
 ## Version
 - [ ] Edit `lib/metasploit/cache/version.rb`
