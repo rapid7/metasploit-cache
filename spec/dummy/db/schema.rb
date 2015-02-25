@@ -228,7 +228,6 @@ ActiveRecord::Schema.define(:version => 20150212214222) do
   create_table "mc_module_ancestors", :force => true do |t|
     t.text     "full_name",                               :null => false
     t.string   "module_type",                             :null => false
-    t.string   "payload_type"
     t.text     "reference_name",                          :null => false
     t.text     "real_path",                               :null => false
     t.datetime "real_path_modified_at",                   :null => false
