@@ -226,7 +226,6 @@ ActiveRecord::Schema.define(:version => 20150212214222) do
   add_index "mc_module_actions", ["module_instance_id", "name"], :name => "index_mc_module_actions_on_module_instance_id_and_name", :unique => true
 
   create_table "mc_module_ancestors", :force => true do |t|
-    t.string   "module_type",                             :null => false
     t.text     "reference_name",                          :null => false
     t.text     "real_path",                               :null => false
     t.datetime "real_path_modified_at",                   :null => false
@@ -234,7 +233,6 @@ ActiveRecord::Schema.define(:version => 20150212214222) do
     t.integer  "parent_path_id",                          :null => false
   end
 
-  add_index "mc_module_ancestors", ["module_type", "reference_name"], :name => "index_mc_module_ancestors_on_module_type_and_reference_name", :unique => true
   add_index "mc_module_ancestors", ["parent_path_id"], :name => "index_mc_module_ancestors_on_parent_path_id"
   add_index "mc_module_ancestors", ["real_path"], :name => "index_mc_module_ancestors_on_real_path", :unique => true
   add_index "mc_module_ancestors", ["real_path_sha1_hex_digest"], :name => "index_mc_module_ancestors_on_real_path_sha1_hex_digest", :unique => true

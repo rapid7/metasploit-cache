@@ -26,7 +26,6 @@ class CreateMcModuleAncestors < ActiveRecord::Migration
       # Columns
       #
 
-      t.string :module_type, null: false
       t.text :reference_name, null: false
       t.text :real_path, null: false
       t.datetime :real_path_modified_at, null: false
@@ -50,7 +49,6 @@ class CreateMcModuleAncestors < ActiveRecord::Migration
       # Unique Indices
       #
 
-      t.index [:module_type, :reference_name], unique: true
       t.index :real_path, unique: true
       t.index :real_path_sha1_hex_digest, unique: true
     end
