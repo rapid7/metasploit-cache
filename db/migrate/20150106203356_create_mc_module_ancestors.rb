@@ -26,9 +26,9 @@ class CreateMcModuleAncestors < ActiveRecord::Migration
       # Columns
       #
 
-      t.text :real_path, null: false
       t.datetime :real_path_modified_at, null: false
       t.string :real_path_sha1_hex_digest, limit: 40, null: false
+      t.text :relative_path, null: false
 
       #
       # References
@@ -48,8 +48,9 @@ class CreateMcModuleAncestors < ActiveRecord::Migration
       # Unique Indices
       #
 
-      t.index :real_path, unique: true
       t.index :real_path_sha1_hex_digest, unique: true
+      # relative_path is unique because all parent_paths must be able to be unified.
+      t.index :relative_path, unique: true
     end
   end
 end
