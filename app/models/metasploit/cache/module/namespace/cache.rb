@@ -10,14 +10,6 @@ class Metasploit::Cache::Module::Namespace::Cache < Metasploit::Model::Base
   #   @return [String] element of {Metasploit::Cache::Module::Type::ALL}.
   attr_accessor :module_type
 
-  # @!attribute [rw] payload_type
-  #   The {Metasploit::Cache::Module::Ancestor#payload_type}.  Only set if {#module_type} is
-  #   {Metasploit::Cache::Module::Type::PAYLOAD}.
-  #
-  #   @return [nil] if {#module_type} is {Metasploit::Cache::Module::Type::PAYLOAD}.
-  #   @return [String] element of {Metasploit::Cache::Module::Ancestor::PAYLOAD_TYPES}
-  attr_accessor :payload_type
-
   # @!attribute [rw] real_path_sha1_hex_digest
   #   The `Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest`.  Used to look up
   #   `Metasploit::Module::Module::Ancestor`.
@@ -32,14 +24,6 @@ class Metasploit::Cache::Module::Namespace::Cache < Metasploit::Model::Base
   validates :module_type,
             inclusion: {
                 in: Metasploit::Cache::Module::Type::ALL
-            }
-  validates :payload_type,
-            inclusion: {
-                if: :payload?,
-                in: Metasploit::Cache::Module::Ancestor::PAYLOAD_TYPES
-            },
-            nil: {
-                unless: :payload?
             }
   validates :real_path_sha1_hex_digest,
             format: {

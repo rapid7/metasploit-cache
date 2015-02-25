@@ -37,18 +37,8 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # File extension used for metasploit modules.
   EXTENSION = '.rb'
 
-  # The {#payload_type payload types} that require {#handler_type}.
-  HANDLED_TYPES = [
-      'single'
-  ]
-
   # Maps directory to {#module_type} for converting a {#real_path} into a {#module_type} and {#reference_name}
   MODULE_TYPE_BY_DIRECTORY = DIRECTORY_BY_MODULE_TYPE.invert
-
-  # Valid values for {#payload_type} if {#payload?} is `true`.
-  PAYLOAD_TYPES = [
-      'single'
-  ]
 
   # Regexp to keep '\' out of reference names
   REFERENCE_NAME_REGEXP = /\A[\-0-9A-Z_a-z]+(?:\/[\-0-9A-Z_a-z]+)*\Z/
@@ -106,13 +96,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #
   #   @return [String] key in {Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE}.
 
-  # @!attribute payload_type
-  #   For payload modules, the type of payload, either 'single', 'stage', or 'stager'.
-  #
-  #   @return ['single', 'stage', 'stager'] if {Metasploit::Cache::Module::Ancestor#payload?} is `true`.
-  #   @return [nil] if {Metasploit::Cache::Module::Ancestor#payload?} is `false`
-  #   @see Metasploit::Cache::Module::Ancestor::PAYLOAD_TYPES
-
   # @!attribute real_path
   #   The real (absolute) path to module file on-disk.
   #
@@ -152,7 +135,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #
 
   derives :full_name, :validate => true
-  derives :payload_type, :validate => true
   derives :real_path, :validate => true
 
   # Don't validate attributes that require accessing file system to derive value
@@ -168,7 +150,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # module_type is accessible because it's needed to derive {#full_name} and {#real_path}.
   attr_accessible :module_type
   # parent_path_id is NOT accessible since it should be supplied from context
-  # payload_type is NOT accessible since it's derived and must match {#derived_payload_type}.
   # reference_name is accessible because it's needed to derive {#full_name} and {#real_path}.
   attr_accessible :reference_name
   # real_path is accessible since {#module_type} and {#reference_name} can be derived from real_path.
@@ -190,14 +171,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
             }
   validates :parent_path,
             presence: true
-  validates :payload_type,
-            inclusion: {
-                if: :payload?,
-                in: PAYLOAD_TYPES
-            },
-            nil: {
-                unless: :payload?
-            }
   validates :real_path,
             uniqueness: {
                 unless: :batched?
@@ -219,32 +192,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
                 scope: :module_type,
                 unless: :batched?
             }
-
-  #
-  # Class Methods
-  #
-
-  # Returns whether {#handler_type} is required or must be `nil` for the given payload_type.
-  #
-  # @param options [Hash{Symbol => String,nil}]
-  # @option options [String, nil] module_type (nil) `nil` or an element of
-  #   `Metasploit::Cache::Module::Ancestor::MODULE_TYPES`.
-  # @option options [String, nil] payload_type (nil) `nil` or an element of {PAYLOAD_TYPES}.
-  # @return [true] if {#handler_type} must be present.
-  # @return [false] if {#handler_type} must be `nil`.
-  def self.handled?(options={})
-    options.assert_valid_keys(:module_type, :payload_type)
-
-    handled = false
-    module_type = options[:module_type]
-    payload_type = options[:payload_type]
-
-    if module_type == 'payload' and HANDLED_TYPES.include? payload_type
-      handled = true
-    end
-
-    handled
-  end
 
   #
   # Instance Methods
@@ -284,21 +231,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   def derived_module_type
     module_type_directory = relative_file_names.first
     derived = MODULE_TYPE_BY_DIRECTORY[module_type_directory]
-
-    derived
-  end
-
-  # Derives {#payload_type} from {#reference_name}.
-  #
-  # @return [String]
-  # @return [nil] if {#payload_type_directory} is `nil`
-  def derived_payload_type
-    derived = nil
-    directory = payload_type_directory
-
-    if directory
-      derived = directory.singularize
-    end
 
     derived
   end
@@ -384,26 +316,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #   @param full_name [String] `"#{module_type}/#{reference_name}"`.
   #   @return [void]
 
-  # Returns whether {#handler_type} is required or must be `nil`.
-  #
-  # @return (see handled?)
-  # @see handled?
-  def handled?
-    self.class.handled?(
-        :module_type => module_type,
-        :payload_type => payload_type
-    )
-  end
-
-  # @!method handler_type=(handler_type)
-  #   Sets {#handler_type}.
-  #
-  #   @param handler_type [String, nil] The handler type (in the case of singles) or (in the case of stagers) the
-  #     handler type alias.  Handler type is appended to the end of the single's or stage's {#reference_name} to get the
-  #     {Metasploit::Cache::Module::Class#reference_name}; `nil` if {Metasploit::Cache::Module::Ancestor#handled?} is
-  #     `false`.
-  #   @return [void]
-
   # @!method module_type=(module_type)
   #   Sets {#module_type}.
   #
@@ -439,37 +351,21 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
 
   # The name used to forming the {Metasploit::Cache::Module::Class#reference_name} for payloads.
   #
-  # @return [String] The {#reference_name} without the {#payload_type_directory} if {#payload_type} is `'single'`
-  #   or `'stage'`
-  # @return [String] The {#handler_type} if {#payload_type} is `'stager'`
+  # @return [String] The {#reference_name} without the {#payload_type_directory}
   # @return [nil] if {#module_type} is not `'payload'`
   def payload_name
     payload_name = nil
 
-    if module_type == Metasploit::Cache::Module::Type::PAYLOAD
-      case payload_type
-        when 'single', 'stage'
-          if reference_name && payload_type_directory
-            escaped_payload_type_directory = Regexp.escape(payload_type_directory)
-            payload_type_directory_regexp = /^#{escaped_payload_type_directory}\//
-            payload_name = reference_name.gsub(payload_type_directory_regexp, '')
-          end
-        when 'stager'
-          payload_name = nil
-      end
+    if module_type == Metasploit::Cache::Module::Type::PAYLOAD && reference_name && payload_type_directory
+      escaped_payload_type_directory = Regexp.escape(payload_type_directory)
+      payload_type_directory_regexp = /^#{escaped_payload_type_directory}\//
+      payload_name = reference_name.gsub(payload_type_directory_regexp, '')
     end
 
     payload_name
   end
 
-  # @!method payload_type=(payload_type)
-  #   Sets {#payload_type}.
-  #
-  #   @param payload_type ['single', 'stage', 'stager'] if `Metasploit::Cache::Module::Ancestor#payload?` is `true`,
-  #     the type of the payload; otherwise `nil`.
-  #   @return [void]
-
-  # The directory for {#payload_type} under {#module_type_directory} in {#real_path}.
+  # The directory for payload type under {#module_type_directory} in {#real_path}.
   #
   # @return [String] first directory in reference_name
   # @return [nil] if {#payload?} is `false`.

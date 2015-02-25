@@ -241,35 +241,15 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     module_type_consensus
   end
 
-  # Derives {#payload_type} based on {#ancestors ancestor's}
-  #   {Metasploit::Cache::Module::Ancestor#payload_type payload_type}.
+  # Derives {#payload_type} based on {#ancestors ancestor's} {Metasploit::Cache::Module::Ancestor#payload? payloadness}.
   #
-  # @return ['single'] if {#payload?} and single ancestor with
-  #   {Metasploit::Cache::Module::Ancestor#payload_type payload_tye} 'single'.
-  # @return ['staged'] if {#payload?} and one ancestor with
-  #   {Metasploit::Cache::Module::Ancestor#payload_type payload_type} 'stager' and another ancestor with
-  #   {Metasploit::Cache::Module::Ancestor#payload_type payload_type} 'stage'.
+  # @return ['single'] if {#payload?} and single ancestor is a payload.
   # @return [nil] otherwise
   def derived_payload_type
     derived = nil
 
-    if payload?
-      case ancestors.length
-        when 1
-          if ancestors.first.payload_type == 'single'
-            derived = 'single'
-          end
-        when 2
-          payload_type_set = Set.new
-
-          ancestors.each do |ancestor|
-            payload_type_set.add ancestor.payload_type
-          end
-
-          if payload_type_set.include? 'stager' and payload_type_set.include? 'stage'
-            derived = 'staged'
-          end
-      end
+    if payload? && ancestors.length ==  1 && ancestors.first.payload?
+      derived = 'single'
     end
 
     derived
@@ -358,45 +338,22 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     end
   end
 
-  # Validates that {#ancestors} have correct {Metasploit::Cache::Module::Ancestor#payload_type payload_types} for
-  # the {#module_type} and {#payload_type}.
+  # Validates that {#ancestors} are payloads when necessary for {#module_type}.
   #
   # @return [void]
   def ancestor_payload_types
     if payload?
-      case payload_type
-        when 'single'
-          ancestors.each do |ancestor|
-            unless ancestor.payload_type == 'single'
-              errors[:ancestors] << "cannot have an ancestor (#{ancestor.full_name}) " \
-                                    "with payload_type (#{ancestor.payload_type}) " \
-                                    "for class payload_type (#{payload_type})"
-            end
-          end
-        when 'staged'
-          ancestors_by_payload_type = ancestors.group_by(&:payload_type)
-
-          STAGED_ANCESTOR_PAYLOAD_TYPES.each do |ancestor_payload_type|
-            staged_payload_type_count(ancestors_by_payload_type, ancestor_payload_type)
-          end
-
-          ancestors_by_payload_type.each do |ancestor_payload_type, ancestors|
-            unless STAGED_ANCESTOR_PAYLOAD_TYPES.include? ancestor_payload_type
-              full_names = ancestors.map(&:full_name)
-              full_name_sentence = full_names.to_sentence
-
-              errors[:ancestors] << "cannot have ancestors (#{full_name_sentence}) " \
-                                    "with payload_type (#{ancestor_payload_type}) " \
-                                    "for class payload_type (#{payload_type}); " \
-                                    "only one stage and one stager ancestor is allowed"
-            end
-          end
+      ancestors.each do |ancestor|
+        unless ancestor.payload?
+          errors[:ancestors] << "cannot have an ancestor (#{ancestor.full_name}) that is not a payload " \
+                                "for payload class"
+        end
       end
     else
       ancestors.each do |ancestor|
-        if ancestor.payload_type
+        if ancestor.payload?
           errors[:ancestors] << "cannot have an ancestor (#{ancestor.full_name}) " \
-                                "with a payload_type (#{ancestor.payload_type}) " \
+                                "that is a payload with " \
                                 "for class module_type (#{module_type})"
         end
       end
@@ -440,7 +397,7 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     if ancestors.length == 1
       ancestor = ancestors.first
 
-      if ancestor.payload_type == 'single'
+      if ancestor.payload?
         derived = ancestor.payload_name
       end
     end
@@ -527,28 +484,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
   #     Modules.
   #   @return [void]
 
-  # Validates that only 1 ancestor with the given payload_type exists.
-  #
-  # @param ancestors_by_payload_type [Hash{String => Array<Metasploit::Cache::Module::Ancestor>}] Maps
-  #   {Metasploit::Cache::Module::Ancestor#payload_type} to the Array of {Metasploit::Cache::Module::Ancestor}
-  #   with that {Metasploit::Cache::Module::Ancestor#payload_type}.
-  # @param ancestor_payload_type [String] {Metasploit::Cache::Module::Ancestor#payload_type}.
-  # @return [void]
-  def staged_payload_type_count(ancestors_by_payload_type, ancestor_payload_type)
-    payload_type_ancestors = ancestors_by_payload_type.fetch(ancestor_payload_type, [])
-    payload_type_ancestor_count = payload_type_ancestors.length
-
-    if payload_type_ancestor_count < 1
-      errors[:ancestors] << "needs exactly one ancestor with payload_type (#{ancestor_payload_type}), " \
-                            "but there are none."
-    elsif payload_type_ancestor_count > 1
-      full_names = payload_type_ancestors.map(&:full_name).sort
-      full_name_sentence = full_names.to_sentence
-      errors[:ancestors] << "needs exactly one ancestor with payload_type (#{ancestor_payload_type}), " \
-                            "but there are #{payload_type_ancestor_count} (#{full_name_sentence})"
-    end
-  end
-  
   # switch back to public for load hooks
   public
   

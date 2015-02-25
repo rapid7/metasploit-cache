@@ -481,26 +481,6 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
         expect(block_ran).to eq(true)
       end
 
-      context 'with Metasploit::Cache::Module::Ancestor#payload_type' do
-        let(:module_ancestor) {
-          FactoryGirl.build(:payload_metasploit_cache_module_ancestor)
-        }
-
-        it 'sets payload_type on namespace module passed to block' do
-          block_ran = false
-
-          expect(module_ancestor.payload_type).not_to be_nil
-
-          transaction { |_, namespace_module|
-            expect(namespace_module.cache.payload_type).to eq(module_ancestor.payload_type)
-
-            block_ran = true
-          }
-
-          expect(block_ran).to eq(true)
-        end
-      end
-
       context 'with Exception' do
         let(:exception) {
           Exception.new("error message")
@@ -627,26 +607,6 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
         }
 
         expect(block_ran).to eq(true)
-      end
-
-      context 'with Metasploit::Cache::Module::Ancestor#payload_type' do
-        let(:module_ancestor) {
-          FactoryGirl.build(:payload_metasploit_cache_module_ancestor)
-        }
-
-        it 'sets payload_type on namespace module passed to block' do
-          block_ran = false
-
-          expect(module_ancestor.payload_type).not_to be_nil
-
-          transaction { |_, namespace_module|
-            expect(namespace_module.cache.payload_type).to eq(module_ancestor.payload_type)
-
-            block_ran = true
-          }
-
-          expect(block_ran).to eq(true)
-        end
       end
 
       context 'with Exception' do

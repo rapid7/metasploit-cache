@@ -6,28 +6,6 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Cache do
   context 'validations' do
     it { is_expected.to validate_inclusion_of(:module_type).in_array(Metasploit::Cache::Module::Type::ALL) }
 
-    context 'of #payload_type' do
-      before(:each) do
-        module_namespace_cache.module_type = module_type
-      end
-
-      context 'with payload' do
-        let(:module_type) {
-          'payload'
-        }
-
-        it { is_expected.to validate_inclusion_of(:payload_type).in_array(Metasploit::Cache::Module::Ancestor::PAYLOAD_TYPES) }
-      end
-
-      context 'without payload' do
-        let(:module_type) {
-          FactoryGirl.generate :metasploit_cache_non_payload_module_type
-        }
-
-        it { is_expected.to validate_nilness_of(:payload_type) }
-      end
-    end
-
     context 'of #real_path_sha1_hex_digest' do
       it { is_expected.to allow_value(Digest::SHA1.hexdigest('')).for(:real_path_sha1_hex_digest) }
     end

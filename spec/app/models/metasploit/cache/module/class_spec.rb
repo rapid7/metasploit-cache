@@ -703,9 +703,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
             context 'single' do
               let(:error) do
-                "cannot have an ancestor (#{ancestor.full_name}) " \
-                "with payload_type (#{ancestor.payload_type}) " \
-                "for class payload_type (#{payload_type})"
+                "cannot have an ancestor (#{ancestor.full_name}) that is not a payload for payload class"
               end
 
               let(:payload_type) do
@@ -733,8 +731,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
           end
 
           let(:error) do
-            "cannot have an ancestor (#{ancestor.full_name}) " \
-            "with a payload_type (#{ancestor.payload_type}) " \
+            "cannot have an ancestor (#{ancestor.full_name}) that is a payload with " \
             "for class module_type (#{module_type})"
           end
 
@@ -1237,89 +1234,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
       end
 
       it { is_expected.to eq(false) }
-    end
-  end
-
-  context '#staged_payload_type_count' do
-    subject(:staged_payload_type_count) do
-      module_class.send(
-          :staged_payload_type_count,
-          ancestors_by_payload_type,
-          ancestor_payload_type
-      )
-    end
-
-    let(:ancestor_payload_type) do
-      FactoryGirl.generate :metasploit_cache_module_ancestor_payload_type
-    end
-
-    before(:each) do
-      staged_payload_type_count
-    end
-
-    context 'with ancestors with payload_type' do
-      context 'with 1' do
-        let(:ancestors_by_payload_type) do
-          {
-              ancestor_payload_type => FactoryGirl.create_list(
-                  :payload_metasploit_cache_module_ancestor,
-                  1,
-                  :payload_type => ancestor_payload_type
-              )
-          }
-        end
-
-        it 'should not record error on ancestors' do
-          expect(module_class.errors[:ancestors]).to be_empty
-        end
-      end
-
-      context 'without 1' do
-        let(:ancestors_by_payload_type) do
-          {
-              ancestor_payload_type => payload_type_ancestors
-          }
-        end
-
-        let(:full_name_sentence) do
-          payload_type_ancestors.map(&:full_name).sort.to_sentence
-        end
-
-        let(:payload_type_ancestors) do
-          FactoryGirl.create_list(
-              :payload_metasploit_cache_module_ancestor,
-              payload_type_ancestor_count,
-              :payload_type => ancestor_payload_type
-          )
-        end
-
-        let(:payload_type_ancestor_count) do
-          2
-        end
-
-        let(:error) do
-          "needs exactly one ancestor with payload_type (#{ancestor_payload_type}), " \
-          "but there are #{payload_type_ancestor_count} (#{full_name_sentence})"
-        end
-
-        it 'should record error on ancestors' do
-          expect(module_class.errors[:ancestors]).to include(error)
-        end
-      end
-    end
-
-    context 'without ancestors with payload_type' do
-      let(:ancestors_by_payload_type) do
-        {}
-      end
-
-      let(:error) do
-        "needs exactly one ancestor with payload_type (#{ancestor_payload_type}), but there are none."
-      end
-
-      it 'should record error on ancestors' do
-        expect(module_class.errors[:ancestors]).to include(error)
-      end
     end
   end
 end

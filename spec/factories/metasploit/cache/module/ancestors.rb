@@ -5,7 +5,7 @@ FactoryGirl.define do
       # depends on module_type
       payload_type {
         if payload?
-          generate :metasploit_cache_module_ancestor_payload_type
+          'single'
         end
       }
 
@@ -77,7 +77,7 @@ FactoryGirl.define do
 
     factory :payload_metasploit_cache_module_ancestor do
       transient do
-        payload_type { generate :metasploit_cache_module_ancestor_payload_type }
+        payload_type { 'single' }
       end
 
       #
@@ -120,8 +120,6 @@ FactoryGirl.define do
     "Metasploit#{version}"
   end
 
-  sequence :metasploit_cache_module_ancestor_payload_type, Metasploit::Cache::Module::Ancestor::PAYLOAD_TYPES.cycle
-
   sequence :metasploit_cache_module_ancestor_reference_name do |n|
     [
         'metasploit',
@@ -146,13 +144,9 @@ FactoryGirl.define do
     ].join('/')
   end
 
-  payload_type_directories = Metasploit::Cache::Module::Ancestor::PAYLOAD_TYPES.map(&:pluralize)
-
   sequence :metasploit_cache_module_ancestor_payload_reference_name do |n|
-    payload_type_directory = payload_type_directories[n % payload_type_directories.length]
-
     [
-        payload_type_directory,
+        'singles',
         'metasploit',
         'cache',
         'module',
