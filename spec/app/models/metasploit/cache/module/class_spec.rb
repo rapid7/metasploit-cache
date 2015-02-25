@@ -1133,7 +1133,8 @@ RSpec.describe Metasploit::Cache::Module::Class do
       let(:ancestor) do
         FactoryGirl.create(
             :payload_metasploit_cache_module_ancestor,
-            :payload_type => payload_type
+            payload_type: payload_type,
+            reference_name: reference_name
         )
       end
 
@@ -1146,10 +1147,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
       context 'with single' do
         let(:payload_type) do
           'single'
-        end
-
-        before(:each) do
-          ancestor.reference_name = reference_name
         end
 
         context 'with reference_name' do

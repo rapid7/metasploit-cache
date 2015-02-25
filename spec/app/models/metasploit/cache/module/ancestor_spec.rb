@@ -96,11 +96,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       end
     end
 
-    # pattern is tested in validation tests below
-    it 'should define REFERENCE_NAME_REGEXP' do
-      expect(described_class::REFERENCE_NAME_REGEXP).to be_a Regexp
-    end
-
     context 'REFERENCE_NAME_SEPARATOR' do
       subject(:reference_name_separator) do
         described_class::REFERENCE_NAME_SEPARATOR
@@ -126,7 +121,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       it { should have_db_column(:real_path).of_type(:text).with_options(:null => false) }
       it { should have_db_column(:real_path_modified_at).of_type(:datetime).with_options(:null => false) }
       it { should have_db_column(:real_path_sha1_hex_digest).of_type(:string).with_options(:limit => 40, :null => false) }
-      it { should have_db_column(:reference_name).of_type(:text).with_options(:null => false) }
     end
 
     context 'indices' do
@@ -219,15 +213,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
 
     context 'with real_path' do
-      before(:each) do
-        # {Metasploit::Cache::Module::Ancestor#reference_name} so it will be rederived from
-        # {Metasploit::Cache::Module::Ancestor#real_path} to simulate module cache construction usage.
-        module_ancestor.reference_name = nil
-      end
-
       it_should_behave_like 'derives', :real_path_modified_at, :validates => false
       it_should_behave_like 'derives', :real_path_sha1_hex_digest, :validates => false
-      it_should_behave_like 'derives', :reference_name, :validates => false
     end
   end
 
@@ -515,175 +502,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
         end
       end
     end
-
-    context 'reference_name' do
-      context 'validates format with REFERENCE_NAME_REGEXP' do
-        context 'without slashes' do
-          context 'first character' do
-            it 'should not allow space' do
-              expect(module_ancestor).not_to allow_value(' ').for(:reference_name)
-            end
-
-            it 'should allow dash' do
-              expect(module_ancestor).to allow_value('-').for(:reference_name)
-            end
-
-            it 'should allow digit' do
-              expect(module_ancestor).to allow_value('0').for(:reference_name)
-            end
-
-            it 'should allow uppercase letter' do
-              expect(module_ancestor).to allow_value('A').for(:reference_name)
-            end
-
-            it 'should allow underscore' do
-              expect(module_ancestor).to allow_value('_').for(:reference_name)
-            end
-
-            it 'should allow lowercase letter' do
-              expect(module_ancestor).to allow_value('a').for(:reference_name)
-            end
-          end
-
-          context 'later letters' do
-            let(:lowercase_letters) do
-              ('a'..'z').to_a
-            end
-
-            let(:first_letter) do
-              lowercase_letters.sample
-            end
-
-            it 'should not allow space' do
-              expect(module_ancestor).not_to allow_value("#{first_letter} ").for(:reference_name)
-            end
-
-            it 'should allow dash' do
-              expect(module_ancestor).to allow_value("#{first_letter}-").for(:reference_name)
-            end
-
-            it 'should allow digit' do
-              expect(module_ancestor).to allow_value("#{first_letter}1").for(:reference_name)
-            end
-
-            it 'should allow uppercase letter' do
-              expect(module_ancestor).to allow_value("#{first_letter}A").for(:reference_name)
-            end
-
-            it 'should allow underscore' do
-              expect(module_ancestor).to allow_value("#{first_letter}_").for(:reference_name)
-            end
-
-            it 'should allow lowercase letter' do
-              expect(module_ancestor).to allow_value("#{first_letter}a").for(:reference_name)
-            end
-          end
-        end
-
-        context 'with slashes' do
-          let(:section) do
-            "-_0a"
-          end
-
-          context 'leading' do
-            it "should not allow '/'" do
-              expect(module_ancestor).not_to allow_value("/#{section}").for(:reference_name)
-            end
-
-            it "should not allow '\\'" do
-              expect(module_ancestor).not_to allow_value("\\#{section}").for(:reference_name)
-            end
-          end
-
-          context 'infix' do
-            it "should allow '/'" do
-              expect(module_ancestor).to allow_value("#{section}/#{section}").for(:reference_name)
-            end
-
-            it "should not allow '\\'" do
-              expect(module_ancestor).not_to allow_value("#{section}\\#{section}").for(:reference_name)
-            end
-          end
-
-          context 'trailing' do
-            it "should not allow '/'" do
-              expect(module_ancestor).not_to allow_value("#{section}/").for(:reference_name)
-            end
-
-            it "should not allow '\\'" do
-              expect(module_ancestor).not_to allow_value("#{section}\\").for(:reference_name)
-            end
-          end
-        end
-
-        context 'real-world examples' do
-          it { should allow_value('admin/2wire/xslt_password_reset').for(:reference_name) }
-          it { should allow_value('dos/http/3com_superstack_switch').for(:reference_name) }
-          it { should allow_value('windows/brightstor/tape_engine_8A').for(:reference_name) }
-          it { should allow_value('windows/fileformat/a-pdf_wav_to_mp3').for(:reference_name) }
-          it { should allow_value('windows/ftp/32bitftp_list_reply').for(:reference_name) }
-          it { should allow_value('windows/ftp/3cdaemon_ftp_user').for(:reference_name) }
-        end
-      end
-
-      context 'validates uniqueness scoped to module_type' do
-        subject(:new_ancestor) do
-          FactoryGirl.build(
-              :metasploit_cache_module_ancestor,
-              :module_type => new_module_type,
-              :reference_name => new_reference_name
-          )
-        end
-
-        let(:original_module_type) do
-          # don't use payload so sequence can be used to generate reference_name
-          FactoryGirl.generate :metasploit_cache_non_payload_module_type
-        end
-
-        let(:original_reference_name) do
-          FactoryGirl.generate :metasploit_cache_module_ancestor_non_payload_reference_name
-        end
-
-        let!(:original_ancestor) do
-          FactoryGirl.create(
-              :metasploit_cache_module_ancestor,
-              :module_type => original_module_type,
-              :reference_name => original_reference_name
-          )
-        end
-
-        context 'without same module_type' do
-          let(:new_module_type) do
-            # don't use payload so sequence can be used to generate reference_name
-            FactoryGirl.generate :metasploit_cache_non_payload_module_type
-          end
-
-          context 'with same reference_name' do
-            let(:new_reference_name) do
-              original_reference_name
-            end
-
-            context 'with batched' do
-              include_context 'Metasploit::Cache::Batch.batch'
-
-              it 'should not record error on reference_name' do
-                new_ancestor.valid?
-
-                expect(new_ancestor.errors[:reference_name]).to be_empty
-              end
-            end
-
-            context 'without batched' do
-              it 'should not record error on reference_name' do
-                new_ancestor.valid?
-
-                expect(new_ancestor.errors[:reference_name]).to be_empty
-              end
-            end
-          end
-        end
-      end
-    end
   end
 
   context '#contents' do
@@ -860,76 +678,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
   end
 
-  context '#derived_reference_name' do
-    subject(:derived_reference_name) do
-      module_ancestor.derived_reference_name
-    end
-
-    before(:each) do
-      allow(module_ancestor).to receive(:relative_file_names).and_return(relative_file_names)
-    end
-
-    context 'with empty #relative_file_names' do
-      let(:relative_file_names) do
-        Enumerator.new { }
-      end
-
-      it { should be_nil }
-    end
-
-    context 'without empty #relative_file_names' do
-      context 'with one element' do
-        context 'with EXTENSION' do
-          let(:relative_file_names) do
-            ["a#{described_class::EXTENSION}"].each
-          end
-
-          it { is_expected.to be_nil }
-        end
-
-        context 'without EXTENSION' do
-          let(:relative_file_names) do
-            ['a'].each
-          end
-
-          it { is_expected.to be_nil }
-        end
-      end
-
-      context 'with more than one element' do
-        context 'with EXTENSION' do
-          let(:relative_file_names) do
-            ['a', 'b', "c#{described_class::EXTENSION}"].each
-          end
-
-          it 'should not include first file name' do
-            expect(derived_reference_name.split(described_class::REFERENCE_NAME_SEPARATOR)).not_to include('a')
-          end
-
-          it 'should match REFERENCE_NAME_REGEXP' do
-            expect(derived_reference_name).to match(described_class::REFERENCE_NAME_REGEXP)
-          end
-
-          it 'should not include EXTENSION' do
-            expect(derived_reference_name).not_to end_with(described_class::EXTENSION)
-          end
-
-          it 'should be all file names except the first joined with the REFERENCE_NAME_SEPARATOR with EXTENSION' do
-            expect(derived_reference_name).to eq("b#{described_class::REFERENCE_NAME_SEPARATOR}c")
-          end
-        end
-
-        context 'without EXTENSION' do
-          let(:relative_file_names) do
-            ['a', 'b', 'c'].each
-          end
-
-          it { should be_nil }
-        end
-      end
-    end
-  end
-
   context '#loading_context?' do
     subject(:loading_context?) do
       module_ancestor.send(:loading_context?)
@@ -989,17 +737,14 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     let(:module_ancestor) do
       FactoryGirl.build(
           :metasploit_cache_module_ancestor,
-          module_type: module_type
+          module_type: module_type,
+          reference_name: reference_name
       )
     end
 
     context 'with payload' do
       let(:module_type) do
         'payload'
-      end
-
-      before(:each) do
-        module_ancestor.reference_name = reference_name
       end
 
       context 'with #reference_name' do
@@ -1037,6 +782,10 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       let(:module_type) do
         FactoryGirl.generate :metasploit_cache_non_payload_module_type
       end
+
+      let(:reference_name) {
+        FactoryGirl.generate :metasploit_cache_module_ancestor_non_payload_reference_name
+      }
 
       it { should be_nil }
     end
@@ -1157,8 +906,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
 
     let(:module_ancestor) do
-      described_class.new(
-          :reference_name => reference_name
+      FactoryGirl.build(
+          :metasploit_cache_module_ancestor,
+          reference_name: reference_name
       )
     end
 

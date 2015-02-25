@@ -11,6 +11,21 @@ FactoryGirl.define do
         end
       }
 
+      # depends on module_type and payload_type
+      reference_name {
+        if payload?
+          payload_type_directory = payload_type.pluralize
+          relative_payload_name = generate :metasploit_cache_module_ancestor_relative_payload_name
+
+          [
+              payload_type_directory,
+              relative_payload_name
+          ].join('/')
+        else
+          generate :metasploit_cache_module_ancestor_non_payload_reference_name
+        end
+      }
+
       #
       # Callback helpers
       #
@@ -43,21 +58,6 @@ FactoryGirl.define do
     #
     # Attributes
     #
-
-    # depends on module_type
-    reference_name {
-      if payload?
-        payload_type_directory = payload_type.pluralize
-        relative_payload_name = generate :metasploit_cache_module_ancestor_relative_payload_name
-
-        [
-            payload_type_directory,
-            relative_payload_name
-        ].join('/')
-      else
-        generate :metasploit_cache_module_ancestor_non_payload_reference_name
-      end
-    }
 
     # depends on module_type, parent_path.real_path and reference_name
     real_path {

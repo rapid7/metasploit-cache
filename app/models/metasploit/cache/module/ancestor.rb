@@ -40,9 +40,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Maps directory to {#module_type} for converting a {#real_path} into a {#module_type} and {#reference_name}
   MODULE_TYPE_BY_DIRECTORY = DIRECTORY_BY_MODULE_TYPE.invert
 
-  # Regexp to keep '\' out of reference names
-  REFERENCE_NAME_REGEXP = /\A[\-0-9A-Z_a-z]+(?:\/[\-0-9A-Z_a-z]+)*\Z/
-
   # Separator used to join names in {#reference_name}.  It is always '/', even on Windows, where '\' is a valid
   # file separator.
   REFERENCE_NAME_SEPARATOR = '/'
@@ -102,16 +99,9 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #   @see Digest::SHA1#hexdigest
   #   @return [String]
 
-  # @!attribute reference_name
-  #   The reference name of the module.  The name of the module under its {#module_type type}.
-  #
-  #   @return [String]
-
   #
   # Derivations
   #
-
-  derives :reference_name, :validate => false
 
   # Don't validate attributes that require accessing file system to derive value
   derives :real_path_modified_at, :validate => false
@@ -151,10 +141,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
             },
             uniqueness: {
                 unless: :batched?
-            }
-  validates :reference_name,
-            format: {
-                with: REFERENCE_NAME_REGEXP
             }
 
   #
@@ -220,25 +206,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     hex_digest
   end
 
-  # Derives {#reference_name} from {#real_path} and {Metasploit::Cache::Module::Path#real_path}.
-  #
-  # @return [String]
-  # @return [nil] if {#real_path} is `nil`.
-  def derived_reference_name
-    derived = nil
-    reference_name_file_names = relative_file_names.drop(1)
-    reference_name_base_name = reference_name_file_names[-1]
-
-    if reference_name_base_name
-      if File.extname(reference_name_base_name) == EXTENSION
-        reference_name_file_names[-1] = File.basename(reference_name_base_name, EXTENSION)
-        derived = reference_name_file_names.join(REFERENCE_NAME_SEPARATOR)
-      end
-    end
-
-    derived
-  end
-
   # The type of the module. This would be called #type, but #type is reserved for ActiveRecord's single table
   # inheritance.
   #
@@ -302,6 +269,25 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     end
 
     directory
+  end
+
+  # The reference name of the module.  The name of the module under its {#module_type type}.
+  #
+  # @return [String] if {#real_path} is set and ends with {EXTENSION}.
+  # @return [nil] otherwise.
+  def reference_name
+    derived = nil
+    reference_name_file_names = relative_file_names.drop(1)
+    reference_name_base_name = reference_name_file_names[-1]
+
+    if reference_name_base_name
+      if File.extname(reference_name_base_name) == EXTENSION
+        reference_name_file_names[-1] = File.basename(reference_name_base_name, EXTENSION)
+        derived = reference_name_file_names.join(REFERENCE_NAME_SEPARATOR)
+      end
+    end
+
+    derived
   end
 
   # @!method real_path=(real_path)
