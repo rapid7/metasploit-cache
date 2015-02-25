@@ -324,8 +324,8 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     ancestors.each do |ancestor|
       if module_type and ancestor.module_type != module_type
         errors[:ancestors] << "can contain ancestors only with same module_type (#{module_type}); " \
-                              "#{ancestor.full_name} cannot be an ancestor due to its module_type " \
-                              "(#{ancestor.module_type})"
+                              "#{ancestor.module_type}/#{ancestor.reference_name} cannot be an ancestor due to its " \
+                              "module_type (#{ancestor.module_type})"
       end
 
       ancestor_module_type_set.add ancestor.module_type
@@ -345,16 +345,15 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     if payload?
       ancestors.each do |ancestor|
         unless ancestor.payload?
-          errors[:ancestors] << "cannot have an ancestor (#{ancestor.full_name}) that is not a payload " \
-                                "for payload class"
+          errors[:ancestors] << "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) " \
+                                "that is not a payload for payload class"
         end
       end
     else
       ancestors.each do |ancestor|
         if ancestor.payload?
-          errors[:ancestors] << "cannot have an ancestor (#{ancestor.full_name}) " \
-                                "that is a payload with " \
-                                "for class module_type (#{module_type})"
+          errors[:ancestors] << "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) " \
+                                "that is a payload with for class module_type (#{module_type})"
         end
       end
     end

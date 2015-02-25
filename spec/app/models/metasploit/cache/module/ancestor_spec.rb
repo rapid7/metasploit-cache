@@ -122,7 +122,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       Metasploit::Cache::Module::Ancestor
     }
 
-    it_should_behave_like 'derives', :full_name, :validates => true
     it_should_behave_like 'derives', :real_path, :validates => true
 
     context 'with only module_path and real_path' do
@@ -526,39 +525,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
     context 'without #real_path' do
       let(:real_path) do
-        nil
-      end
-
-      it { should be_nil }
-    end
-  end
-
-  context '#derived_full_name' do
-    subject(:derived_full_name) do
-      module_ancestor.derived_full_name
-    end
-
-    let(:module_ancestor) do
-      FactoryGirl.build(
-          :metasploit_cache_module_ancestor,
-          :module_type => module_type,
-          # don't create parent_path since it's unneeded for tests
-          :parent_path => nil
-      )
-    end
-
-    context 'with module_type' do
-      let(:module_type) do
-        FactoryGirl.generate :metasploit_cache_module_type
-      end
-
-      it "should equal <module_type>/<reference_name>" do
-        expect(derived_full_name).to eq("#{module_ancestor.module_type}/#{module_ancestor.reference_name}")
-      end
-    end
-
-    context 'without module_type' do
-      let(:module_type) do
         nil
       end
 

@@ -521,7 +521,8 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           def error(module_class, ancestor)
             "can contain ancestors only with same module_type (#{module_class.module_type}); " \
-            "#{ancestor.full_name} cannot be an ancestor due to its module_type (#{ancestor.module_type})"
+            "#{ancestor.module_type}/#{ancestor.reference_name} cannot be an ancestor due to its module_type " \
+            "(#{ancestor.module_type})"
           end
 
           before(:each) do
@@ -703,7 +704,8 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
             context 'single' do
               let(:error) do
-                "cannot have an ancestor (#{ancestor.full_name}) that is not a payload for payload class"
+                "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) that is not a payload " \
+                "for payload class"
               end
 
               let(:payload_type) do
@@ -731,7 +733,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
           end
 
           let(:error) do
-            "cannot have an ancestor (#{ancestor.full_name}) that is a payload with " \
+            "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) that is a payload with " \
             "for class module_type (#{module_type})"
           end
 

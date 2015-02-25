@@ -85,11 +85,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Attributes
   #
 
-  # @!attribute full_name
-  #   The full name of the module.  The full name is `"#{module_type}/#{reference_name}"`.
-  #
-  #   @return [String]
-
   # @!attribute module_type
   #   The type of the module. This would be called #type, but #type is reserved for ActiveRecord's single table
   #   inheritance.
@@ -134,7 +129,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Normal derivation from setting {#module_type} and {#reference_name}
   #
 
-  derives :full_name, :validate => true
   derives :real_path, :validate => true
 
   # Don't validate attributes that require accessing file system to derive value
@@ -145,12 +139,10 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Mass Assignment Security
   #
 
-  # full_name is NOT accessible since it's derived and must match {#derived_full_name} so there's no reason for a
-  # user to set it.
-  # module_type is accessible because it's needed to derive {#full_name} and {#real_path}.
+  # module_type is accessible because it's needed to derive {#real_path}.
   attr_accessible :module_type
   # parent_path_id is NOT accessible since it should be supplied from context
-  # reference_name is accessible because it's needed to derive {#full_name} and {#real_path}.
+  # reference_name is accessible because it's needed to derive {#real_path}.
   attr_accessible :reference_name
   # real_path is accessible since {#module_type} and {#reference_name} can be derived from real_path.
   attr_accessible :real_path
@@ -161,10 +153,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Validations
   #
 
-  validates :full_name,
-            uniqueness: {
-                unless: :batched?
-            }
   validates :module_type,
             inclusion: {
                 in: Metasploit::Cache::Module::Type::ALL
@@ -309,12 +297,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
 
     derived
   end
-
-  # @!method full_name=(full_name)
-  #   Sets {#full_name}.
-  #
-  #   @param full_name [String] `"#{module_type}/#{reference_name}"`.
-  #   @return [void]
 
   # @!method module_type=(module_type)
   #   Sets {#module_type}.

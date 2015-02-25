@@ -11,7 +11,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:full_name).of_type(:text).with_options(:null => false) }
       it { should have_db_column(:module_type).of_type(:string).with_options(:null => false) }
       it { should have_db_column(:real_path).of_type(:text).with_options(:null => false) }
       it { should have_db_column(:real_path_modified_at).of_type(:datetime).with_options(:null => false) }
@@ -27,10 +26,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       context 'unique' do
         subject(:ancestor) do
           described_class.new
-        end
-
-        it 'should have unique index on full_name to represent that Msf::ModuleManager only allows one module with a given full_name' do
-          expect(ancestor).to have_db_index(:full_name).unique(true)
         end
 
         it 'should have unique index on (module_type, reference_name) to present that Msf::ModuleSet and Msf::PayloadSet only allow one module with a given reference_name' do
@@ -51,50 +46,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
   context 'validations' do
     let(:taken_error) do
       I18n.translate!('metasploit.model.errors.messages.taken')
-    end
-
-    context 'full_name' do
-      # can't use validate_uniqueness_of(:full_name) because of null value in module_type
-      context 'validates uniqueness' do
-        let!(:original_ancestor) do
-          FactoryGirl.create(:metasploit_cache_module_ancestor)
-        end
-
-        context 'with same full_name' do
-          subject(:same_full_name_ancestor) do
-            FactoryGirl.build(
-                :metasploit_cache_module_ancestor,
-                # set module_type and reference_name as full_name is derived from them
-                :module_type => original_ancestor.module_type,
-                :reference_name => original_ancestor.reference_name
-            )
-          end
-
-          context 'with batched' do
-            include_context 'Metasploit::Cache::Batch.batch'
-
-            it 'should not add error on #full_name' do
-              same_full_name_ancestor.valid?
-
-              expect(same_full_name_ancestor.errors[:full_name]).not_to include(taken_error)
-            end
-
-            it 'should raise ActiveRecord::RecordNotUnique when saved' do
-              expect {
-                same_full_name_ancestor.save
-              }.to raise_error(ActiveRecord::RecordNotUnique)
-            end
-          end
-
-          context 'without batched' do
-            it 'should add error on #full_name' do
-              same_full_name_ancestor.valid?
-
-              expect(same_full_name_ancestor.errors[:full_name]).to include(taken_error)
-            end
-          end
-        end
-      end
     end
 
     context 'real_path' do
