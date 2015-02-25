@@ -86,6 +86,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
             )
           }
 
+          let(:module_ancestor) {
+            super().tap { |module_ancestor|
+              module_ancestor.real_path = module_ancestor.parent_path.real_pathname.join('does', 'not', 'exist.rb').to_path
+            }
+          }
+
           let(:string_io) {
             StringIO.new
           }
@@ -99,6 +105,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
           #
 
           before(:each) do
+            module_ancestor.valid?
             module_ancestor_cache.logger = logger
           end
 

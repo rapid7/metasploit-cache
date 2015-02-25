@@ -123,7 +123,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:module_type).of_type(:string).with_options(:null => false) }
       it { should have_db_column(:real_path).of_type(:text).with_options(:null => false) }
       it { should have_db_column(:real_path_modified_at).of_type(:datetime).with_options(:null => false) }
       it { should have_db_column(:real_path_sha1_hex_digest).of_type(:string).with_options(:limit => 40, :null => false) }
@@ -138,10 +137,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       context 'unique' do
         subject(:ancestor) do
           described_class.new
-        end
-
-        it 'should have unique index on (module_type, reference_name) to present that Msf::ModuleSet and Msf::PayloadSet only allow one module with a given reference_name' do
-          expect(ancestor).to have_db_index([:module_type, :reference_name]).unique(true)
         end
 
         it 'should have unique index on real_path because only one file can have a given path' do
@@ -161,8 +156,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     let(:base_class) {
       Metasploit::Cache::Module::Ancestor
     }
-
-    it_should_behave_like 'derives', :real_path, :validates => true
 
     context 'with only module_path and real_path' do
       subject(:module_ancestor) do
@@ -227,20 +220,11 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
     context 'with real_path' do
       before(:each) do
-        # {Metasploit::Cache::Module::Ancestor#derived_real_path_modified_at} and
-        # {Metasploit::Cache::Module::Ancestor#derived_real_path_sha1_hex_digest} both depend on real_path being
-        # populated or they will return nil, so need set real_path = derived_real_path before testing as would happen
-        # with the normal order of before validation callbacks.
-        module_ancestor.real_path = module_ancestor.derived_real_path
-
-        # blank out {Metasploit::Cache::Module::Ancestor#module_type} and
-        # {Metasploit::Cache::Module::Ancestor#reference_name} so they will be rederived from
+        # {Metasploit::Cache::Module::Ancestor#reference_name} so it will be rederived from
         # {Metasploit::Cache::Module::Ancestor#real_path} to simulate module cache construction usage.
-        module_ancestor.module_type = nil
         module_ancestor.reference_name = nil
       end
 
-      it_should_behave_like 'derives', :module_type, :validates => false
       it_should_behave_like 'derives', :real_path_modified_at, :validates => false
       it_should_behave_like 'derives', :real_path_sha1_hex_digest, :validates => false
       it_should_behave_like 'derives', :reference_name, :validates => false
@@ -359,8 +343,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       expect(module_ancestor).not_to allow_mass_assignment_of(:full_name)
     end
 
-    it { should allow_mass_assignment_of(:module_type) }
-
     it 'should not allow mass assignment of payload_type since it must match derived_payload_type' do
       expect(module_ancestor).not_to allow_mass_assignment_of(:payload_type)
     end
@@ -390,7 +372,43 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       I18n.translate!('metasploit.model.errors.messages.taken')
     end
 
-    it { should validate_inclusion_of(:module_type).in_array(Metasploit::Cache::Module::Type::ALL) }
+    context 'validates inclusion of #module_type in array Metasploit::Cache::Module::Type::ALL' do
+      subject(:module_type_errors) {
+        module_ancestor.valid?
+
+        module_ancestor.errors[:module_type]
+      }
+
+      let(:error) {
+        I18n.translate!('errors.messages.inclusion')
+      }
+
+      let(:module_ancestor) {
+        FactoryGirl.build(
+                       :metasploit_cache_module_ancestor,
+                       module_type: module_type
+        )
+      }
+
+      context 'with invalid module_type' do
+        let(:module_type) {
+          'not_a_module_type'
+        }
+
+        it { is_expected.to include(error) }
+      end
+
+      Metasploit::Cache::Module::Type::ALL.each do |context_module_type|
+        context "with '#{context_module_type}'" do
+          let(:module_type) {
+            context_module_type
+          }
+
+          it { is_expected.not_to include(error) }
+        end
+      end
+    end
+
     it { should validate_presence_of(:parent_path) }
     it { should validate_presence_of(:real_path_modified_at) }
 
@@ -634,42 +652,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
           )
         end
 
-        context 'with same module_type' do
-          let(:new_module_type) do
-            original_module_type
-          end
-
-          context 'with same reference_name' do
-            let(:new_reference_name) do
-              original_reference_name
-            end
-
-            context 'with batched' do
-              include_context 'Metasploit::Cache::Batch.batch'
-
-              it 'should not add error on #reference_name' do
-                new_ancestor.valid?
-
-                expect(new_ancestor.errors[:reference_name]).not_to include(taken_error)
-              end
-
-              it 'should raise ActiveRecord::RecordNotUnique when saved' do
-                expect {
-                  new_ancestor.save
-                }.to raise_error(ActiveRecord::RecordNotUnique)
-              end
-            end
-
-            context 'without batched' do
-              it 'should add error on #reference_name' do
-                new_ancestor.valid?
-
-                expect(new_ancestor.errors[:reference_name]).to include(taken_error)
-              end
-            end
-          end
-        end
-
         context 'without same module_type' do
           let(:new_module_type) do
             # don't use payload so sequence can be used to generate reference_name
@@ -715,7 +697,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
     context 'with #real_path' do
       let(:real_path) do
-        module_ancestor.derived_real_path
+        module_ancestor.real_path
       end
 
       context 'with file' do
@@ -752,160 +734,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
   end
 
-  context '#derived_module_type' do
-    subject(:derived_module_type) do
-      module_ancestor.derived_module_type
-    end
-
-    before(:each) do
-      module_ancestor.real_path = real_path
-    end
-
-    context 'with #real_path' do
-      let(:real_path) do
-        module_ancestor.derived_real_path
-      end
-
-      before(:each) do
-        module_ancestor.parent_path = module_path
-      end
-
-      context 'with Metasploit::Cache::Module::Path' do
-        let(:module_path) do
-          module_ancestor.parent_path
-        end
-
-        before(:each) do
-          module_path.real_path = module_path_real_path
-        end
-
-        context 'with Metasploit::Cache::Module::Path#real_path' do
-          let(:module_path_real_path) do
-            module_path.real_path
-          end
-
-          it { should_not be_nil }
-        end
-
-        context 'without Metasploit::Cache::Module::Path#real_path' do
-          let(:module_path_real_path) do
-            nil
-          end
-
-          it { should be_nil }
-        end
-      end
-
-      context 'without Metasploit::Cache::Module::Path' do
-        let(:module_path) do
-          nil
-        end
-
-        it { should be_nil }
-      end
-    end
-
-    context 'without #real_path' do
-      let(:real_path) do
-        nil
-      end
-
-      it { should be_nil }
-    end
-  end
-
-  context '#derived_real_path' do
-    subject(:derived_real_path) do
-      module_ancestor.derived_real_path
-    end
-
-    let(:module_ancestor) do
-      FactoryGirl.build(
-          :metasploit_cache_module_ancestor,
-          :module_type => module_type,
-          :parent_path => parent_path,
-          :reference_name => reference_name
-      )
-    end
-
-    let(:module_type) do
-      nil
-    end
-
-    let(:reference_name) do
-      nil
-    end
-
-    context 'with parent_path' do
-      let(:parent_path) do
-        FactoryGirl.build(
-            :metasploit_cache_module_path,
-            :real_path => parent_path_real_path
-        )
-      end
-
-      context 'with parent_path.real_path' do
-        let(:parent_path_real_path) do
-          FactoryGirl.generate :metasploit_cache_module_path_real_path
-        end
-
-        context 'with module_type' do
-          let(:module_type) do
-            FactoryGirl.generate :metasploit_cache_module_type
-          end
-
-          context 'with reference_name' do
-            let(:reference_name) do
-              FactoryGirl.generate :metasploit_cache_module_ancestor_non_payload_reference_name
-            end
-
-            it 'should be full path including parent_path.real_path, type_directory, and reference_path' do
-              expect(derived_real_path).to eq(
-                                               File.join(
-                                                   parent_path_real_path,
-                                                   module_ancestor.module_type_directory,
-                                                   module_ancestor.reference_path
-                                               )
-                                           )
-            end
-          end
-
-          context 'without reference_name' do
-            let(:reference_name) do
-              nil
-            end
-
-            it { should be_nil }
-          end
-        end
-
-        context 'without module_type' do
-          let(:module_type) do
-            nil
-          end
-
-          it { should be_nil }
-        end
-      end
-
-      context 'without parent_path.real_path' do
-        let(:parent_path_real_path) do
-          nil
-        end
-
-        it { should be_nil }
-      end
-    end
-
-    context 'without parent_path' do
-      let(:parent_path) do
-        nil
-      end
-
-      it { should be_nil }
-    end
-  end
-
   context '#derived_real_path_modified_at' do
     subject(:derived_real_path_modified_at) do
       module_ancestor.derived_real_path_modified_at
@@ -922,8 +750,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
       context 'that exists' do
         let(:real_path) do
-          # derived real path will have been created by factory's after(:build)
-          module_ancestor.derived_real_path
+          module_ancestor.real_path
         end
 
         it 'should be modification time of file' do
@@ -967,10 +794,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
 
     context 'with real_path' do
-      before(:each) do
-        module_ancestor.real_path = module_ancestor.derived_real_path
-      end
-
       context 'that exists' do
         it 'should read the using Digest::SHA1.file' do
           expect(Digest::SHA1).to receive(:file).with(module_ancestor.real_path).and_call_original
@@ -1135,7 +958,10 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
   context '#payload?' do
     subject(:module_ancestor) do
-      described_class.new(:module_type => module_type)
+      FactoryGirl.build(
+                     :metasploit_cache_module_ancestor,
+                     module_type: module_type
+      )
     end
 
     context "with 'payload' module_type" do
@@ -1361,7 +1187,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
 
     let(:module_ancestor) do
-      described_class.new(
+      FactoryGirl.build(
+          :metasploit_cache_module_ancestor,
           :module_type => module_type
       )
     end
@@ -1382,7 +1209,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
           'not_a_type'
         end
 
-        it { should be_nil }
+        it 'returns the unknown type without filtering for validity' do
+          expect(module_type_directory).to eq(module_type)
+        end
       end
     end
 

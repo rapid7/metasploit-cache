@@ -2,6 +2,8 @@ FactoryGirl.define do
   factory :metasploit_cache_module_ancestor,
           class: Metasploit::Cache::Module::Ancestor do
     transient do
+      module_type { generate :metasploit_cache_module_type }
+
       # depends on module_type
       payload_type {
         if payload?
@@ -42,8 +44,6 @@ FactoryGirl.define do
     # Attributes
     #
 
-    module_type { generate :metasploit_cache_module_type }
-
     # depends on module_type
     reference_name {
       if payload?
@@ -59,32 +59,38 @@ FactoryGirl.define do
       end
     }
 
+    # depends on module_type, parent_path.real_path and reference_name
+    real_path {
+      if module_type
+        module_type_directory = Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE.fetch(module_type, module_type)
+
+        parent_path.real_pathname.join(
+            module_type_directory,
+            "#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
+        ).to_path
+      end
+    }
+
     #
     # Child Factories
     #
 
     factory :non_payload_metasploit_cache_module_ancestor do
       transient do
+        module_type { generate :metasploit_cache_non_payload_module_type }
         payload_type nil
       end
-
-      #
-      # Attributes
-      #
-
-      module_type { generate :metasploit_cache_non_payload_module_type }
     end
 
     factory :payload_metasploit_cache_module_ancestor do
       transient do
+        module_type 'payload'
         payload_type { 'single' }
       end
 
       #
       # Attributes
       #
-
-      module_type 'payload'
 
       reference_name {
         payload_type_directory = payload_type.pluralize

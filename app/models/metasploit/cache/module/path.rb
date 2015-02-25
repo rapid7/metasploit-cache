@@ -369,7 +369,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   def update_module_ancestor_real_paths
     if real_path_changed?
       module_ancestors.each do |module_ancestor|
-        module_ancestor.real_path = module_ancestor.derived_real_path
+        module_ancestor.real_path = module_ancestor.real_path.gsub(real_path_was, real_path)
 
         module_ancestor.save!
       end

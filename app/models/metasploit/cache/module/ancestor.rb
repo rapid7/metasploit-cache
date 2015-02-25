@@ -85,12 +85,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Attributes
   #
 
-  # @!attribute module_type
-  #   The type of the module. This would be called #type, but #type is reserved for ActiveRecord's single table
-  #   inheritance.
-  #
-  #   @return [String] key in {Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE}.
-
   # @!attribute real_path
   #   The real (absolute) path to module file on-disk.
   #
@@ -117,19 +111,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Derivations
   #
 
-  #
-  # Module Cache Construction derivation of {#module_type} and {#reference_name} from {#real_path} and
-  # {Metasploit::Cache::Module::Path#real_path}.
-  #
-
-  derives :module_type, :validate => false
   derives :reference_name, :validate => false
-
-  #
-  # Normal derivation from setting {#module_type} and {#reference_name}
-  #
-
-  derives :real_path, :validate => true
 
   # Don't validate attributes that require accessing file system to derive value
   derives :real_path_modified_at, :validate => false
@@ -139,12 +121,10 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Mass Assignment Security
   #
 
-  # module_type is accessible because it's needed to derive {#real_path}.
-  attr_accessible :module_type
   # parent_path_id is NOT accessible since it should be supplied from context
   # reference_name is accessible because it's needed to derive {#real_path}.
   attr_accessible :reference_name
-  # real_path is accessible since {#module_type} and {#reference_name} can be derived from real_path.
+  # real_path is accessible since {#reference_name} can be derived from real_path.
   attr_accessible :real_path
   # real_path_modified_at is NOT accessible since it's derived
   # real_path_sha1_hex_digest is NOT accessible since it's derived
@@ -175,10 +155,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   validates :reference_name,
             format: {
                 with: REFERENCE_NAME_REGEXP
-            },
-            uniqueness: {
-                scope: :module_type,
-                unless: :batched?
             }
 
   #
@@ -209,41 +185,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     end
 
     contents
-  end
-
-  # Derives {#module_type} from {#real_path} and {Metasploit::Cache::Module::Path#real_path}.
-  #
-  # @return [String]
-  # @return [nil] if {#real_path} is `nil`
-  # @return [nil] if {#relative_file_names} does not start with a module type directory.
-  def derived_module_type
-    module_type_directory = relative_file_names.first
-    derived = MODULE_TYPE_BY_DIRECTORY[module_type_directory]
-
-    derived
-  end
-
-  # Derives {#real_path} by combining {Metasploit::Cache::Module::Path#real_path parent_path.real_path},
-  # {#module_type_directory}, and {#reference_path} in the same way the module loader does in
-  # metasploit-framework.
-  #
-  # @return [String] the real path to the file holding the ruby Module or ruby Class represented by this ancestor.
-  # @return [nil] if {#parent_path} is `nil`.
-  # @return [nil] if {Metasploit::Cache::Module::Path#real_path parent_path.real_path} is `nil`.
-  # @return [nil] if {#module_type_directory} is `nil`.
-  # @return [nil] if {#reference_name} is `nil`.
-  def derived_real_path
-    derived_real_path = nil
-
-    if parent_path and parent_path.real_path and module_type_directory and reference_path
-      derived_real_path = File.join(
-          parent_path.real_path,
-          module_type_directory,
-          reference_path
-      )
-    end
-
-    derived_real_path
   end
 
   # Derives {#real_path_modified_at} by getting the modification time of the file on-disk.
@@ -298,19 +239,19 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     derived
   end
 
-  # @!method module_type=(module_type)
-  #   Sets {#module_type}.
+  # The type of the module. This would be called #type, but #type is reserved for ActiveRecord's single table
+  # inheritance.
   #
-  #   @param module_type [String] key in {Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE}. The type of
-  #     the module. This would be called #type, but #type is reserved for ActiveRecord's single table inheritance.
-  #   @return [void]
+  # @return [String] value in {Metasploit::Cache::Module::Ancestor::MODULE_TYPE_BY_DIRECTORY}.
+  def module_type
+    MODULE_TYPE_BY_DIRECTORY[module_type_directory]
+  end
 
-  # The directory for {#module_type} under {Metasploit::Cache::Module::Path parent_path.real_path}.
+  # The directory under {Metasploit::Cache::Module::Path parent_path.real_path}.
   #
   # @return [String]
-  # @see Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE
   def module_type_directory
-    Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE[module_type]
+    relative_file_names.first
   end
 
   # @!method parent_path=(parent_path)

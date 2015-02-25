@@ -569,7 +569,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
       end
 
       let(:new_module_ancestor_real_paths) do
-        new_module_ancestors.map(&:derived_real_path)
+        new_module_ancestors.map(&:real_path)
       end
 
       it 'use #module_ancestor_real_paths to gather Metasploit::Cache::Module::Ancestor#real_path' do
@@ -1019,7 +1019,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
     it 'should include all Metasploit::Cache::Module::Ancestor#real_paths' do
       expected_real_paths = []
       expected_real_paths.concat existing_module_ancestors.map(&:real_path)
-      expected_real_paths.concat new_module_ancestors.map(&:derived_real_path)
+      expected_real_paths.concat new_module_ancestors.map(&:real_path)
 
       expect(module_ancestor_real_paths).to match_array(expected_real_paths)
     end
