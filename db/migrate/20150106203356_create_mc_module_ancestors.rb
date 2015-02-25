@@ -26,7 +26,6 @@ class CreateMcModuleAncestors < ActiveRecord::Migration
       # Columns
       #
 
-      t.text :reference_name, null: false
       t.text :real_path, null: false
       t.datetime :real_path_modified_at, null: false
       t.string :real_path_sha1_hex_digest, limit: 40, null: false

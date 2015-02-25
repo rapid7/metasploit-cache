@@ -226,7 +226,6 @@ ActiveRecord::Schema.define(:version => 20150212214222) do
   add_index "mc_module_actions", ["module_instance_id", "name"], :name => "index_mc_module_actions_on_module_instance_id_and_name", :unique => true
 
   create_table "mc_module_ancestors", :force => true do |t|
-    t.text     "reference_name",                          :null => false
     t.text     "real_path",                               :null => false
     t.datetime "real_path_modified_at",                   :null => false
     t.string   "real_path_sha1_hex_digest", :limit => 40, :null => false
