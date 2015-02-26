@@ -27,6 +27,7 @@ module Metasploit
     autoload :Association
     autoload :Author
     autoload :Authority
+    autoload :Auxiliary
     autoload :Base
     autoload :Batch
     autoload :Derivation

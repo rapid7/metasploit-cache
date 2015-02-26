@@ -139,6 +139,28 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
             }
 
   #
+  # Class Methods
+  #
+
+  # Ensure that only {#module_type} matching `module_type` is valid for `subclass`.
+  #
+  # @param subclass [Class<Metasploit::Cache::Module::Ancestor>] a subclass of {Metasploit::Cache::Module::Ancestor}.
+  # @param to [String] an element of {Metasploit::Cache::Module::Type::ALL}.
+  # @return [void]
+  def self.restrict(subclass, to:)
+    subclass.validate :module_type_matches
+    error = "is not #{to}"
+
+    subclass.send(:define_method, :module_type_matches) do
+      if module_type != to
+        errors.add(:module_type, error)
+      end
+    end
+
+    subclass.send(:private, :module_type_matches)
+  end
+
+  #
   # Instance Methods
   #
 

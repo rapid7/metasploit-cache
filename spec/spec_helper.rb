@@ -21,6 +21,7 @@ roots = []
 metasploit_version_gem_specification = Gem::Specification.find_all_by_name('metasploit-version').first
 roots << metasploit_version_gem_specification.gem_dir
 
+roots << Metasploit::Concern::Engine.root
 roots << Metasploit::Model::Engine.root
 roots << Metasploit::Cache::Engine.root
 
