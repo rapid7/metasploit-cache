@@ -40,6 +40,7 @@ module Metasploit
     autoload :Login
     autoload :Module
     autoload :NilifyBlanks
+    autoload :Nop
     autoload :NullProgressBar
     autoload :Platform
     autoload :ProxiedValidation
