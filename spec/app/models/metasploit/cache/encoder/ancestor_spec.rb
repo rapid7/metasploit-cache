@@ -1,5 +1,7 @@
-RSpec.describe Metasploit::Cache::Auxiliary::Ancestor do
-  it_should_behave_like 'Metasploit::Cache::Module::Ancestor.restrict', module_type: 'auxiliary', module_type_directory: 'auxiliary'
+RSpec.describe Metasploit::Cache::Encoder::Ancestor do
+  it_should_behave_like 'Metasploit::Cache::Module::Ancestor.restrict',
+                        module_type: 'encoder',
+                        module_type_directory: 'encoders'
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'factories' do
