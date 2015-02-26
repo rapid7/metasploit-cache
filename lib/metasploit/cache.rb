@@ -32,6 +32,7 @@ module Metasploit
     autoload :Batch
     autoload :Derivation
     autoload :EmailAddress
+    autoload :Encoder
     autoload :Error
     autoload :File
     autoload :Invalid
