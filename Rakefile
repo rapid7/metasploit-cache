@@ -45,13 +45,45 @@ task :coverage do
     refuse_coverage_drop
   end
 
+  merged_results = SimpleCov::ResultMerger.merged_result
+
   if ENV['TRAVIS'] == 'true'
     Rake.application['coveralls:push'].invoke
   else
     require 'simplecov-html'
 
-    result = SimpleCov::ResultMerger.merged_result
-    SimpleCov::Formatter::HTMLFormatter.new.format result
+    SimpleCov::Formatter::HTMLFormatter.new.format merged_results
+  end
+
+  #
+  # 'simplecov/defaults' at_exit only works on unmerged results, so adapt it here to work on merged results.
+  #
+  # @see https://github.com/colszowka/simplecov/blob/47b9a891dfb36d0271b729fa18620429455fda75/lib/simplecov/defaults.rb#L42-L83
+  #
+
+  covered_percent = merged_results.covered_percent.round(2)
+  exit_status = SimpleCov::ExitCodes::SUCCESS
+
+  if covered_percent < SimpleCov.minimum_coverage
+    $stderr.puts "Coverage (%.2f%%) is below the expected minimum coverage (%.2f%%)." % \
+                     [covered_percent, SimpleCov.minimum_coverage]
+
+    exit_status = SimpleCov::ExitCodes::MINIMUM_COVERAGE
+  elsif (last_run = SimpleCov::LastRun.read)
+    diff = last_run['result']['covered_percent'] - covered_percent
+
+    if diff > SimpleCov.maximum_coverage_drop
+      $stderr.puts "Coverage has dropped by %.2f%% since the last time (maximum allowed: %.2f%%)." % \
+                       [diff, SimpleCov.maximum_coverage_drop]
+
+      exit_status = SimpleCov::ExitCodes::MAXIMUM_COVERAGE_DROP
+    end
+  end
+
+  SimpleCov::LastRun.write(:result => {:covered_percent => covered_percent})
+
+  if exit_status != SimpleCov::ExitCodes::SUCCESS
+    Kernel.exit exit_status
   end
 end
 

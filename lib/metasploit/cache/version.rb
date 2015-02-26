@@ -11,7 +11,7 @@ module Metasploit
       # The minor version number, scoped to the {MAJOR} version number.
       MINOR = 61
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-      PATCH = 5
+      PATCH = 6
 
       #
       # Module Methods
@@ -28,9 +28,11 @@ module Metasploit
       def self.full
         version = "#{MAJOR}.#{MINOR}.#{PATCH}"
 
+        # :nocov:
         if defined? PRERELEASE
           version = "#{version}-#{PRERELEASE}"
         end
+        # :nocov:
 
         version
       end
