@@ -23,6 +23,12 @@ class CreateMcModuleAncestors < ActiveRecord::Migration
   def up
     create_table TABLE_NAME do |t|
       #
+      # Single Table Inheritance (STI)
+      #
+
+      t.string :type
+
+      #
       # Columns
       #
 
