@@ -34,6 +34,7 @@ module Metasploit
     autoload :EmailAddress
     autoload :Encoder
     autoload :Error
+    autoload :Exploit
     autoload :File
     autoload :Invalid
     autoload :Login
