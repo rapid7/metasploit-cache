@@ -208,6 +208,6 @@ RSpec.describe Metasploit::Cache::Derivation do
       base_class.validate_by_derived_attribute
     end
 
-    it { is_expected.to eq({}) }
+    it { is_expected.to be_nil }
   end
 end

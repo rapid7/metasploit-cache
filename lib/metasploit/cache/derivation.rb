@@ -53,6 +53,11 @@ module Metasploit::Cache::Derivation
     include ActiveModel::Validations
     include ActiveModel::Validations::Callbacks
 
+    # Maps a derived attribute (declared with {#derives}) to whether the attribute should validate as a derivation.
+    #
+    # @return [Hash{Symbol => Boolean}]
+    class_attribute :validate_by_derived_attribute
+
     before_validation :derive
   end
 
@@ -71,18 +76,14 @@ module Metasploit::Cache::Derivation
       options.assert_valid_keys(:validate)
 
       validate = options.fetch(:validate, false)
-      validate_by_derived_attribute[attribute] = validate
+
+      # avoid mutation so that superclass copy is not affected
+      self.validate_by_derived_attribute ||= {}
+      self.validate_by_derived_attribute = validate_by_derived_attribute.merge(attribute => validate)
 
       if validate
         validates attribute, :derivation => true
       end
-    end
-
-    # Maps a derived attribute (declared with {#derives}) to whether the attribute should validate as a derivation.
-    #
-    # @return [Hash{Symbol => Boolean}]
-    def validate_by_derived_attribute
-      @validate_by_derived_attribute ||= {}
     end
   end
 
