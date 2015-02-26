@@ -88,7 +88,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
 
           let(:module_ancestor) {
             super().tap { |module_ancestor|
-              module_ancestor.real_path = module_ancestor.parent_path.real_pathname.join('does', 'not', 'exist.rb').to_path
+              module_ancestor.relative_path = File.join('does', 'not', 'exist.rb')
             }
           }
 
@@ -112,7 +112,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
           it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
             persist
 
-            expect(string_io.string).to include("[#{module_ancestor.real_path}]")
+            expect(string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
           end
 
           it 'logs validation errors' do

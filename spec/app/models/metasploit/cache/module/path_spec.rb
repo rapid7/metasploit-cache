@@ -94,51 +94,6 @@ RSpec.describe Metasploit::Cache::Module::Path do
         end
       end
     end
-
-    context 'after update' do
-      context '#update_module_ancestor_real_paths' do
-        context 'with change to #real_path' do
-          let!(:path) do
-            FactoryGirl.create(:metasploit_cache_module_path)
-          end
-
-          let(:new_real_path) do
-            FactoryGirl.generate :metasploit_cache_module_path_real_path
-          end
-
-          context 'with #module_ancestors' do
-            let!(:ancestors) do
-              FactoryGirl.create_list(:metasploit_cache_module_ancestor, 2, :parent_path => path)
-            end
-
-            before(:each) do
-              # Have to remove new_real_path as sequence will have already created it
-              FileUtils.rmdir(new_real_path)
-              # Move old real_path to new real_path to simulate install location for path changing and to ensure
-              # that ancestors exist on path.
-              FileUtils.mv(path.real_path, new_real_path)
-
-              path.real_path = new_real_path
-            end
-
-            it 'should save without errors' do
-              expect {
-                path.save!
-              }.to_not raise_error
-            end
-
-            it "should update ancestor's real_paths" do
-              expect {
-                path.save!
-              }.to change {
-                # true = reload association
-                path.module_ancestors(true).map(&:real_path)
-              }
-            end
-          end
-        end
-      end
-    end
   end
 
   context 'database' do
@@ -548,6 +503,9 @@ RSpec.describe Metasploit::Cache::Module::Path do
       )
     end
 
+    #
+    # Callbacks
+    #
 
     before(:each) do
       # validate to derive real_path
@@ -560,20 +518,20 @@ RSpec.describe Metasploit::Cache::Module::Path do
         }
       end
 
-      let(:existing_module_ancestor_real_paths) do
-        existing_module_ancestors.map(&:real_path)
+      let(:existing_module_ancestor_relative_paths) do
+        existing_module_ancestors.map(&:relative_path)
       end
 
-      let(:module_ancestor_real_paths) do
-        existing_module_ancestor_real_paths + new_module_ancestor_real_paths
+      let(:module_ancestor_relative_paths) do
+        existing_module_ancestor_relative_paths + new_module_ancestor_relative_paths
       end
 
-      let(:new_module_ancestor_real_paths) do
-        new_module_ancestors.map(&:real_path)
+      let(:new_module_ancestor_relative_paths) do
+        new_module_ancestors.map(&:relative_path)
       end
 
-      it 'use #module_ancestor_real_paths to gather Metasploit::Cache::Module::Ancestor#real_path' do
-        expect(path).to receive(:module_ancestor_real_paths).and_return([])
+      it 'use #module_ancestor_relative_paths to gather Metasploit::Cache::Module::Ancestor#relative_path' do
+        expect(path).to receive(:module_ancestor_relative_paths).and_return([])
 
         each_changed_module_ancestor
       end
@@ -601,15 +559,15 @@ RSpec.describe Metasploit::Cache::Module::Path do
         each_changed_module_ancestor
       end
 
-      it 'should use Set to calculate new real_paths' do
-        set = Set.new(module_ancestor_real_paths)
+      it 'should use Set to calculate new relative_paths' do
+        set = Set.new(module_ancestor_relative_paths)
 
-        expect(Set).to receive(:new) { |actual_real_paths|
-          expect(actual_real_paths).to match_array(module_ancestor_real_paths)
+        expect(Set).to receive(:new) { |actual_relative_paths|
+          expect(actual_relative_paths).to match_array(module_ancestor_relative_paths)
         }.and_return(set)
 
-        existing_module_ancestor_real_paths.each do |real_path|
-          expect(set).to receive(:delete).with(real_path).and_call_original
+        existing_module_ancestor_relative_paths.each do |relative_path|
+          expect(set).to receive(:delete).with(relative_path).and_call_original
         end
 
         each_changed_module_ancestor
@@ -637,10 +595,10 @@ RSpec.describe Metasploit::Cache::Module::Path do
               expect(changed_module_ancestors).to include(existing_module_ancestor)
             end
 
-            actual_real_paths = changed_module_ancestors.map(&:real_path)
+            actual_relative_paths = changed_module_ancestors.map(&:relative_path)
 
-            new_module_ancestor_real_paths.each do |real_path|
-              expect(actual_real_paths).to include(real_path)
+            new_module_ancestor_relative_paths.each do |relative_path|
+              expect(actual_relative_paths).to include(relative_path)
             end
           end
         end
@@ -658,7 +616,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
 
           context 'without change to file modification time' do
             it 'should yield only new Metasploit::Cache::Module::Ancestors' do
-              actual_real_paths = changed_module_ancestors.map(&:real_path)
+              actual_relative_paths = changed_module_ancestors.map(&:relative_path)
 
               expect(
                   changed_module_ancestors.all? { |module_ancestor|
@@ -666,7 +624,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
                   }
               ).to eq(true)
 
-              expect(actual_real_paths).to match_array(new_module_ancestor_real_paths)
+              expect(actual_relative_paths).to match_array(new_module_ancestor_relative_paths)
             end
           end
 
@@ -674,12 +632,12 @@ RSpec.describe Metasploit::Cache::Module::Path do
             def change_real_path_modification_time(module_ancestor)
               changed_time_with_zone = module_ancestor.real_path_modified_at + 5.seconds
               changed_time = changed_time_with_zone.time()
-              File.utime(changed_time, changed_time, module_ancestor.real_path)
+              File.utime(changed_time, changed_time, module_ancestor.real_pathname.to_path)
             end
 
             context 'with change to file contents' do
               def change_contents(module_ancestor)
-                File.open(module_ancestor.real_path, 'a') do |f|
+                module_ancestor.real_pathname.open('a') do |f|
                   f.puts "# Change to contents"
                 end
               end
@@ -694,14 +652,14 @@ RSpec.describe Metasploit::Cache::Module::Path do
               end
 
               it 'should return all Metasploit::Cache::module::Ancestors' do
-                actual_real_paths = changed_module_ancestors.map(&:real_path)
+                actual_relative_paths = changed_module_ancestors.map(&:relative_path)
 
                 existing_module_ancestors.each do |existing_module_ancestor|
-                  expect(actual_real_paths).to include(existing_module_ancestor.real_path)
+                  expect(actual_relative_paths).to include(existing_module_ancestor.relative_path)
                 end
 
                 new_module_ancestors.each do |new_module_ancestor|
-                  expect(actual_real_paths).to include(new_module_ancestor.real_path)
+                  expect(actual_relative_paths).to include(new_module_ancestor.relative_path)
                 end
               end
 
@@ -771,8 +729,8 @@ RSpec.describe Metasploit::Cache::Module::Path do
             )
           end
 
-          it 'should set #total to #module_ancestor_real_paths #length' do
-            expected_total = path.module_ancestor_real_paths.length
+          it 'should set #total to #module_ancestor_relative_paths #length' do
+            expected_total = path.module_ancestor_relative_paths.length
 
             expect(progress_bar).to receive(:total=).with(expected_total).and_call_original
 
@@ -792,13 +750,13 @@ RSpec.describe Metasploit::Cache::Module::Path do
               end
 
               it 'should increment progress bar with yielding' do
-                actual_real_paths = []
+                actual_relative_paths = []
 
                 path.each_changed_module_ancestor(options) { |module_ancestor|
-                  actual_real_paths << module_ancestor.real_path
+                  actual_relative_paths << module_ancestor.relative_path
                 }
 
-                expect(actual_real_paths).to match_array(existing_module_ancestor_real_paths)
+                expect(actual_relative_paths).to match_array(existing_module_ancestor_relative_paths)
                 expect(progress_bar).to be_finished
               end
 
@@ -863,8 +821,8 @@ RSpec.describe Metasploit::Cache::Module::Path do
         end
 
         context 'without progress bar' do
-          it 'should set #total to #module_ancestor_real_paths #length' do
-            expected_total = path.module_ancestor_real_paths.length
+          it 'should set #total to #module_ancestor_relative_paths #length' do
+            expected_total = path.module_ancestor_relative_paths.length
 
             expect_any_instance_of(Metasploit::Cache::NullProgressBar).to receive(:total=).with(expected_total)
 
@@ -886,13 +844,13 @@ RSpec.describe Metasploit::Cache::Module::Path do
               it 'increments progress bar with yielding' do
                 expect_any_instance_of(Metasploit::Cache::NullProgressBar).to receive(:increment).exactly(existing_module_ancestors.length).times
 
-                actual_real_paths = []
+                actual_relative_paths = []
 
                 path.each_changed_module_ancestor(options) { |module_ancestor|
-                  actual_real_paths << module_ancestor.real_path
+                  actual_relative_paths << module_ancestor.relative_path
                 }
 
-                expect(actual_real_paths).to match_array(existing_module_ancestor_real_paths)
+                expect(actual_relative_paths).to match_array(existing_module_ancestor_relative_paths)
               end
             end
 
@@ -919,7 +877,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
             end
 
             it 'increments progress bar' do
-              expect_any_instance_of(Metasploit::Cache::NullProgressBar).to receive(:increment).exactly(new_module_ancestor_real_paths.length).times
+              expect_any_instance_of(Metasploit::Cache::NullProgressBar).to receive(:increment).exactly(new_module_ancestor_relative_paths.length).times
 
               each_changed_module_ancestor
             end
@@ -937,9 +895,9 @@ RSpec.describe Metasploit::Cache::Module::Path do
     end
   end
 
-  context '#module_ancestor_real_paths' do
-    subject(:module_ancestor_real_paths) do
-      module_path.module_ancestor_real_paths
+  context '#module_ancestor_relative_paths' do
+    subject(:module_ancestor_relative_paths) do
+      module_path.module_ancestor_relative_paths
     end
 
     #
@@ -986,42 +944,42 @@ RSpec.describe Metasploit::Cache::Module::Path do
       end
     end
 
-    it 'uses #module_ancestor_rule to find Metasploit::Cache::Module::Ancestor#real_paths' do
+    it 'uses #module_ancestor_rule to find Metasploit::Cache::Module::Ancestor#relative_paths' do
       expect(module_path).to receive(:module_ancestor_rule).and_call_original
 
-      module_ancestor_real_paths
+      module_ancestor_relative_paths
     end
 
     it 'should not include directories' do
       expect(
-          module_ancestor_real_paths.any? { |real_path|
-            File.directory?(real_path)
+          module_ancestor_relative_paths.any? { |relative_path|
+            module_path.real_pathname.join(relative_path).directory?
           }
       ).to eq(false)
     end
 
     it 'should only include files' do
       expect(
-          module_ancestor_real_paths.all? { |real_path|
-            File.file?(real_path)
+          module_ancestor_relative_paths.all? { |relative_path|
+            module_path.real_pathname.join(relative_path).file?
           }
       ).to eq(true)
     end
 
     it 'should only include file names with Metasploit::Cache::Module::Ancestor::EXTENSION' do
       expect(
-          module_ancestor_real_paths.all? { |real_path|
-            File.extname(real_path) == Metasploit::Cache::Module::Ancestor::EXTENSION
+          module_ancestor_relative_paths.all? { |relative_path|
+            module_path.real_pathname.join(relative_path).extname == Metasploit::Cache::Module::Ancestor::EXTENSION
           }
       ).to eq(true)
     end
 
     it 'should include all Metasploit::Cache::Module::Ancestor#real_paths' do
-      expected_real_paths = []
-      expected_real_paths.concat existing_module_ancestors.map(&:real_path)
-      expected_real_paths.concat new_module_ancestors.map(&:real_path)
+      expected_relative_paths = []
+      expected_relative_paths.concat existing_module_ancestors.map(&:relative_path)
+      expected_relative_paths.concat new_module_ancestors.map(&:relative_path)
 
-      expect(module_ancestor_real_paths).to match_array(expected_real_paths)
+      expect(module_ancestor_relative_paths).to match_array(expected_relative_paths)
     end
   end
 

@@ -242,7 +242,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         #
 
         before(:each) do
-          File.open(module_ancestor.real_path, 'w') do |f|
+          module_ancestor.real_pathname.open('w') do |f|
             f.puts "RequiredVersions = [#{minimum_core_version}, #{minimum_api_version}]"
             f.puts ""
             f.puts "module Metasploit4"
@@ -316,7 +316,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         #
 
         before(:each) do
-          File.open(module_ancestor.real_path, 'w') do |f|
+          module_ancestor.real_pathname.open('w') do |f|
             f.puts "RequiredVersions = [#{minimum_core_version}, #{minimum_api_version}]"
             f.puts ""
             f.puts "module Metasploit4"
@@ -373,7 +373,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
       context 'with constant matching Metasploit<n>' do
         context 'without Module' do
           before(:each) do
-            File.open(module_ancestor.real_path, 'w') do |f|
+            module_ancestor.real_pathname.open('w') do |f|
               f.puts "Metasploit#{n} = nil"
             end
 
@@ -415,7 +415,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
 
         context 'with Module' do
           before(:each) do
-            File.open(module_ancestor.real_path, 'w') do |f|
+            module_ancestor.real_pathname.open('w') do |f|
               f.puts "module Metasploit#{n}"
               f.puts "end"
             end
@@ -470,7 +470,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
 
         context 'with Class' do
           before(:each) do
-            File.open(module_ancestor.real_path, 'w') do |f|
+            module_ancestor.real_pathname.open('w') do |f|
               f.puts "class Metasploit#{n}"
               f.puts "end"
             end
@@ -526,7 +526,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
 
       context 'without constant matching Metasploit<n>' do
         before(:each) do
-          File.open(module_ancestor.real_path, 'w') do |f|
+          module_ancestor.real_pathname.open('w') do |f|
             f.puts "# This space intentionally left blank"
           end
 
@@ -684,7 +684,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
 
       context 'without valid' do
         before(:each) do
-          File.open(module_ancestor.real_path, 'w') do |f|
+          module_ancestor.real_pathname.open('w') do |f|
             f.puts "module Metasploit4"
             f.puts "  def self.is_usable"
             f.puts "    false"

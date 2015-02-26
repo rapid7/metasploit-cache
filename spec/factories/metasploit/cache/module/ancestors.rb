@@ -59,15 +59,12 @@ FactoryGirl.define do
     # Attributes
     #
 
-    # depends on module_type, parent_path.real_path and reference_name
-    real_path {
+    # depends on module_type and reference_name
+    relative_path {
       if module_type
         module_type_directory = Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE.fetch(module_type, module_type)
 
-        parent_path.real_pathname.join(
-            module_type_directory,
-            "#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
-        ).to_path
+        "#{module_type_directory}/#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
       end
     }
 

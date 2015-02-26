@@ -61,7 +61,6 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   nilify_blank :gem,
                :name
   before_validation :normalize_real_path
-  after_update :update_module_ancestor_real_paths
 
   #
   # Mass Assignment Security
@@ -118,9 +117,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   end
 
   # @note The yielded {Metasploit::Cache::Module::Ancestor} may contain unsaved changes.  It is the responsibility of the caller to
-  #   save the record and to populate the {Metasploit::Cache::Module::Ancestor#handler_type} if the {Metasploit::Cache::Module::Ancestor#handled?}
-  #   is `true` because the {Metasploit::Cache::Module::Ancestor#handler_type} can only be determined by loading the ancestor, not
-  #   from the file system alone.
+  #   save the record.
   #
   # @overload each_changed_module_ancestor(options={}, &block)
   #   Yields each module ancestor that is changed under this module path.
@@ -143,38 +140,38 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   #   {Metasploit::Cache::Module::Ancestor} should be returned.
   # @option options [ProgressBar, #total=, #increment] :progress_bar a ruby `ProgressBar` or similar object that
   #   supports the `#total=` and `#increment` API for monitoring the progress of the enumerator.  `#total` will be set
-  #   to total number of {#module_ancestor_real_paths real paths} under this module path, not just the number of changed
-  #   (updated or new) real paths.  `#increment` will be called whenever a real path is visited, which means it can be
-  #   called when there is no yielded module ancestor because that module ancestor was unchanged.  When
+  #   to total number of {#module_ancestor_relative_paths relative paths} under this module path, not just the number of
+  #   changed (updated or new) real paths.  `#increment` will be called whenever a relative path is visited, which means
+  #   it can be called when there is no yielded module ancestor because that module ancestor was unchanged.  When
   #   {#each_changed_module_ancestor} returns, `#increment` will have been called the same number of times as the value
   #   passed to `#total=` and `#finished?` will be `true`.
   #
-  # @see #changed_module_ancestor_from_real_path
+  # @see #changed_module_ancestor_from_relative_path
   def each_changed_module_ancestor(options={})
     options.assert_valid_keys(:changed, :progress_bar)
 
     unless block_given?
       to_enum(__method__, options)
     else
-      real_paths = module_ancestor_real_paths
+      relative_paths = module_ancestor_relative_paths
 
       progress_bar = options[:progress_bar] || Metasploit::Cache::NullProgressBar.new
-      progress_bar.total = real_paths.length
+      progress_bar.total = relative_paths.length
 
       # ensure the connection doesn't stay checked out for thread in metasploit-framework.
       ActiveRecord::Base.connection_pool.with_connection do
-        updatable_module_ancestors = module_ancestors.where(real_path: real_paths)
-        new_real_path_set = Set.new(real_paths)
+        updatable_module_ancestors = module_ancestors.where(relative_path: relative_paths)
+        new_relative_path_set = Set.new(relative_paths)
         assume_changed = options.fetch(:changed, false)
 
         # use find_each since this is expected to exceed default batch size of 1000 records.
         updatable_module_ancestors.find_each do |updatable_module_ancestor|
-          new_real_path_set.delete(updatable_module_ancestor.real_path)
+          new_relative_path_set.delete(updatable_module_ancestor.relative_path)
 
           changed = assume_changed
 
           # real_path_modified_at and real_path_sha1_hex_digest should be updated even if assume_changed is true so
-          # that database says in-sync with file system
+          # that database stays in-sync with file system
 
           updatable_module_ancestor.real_path_modified_at = updatable_module_ancestor.derived_real_path_modified_at
 
@@ -194,10 +191,10 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
           end
         end
 
-        # after all pre-existing real_paths are subtracted, new_real_path_set contains only real_paths not in the
-        # database
-        new_real_path_set.each do |real_path|
-          new_module_ancestor = module_ancestors.new(real_path: real_path)
+        # after all pre-existing relative_paths are subtracted, new_relative_path_set contains only relative_paths not
+        # in the database
+        new_relative_path_set.each do |relative_path|
+          new_module_ancestor = module_ancestors.new(relative_path: relative_path)
 
           yield new_module_ancestor
           progress_bar.increment
@@ -216,14 +213,21 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   #     collisions on {#name} which could disrupt the cache behavior.
   #   @return [void]
 
-  # {Metasploit::Cache::Module::Ancestor#real_path} under {#real_path} on-disk.
+  # {Metasploit::Cache::Module::Ancestor#relative_path} under {#real_path} on-disk.
   #
-  # @return [Arrray<String>]
-  def module_ancestor_real_paths
-    module_ancestor_rule.find
+  # @return [Array<String>]
+  def module_ancestor_relative_paths
+    real_pathname = self.real_pathname
+
+    module_ancestor_rule.find.map { |module_ancestor_real_path|
+      module_ancestor_real_pathname = Pathname.new(module_ancestor_real_path)
+      relative_pathname = module_ancestor_real_pathname.relative_path_from(real_pathname)
+
+      relative_pathname.to_path
+    }
   end
 
-  # File::Find rule for find all {Metasploit::Cache::Module::Ancestor#real_path} under {#real_path} on-disk.
+  # File::Find rule for find all {Metasploit::Cache::Module::Ancestor#relative_path} under {#real_path} on-disk.
   #
   # @return [File::Find]
   def module_ancestor_rule
@@ -360,19 +364,6 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   def normalize_real_path
     if real_path and File.exist?(real_path)
       self.real_path = Metasploit::Model::File.realpath(real_path)
-    end
-  end
-
-  # If {#real_path} changes, then update the {Metasploit::Cache::Module::Ancestor#real_path} for {#module_ancestors}.
-  #
-  # @return [void]
-  def update_module_ancestor_real_paths
-    if real_path_changed?
-      module_ancestors.each do |module_ancestor|
-        module_ancestor.real_path = module_ancestor.real_path.gsub(real_path_was, real_path)
-
-        module_ancestor.save!
-      end
     end
   end
 

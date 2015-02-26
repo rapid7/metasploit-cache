@@ -3,12 +3,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     FactoryGirl.build(:metasploit_cache_module_ancestor)
   }
 
-  it_should_behave_like 'Metasploit::Cache::RealPathname' do
-    let(:base_instance) do
-      FactoryGirl.build(:metasploit_cache_module_ancestor)
-    end
-  end
-
   context 'CONSTANTS' do
     context 'DIRECTORY_BY_MODULE_TYPE' do
       subject(:directory_by_module_type) do
@@ -118,7 +112,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:real_path).of_type(:text).with_options(:null => false) }
       it { should have_db_column(:real_path_modified_at).of_type(:datetime).with_options(:null => false) }
       it { should have_db_column(:real_path_sha1_hex_digest).of_type(:string).with_options(:limit => 40, :null => false) }
     end
@@ -133,8 +126,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
           described_class.new
         end
 
-        it 'should have unique index on real_path because only one file can have a given path' do
-          expect(ancestor).to have_db_index(:real_path).unique(true)
+        it 'should have unique index on relative_path because only ancestor one can have a given relative path because they map directly to full_names which are unique' do
+          expect(ancestor).to have_db_index(:relative_path).unique(true)
         end
 
         it 'should have unique index on real_path_sha1_hex_digest so renames can be detected' do
@@ -160,7 +153,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
         # work-around mass-assignment security
         module_ancestor.parent_path = real_path_creator.parent_path
-        module_ancestor.real_path = real_path_creator.real_path
+        module_ancestor.relative_path = real_path_creator.relative_path
 
         module_ancestor
       end
@@ -334,10 +327,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       expect(module_ancestor).not_to allow_mass_assignment_of(:payload_type)
     end
 
-    it 'should allow mass assignment of real_path to allow derivation of module_type and reference_name' do
-      expect(module_ancestor).to allow_mass_assignment_of(:real_path)
-    end
-
     it 'should not allow mass assignment of real_path_modified_at since it is derived' do
       expect(module_ancestor).not_to allow_mass_assignment_of(:real_path_modified_at)
     end
@@ -399,41 +388,41 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     it { should validate_presence_of(:parent_path) }
     it { should validate_presence_of(:real_path_modified_at) }
 
-    context 'real_path' do
+    context 'relative_path' do
       context 'validate uniqueness' do
         let!(:original_ancestor) do
           FactoryGirl.create(:metasploit_cache_module_ancestor)
         end
 
-        context 'with same real_path' do
-          subject(:same_real_path_ancestor) do
-            # Don't use factory as it will try to write real_path, which cause a path collision
+        context 'with same relative_path' do
+          subject(:same_relative_path_ancestor) do
+            # Don't use factory as it will try to write real_pathname, which cause a path collision
             original_ancestor.parent_path.module_ancestors.new(
-                real_path: original_ancestor.real_path
+                relative_path: original_ancestor.relative_path
             )
           end
 
           context 'with batched' do
             include_context 'Metasploit::Cache::Batch.batch'
 
-            it 'should not add error on #real_path' do
-              same_real_path_ancestor.valid?
+            it 'should not add error on #relative_path' do
+              same_relative_path_ancestor.valid?
 
-              expect(same_real_path_ancestor.errors[:real_path]).not_to include(taken_error)
+              expect(same_relative_path_ancestor.errors[:relative_path]).not_to include(taken_error)
             end
 
             it 'should raise ActiveRecord::RecordNotUnique when saved' do
               expect {
-                same_real_path_ancestor.save
+                same_relative_path_ancestor.save
               }.to raise_error(ActiveRecord::RecordNotUnique)
             end
           end
 
           context 'without batched' do
             it 'should add error on #real_path' do
-              same_real_path_ancestor.valid?
+              same_relative_path_ancestor.valid?
 
-              expect(same_real_path_ancestor.errors[:real_path]).to include(taken_error)
+              expect(same_relative_path_ancestor.errors[:relative_path]).to include(taken_error)
             end
           end
         end
@@ -510,13 +499,17 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
 
     before(:each) do
-      module_ancestor.real_path = real_path
+      module_ancestor.relative_path = relative_path
     end
 
-    context 'with #real_path' do
-      let(:real_path) do
-        module_ancestor.real_path
+    context 'with #relative_path' do
+      let(:relative_path) do
+        module_ancestor.relative_path
       end
+
+      let(:real_pathname) {
+        module_ancestor.real_pathname
+      }
 
       context 'with file' do
         let(:file_contents) do
@@ -524,7 +517,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
         end
 
         before(:each) do
-          File.open(real_path, 'wb') do |f|
+          real_pathname.open('wb') do |f|
             f.write(file_contents)
           end
         end
@@ -536,15 +529,15 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
       context 'without file' do
         before(:each) do
-          File.delete(real_path)
+          real_pathname.delete
         end
 
         it { should be_nil }
       end
     end
 
-    context 'without #real_path' do
-      let(:real_path) do
+    context 'without #relative_path' do
+      let(:relative_path) do
         nil
       end
 
@@ -561,18 +554,18 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       FactoryGirl.build(:metasploit_cache_module_ancestor)
     end
 
-    context 'with real_path' do
+    context 'with relative_path' do
       before(:each) do
-        module_ancestor.real_path = real_path
+        module_ancestor.relative_path = relative_path
       end
 
       context 'that exists' do
-        let(:real_path) do
-          module_ancestor.real_path
+        let(:relative_path) do
+          module_ancestor.relative_path
         end
 
         it 'should be modification time of file' do
-          expect(derived_real_path_modified_at).to eq(File.mtime(real_path))
+          expect(derived_real_path_modified_at).to eq(module_ancestor.parent_path.real_pathname.join(relative_path).mtime)
         end
 
         it 'should be in UTC' do
@@ -581,7 +574,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       end
 
       context 'that does not exist' do
-        let(:real_path) do
+        let(:relative_path) do
           'non/existent/path'
         end
 
@@ -589,13 +582,13 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       end
     end
 
-    context 'without real_path' do
+    context 'without relative_path' do
       before(:each) do
-        module_ancestor.real_path = nil
+        module_ancestor.relative_path = nil
       end
 
-      it 'should have nil for real_path' do
-        expect(module_ancestor.real_path).to be_nil
+      it 'should have nil for relative_path' do
+        expect(module_ancestor.relative_path).to be_nil
       end
 
       it { should be_nil }
@@ -611,10 +604,10 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       FactoryGirl.build(:metasploit_cache_module_ancestor)
     end
 
-    context 'with real_path' do
+    context 'with real_pathname' do
       context 'that exists' do
         it 'should read the using Digest::SHA1.file' do
-          expect(Digest::SHA1).to receive(:file).with(module_ancestor.real_path).and_call_original
+          expect(Digest::SHA1).to receive(:file).with(module_ancestor.real_pathname.to_s).and_call_original
 
           derived_real_path_sha1_hex_digest
         end
@@ -625,7 +618,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
           end
 
           before(:each) do
-            File.open(module_ancestor.real_path, 'wb') do |f|
+            module_ancestor.real_pathname.open('wb') do |f|
               f.write(content)
             end
           end
@@ -636,7 +629,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
             end
 
             it 'should have empty file at real_path' do
-              expect(File.size(module_ancestor.real_path)).to be_zero
+              expect(module_ancestor.real_pathname.size).to be_zero
             end
 
             it 'should have SHA1 hex digest for empty string' do
@@ -658,20 +651,20 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
       context 'that does not exist' do
         before(:each) do
-          File.delete(module_ancestor.real_path)
+          module_ancestor.real_pathname.delete
         end
 
         it { should be_nil }
       end
     end
 
-    context 'without real_path' do
+    context 'without #relative_path' do
       before(:each) do
-        module_ancestor.real_path = nil
+        module_ancestor.relative_path = nil
       end
 
-      it 'should have nil for real_path' do
-        expect(module_ancestor.real_path).to be_nil
+      it 'should have nil for relative_path' do
+        expect(module_ancestor.relative_path).to be_nil
       end
 
       it { should be_nil }
@@ -838,65 +831,34 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       module_ancestor.relative_pathname
     end
 
-    before(:each) do
-      allow(module_ancestor).to receive(:real_pathname).and_return(real_pathname)
-    end
+    let(:module_ancestor) {
+      FactoryGirl.build(
+                     :metasploit_cache_module_ancestor,
+                     relative_path: relative_path
+      )
+    }
 
-    context 'with #real_pathname' do
-      let(:real_pathname) do
-        Pathname.new('a/b/c')
-      end
+    context 'with #relative_path' do
+      let(:module_ancestor) {
+        FactoryGirl.build(:metasploit_cache_module_ancestor)
+      }
 
-      before(:each) do
-        module_ancestor.parent_path = parent_path
-      end
+      it { is_expected.to be_a Pathname }
 
-      context 'with #parent_path' do
-        let(:parent_path) do
-          module_ancestor.parent_path
-        end
-
-        before(:each) do
-          allow(parent_path).to receive(:real_pathname).and_return(parent_path_real_pathname)
-        end
-
-        context 'with Metasploit::Cache::Module::Path#real_pathname' do
-          let(:parent_path_real_pathname) do
-            Pathname.new('a')
-          end
-
-          it { should be_a Pathname }
-          it { should be_relative }
-
-          it 'should be relative to parent_path.real_pathname' do
-            expect(relative_pathname).to eq(Pathname.new('b/c'))
-          end
-        end
-
-        context 'without Metasploit::Cache::Module::Path#real_pathname' do
-          let(:parent_path_real_pathname) do
-            nil
-          end
-
-          it { should be_nil }
-        end
-      end
-
-      context 'without #parent_path' do
-        let(:parent_path) do
-          nil
-        end
-
-        it { should be_nil }
+      it 'is #relative_path as a Pathname' do
+        expect(relative_pathname).to eq(Pathname.new(module_ancestor.relative_path))
       end
     end
 
-    context 'without #real_pathname' do
-      let(:real_pathname) do
-        nil
-      end
+    context 'without #relative_path' do
+      let(:module_ancestor) {
+        FactoryGirl.build(
+                       :metasploit_cache_module_ancestor,
+                       relative_path: nil
+        )
+      }
 
-      it { should be_nil }
+      it { is_expected.to be_nil }
     end
   end
 

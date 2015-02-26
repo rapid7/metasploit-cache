@@ -126,16 +126,18 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
 
       module_ancestor = FactoryGirl.build(:metasploit_cache_module_ancestor)
 
-      File.open(module_ancestor.real_path, 'w') do |f|
+      module_ancestor.real_pathname.open('w') do |f|
         f.puts 'raise "Error in module_eval_with_lexical_scope"'
       end
 
+      module_ancestor_real_path = module_ancestor.real_pathname.to_path
+
       expect {
-        namespace_module.module_eval_with_lexical_scope(module_ancestor.contents, module_ancestor.real_path)
+        namespace_module.module_eval_with_lexical_scope(module_ancestor.contents, module_ancestor_real_path)
       }.to raise_error(RuntimeError) { |error|
              backtrace = error.backtrace
 
-             expect(backtrace[0]).to start_with(module_ancestor.real_path)
+             expect(backtrace[0]).to start_with(module_ancestor_real_path)
              expect(backtrace[1]).to match(/#{Regexp.escape(described_class::CONTENT_FILE)}:\d+:in `module_eval'/)
 
              path, line, code = backtrace[2].split(':')

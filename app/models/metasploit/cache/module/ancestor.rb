@@ -10,7 +10,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   include Metasploit::Cache::Batch::Root
   include Metasploit::Cache::Derivation
   include Metasploit::Cache::Derivation::FullName
-  include Metasploit::Cache::RealPathname
   include Metasploit::Model::Translation
 
   autoload :Cache
@@ -22,9 +21,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # CONSTANTS
   #
 
-  # The directory for a given {#module_type} is a not always the pluralization of #module_type, so this maps the
-  # #module_type to the type directory that is used to generate the #real_path from the #module_type and
-  # #reference_name.
+  # The directory for a given {#module_type} is a not always the pluralization of {#module_type}.
   DIRECTORY_BY_MODULE_TYPE = {
       Metasploit::Cache::Module::Type::AUX => Metasploit::Cache::Module::Type::AUX,
       Metasploit::Cache::Module::Type::ENCODER => Metasploit::Cache::Module::Type::ENCODER.pluralize,
@@ -37,7 +34,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # File extension used for metasploit modules.
   EXTENSION = '.rb'
 
-  # Maps directory to {#module_type} for converting a {#real_path} into a {#module_type} and {#reference_name}
+  # Maps directory to {#module_type} for converting a {#relative_path} into a {#module_type} and {#reference_name}
   MODULE_TYPE_BY_DIRECTORY = DIRECTORY_BY_MODULE_TYPE.invert
 
   # Separator used to join names in {#reference_name}.  It is always '/', even on Windows, where '\' is a valid
@@ -72,8 +69,8 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #
 
   # @!attribute [r] descendants
-  #   {Metasploit::Cache::Module::Class Classes} that either subclass the ruby Class in {#real_path} or include the ruby Module in
-  #   {#real_path}.
+  #   {Metasploit::Cache::Module::Class Classes} that either subclass the ruby Class in {#real_pathname} or include the
+  #   ruby Module in {#real_pathname}.
   #
   #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Class>]
   has_many :descendants, class_name: 'Metasploit::Cache::Module::Class', through: :relationships
@@ -82,21 +79,22 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Attributes
   #
 
-  # @!attribute real_path
-  #   The real (absolute) path to module file on-disk.
-  #
-  #   @return [String]
-
   # @!attribute real_path_modified_at
-  #   The modification time of the module {#real_path file on-disk}.
+  #   The modification time of the module {#real_pathname file on-disk}.
   #
   #   @return [DateTime]
 
   # @!attribute real_path_sha1_hex_digest
-  #   The SHA1 hexadecimal digest of contents of the file at {#real_path}.  Stored as a string because postgres does not
-  #   have support for a 160 bit numerical type and the hexdigest format is more recognizable when using SQL directly.
+  #   The SHA1 hexadecimal digest of contents of the file at {#real_pathname}.  Stored as a string because postgres does
+  #   not have support for a 160 bit numerical type and the hexdigest format is more recognizable when using SQL
+  #   directly.
   #
   #   @see Digest::SHA1#hexdigest
+  #   @return [String]
+
+  # @!attribute relative_path
+  #   The relative path under {#parent_path} {Metasploit::Cache::Module::Path#real_path} to the module file on-disk.
+  #
   #   @return [String]
 
   #
@@ -111,11 +109,8 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Mass Assignment Security
   #
 
-  # parent_path_id is NOT accessible since it should be supplied from context
-  # reference_name is accessible because it's needed to derive {#real_path}.
-  attr_accessible :reference_name
-  # real_path is accessible since {#reference_name} can be derived from real_path.
-  attr_accessible :real_path
+  # relative_path is accessible since it is set when building cache.
+  attr_accessible :relative_path
   # real_path_modified_at is NOT accessible since it's derived
   # real_path_sha1_hex_digest is NOT accessible since it's derived
 
@@ -129,16 +124,16 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
             }
   validates :parent_path,
             presence: true
-  validates :real_path,
-            uniqueness: {
-                unless: :batched?
-            }
   validates :real_path_modified_at,
             presence: true
   validates :real_path_sha1_hex_digest,
             format: {
                 with: SHA1_HEX_DIGEST_REGEXP
             },
+            uniqueness: {
+                unless: :batched?
+            }
+  validates :relative_path,
             uniqueness: {
                 unless: :batched?
             }
@@ -150,21 +145,24 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   def batched?
     super || loading_context?
   end
-  # The contents of {#real_path}.
+
+  # The contents of {#real_pathname}.
   #
-  # @return [String] contents of file at {#real_path}.
-  # @return [nil] if {#real_path} is `nil`.
-  # @return [nil] if {#real_path} does not exist on-disk.
+  # @return [String] contents of file at {#real_pathname}.
+  # @return [nil] if {#real_pathname} is `nil`.
+  # @return [nil] if {#real_pathname} does not exist on-disk.
   def contents
     contents = nil
 
-    if real_path
+    real_pathname = self.real_pathname
+
+    if real_pathname
       # rescue around both File calls since file could be deleted before size or after size and before read
       begin
-        size = File.size(real_path)
+        size = real_pathname.size
         # Specify full size of file for faster read on Windows (less chance of context switching mid-read).
         # Open in binary mode in Windows to handle non-text content embedded in file.
-        contents = File.read(real_path, size, 0, mode: 'rb')
+        contents = real_pathname.read(size, 0, mode: 'rb')
       rescue Errno::ENOENT
         contents = nil
       end
@@ -175,28 +173,26 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
 
   # Derives {#real_path_modified_at} by getting the modification time of the file on-disk.
   #
-  # @return [Time] modification time of {#real_path} if {#real_path} exists on disk and modification time can be
+  # @return [Time] modification time of {#real_pathname} if {#real_pathname} exists on disk and modification time can be
   #   queried by user.
-  # @return [nil] if {#real_path} does not exist or user cannot query the file's modification time.
+  # @return [nil] if {#real_pathname} does not exist or user cannot query the file's modification time.
   def derived_real_path_modified_at
-    real_path_string = real_path.to_s
-
     begin
-      mtime = File.mtime(real_path_string)
+      mtime = real_pathname.try(:mtime)
     rescue Errno::ENOENT
       nil
     else
-      mtime.utc
+      mtime.try(:utc)
     end
   end
 
-  # Derives {#real_path_sha1_hex_digest} by running the contents of {#real_path} through Digest::SHA1.hexdigest.
+  # Derives {#real_path_sha1_hex_digest} by running the contents of {#real_pathname} through Digest::SHA1.hexdigest.
   #
-  # @return [String] 40 character SHA1 hex digest if {#real_path} can be read.
-  # @return [nil] if {#real_path} cannot be read.
+  # @return [String] 40 character SHA1 hex digest if {#real_pathname} can be read.
+  # @return [nil] if {#real_pathname} cannot be read.
   def derived_real_path_sha1_hex_digest
     begin
-      sha1 = Digest::SHA1.file(real_path.to_s)
+      sha1 = Digest::SHA1.file(real_pathname.to_s)
     rescue Errno::ENOENT
       hex_digest = nil
     else
@@ -255,7 +251,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     payload_name
   end
 
-  # The directory for payload type under {#module_type_directory} in {#real_path}.
+  # The directory for payload type under {#module_type_directory} in {#real_pathname}.
   #
   # @return [String] first directory in reference_name
   # @return [nil] if {#payload?} is `false`.
@@ -271,9 +267,23 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     directory
   end
 
+  # The real (absolute) path to the module file on-disk as a `Pathname`.
+  #
+  # @return [Pathname] unless {#parent_path} {Metasploit::Cache::Module::Path#real_path} or {real_pathname} is `nil`.
+  # @return [nil] otherwise
+  def real_pathname
+    if parent_path
+      parent_real_pathname = parent_path.real_pathname
+
+      if parent_real_pathname && relative_path
+        parent_real_pathname.join(relative_path)
+      end
+    end
+  end
+
   # The reference name of the module.  The name of the module under its {#module_type type}.
   #
-  # @return [String] if {#real_path} is set and ends with {EXTENSION}.
+  # @return [String] if {#real_pathname} is set and ends with {EXTENSION}.
   # @return [nil] otherwise.
   def reference_name
     derived = nil
@@ -290,22 +300,16 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     derived
   end
 
-  # @!method real_path=(real_path)
-  #   Sets {#real_path}.
-  #
-  #   @param real_path [String] The real (absolute) path to module file on-disk.
-  #   @return [void]
-
   # @!method real_path_modified_at=(real_path_modified_at)
   #   Sets {#real_path_modified_at}.
   #
-  #   @param real_path_modified_at [String] The modification time of the module {#real_path file on-disk}.
+  #   @param real_path_modified_at [String] The modification time of the module {#real_pathname file on-disk}.
   #   @return [void]
 
   # @!method real_path_sha1_hex_digest=(real_path_sha1_hex_digest)
   #   Sets {#real_path_sha1_hex_digest}.
   #
-  #   @param real_path_sha1_hex_digest [String] The SHA1 hexadecimal digest of contents of the file at {#real_path}.
+  #   @param real_path_sha1_hex_digest [String] The SHA1 hexadecimal digest of contents of the file at {#real_pathname}.
   #   @return [void]
 
   # @!method relationships=(relationships)
@@ -331,26 +335,14 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     end
   end
 
-  # {#real_path} relative to {Metasploit::Cache::Module::Path#real_path}
+  # {#relative_path} as a `Pathname`.
   #
-  # @return [Pathname]
+  # @return [Pathname] unless {#relative_path} is `nil`.
+  # @return [nil] if {#relative_path} is `nil`.
   def relative_pathname
-    relative_pathname = nil
-    real_pathname = self.real_pathname
-
-    if real_pathname
-      parent_path = self.parent_path
-
-      if parent_path
-        parent_path_real_pathname = parent_path.real_pathname
-
-        if parent_path_real_pathname
-          relative_pathname = real_pathname.relative_path_from parent_path_real_pathname
-        end
-      end
+    if relative_path
+      Pathname.new(relative_path)
     end
-
-    relative_pathname
   end
 
   # @!method reference_name=(reference_name)
