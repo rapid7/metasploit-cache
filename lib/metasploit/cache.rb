@@ -43,6 +43,7 @@ module Metasploit
     autoload :Nop
     autoload :NullProgressBar
     autoload :Platform
+    autoload :Post
     autoload :ProxiedValidation
     autoload :RealPathname
     autoload :Realm
