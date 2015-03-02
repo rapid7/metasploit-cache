@@ -42,6 +42,7 @@ module Metasploit
     autoload :NilifyBlanks
     autoload :Nop
     autoload :NullProgressBar
+    autoload :Payload
     autoload :Platform
     autoload :Post
     autoload :ProxiedValidation
