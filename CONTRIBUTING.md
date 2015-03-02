@@ -38,10 +38,17 @@ PRERELEASE = '<SUMMARY>'
 
 Make your changes or however many commits you like, committing each with `git commit`.
 
-### Pre-Pull Request Testing
+### Pre-Pull Request Steps
 
-1. Run specs one last time before opening the Pull Request: `rake spec`
-2. Verify there was no failures.
+#### Testing
+1. `rake cucumber spec coverage`
+2. Verify there were no failures.
+3. Verify there was 100% coverage.
+
+#### Documentation
+1. `rake yard`
+2. Verify there were no warnings.
+2. Verify there were no undocumented objects.
 
 ### Push
 
@@ -54,17 +61,22 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 
 ```
 # Verification Steps
-
+- [ ] `rm Gemfile.lock`
 - [ ] `bundle install`
 
-## `rake spec`
-- [ ] `rake spec`
+## Test coverage
+- [ ] `rake cucumber spec coverage`
 - [ ] VERIFY no failures
-```
+- [ ] VERIFY 100% coverage
+
+## Documentation coverage
+- [ ] `rake yard`
+- [ ] VERIFY no warnings
+- [ ] VERIFY no undocumented objects
 
 You should also include at least one scenario to manually check the changes outside of specs.
 
-* Add a Post-merge Steps comment
+* Add Post-merge Steps to the description comment
 
 The 'Post-merge Steps' are a reminder to the reviewer of the Pull Request of how to update the [`PRERELEASE`](lib/metasploit/cache/version.rb) so that [version_spec.rb](spec/lib/metasploit/cache/version.rb_spec.rb) passes on the target branch after the merge.
 
@@ -75,7 +87,7 @@ When merging to `master`:
 ```
 # Post-merge Steps
 
-Perform these steps prior to pushing to master or the build will be broke on master.
+Perform these steps prior to pushing to master or the build will be broken on master.
 
 ## Version
 - [ ] Edit `lib/metasploit/cache/version.rb`
@@ -99,7 +111,7 @@ When merging to DESTINATION other than `master`:
 ```
 # Post-merge Steps
 
-Perform these steps prior to pushing to DESTINATION or the build will be broke on DESTINATION.
+Perform these steps prior to pushing to DESTINATION or the build will be broken on DESTINATION.
 
 ## Version
 - [ ] Edit `lib/metasploit/cache/version.rb`
