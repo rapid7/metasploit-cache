@@ -33,6 +33,7 @@ module Metasploit::Cache::Module
   autoload :Class
   autoload :Handler
   autoload :Instance
+  autoload :Namespace
   autoload :Path
   autoload :Platform
   autoload :Relationship

@@ -3,11 +3,24 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in metasploit-cache.gemspec
 gemspec
 
+# TODO remove once this version of metasploit-model is out of prerelease
+gem 'metasploit-model',
+    tag: 'v0.29.2.pre.validates.pre.nilness.pre.of',
+    github: 'rapid7/metasploit-model'
 # TODO remove once metasploit-version has owners besides Trevor and I can prerelease the gem.
 gem 'metasploit-version',
     branch: 'v0.1.3.pre.changelog.pre.template',
     github: 'rapid7/metasploit-version',
     group: :development
+
+group :content do
+  gem 'metasploit-framework',
+      github: 'rapid7/metasploit-framework',
+      ref: '1099084fb04164034e5520564828d57915d3a63a'
+  gem 'metasploit-framework-db',
+      github: 'rapid7/metasploit-framework',
+      ref: '1099084fb04164034e5520564828d57915d3a63a'
+end
 
 # used by dummy application
 group :development, :test do

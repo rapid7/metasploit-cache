@@ -2,12 +2,22 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-Bundler.require(*Rails.groups(documentation: [:development]))
+Bundler.require(
+    *Rails.groups(
+        content: [:development, :test],
+        documentation: [:development]
+    )
+)
 
 # require the engine being tested.  In a non-dummy app this would be handled by the engine's gem being in the Gemfile
 # for real app and Bundler.require requiring the gem.
 require 'metasploit/cache'
 require 'metasploit/cache/engine'
+
+unless Bundler.settings.without.include? 'content'
+  require 'metasploit/framework'
+  require 'metasploit/framework/engine'
+end
 
 module Dummy
   class Application < Rails::Application

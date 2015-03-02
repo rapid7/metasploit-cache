@@ -30,6 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'file-find'
   # Allow patching of Metasploit::Cache models.
   spec.add_runtime_dependency 'metasploit-concern', '~> 0.3.0'
-  spec.add_runtime_dependency 'metasploit-model', '~> 0.29.0'
+  spec.add_runtime_dependency 'metasploit-model', '= 0.29.2.pre.validates.pre.nilness.pre.of'
   spec.add_runtime_dependency 'pg'
 end

@@ -39,9 +39,11 @@ module Metasploit
     autoload :NilifyBlanks
     autoload :NullProgressBar
     autoload :Platform
+    autoload :ProxiedValidation
     autoload :RealPathname
     autoload :Realm
     autoload :Reference
+    autoload :ResurrectingAttribute
     autoload :Search
     autoload :Spec
     autoload :Translation

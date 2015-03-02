@@ -30,6 +30,19 @@ In a Rails application, Metasploit::Cache acts a
 just as if they were defined under app/models.  If your Rails appliation needs to modify the models, this can be done
 using [metasploit-concern](https://github.com/rapid7/metasploit-concern).
 
+## Testing
+
+### With metasploit-framework
+
+    rm Gemfile.lock
+    bundle install
+    rake spec
+
+### Without metasploit-framework
+
+    rm Gemfile.lock
+    bundle install --without content
+    rake spec
 
 ## Contributing
 
