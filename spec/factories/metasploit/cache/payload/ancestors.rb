@@ -12,14 +12,6 @@ FactoryGirl.define do
         "#{payload_type.pluralize}/#{payload_name}"
       }
     end
-
-    #
-    # Child factories
-    #
-
-    factory :single_metasploit_cache_payload_ancestor do
-      payload_type { 'single' }
-    end
   end
 
   sequence :metasploit_cache_payload_ancestor_payload_name do |n|

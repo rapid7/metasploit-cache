@@ -18,6 +18,28 @@ class Metasploit::Cache::Payload::Ancestor < Metasploit::Cache::Module::Ancestor
             }
 
   #
+  # Class Methods
+  #
+
+  # Ensure that only {#payload_type} matching `payload_type` is valid for `subclass`.
+  #
+  # @param subclass [Class<Metasploit::Cache::Payload::Ancestor>] a subclass of {Metasploit::Cache::Payload::Ancestor}.
+  # @param to [String] an element of {Metasploit::Cache::Payload::Ancestor::Type::ALL}.
+  # @return [void]
+  def self.restrict(subclass, to:)
+    subclass.validate :payload_type_matches
+    error = "is not #{to}"
+
+    subclass.send(:define_method, :payload_type_matches) do
+      if payload_type != to
+        errors.add(:payload_type, error)
+      end
+    end
+
+    subclass.send(:private, :payload_type_matches)
+  end
+
+  #
   # Instance Methods
   #
 

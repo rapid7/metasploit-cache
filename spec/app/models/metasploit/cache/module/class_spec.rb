@@ -248,7 +248,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
         context 'single payload' do
           let!(:ancestors) do
             [
-                FactoryGirl.create(:single_metasploit_cache_payload_ancestor)
+                FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
             ]
           end
 
@@ -275,7 +275,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
       let!(:generic_payload_ancestor) {
         FactoryGirl.create(
-                       :single_metasploit_cache_payload_ancestor,
+                       :metasploit_cache_payload_single_ancestor,
                        payload_name: 'generic/shell_bind_tcp'
         )
       }
@@ -447,7 +447,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
             context 'with 1 ancestor' do
               let(:ancestors) do
                 [
-                    FactoryGirl.create(:single_metasploit_cache_payload_ancestor)
+                    FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
                 ]
               end
 
@@ -714,7 +714,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
               context "with 'single' Metasploit::Cache::Module::Ancestor#payload_type" do
                 let(:ancestor) do
-                  FactoryGirl.create(:single_metasploit_cache_payload_ancestor)
+                  FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
                 end
 
                 it 'should not record error on ancestors' do

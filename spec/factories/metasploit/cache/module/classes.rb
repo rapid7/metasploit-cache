@@ -46,7 +46,7 @@ FactoryGirl.define do
         # ignored attribute from factory; NOT the instance attribute
         case payload_type
         when 'single'
-          ancestors << FactoryGirl.create(:single_metasploit_cache_payload_ancestor)
+          ancestors << FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
         else
           raise ArgumentError,
                 "Don't know how to create Metasploit::Cache::Module::Class#ancestors " \
