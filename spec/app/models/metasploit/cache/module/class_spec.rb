@@ -534,7 +534,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'with module_type' do
             let(:module_type) do
-              FactoryGirl.generate :metasploit_cache_module_type
+              FactoryGirl.generate :metasploit_cache_non_payload_module_type
             end
 
             context 'with same Metasploit::Cache::Module::Ancestor#module_type and Metasploit::Cache::Module::Class#module_type' do
