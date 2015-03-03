@@ -248,7 +248,7 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
   def derived_payload_type
     derived = nil
 
-    if payload? && ancestors.length ==  1 && ancestors.first.payload?
+    if payload? && ancestors.length ==  1 && ancestors.first.module_type == Metasploit::Cache::Module::Type::PAYLOAD
       derived = 'single'
     end
 
@@ -344,14 +344,14 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
   def ancestor_payload_types
     if payload?
       ancestors.each do |ancestor|
-        unless ancestor.payload?
+        unless ancestor.module_type == Metasploit::Cache::Module::Type::PAYLOAD
           errors[:ancestors] << "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) " \
                                 "that is not a payload for payload class"
         end
       end
     else
       ancestors.each do |ancestor|
-        if ancestor.payload?
+        if ancestor.module_type == Metasploit::Cache::Module::Type::PAYLOAD
           errors[:ancestors] << "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) " \
                                 "that is a payload with for class module_type (#{module_type})"
         end
@@ -396,7 +396,7 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     if ancestors.length == 1
       ancestor = ancestors.first
 
-      if ancestor.payload?
+      if ancestor.module_type == Metasploit::Cache::Module::Type::PAYLOAD
         derived = ancestor.payload_name
       end
     end

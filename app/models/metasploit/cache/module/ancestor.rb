@@ -245,50 +245,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #   @param parent_path [Metasploit::Cache::Module::Path] Path under which this ancestor exists on-disk.
   #   @return [void]
 
-  # Return whether this forms part of a payload (either a single, stage, or stager).
-  #
-  # @return [true] if {#module_type} == 'payload'
-  # @return [false] if {#module_type} != 'payload'
-  def payload?
-    if module_type == Metasploit::Cache::Module::Type::PAYLOAD
-      true
-    else
-      false
-    end
-  end
-
-  # The name used to forming the {Metasploit::Cache::Module::Class#reference_name} for payloads.
-  #
-  # @return [String] The {#reference_name} without the {#payload_type_directory}
-  # @return [nil] if {#module_type} is not `'payload'`
-  def payload_name
-    payload_name = nil
-
-    if module_type == Metasploit::Cache::Module::Type::PAYLOAD && reference_name && payload_type_directory
-      escaped_payload_type_directory = Regexp.escape(payload_type_directory)
-      payload_type_directory_regexp = /^#{escaped_payload_type_directory}\//
-      payload_name = reference_name.gsub(payload_type_directory_regexp, '')
-    end
-
-    payload_name
-  end
-
-  # The directory for payload type under {#module_type_directory} in {#real_pathname}.
-  #
-  # @return [String] first directory in reference_name
-  # @return [nil] if {#payload?} is `false`.
-  # @return [nil] if {#reference_name} is `nil`.
-  def payload_type_directory
-    directory = nil
-
-    if payload? and reference_name
-      head, _tail = reference_name.split(REFERENCE_NAME_SEPARATOR, 2)
-      directory = head
-    end
-
-    directory
-  end
-
   # The real (absolute) path to the module file on-disk as a `Pathname`.
   #
   # @return [Pathname] unless {#parent_path} {Metasploit::Cache::Module::Path#real_path} or {real_pathname} is `nil`.

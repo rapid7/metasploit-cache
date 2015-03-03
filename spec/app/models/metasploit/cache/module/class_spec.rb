@@ -248,7 +248,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
         context 'single payload' do
           let!(:ancestors) do
             [
-                FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
+                FactoryGirl.create(:single_metasploit_cache_payload_ancestor)
             ]
           end
 
@@ -275,8 +275,8 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
       let!(:generic_payload_ancestor) {
         FactoryGirl.create(
-                       :single_payload_metasploit_cache_module_ancestor,
-                       reference_name: 'singles/generic/shell_bind_tcp'
+                       :single_metasploit_cache_payload_ancestor,
+                       payload_name: 'generic/shell_bind_tcp'
         )
       }
 
@@ -447,7 +447,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
             context 'with 1 ancestor' do
               let(:ancestors) do
                 [
-                    FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
+                    FactoryGirl.create(:single_metasploit_cache_payload_ancestor)
                 ]
               end
 
@@ -488,7 +488,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
           context 'with 1 ancestor' do
             let(:ancestors) do
               [
-                  FactoryGirl.create(:non_payload_metasploit_cache_module_ancestor)
+                  FactoryGirl.create(:metasploit_cache_module_ancestor)
               ]
             end
 
@@ -714,7 +714,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
               context "with 'single' Metasploit::Cache::Module::Ancestor#payload_type" do
                 let(:ancestor) do
-                  FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
+                  FactoryGirl.create(:single_metasploit_cache_payload_ancestor)
                 end
 
                 it 'should not record error on ancestors' do
@@ -747,7 +747,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'with Metasploit::Cache::Module::Ancestor#payload_type' do
             let(:ancestor) do
-              FactoryGirl.create(:payload_metasploit_cache_module_ancestor)
+              FactoryGirl.create(:metasploit_cache_payload_ancestor)
             end
 
             it 'should record error on ancestors' do
@@ -757,7 +757,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'without Metasploit::Cache::Module::Ancestor#payload_type' do
             let(:ancestor) do
-              FactoryGirl.create(:non_payload_metasploit_cache_module_ancestor)
+              FactoryGirl.create(:metasploit_cache_module_ancestor)
             end
 
             it 'should not record error on ancestors' do
@@ -1008,8 +1008,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
         let(:ancestors) do
           [
               FactoryGirl.create(
-                  :metasploit_cache_module_ancestor,
-                  :module_type => 'payload',
+                  :metasploit_cache_payload_ancestor,
                   :payload_type => payload_type
               )
           ]
@@ -1096,7 +1095,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
       context 'with 1 ancestor' do
         let(:ancestor) do
-          FactoryGirl.create(:non_payload_metasploit_cache_module_ancestor)
+          FactoryGirl.create(
+              :metasploit_cache_module_ancestor,
+              module_type: module_type
+          )
         end
 
         let(:ancestors) do
@@ -1131,10 +1133,9 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
     context 'with 1 ancestor' do
       let(:ancestor) do
-        FactoryGirl.create(
-            :payload_metasploit_cache_module_ancestor,
-            payload_type: payload_type,
-            reference_name: reference_name
+        FactoryGirl.build(
+            :metasploit_cache_payload_ancestor,
+            relative_path: relative_path
         )
       end
 
@@ -1145,21 +1146,13 @@ RSpec.describe Metasploit::Cache::Module::Class do
       end
 
       context 'with single' do
-        let(:payload_type) do
-          'single'
-        end
-
-        context 'with reference_name' do
+        context 'with Metasploit::Cache::Module::Ancestor#relative_path' do
           let(:payload_name) do
             'payload/name'
           end
 
-          let(:payload_type_directory) do
-            'singles'
-          end
-
-          let(:reference_name) do
-            "#{payload_type_directory}/#{payload_name}"
+          let(:relative_path) do
+            "payloads/singles/#{payload_name}"
           end
 
           it 'should return Metasploit::Cache::Module::Ancestor#payload_name' do
@@ -1168,7 +1161,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
         end
 
         context 'without reference_name' do
-          let(:reference_name) do
+          let(:relative_path) do
             nil
           end
 

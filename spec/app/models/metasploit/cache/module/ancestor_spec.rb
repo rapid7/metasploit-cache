@@ -168,13 +168,13 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
           FactoryGirl.build(
               :metasploit_cache_module_ancestor,
               module_type: 'payload',
-              payload_type: payload_type
+              reference_name: reference_name
           )
         end
 
         context 'with single' do
-          let(:payload_type) do
-            'single'
+          let(:reference_name) do
+            'singles'
           end
 
           it { should be_valid }
@@ -285,34 +285,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
               end
             end
           end
-        end
-      end
-    end
-
-    context :payload_metasploit_cache_module_ancestor do
-      subject(:payload_metasploit_cache_module_ancestor) do
-        FactoryGirl.build(:payload_metasploit_cache_module_ancestor)
-      end
-
-      it { should be_valid }
-
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory' do
-        let(:module_ancestor) do
-          payload_metasploit_cache_module_ancestor
-        end
-      end
-    end
-
-    context :single_payload_metasploit_cache_module_ancestor do
-      subject(:single_payload_metasploit_cache_module_ancestor) do
-        FactoryGirl.build(:single_payload_metasploit_cache_module_ancestor)
-      end
-
-      it { should be_valid }
-
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory' do
-        let(:module_ancestor) do
-          single_payload_metasploit_cache_module_ancestor
         end
       end
     end
@@ -697,93 +669,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
   end
 
-  context '#payload?' do
-    subject(:module_ancestor) do
-      FactoryGirl.build(
-                     :metasploit_cache_module_ancestor,
-                     module_type: module_type
-      )
-    end
-
-    context "with 'payload' module_type" do
-      let(:module_type) do
-        'payload'
-      end
-
-      it { should be_payload }
-    end
-
-    context "without 'payload' module_type" do
-      let(:module_type) do
-        FactoryGirl.generate :metasploit_cache_non_payload_module_type
-      end
-
-      it { should_not be_payload }
-    end
-  end
-
-  context '#payload_type_directory' do
-    subject(:payload_type_directory) do
-      module_ancestor.payload_type_directory
-    end
-
-    let(:module_ancestor) do
-      FactoryGirl.build(
-          :metasploit_cache_module_ancestor,
-          module_type: module_type,
-          reference_name: reference_name
-      )
-    end
-
-    context 'with payload' do
-      let(:module_type) do
-        'payload'
-      end
-
-      context 'with #reference_name' do
-        let(:expected_payload_type_directory) do
-          payload_type_directories.sample
-        end
-
-        let(:payload_type_directories) do
-          [
-              'singles',
-              'stages',
-              'stagers'
-          ]
-        end
-
-        let(:reference_name) do
-          "#{expected_payload_type_directory}/reference/name/tail"
-        end
-
-        it 'is name before REFERENCE_NAME_SEPARATOR' do
-          expect(payload_type_directory).to eq(expected_payload_type_directory)
-        end
-      end
-
-      context 'without #reference_name' do
-        let(:reference_name) do
-          nil
-        end
-
-        it { should be_nil }
-      end
-    end
-
-    context 'without payload' do
-      let(:module_type) do
-        FactoryGirl.generate :metasploit_cache_non_payload_module_type
-      end
-
-      let(:reference_name) {
-        FactoryGirl.generate :metasploit_cache_module_ancestor_non_payload_reference_name
-      }
-
-      it { should be_nil }
-    end
-  end
-
   context '#relative_file_names' do
     subject(:relative_file_names) do
       module_ancestor.relative_file_names
@@ -876,7 +761,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
     context 'with reference_name' do
       let(:reference_name) do
-        FactoryGirl.generate :metasploit_cache_module_ancestor_non_payload_reference_name
+        FactoryGirl.generate :metasploit_cache_module_ancestor_reference_name
       end
 
       it 'should be reference_name + EXTENSION' do
