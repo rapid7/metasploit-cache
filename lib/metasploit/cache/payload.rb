@@ -6,4 +6,5 @@ module Metasploit::Cache::Payload
   autoload :Ancestor
   autoload :Single
   autoload :Stage
+  autoload :Stager
 end
