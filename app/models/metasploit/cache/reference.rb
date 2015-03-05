@@ -12,27 +12,18 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
   #
   #
 
-  # @!attribute authority
-  #   The {Metasploit::Cache::Authority authority} that assigned {#designation}.
-  #
-  #   @return [Metasploit::Cache::Authority, nil]
+  # The {Metasploit::Cache::Authority authority} that assigned {#designation}.
   belongs_to :authority, class_name: 'Metasploit::Cache::Authority', inverse_of: :references
 
-  # @!attribute module_references
-  #   Joins this {Metasploit::Cache::Reference} to {#module_instances}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::References>]
+  # Joins this {Metasploit::Cache::Reference} to {#module_instances}.
   has_many :module_references, class_name: 'Metasploit::Cache::Module::Reference', dependent: :destroy, inverse_of: :reference
 
   #
   # through: :module_references
   #
 
-  # @!attribute [r] module_instances
-  #   {Metasploit::Cache::Module::Instance Modules} that exploit this reference or describe a proof-of-concept (PoC) code that the
-  #   module is based on.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
+  # {Metasploit::Cache::Module::Instance Modules} that exploit this reference or describe a proof-of-concept (PoC) code
+  # that the module is based on.
   has_many :module_instances, class_name: 'Metasploit::Cache::Module::Instance', through: :module_references
 
   #

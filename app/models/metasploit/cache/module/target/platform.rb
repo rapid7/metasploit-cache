@@ -7,16 +7,10 @@ class Metasploit::Cache::Module::Target::Platform < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute module_target
-  #   The module target that supports {#platform}.
-  #
-  #   @return [Metasploit::Cache::Module::Target]
+  # The module target that supports {#platform}.
   belongs_to :module_target, class_name: 'Metasploit::Cache::Module::Target', inverse_of: :target_platforms
 
-  # @!attribute platform
-  #   The platform supported by the {#module_target}.
-  #
-  #   @return [Metasploit::Cache::Platform]
+  # The platform supported by the {#module_target}.
   belongs_to :platform, class_name: 'Metasploit::Cache::Platform', inverse_of: :target_platforms
 
   #

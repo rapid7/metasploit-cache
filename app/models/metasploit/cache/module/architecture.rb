@@ -7,16 +7,10 @@ class Metasploit::Cache::Module::Architecture < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute architecture
-  #   {Metasploit::Cache::Module::Architecture Architecture} supported by {#module_instance}.
-  #
-  #   @return [Metasploit::Cache::Architecture]
+  # {Metasploit::Cache::Module::Architecture Architecture} supported by {#module_instance}.
   belongs_to :architecture, class_name: 'Metasploit::Cache::Architecture', inverse_of: :module_architectures
 
-  # @!attribute module_instance
-  #
-  #
-  #   @return [Metasploit::Cache::Module::Instance]
+  # {Metasploit::Cache::Module::Instance} that supports {#architecture}.
   belongs_to :module_instance, class_name: 'Metasploit::Cache::Module::Instance', inverse_of: :module_architectures
 
   #

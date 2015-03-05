@@ -62,19 +62,13 @@ class Metasploit::Cache::Architecture < ActiveRecord::Base
   #
   #
 
-  # @!attribute module_architectures
-  #   Join models between this {Metasploit::Cache::Architecture} and {Metasploit::Cache::Module::Instance}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Architecture>]
+  # Join models between this {Metasploit::Cache::Architecture} and {Metasploit::Cache::Module::Instance}.
   has_many :module_architectures,
            class_name: 'Metasploit::Cache::Module::Architecture',
            dependent: :destroy,
            inverse_of: :architecture
 
-  # @!attribute target_architectures
-  #   Join models between this and {Metasploit::Cache::Module::Target}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Target::Architecture>]
+  # Join models between this and {Metasploit::Cache::Module::Target}.
   has_many :target_architectures,
            class_name: 'Metasploit::Cache::Module::Target::Architecture',
            dependent: :destroy,
@@ -84,11 +78,8 @@ class Metasploit::Cache::Architecture < ActiveRecord::Base
   # through: :module_architectures
   #
 
-  # @!attribute [r] module_instances
-  #   {Metasploit::Cache::Module::Instance Modules} that have this {Metasploit::Cache::Module::Architecture} as a
-  #   {Metasploit::Cache::Module::Instance#architectures support architecture}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
+  # {Metasploit::Cache::Module::Instance Modules} that have this {Metasploit::Cache::Module::Architecture} as a
+  # {Metasploit::Cache::Module::Instance#architectures support architecture}.
   has_many :module_instances,
            class_name: 'Metasploit::Cache::Module::Instance',
            through: :module_architectures

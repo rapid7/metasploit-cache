@@ -13,10 +13,7 @@ class Metasploit::Cache::Payload::Single::Ancestor < Metasploit::Cache::Payload:
   # Associations
   #
 
-  # @!attribute parent_path
-  #   Path under which this module's {Metasploit::Cache::Module::Ancestor#relative_path} exists.
-  #
-  #   @return [Metasploit::Cache::Module::Path]
+  # Path under which this module's {Metasploit::Cache::Module::Ancestor#relative_path} exists.
   belongs_to :parent_path,
              class_name: 'Metasploit::Cache::Module::Path',
              inverse_of: :single_payload_ancestors

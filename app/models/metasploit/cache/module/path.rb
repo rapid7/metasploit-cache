@@ -20,10 +20,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute auxiliary_ancestors
-  #   The auxiliary ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Auxiliary::Ancestor>]
+  # The auxiliary ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   has_many :auxiliary_ancestors,
            class_name: 'Metasploit::Cache::Auxiliary::Ancestor',
            dependent: :destroy,
@@ -31,10 +28,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
            foreign_key: :parent_path_id,
            inverse_of: :parent_path
 
-  # @!attribute encoder_ancestors
-  #   The encoder ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Encoder::Ancestor>]
+  # The encoder ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   has_many :encoder_ancestors,
            class_name: 'Metasploit::Cache::Encoder::Ancestor',
            dependent: :destroy,
@@ -42,10 +36,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
            foreign_key: :parent_path_id,
            inverse_of: :parent_path
 
-  # @!attribute exploit_ancestors
-  #   The exploit ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Exploit::Ancestor>]
+  # The exploit ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   has_many :exploit_ancestors,
            class_name: 'Metasploit::Cache::Exploit::Ancestor',
            dependent: :destroy,
@@ -53,10 +44,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
            foreign_key: :parent_path_id,
            inverse_of: :parent_path
 
-  # @!attribute nop_ancestors
-  #   The nop ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Nop::Ancestor>]
+  # The nop ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   has_many :nop_ancestors,
            class_name: 'Metasploit::Cache::Nop::Ancestor',
            dependent: :destroy,
@@ -64,10 +52,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
            foreign_key: :parent_path_id,
            inverse_of: :parent_path
 
-  # @!attribute single_payload_ancestors
-  #   The single payload ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Single::Ancestor>]
+  # The single payload ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   has_many :single_payload_ancestors,
            class_name: 'Metasploit::Cache::Payload::Single::Ancestor',
            dependent: :destroy,
@@ -75,10 +60,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
            foreign_key: :parent_path_id,
            inverse_of: :parent_path
 
-  # @!attribute stage_payload_ancestors
-  #   The stage payload ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Stage::Ancestor>]
+  # The stage payload ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   has_many :stage_payload_ancestors,
            class_name: 'Metasploit::Cache::Payload::Stage::Ancestor',
            dependent: :destroy,
@@ -86,10 +68,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
            foreign_key: :parent_path_id,
            inverse_of: :parent_path
 
-  # @!attribute stager_payload_ancestors
-  #   The stager payload ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Stager::Ancestor>]
+  # The stager payload ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   has_many :stager_payload_ancestors,
            class_name: 'Metasploit::Cache::Payload::Stager::Ancestor',
            dependent: :destroy,
@@ -97,10 +76,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
            foreign_key: :parent_path_id,
            inverse_of: :parent_path
 
-  # @!attribute post_ancestors
-  #   The post ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Post::Ancestor>]
+  # The post ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   has_many :post_ancestors,
            class_name: 'Metasploit::Cache::Post::Ancestor',
            dependent: :destroy,

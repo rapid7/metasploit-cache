@@ -34,29 +34,20 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
   #
   #
 
-  # @!attribute module_instance
-  #   Instance-derived metadata to go along with the class-derived metadata from this model.
-  #
-  #   @return [Metasploit::Cache::Module::Instance, nil]
+  # Instance-derived metadata to go along with the class-derived metadata from this model.
   has_one :module_instance,
           class_name: 'Metasploit::Cache::Module::Instance',
           dependent: :destroy,
           foreign_key: :module_class_id,
           inverse_of: :module_class
  
-  # @!attribute rank
-  #   The reliability of the module and likelyhood that the module won't knock over the service or host being
-  #   exploited.  Bigger values is better.
-  #
-  #   @return [Metasploit::Cache::Module::Rank]
+  # The reliability of the module and likelyhood that the module won't knock over the service or host being exploited.
+  # Bigger values are better.
   belongs_to :rank, class_name: 'Metasploit::Cache::Module::Rank', inverse_of: :module_classes
  
-  # @!attribute relationships
-  #   Join model between {Metasploit::Cache::Module::Class} and {Metasploit::Cache::Module::Ancestor} that represents
-  #   that the Class or Module in {Metasploit::Cache::Module::Ancestor#real_path} is an ancestor of the Class
-  #   represented by this {Metasploit::Cache::Module::Class}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Relationship>]
+  # Join model between {Metasploit::Cache::Module::Class} and {Metasploit::Cache::Module::Ancestor} that represents
+  # that the Class or Module in {Metasploit::Cache::Module::Ancestor#real_path} is an ancestor of the Class
+  # represented by this {Metasploit::Cache::Module::Class}.
   has_many :relationships,
            class_name: 'Metasploit::Cache::Module::Relationship',
            dependent: :destroy,
@@ -67,10 +58,7 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
   # through: :relationships
   #
   
-  # @!attribute [r] ancestors
-  #   The Class or Modules that were loaded to make this module Class.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Ancestor>]
+  # The Class or Modules that were loaded to make this module Class.
   has_many :ancestors, class_name: 'Metasploit::Cache::Module::Ancestor', through: :relationships
 
   #

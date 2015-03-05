@@ -23,27 +23,18 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   #
   #
 
-  # @!attribute module_platforms
-  #   Joins this {Metasploit::Cache::Platform} to {Metasploit::Cache::Module::Instance modules} that support the platform.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Platform>]
+  # Joins this {Metasploit::Cache::Platform} to {Metasploit::Cache::Module::Instance modules} that support the platform.
   has_many :module_platforms, class_name: 'Metasploit::Cache::Module::Platform', dependent: :destroy, inverse_of: :platform
 
-  # @!attribute target_platforms
-  #   Joins this to {Metasploit::Cache::Module::Target targets} that support this platform.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Target::Platform>]
+  # Joins this to {Metasploit::Cache::Module::Target targets} that support this platform.
   has_many :target_platforms, class_name: 'Metasploit::Cache::Module::Target::Platform', dependent: :destroy, inverse_of: :platform
 
   #
   # through: :module_platforms
   #
 
-  # @!attribute [r] module_instance
-  #   {Metasploit::Cache::Module::Instance Modules} that has this {Metasploit::Cache::Platform} as one of their supported
-  #   {Metasploit::Cache::Module::Instance#platforms platforms}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
+  # {Metasploit::Cache::Module::Instance Modules} that has this {Metasploit::Cache::Platform} as one of their supported
+  # {Metasploit::Cache::Module::Instance#platforms platforms}.
   has_many :module_instances, class_name: 'Metasploit::Cache::Module::Instance', through: :module_platforms
 
   #

@@ -139,79 +139,52 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #
   #
 
-  # @!attribute actions
-  #   Auxiliary actions to perform when this running this module.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Action>]
+  # Auxiliary actions to perform when this running this module.
   has_many :actions,
            class_name: 'Metasploit::Cache::Module::Action',
            dependent: :destroy,
            foreign_key: :module_instance_id,
            inverse_of: :module_instance
 
-  # @!attribute default_action
-  #   The default action in {#actions}.
-  #
-  #   @return [Metasploit::Cache::Module::Action]
+  # The default action in {#actions}.
   belongs_to :default_action, class_name: 'Metasploit::Cache::Module::Action', inverse_of: :module_instance
 
-  # @!attribute default_target
-  #   The default target in {#targets}.
-  #
-  #   @return [Metasploit::Cache::Module::Target]
+  # The default target in {#targets}.
   belongs_to :default_target, class_name: 'Metasploit::Cache::Module::Target', inverse_of: :module_instance
 
-  # @!attribute module_architectures
-  #   Joins this {Metasploit::Cache::Module::Instance} to its supported {Metasploit::Cache::Architecture architectures}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Architecture>]
+  # Joins this {Metasploit::Cache::Module::Instance} to its supported {Metasploit::Cache::Architecture architectures}.
   has_many :module_architectures,
            class_name: 'Metasploit::Cache::Module::Architecture',
            dependent: :destroy,
            foreign_key: :module_instance_id,
            inverse_of: :module_instance
 
-  # @!attribute module_authors
-  #   Joins this with {#authors} and {#email_addresses} to model the name and email address used for an author entry in
-  #   the module metadata.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Author>]
+  # Joins this with {#authors} and {#email_addresses} to model the name and email address used for an author entry in
+  # the module metadata.
   has_many :module_authors,
            class_name: 'Metasploit::Cache::Module::Author',
            dependent: :destroy,
            foreign_key: :module_instance_id,
            inverse_of: :module_instance
 
-  # @!attribute module_class
-  #   Class-derived metadata to go along with the instance-derived metadata in this model.
-  #
-  #   @return [Metasploit::Cache::Module::Class]
+  # Class-derived metadata to go along with the instance-derived metadata in this model.
   belongs_to :module_class, class_name: 'Metasploit::Cache::Module::Class', inverse_of: :module_instance
 
-  # @!attribute module_platforms
-  #   Joins this {Metasploit::Cache::Module::Instance} to its supported {Metasploit::Cache::Platform platforms}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Platform>]
+  # Joins this {Metasploit::Cache::Module::Instance} to its supported {Metasploit::Cache::Platform platforms}.
   has_many :module_platforms,
            class_name: 'Metasploit::Cache::Module::Platform',
            dependent: :destroy,
            foreign_key: :module_instance_id,
            inverse_of: :module_instance
 
-  # @!attribute module_references
-  #   Joins {#references} to this {Metasploit::Cache::Module::Instance}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Reference>]
+  # Joins {#references} to this {Metasploit::Cache::Module::Instance}.
   has_many :module_references,
            class_name: 'Metasploit::Cache::Module::Reference',
            dependent: :destroy,
            foreign_key: :module_instance_id,
            inverse_of: :module_instance
 
-  # @!attribute targets
-  #   Names of targets with different configurations that can be exploited by this module.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Target>]
+  # Names of targets with different configurations that can be exploited by this module.
   has_many :targets,
            class_name: 'Metasploit::Cache::Module::Target',
            dependent: :destroy,
@@ -222,66 +195,45 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # through: :module_architectures
   #
 
-  # @!attribute [r] architectures
-  #   The {Metasploit::Cache::Module::Architecture architectures} supported by this module.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Architecture>]
+  # The {Metasploit::Cache::Module::Architecture architectures} supported by this module.
   has_many :architectures, :class_name => 'Metasploit::Cache::Architecture', :through => :module_architectures
 
   #
   # through: :module_authors
   #
 
-  # @!attribute [r] authors
-  #   The names of the authors of this module.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Author>]
+  # The names of the authors of this module.
   has_many :authors, :class_name => 'Metasploit::Cache::Author', :through => :module_authors
 
-  # @!attribute [r] email_addresses
-  #   The email addresses of the authors of this module.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::EmailAddress>]
+  # The email addresses of the authors of this module.
   has_many :email_addresses, :class_name => 'Metasploit::Cache::EmailAddress', :through => :module_authors, :uniq => true
 
   #
   # through: :module_class
   #
 
-  # @!attribute [r] rank
-  #   The rank of this module.
-  #
-  #   @return [Metasploit::Cache::Module::Rank]
+  # The rank of this module.
   has_one :rank, :class_name => 'Metasploit::Cache::Module::Rank', :through => :module_class
 
   #
   # through: :module_platforms
   #
 
-  # @!attribute [r] platforms
-  #   Platforms supported by this module.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Platform>]
+  # Platforms supported by this module.
   has_many :platforms, :class_name => 'Metasploit::Cache::Platform', :through => :module_platforms
 
   #
   # through: :module_references
   #
 
-  # @!attribute [r] references
-  #   External references to the exploit or proof-of-concept (PoC) code in this module.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Reference>]
+  # External references to the exploit or proof-of-concept (PoC) code in this module.
   has_many :references, :class_name => 'Metasploit::Cache::Reference', :through => :module_references
 
   #
   # through: :references
   #
 
-  # @!attribute [r] authorities
-  #   Authorities across all {#references} to this module.
-  #
-  #   @return [ActiveRecord<Metasploit::Cache::Authority>]
+  # Authorities across all {#references} to this module.
   has_many :authorities, :class_name => 'Metasploit::Cache::Authority', :through => :references, :uniq => true
 
   #

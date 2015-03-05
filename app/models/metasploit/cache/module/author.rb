@@ -8,23 +8,13 @@ class Metasploit::Cache::Module::Author < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute author
-  #   Author who wrote the {#module_instance module}.
-  #
-  #   @return [Metasploit::Cache::Author]
+  # Author who wrote the {#module_instance module}.
   belongs_to :author, :class_name => 'Metasploit::Cache::Author', inverse_of: :module_authors
 
-  # @!attribute email_address
-  #   Email address {#author} used when writing {#module_instance module}.
-  #
-  #   @return [Metasploit::Cache::EmailAddress] if {#author} gave an email address.
-  #   @return [nil] if {#author} only gave a name.
+  # Email address {#author} used when writing {#module_instance module}.
   belongs_to :email_address, class_name: 'Metasploit::Cache::EmailAddress', inverse_of: :module_authors
 
-  # @!attribute module_instance
-  #   Module written by {#author}.
-  #
-  #   @return [Metasploit::Cache::Module::Instance]
+  # Module written by {#author}.
   belongs_to :module_instance, class_name: 'Metasploit::Cache::Module::Instance', inverse_of: :module_authors
 
   #

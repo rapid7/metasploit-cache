@@ -16,26 +16,17 @@ class Metasploit::Cache::Module::Target < ActiveRecord::Base
   #
   #
 
-  # @!attribute module_instance
-  #   Module where this target was declared.
-  #
-  #   @return [Metasploit::Cache::Module::Instance]
+  # Module where this target was declared.
   belongs_to :module_instance, class_name: 'Metasploit::Cache::Module::Instance', inverse_of: :targets
 
-  # @!attribute target_architectures
-  #   Joins this target to its {#architectures}
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Target::Architecture]
+  # Joins this target to its {#architectures}
   has_many :target_architectures,
            class_name: 'Metasploit::Cache::Module::Target::Architecture',
            dependent: :destroy,
            foreign_key: :module_target_id,
            inverse_of: :module_target
 
-  # @!attribute target_platforms
-  #   Joins this target to its {#platforms}
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Target::Platform>]
+  # Joins this target to its {#platforms}
   has_many :target_platforms,
            class_name: 'Metasploit::Cache::Module::Target::Platform',
            dependent: :destroy,
@@ -46,22 +37,16 @@ class Metasploit::Cache::Module::Target < ActiveRecord::Base
   # through: :target_architectures
   #
 
-  # @!attribute [r] architectures
-  #   Architectures that this target supports, either by being declared specifically for this target or because
-  #   this target did not override architectures and so inheritted the architecture set from the class.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Architecture>]
+  # Architectures that this target supports, either by being declared specifically for this target or because this
+  # target did not override architectures and so inheritted the architecture set from the class.
   has_many :architectures, class_name: 'Metasploit::Cache::Architecture', through: :target_architectures
 
   #
   # through: :target_platforms
   #
 
-  # @!attribute [r] platforms
-  #   Platforms that this target supports, either by being declared specifically for this target or because this
-  #   target did not override platforms and so inheritted the platform set from the class.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Platform>]
+  # Platforms that this target supports, either by being declared specifically for this target or because this target
+  # did not override platforms and so inheritted the platform set from the class.
   has_many :platforms, class_name: 'Metasploit::Cache::Platform', through: :target_platforms
 
   #

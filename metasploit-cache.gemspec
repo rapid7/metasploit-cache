@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'metasploit-version', '= 0.1.3.pre.changelog.pre.template'
   spec.add_development_dependency 'metasploit-yard', '~> 1.0'
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency 'yard-activerecord', '~> 0.0.14'
   spec.add_development_dependency 'yard-metasploit-erd', '~> 0.0.2'
 
   spec.add_runtime_dependency 'activerecord', '>= 3.2.13', '< 4.0.0'
