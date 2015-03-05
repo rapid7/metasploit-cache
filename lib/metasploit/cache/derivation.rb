@@ -93,7 +93,7 @@ module Metasploit::Cache::Derivation
 
   private
 
-  # Derives each attribute in {ClassMethods#validate_by_derived_attribute} if the attribute is `nil`.
+  # Derives each attribute in `validate_by_derived_attribute` if the attribute is `nil`.
   #
   # @return [void]
   def derive

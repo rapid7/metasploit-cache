@@ -7,7 +7,7 @@ class Metasploit::Cache::Module::Relationship < ActiveRecord::Base
   # Associations
   #
 
-  # The {Metasploit::Cache::Module::Ancestor} whose {Metasploit::Cache::Module::Ancestor#real_path file} defined the
+  # The {Metasploit::Cache::Module::Ancestor} whose {Metasploit::Cache::Module::Ancestor#relative_path file} defined the
   # ruby Class or ruby Module.
   belongs_to :ancestor, class_name: 'Metasploit::Cache::Module::Ancestor', inverse_of: :relationships
 

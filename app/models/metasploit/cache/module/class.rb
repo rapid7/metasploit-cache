@@ -1,6 +1,6 @@
-# 1. A ruby Class defined in one {Metasploit::Cache::Module::Ancestor#real_path} for non-payloads.
-# 2. A ruby Class with one or more ruby Modules mixed into the Class from {Metasploit::Cache::Module::Ancestor#real_path multiple paths}
-#    for payloads.
+# 1. A ruby Class defined in one {Metasploit::Cache::Module::Ancestor#relative_path path} for non-payloads.
+# 2. A ruby Class with one or more ruby Modules mixed into the Class from
+#    {Metasploit::Cache::Module::Ancestor#relative_path multiple paths} for payloads.
 class Metasploit::Cache::Module::Class < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
@@ -229,7 +229,7 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     module_type_consensus
   end
 
-  # Derives {#payload_type} based on {#ancestors ancestor's} {Metasploit::Cache::Module::Ancestor#payload? payloadness}.
+  # Derives {#payload_type} based on {#ancestors ancestor's} {Metasploit::Cache::Module::Ancestor#module_type}.
   #
   # @return ['single'] if {#payload?} and single ancestor is a payload.
   # @return [nil] otherwise

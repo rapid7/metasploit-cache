@@ -327,7 +327,7 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
           )
         }
 
-  # @!method self.intersecting_platforms_with(architectured)
+  # @!method self.intersecting_architectures_with(architectured)
   #   List of {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} that share at least 1 {Metasploit::Cache::Architecture} with the given
   #   architectured record's `#architectures`.
   #

@@ -3,7 +3,8 @@ module Metasploit::Cache::Module::Path::AssociationExtension
   #   of the caller to save the record.
   #
   # @overload each_changed(changed: false, progress_bar: Metasploit::Cache::NullProgressBar.new, &block)
-  #   Yields each module ancestor that is changed under this association's {#relative_path_prefix}.
+  #   Yields each module ancestor that is changed under this association's `relative_path_prefix`, as defined by
+  #   {Metasploit::Cache::Module::Ancestor.restrict} and {Metasploit::Cache::Payload::Ancestor.restrict}.
   #
   #   @yield [module_ancestor]
   #   @yieldparam module_ancestor [Metasploit::Cache::Module::Ancestor] a changed, or in the case `changed` is
@@ -21,11 +22,10 @@ module Metasploit::Cache::Module::Path::AssociationExtension
   #   {Metasploit::Cache::Module::Ancestor} should be yielded.
   # @param progress_bar [ProgressBar, #total=, #increment] a ruby `ProgressBar` or similar object that supports the
   #   `#total=` and `#increment` API for monitoring the progress of the enumerator.  `#total` will be set to total
-  #   number of {#module_ancestor_relative_paths relative paths} under this module path, not just the number of
-  #   changed (updated or new) real paths.  `#increment` will be called whenever a relative path is visited, which
-  #   means it can be called when there is no yielded module ancestor because that module ancestor was unchanged.
-  #   When {#each_changed} returns, `#increment` will have been called the same number of times as the value passed to
-  #   `#total=` and `#finished?` will be `true`.
+  #   number of {#relative_paths} under this module path, not just the number of changed (updated or new) real paths.
+  #   `#increment` will be called whenever a relative path is visited, which means it can be called when there is no
+  #   yielded module ancestor because that module ancestor was unchanged. When {#each_changed} returns, `#increment`
+  #   will have been called the same number of times as the value passed to `#total=` and `#finished?` will be `true`.
   def each_changed(assume_changed: false, progress_bar: Metasploit::Cache::NullProgressBar.new, &block)
     Metasploit::Cache::Module::Ancestor.each_changed(
         assume_changed: assume_changed,

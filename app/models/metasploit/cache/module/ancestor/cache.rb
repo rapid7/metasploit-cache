@@ -46,7 +46,8 @@ class Metasploit::Cache::Module::Ancestor::Cache < Metasploit::Model::Base
   #
 
   # @note Validation errors for `module_ancestor` will be logged as errors tagged with
-  #   {Metasploit::Cache::Module::Ancestor#real_path}
+  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  #
   # Persists ephemeral cache data from {#metasploit_module} and it's namespace to the persistent cache entry.
   #
   # @param options [Hash{Symbol => Metasploit::Cache::Module::Ancestor}]
