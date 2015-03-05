@@ -154,7 +154,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #   `#total=` and `#increment` API for monitoring the progress of the enumerator.  `#total` will be set to total
   #   number of `relative_paths`, not just the number of changed (updated or new) relative_paths.  `#increment` will be
   #   called whenever a relative path is visited, which means it can be called when there is no yielded module ancestor
-  #   because that module ancestor was unchanged.  When {#each_changed} returns, `#increment` will have been called the
+  #   because that module ancestor was unchanged.  When {each_changed} returns, `#increment` will have been called the
   #   same number of times as the value passed to `#total=` and `#finished?` will be `true`.
   # @param relative_paths [Array<String>] an `Array` of {Metasploit::Cache::Module::Ancestor#real_path}.
   # @param scope [ActiveRecord::Relation<Class<Metasploit::Cache::Module::Ancestor>>] scope for a
