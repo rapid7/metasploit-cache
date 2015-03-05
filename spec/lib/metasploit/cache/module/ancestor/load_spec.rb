@@ -610,6 +610,44 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
         # use relative pathname so that context name is not dependent on build directory
         context module_path_relative_pathname.to_s do
+          #
+          # Shared Examples
+          #
+
+          shared_examples_for 'relative_path_prefix' do |association:, relative_path_prefix:|
+            context relative_path_prefix do
+              real_prefix_pathname = module_path_real_pathname.join(relative_path_prefix)
+
+              rule = File::Find.new(
+                  ftype: 'file',
+                  pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}",
+                  path: real_prefix_pathname.to_path
+              )
+
+              rule.find do |real_path|
+                real_pathname = Pathname.new(real_path)
+                display_pathname = real_pathname.relative_path_from(real_prefix_pathname)
+                relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
+
+                context display_pathname.to_s do
+                  let(:module_ancestor) {
+                    module_path.send(
+                        association
+                    ).build(
+                        relative_path: relative_pathname.to_path
+                    )
+                  }
+
+                  it { is_expected.to load_metasploit_module}
+                end
+              end
+            end
+          end
+
+          #
+          # lets
+          #
+
           let(:module_path) do
             FactoryGirl.create(
                 :metasploit_cache_module_path,
@@ -619,36 +657,37 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
             )
           end
 
-          rule = File::Find.new(
-              ftype: 'file',
-              pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}",
-              path: module_path_real_path
-          )
+          it_should_behave_like 'relative_path_prefix',
+                                association: :auxiliary_ancestors,
+                                relative_path_prefix: 'auxiliary'
 
-          rule.find do |real_path|
-            real_pathname = Pathname.new(real_path)
-            relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
+          it_should_behave_like 'relative_path_prefix',
+                                association: :encoder_ancestors,
+                                relative_path_prefix: 'encoders'
 
-            # have context be path relative to project root so context name is consistent no matter where the specs run
-            context "#{relative_pathname}" do
-              let(:module_ancestor) do
-                module_path.module_ancestors.build(real_path: real_path)
-              end
+          it_should_behave_like 'relative_path_prefix',
+                                association: :exploit_ancestors,
+                                relative_path_prefix: 'exploits'
 
-              it 'loads Metasploit Module' do
-                expect(module_ancestor.derived_module_type).not_to be_nil
+          it_should_behave_like 'relative_path_prefix',
+                                association: :nop_ancestors,
+                                relative_path_prefix: 'nops'
 
-                if module_ancestor.derived_module_type == Metasploit::Cache::Module::Type::PAYLOAD
-                  pending(
-                      "Current Metasploit::Cache::Module::Ancestor expects handler_type to be accessible from payload" \
-                  "ancestor, but metasploit-framework does not implement that API"
-                  )
-                end
+          it_should_behave_like 'relative_path_prefix',
+                                association: :single_payload_ancestors,
+                                relative_path_prefix: 'payloads/singles'
 
-                expect(module_ancestor_load).to load_metasploit_module
-              end
-            end
-          end
+          it_should_behave_like 'relative_path_prefix',
+                                association: :stage_payload_ancestors,
+                                relative_path_prefix: 'payloads/stages'
+
+          it_should_behave_like 'relative_path_prefix',
+                                association: :stager_payload_ancestors,
+                                relative_path_prefix: 'payloads/stagers'
+
+          it_should_behave_like 'relative_path_prefix',
+                                association: :post_ancestors,
+                                relative_path_prefix: 'post'
         end
       end
     end
