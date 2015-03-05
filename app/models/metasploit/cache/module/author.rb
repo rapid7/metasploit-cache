@@ -31,28 +31,5 @@ class Metasploit::Cache::Module::Author < ActiveRecord::Base
   validates :module_instance,
             presence: true
 
-  #
-  # Instance Methods
-  #
-
-  # @!method author=(author)
-  #   Sets {#author}.
-  #
-  #   @param author [Metasploit::Cache::Author] Author who wrote the {#module_instanec module}.
-  #   @return [void]
-
-  # @!method email_address=(email_address)
-  #   Sets {#email_address}.
-  #
-  #   @param email_address [Metasploit::Cache::EmailAddress] email address {#author} used when writing
-  #     {#module_instance module}; `nil` if {#author} only gave a name.
-  #   @return [void]
-
-  # @!method module_instance=(module_instance)
-  #   Sets {#module_instance}.
-  #
-  #   @param module_instance [Metasploit::Cache::Module::Instance] module written by {#author}.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end
