@@ -486,9 +486,17 @@ RSpec.describe Metasploit::Cache::Module::Class do
           end
 
           context 'with 1 ancestor' do
+            let(:ancestor) {
+              FactoryGirl.create(ancestor_factory)
+            }
+
+            let(:ancestor_factory) {
+              FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+            }
+
             let(:ancestors) do
               [
-                  FactoryGirl.create(:metasploit_cache_module_ancestor)
+                  ancestor
               ]
             end
 
@@ -538,12 +546,17 @@ RSpec.describe Metasploit::Cache::Module::Class do
             end
 
             context 'with same Metasploit::Cache::Module::Ancestor#module_type and Metasploit::Cache::Module::Class#module_type' do
+              let(:ancestor) {
+                FactoryGirl.create(ancestor_factory)
+              }
+
+              let(:ancestor_factory) {
+                Metasploit::Cache::Module::Ancestor::Spec::FACTORIES_BY_MODULE_TYPE.fetch(module_type).sample
+              }
+
               let(:ancestors) do
                 [
-                    FactoryGirl.create(
-                        :metasploit_cache_module_ancestor,
-                        :module_type => module_type
-                    )
+                    ancestor
                 ]
               end
 
@@ -555,10 +568,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
             context 'without same Metasploit::Cache::Module::Ancestor#module_type and Metasploit::Cache::Module::Class#module_type' do
               let(:ancestors) do
                 [
-                    FactoryGirl.create(
-                        :metasploit_cache_module_ancestor,
-                        :module_type => 'exploit'
-                    )
+                    FactoryGirl.create(:metasploit_cache_exploit_ancestor)
                 ]
               end
 
@@ -575,10 +585,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
           context 'without module_type' do
             # with a nil module_type, module_type will be derived from
             let(:ancestors) do
-              [
-                  FactoryGirl.create(:metasploit_cache_module_ancestor),
-                  FactoryGirl.create(:metasploit_cache_module_ancestor)
-              ]
+              Array.new(2) {
+                factory = FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+                FactoryGirl.create(factory)
+              }
             end
 
             let(:module_type) do
@@ -616,17 +626,12 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'with same Metasploit::Cache::Module::Ancestor#module_type' do
             let(:ancestors) do
-              [
-                  FactoryGirl.create(
-                      :metasploit_cache_module_ancestor,
-                      :module_type => module_type
-                  ),
-                  FactoryGirl.create(
-                      :metasploit_cache_module_ancestor,
-                      :module_type => module_type
-                  )
-              ]
+              FactoryGirl.create_list(ancestors_factory, 2)
             end
+
+            let(:ancestors_factory) {
+              Metasploit::Cache::Module::Ancestor::Spec::FACTORIES_BY_MODULE_TYPE[module_type].sample
+            }
 
             let(:module_type) do
               FactoryGirl.generate :metasploit_cache_module_type
@@ -644,10 +649,9 @@ RSpec.describe Metasploit::Cache::Module::Class do
           context 'without same Metasploit::Cache::Module::Ancestor#module_type' do
             let(:ancestors) do
               module_type_set.collect { |module_type|
-                FactoryGirl.create(
-                    :metasploit_cache_module_ancestor,
-                    :module_type => module_type
-                )
+                factory = Metasploit::Cache::Module::Ancestor::Spec::FACTORIES_BY_MODULE_TYPE.fetch(module_type).sample
+
+                FactoryGirl.create(factory)
               }
             end
 
@@ -747,8 +751,16 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'with Metasploit::Cache::Module::Ancestor#payload_type' do
             let(:ancestor) do
-              FactoryGirl.create(:metasploit_cache_payload_ancestor)
+              FactoryGirl.create(ancestor_factory)
             end
+
+            let(:ancestor_factory) {
+              [
+                  :metasploit_cache_payload_single_ancestor,
+                  :metasploit_cache_payload_stage_ancestor,
+                  :metasploit_cache_payload_stager_ancestor
+              ].sample
+            }
 
             it 'should record error on ancestors' do
               expect(module_class.errors[:ancestors]).to include(error)
@@ -757,8 +769,12 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'without Metasploit::Cache::Module::Ancestor#payload_type' do
             let(:ancestor) do
-              FactoryGirl.create(:metasploit_cache_module_ancestor)
+              FactoryGirl.create(ancestor_factory)
             end
+
+            let(:ancestor_factory) {
+              FactoryGirl.generate :metasploit_cache_non_payload_ancestor_factory
+            }
 
             it 'should not record error on ancestors' do
               expect(module_class.errors[:ancestors]).not_to include(error)
@@ -961,8 +977,12 @@ RSpec.describe Metasploit::Cache::Module::Class do
       context 'non-empty' do
         context 'with same Metasploit::Cache::Module::Ancestor#module_type' do
           let(:ancestors) do
-            FactoryGirl.create_list(:metasploit_cache_module_ancestor, 2, :module_type => module_type)
+            FactoryGirl.create_list(ancestors_factory, 2)
           end
+
+          let(:ancestors_factory) {
+            Metasploit::Cache::Module::Ancestor::Spec::FACTORIES_BY_MODULE_TYPE.fetch(module_type).sample
+          }
 
           let(:module_type) do
             FactoryGirl.generate :metasploit_cache_module_type
@@ -975,7 +995,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
         context 'with different Metasploit::Cache::Module;:Ancestor#module_type' do
           let(:ancestors) do
-            FactoryGirl.create_list(:metasploit_cache_module_ancestor, 2)
+            [
+                FactoryGirl.create(:metasploit_cache_auxiliary_ancestor),
+                FactoryGirl.create(:metasploit_cache_encoder_ancestor)
+            ]
           end
 
           it 'should return nil because there is no consensus' do
@@ -1005,19 +1028,12 @@ RSpec.describe Metasploit::Cache::Module::Class do
       end
 
       context 'with 1 ancestor' do
-        let(:ancestors) do
-          [
-              FactoryGirl.create(
-                  :metasploit_cache_payload_ancestor,
-                  :payload_type => payload_type
-              )
-          ]
-        end
-
         context 'with single' do
-          let(:payload_type) do
-            'single'
-          end
+          let(:ancestors) {
+            [
+                FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
+            ]
+          }
 
           it { should == 'single' }
         end
@@ -1095,11 +1111,12 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
       context 'with 1 ancestor' do
         let(:ancestor) do
-          FactoryGirl.create(
-              :metasploit_cache_module_ancestor,
-              module_type: module_type
-          )
+          FactoryGirl.create(ancestor_factory)
         end
+
+        let(:ancestor_factory) {
+          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+        }
 
         let(:ancestors) do
           [
@@ -1114,7 +1131,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
       context 'without 1 ancestor' do
         let(:ancestors) do
-          FactoryGirl.create_list(:metasploit_cache_module_ancestor, 2)
+          Array.new(2) {
+            factory = FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+            FactoryGirl.create(factory)
+          }
         end
 
         it { should be_nil }
@@ -1132,13 +1152,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
     end
 
     context 'with 1 ancestor' do
-      let(:ancestor) do
-        FactoryGirl.build(
-            :metasploit_cache_payload_ancestor,
-            relative_path: relative_path
-        )
-      end
-
       let(:ancestors) do
         [
             ancestor
@@ -1146,6 +1159,13 @@ RSpec.describe Metasploit::Cache::Module::Class do
       end
 
       context 'with single' do
+        let(:ancestor) do
+          FactoryGirl.build(
+              :metasploit_cache_payload_single_ancestor,
+              relative_path: relative_path
+          )
+        end
+
         context 'with Metasploit::Cache::Module::Ancestor#relative_path' do
           let(:payload_name) do
             'payload/name'
@@ -1160,7 +1180,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
           end
         end
 
-        context 'without reference_name' do
+        context 'without Metasploit::Cache::Module::Ancestor#relative_path' do
           let(:relative_path) do
             nil
           end
@@ -1190,7 +1210,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
     context 'without 2 ancestors' do
       let(:ancestors) do
-        FactoryGirl.create_list(:metasploit_cache_module_ancestor, 3)
+        Array.new(3) {
+          factory = FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+          FactoryGirl.create(factory)
+        }
       end
 
       it { should be_nil }

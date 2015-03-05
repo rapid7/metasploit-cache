@@ -124,7 +124,8 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
     it 'sets path and line so that backtrace appears in CONTENT' do
       namespace_module = create
 
-      module_ancestor = FactoryGirl.build(:metasploit_cache_module_ancestor)
+      module_ancestor_factory = FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+      module_ancestor = FactoryGirl.build(module_ancestor_factory)
 
       module_ancestor.real_pathname.open('w') do |f|
         f.puts 'raise "Error in module_eval_with_lexical_scope"'
@@ -210,10 +211,14 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
     }
 
     let(:module_ancestor) {
-      FactoryGirl.build(:metasploit_cache_module_ancestor).tap { |module_ancestor|
+      FactoryGirl.build(module_ancestor_factory).tap { |module_ancestor|
         # validate to populate #real_path_sha1_hex_digest
         module_ancestor.valid?
       }
+    }
+
+    let(:module_ancestor_factory) {
+      FactoryGirl.generate :metasploit_cache_module_ancestor_factory
     }
 
     it 'starts with NAMES' do
@@ -406,7 +411,11 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
     #
 
     let(:module_ancestor) {
-      FactoryGirl.build(:metasploit_cache_module_ancestor)
+      FactoryGirl.build(module_ancestor_factory)
+    }
+
+    let(:module_ancestor_factory) {
+      FactoryGirl.generate :metasploit_cache_module_ancestor_factory
     }
 
     context 'with previous namespace module' do

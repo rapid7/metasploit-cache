@@ -1,8 +1,40 @@
 FactoryGirl.define do
-  factory :metasploit_cache_module_ancestor,
-          class: Metasploit::Cache::Module::Ancestor do
+  #
+  # Sequences
+  #
+
+  sequence :metasploit_cache_non_payload_ancestor_factory,
+           Metasploit::Cache::Module::Ancestor::Spec.random_non_payload_factory
+
+  sequence :metasploit_cache_module_ancestor_factory, Metasploit::Cache::Module::Ancestor::Spec.random_factory
+
+  minimum_version = 1
+  maximum_version = 4
+  range = maximum_version - minimum_version + 1
+
+  sequence :metasploit_cache_module_ancestor_metasploit_module_relative_name do |n|
+    version = (n % range) + minimum_version
+
+    "Metasploit#{version}"
+  end
+
+  sequence :metasploit_cache_module_ancestor_reference_name do |n|
+    [
+        'metasploit',
+        'cache',
+        'module',
+        'ancestor',
+        'reference',
+        "name#{n}"
+    ].join('/')
+  end
+
+  #
+  # Traits
+  #
+
+  trait :metasploit_cache_module_ancestor do
     transient do
-      module_type { generate :metasploit_cache_non_payload_module_type }
       reference_name { generate :metasploit_cache_module_ancestor_reference_name }
 
       #
@@ -46,26 +78,5 @@ FactoryGirl.define do
         "#{module_type_directory}/#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
       end
     }
-  end
-
-  minimum_version = 1
-  maximum_version = 4
-  range = maximum_version - minimum_version + 1
-
-  sequence :metasploit_cache_module_ancestor_metasploit_module_relative_name do |n|
-    version = (n % range) + minimum_version
-
-    "Metasploit#{version}"
-  end
-
-  sequence :metasploit_cache_module_ancestor_reference_name do |n|
-    [
-        'metasploit',
-        'cache',
-        'module',
-        'ancestor',
-        'reference',
-        "name#{n}"
-    ].join('/')
   end
 end

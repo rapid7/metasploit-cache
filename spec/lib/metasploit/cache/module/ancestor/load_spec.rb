@@ -25,8 +25,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
   }
 
   let(:module_ancestor) do
-    FactoryGirl.create(:metasploit_cache_module_ancestor)
+    FactoryGirl.create(module_ancestor_factory)
   end
+
+  let(:module_ancestor_factory) {
+    FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+  }
 
   context 'validations' do
     context 'metasploit_module' do
@@ -517,8 +521,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
     context 'without valid for loading' do
       let(:module_ancestor) do
-        FactoryGirl.build(:metasploit_cache_module_ancestor, module_type: nil, reference_name: nil, relative_path: nil)
+        FactoryGirl.build(module_ancestor_factory, module_type: nil, reference_name: nil, relative_path: nil)
       end
+
+      let(:module_ancestor_factory) {
+        FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+      }
 
       it 'should not be valid for loading' do
         expect(module_ancestor_load).not_to be_valid(:loading)

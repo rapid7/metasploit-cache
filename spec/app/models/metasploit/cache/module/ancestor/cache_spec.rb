@@ -15,8 +15,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
   }
 
   let(:expected_module_ancestor) do
-    FactoryGirl.create(:metasploit_cache_module_ancestor)
+    FactoryGirl.create(expected_module_ancestor_factory)
   end
+
+  let(:expected_module_ancestor_factory) {
+    FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+  }
 
   context 'resurrecting attributes' do
     context '#module_ancestor' do
@@ -55,7 +59,11 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
       }
 
       let(:module_ancestor) {
-        FactoryGirl.build(:metasploit_cache_module_ancestor)
+        FactoryGirl.build(module_ancestor_factory)
+      }
+
+      let(:module_ancestor_factory) {
+        FactoryGirl.generate :metasploit_cache_module_ancestor_factory
       }
 
       it 'does not access default #module_ancestor' do

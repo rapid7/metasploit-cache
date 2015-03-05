@@ -1,86 +1,40 @@
 RSpec.describe Metasploit::Cache::Payload::Ancestor do
   it_should_behave_like 'Metasploit::Cache::Module::Ancestor.restrict',
                         module_type: 'payload',
-                        module_type_directory: 'payloads'
+                        module_type_directory: 'payloads' do
+    let(:described_class) {
+      [
+          Metasploit::Cache::Payload::Single::Ancestor,
+          Metasploit::Cache::Payload::Stage::Ancestor,
+          Metasploit::Cache::Payload::Stager::Ancestor,
+      ].sample
+    }
+  end
+
   it_should_behave_like 'Metasploit::Concern.run'
 
-  context 'factories' do
-    context 'metasploit_cache_payload_ancestor' do
-      subject(:metasploit_cache_payload_ancestor) {
-        FactoryGirl.build(:metasploit_cache_payload_ancestor)
-      }
-
-      it { is_expected.to be_valid }
-
-      context 'with :payload_type' do
-        subject(:metasploit_cache_payload_ancestor) {
-          FactoryGirl.build(
-                         :metasploit_cache_payload_ancestor,
-                         payload_type: expected_payload_type
-          )
-        }
-
-        context 'single' do
-          let(:expected_payload_type) {
-            'single'
-          }
-
-          it { is_expected.to be_valid }
-
-          context '#payload_type' do
-            subject(:payload_type) {
-              metasploit_cache_payload_ancestor.payload_type
-            }
-
-            it { is_expected.to eq(expected_payload_type) }
-          end
-        end
-
-        context 'stage' do
-          let(:expected_payload_type) {
-            'stage'
-          }
-
-          it { is_expected.to be_valid }
-
-          context '#payload_type' do
-            subject(:payload_type) {
-              metasploit_cache_payload_ancestor.payload_type
-            }
-
-            it { is_expected.to eq(expected_payload_type) }
-          end
-        end
-
-        context 'stager' do
-          let(:expected_payload_type) {
-            'stager'
-          }
-
-          it { is_expected.to be_valid }
-
-          context '#payload_type' do
-            subject(:payload_type) {
-              metasploit_cache_payload_ancestor.payload_type
-            }
-
-            it { is_expected.to eq(expected_payload_type) }
-          end
-        end
-      end
+  context '#initialize' do
+    it 'prevents initialization of Metasploit::Cache::Payload::Ancestors' do
+      expect {
+        described_class.new
+      }.to raise_error(TypeError)
     end
   end
 
   context '#payload_type' do
     subject(:payload_type) {
-      metasploit_cache_payload_ancestor.payload_type
+      payload_ancestor.payload_type
     }
 
-    let(:metasploit_cache_payload_ancestor) {
+    let(:payload_ancestor) {
       FactoryGirl.build(
-          :metasploit_cache_payload_ancestor,
+          payload_ancestor_factory,
           reference_name: reference_name
       )
+    }
+
+    let(:payload_ancestor_factory) {
+      FactoryGirl.generate :metasploit_cache_payload_ancestor_factory
     }
 
     context 'with #reference_name starting with' do
@@ -117,9 +71,13 @@ RSpec.describe Metasploit::Cache::Payload::Ancestor do
 
     let(:payload_ancestor) {
       FactoryGirl.build(
-                     :metasploit_cache_payload_ancestor,
+                     payload_ancestor_factory,
                      relative_path: relative_path
       )
+    }
+
+    let(:payload_ancestor_factory) {
+      FactoryGirl.generate :metasploit_cache_payload_ancestor_factory
     }
 
     context 'with #relative_path' do

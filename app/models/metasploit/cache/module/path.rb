@@ -8,6 +8,10 @@ require 'file/find'
 # directories can be moved, but the cached metadata in {Metasploit::Cache::Module::Ancestor} and its associations can remain valid by
 # just changing the Metasploit::Cache::Module::Path records in the database.
 class Metasploit::Cache::Module::Path < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
+  autoload :AssociationExtension
+
   include Metasploit::Cache::RealPathname
   include Metasploit::Model::NilifyBlanks
   include Metasploit::Model::Translation
@@ -16,13 +20,91 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute module_ancestors
-  #   The modules ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
+  # @!attribute auxiliary_ancestors
+  #   The auxiliary ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Ancestor>]
-  has_many :module_ancestors,
-           class_name: 'Metasploit::Cache::Module::Ancestor',
+  #   @return [ActiveRecord::Relation<Metasploit::Cache::Auxiliary::Ancestor>]
+  has_many :auxiliary_ancestors,
+           class_name: 'Metasploit::Cache::Auxiliary::Ancestor',
            dependent: :destroy,
+           extend: AssociationExtension,
+           foreign_key: :parent_path_id,
+           inverse_of: :parent_path
+
+  # @!attribute encoder_ancestors
+  #   The encoder ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
+  #
+  #   @return [ActiveRecord::Relation<Metasploit::Cache::Encoder::Ancestor>]
+  has_many :encoder_ancestors,
+           class_name: 'Metasploit::Cache::Encoder::Ancestor',
+           dependent: :destroy,
+           extend: AssociationExtension,
+           foreign_key: :parent_path_id,
+           inverse_of: :parent_path
+
+  # @!attribute exploit_ancestors
+  #   The exploit ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
+  #
+  #   @return [ActiveRecord::Relation<Metasploit::Cache::Exploit::Ancestor>]
+  has_many :exploit_ancestors,
+           class_name: 'Metasploit::Cache::Exploit::Ancestor',
+           dependent: :destroy,
+           extend: AssociationExtension,
+           foreign_key: :parent_path_id,
+           inverse_of: :parent_path
+
+  # @!attribute nop_ancestors
+  #   The nop ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
+  #
+  #   @return [ActiveRecord::Relation<Metasploit::Cache::Nop::Ancestor>]
+  has_many :nop_ancestors,
+           class_name: 'Metasploit::Cache::Nop::Ancestor',
+           dependent: :destroy,
+           extend: AssociationExtension,
+           foreign_key: :parent_path_id,
+           inverse_of: :parent_path
+
+  # @!attribute single_payload_ancestors
+  #   The single payload ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
+  #
+  #   @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Single::Ancestor>]
+  has_many :single_payload_ancestors,
+           class_name: 'Metasploit::Cache::Payload::Single::Ancestor',
+           dependent: :destroy,
+           extend: AssociationExtension,
+           foreign_key: :parent_path_id,
+           inverse_of: :parent_path
+
+  # @!attribute stage_payload_ancestors
+  #   The stage payload ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
+  #
+  #   @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Stage::Ancestor>]
+  has_many :stage_payload_ancestors,
+           class_name: 'Metasploit::Cache::Payload::Stage::Ancestor',
+           dependent: :destroy,
+           extend: AssociationExtension,
+           foreign_key: :parent_path_id,
+           inverse_of: :parent_path
+
+  # @!attribute stager_payload_ancestors
+  #   The stager payload ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
+  #
+  #   @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Stager::Ancestor>]
+  has_many :stager_payload_ancestors,
+           class_name: 'Metasploit::Cache::Payload::Stager::Ancestor',
+           dependent: :destroy,
+           extend: AssociationExtension,
+           foreign_key: :parent_path_id,
+           inverse_of: :parent_path
+
+  # @!attribute post_ancestors
+  #   The post ancestors that use this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
+  #
+  #   @return [ActiveRecord::Relation<Metasploit::Cache::Post::Ancestor>]
+  has_many :post_ancestors,
+           class_name: 'Metasploit::Cache::Post::Ancestor',
+           dependent: :destroy,
+           extend: AssociationExtension,
            foreign_key: :parent_path_id,
            inverse_of: :parent_path
 
@@ -116,93 +198,6 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
     directory
   end
 
-  # @note The yielded {Metasploit::Cache::Module::Ancestor} may contain unsaved changes.  It is the responsibility of the caller to
-  #   save the record.
-  #
-  # @overload each_changed_module_ancestor(options={}, &block)
-  #   Yields each module ancestor that is changed under this module path.
-  #
-  #   @yield [module_ancestor]
-  #   @yieldparam module_ancestor [Metasploit::Cache::Module::Ancestor] a changed, or in the case of `changed: true`,
-  #     assumed changed, {Metasploit::Cache::Module::Ancestor}.
-  #   @yieldreturn [void]
-  #   @return [void]
-  #
-  # @overload each_changed_module_ancestor(options={})
-  #   Returns enumerator that yields each module ancestor that is changed under this module path.
-  #
-  #   @return [Enumerator]
-  #
-  # @param options [Hash{Symbol => Boolean}]
-  # @option options [Boolean] :changed (false) if `true`, assume the
-  #   {Metasploit::Cache::Module::Ancestor#real_path_modified_at} and
-  #   {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} have changed and that
-  #   {Metasploit::Cache::Module::Ancestor} should be returned.
-  # @option options [ProgressBar, #total=, #increment] :progress_bar a ruby `ProgressBar` or similar object that
-  #   supports the `#total=` and `#increment` API for monitoring the progress of the enumerator.  `#total` will be set
-  #   to total number of {#module_ancestor_relative_paths relative paths} under this module path, not just the number of
-  #   changed (updated or new) real paths.  `#increment` will be called whenever a relative path is visited, which means
-  #   it can be called when there is no yielded module ancestor because that module ancestor was unchanged.  When
-  #   {#each_changed_module_ancestor} returns, `#increment` will have been called the same number of times as the value
-  #   passed to `#total=` and `#finished?` will be `true`.
-  #
-  # @see #changed_module_ancestor_from_relative_path
-  def each_changed_module_ancestor(options={})
-    options.assert_valid_keys(:changed, :progress_bar)
-
-    unless block_given?
-      to_enum(__method__, options)
-    else
-      relative_paths = module_ancestor_relative_paths
-
-      progress_bar = options[:progress_bar] || Metasploit::Cache::NullProgressBar.new
-      progress_bar.total = relative_paths.length
-
-      # ensure the connection doesn't stay checked out for thread in metasploit-framework.
-      ActiveRecord::Base.connection_pool.with_connection do
-        updatable_module_ancestors = module_ancestors.where(relative_path: relative_paths)
-        new_relative_path_set = Set.new(relative_paths)
-        assume_changed = options.fetch(:changed, false)
-
-        # use find_each since this is expected to exceed default batch size of 1000 records.
-        updatable_module_ancestors.find_each do |updatable_module_ancestor|
-          new_relative_path_set.delete(updatable_module_ancestor.relative_path)
-
-          changed = assume_changed
-
-          # real_path_modified_at and real_path_sha1_hex_digest should be updated even if assume_changed is true so
-          # that database stays in-sync with file system
-
-          updatable_module_ancestor.real_path_modified_at = updatable_module_ancestor.derived_real_path_modified_at
-
-          # only derive the SHA1 Hex Digest if modification time has changed to save time
-          if updatable_module_ancestor.real_path_modified_at_changed?
-            updatable_module_ancestor.real_path_sha1_hex_digest = updatable_module_ancestor.derived_real_path_sha1_hex_digest
-
-            changed ||= updatable_module_ancestor.real_path_sha1_hex_digest_changed?
-          end
-
-          if changed
-            yield updatable_module_ancestor
-            progress_bar.increment
-          else
-            # increment even when no yield so that increment occurs for each path and matches totally without jumps
-            progress_bar.increment
-          end
-        end
-
-        # after all pre-existing relative_paths are subtracted, new_relative_path_set contains only relative_paths not
-        # in the database
-        new_relative_path_set.each do |relative_path|
-          new_module_ancestor = module_ancestors.new(relative_path: relative_path)
-
-          yield new_module_ancestor
-          progress_bar.increment
-        end
-      end
-    end
-  end
-
   # @!method gem=(gem)
   #   Sets {#gem}.
   #
@@ -211,38 +206,6 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   #     this would be `'metasploit-pro'`.  The name used for `gem` does not have to be a gem on rubygems, it just
   #     functions as a namespace for {#name} so that projects using metasploit-framework do not need to worry about
   #     collisions on {#name} which could disrupt the cache behavior.
-  #   @return [void]
-
-  # {Metasploit::Cache::Module::Ancestor#relative_path} under {#real_path} on-disk.
-  #
-  # @return [Array<String>]
-  def module_ancestor_relative_paths
-    real_pathname = self.real_pathname
-
-    module_ancestor_rule.find.map { |module_ancestor_real_path|
-      module_ancestor_real_pathname = Pathname.new(module_ancestor_real_path)
-      relative_pathname = module_ancestor_real_pathname.relative_path_from(real_pathname)
-
-      relative_pathname.to_path
-    }
-  end
-
-  # File::Find rule for find all {Metasploit::Cache::Module::Ancestor#relative_path} under {#real_path} on-disk.
-  #
-  # @return [File::Find]
-  def module_ancestor_rule
-    File::Find.new(
-        ftype: 'file',
-        path: real_path,
-        pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
-    )
-  end
-
-  # @!method module_ancestors=(module_ancestors)
-  #   Sets {#module_ancestors}.
-  #
-  #   @param module_ancestors [Enumerable<Metasploit::Cache::Module::Ancestor>, nil] The modules ancestors that use
-  #     this as a {Metasploit::Cache::Module::Ancestor#parent_path}.
   #   @return [void]
 
   # @note This path should be validated before calling {#name_collision} so that {#gem} and {#name} is normalized.

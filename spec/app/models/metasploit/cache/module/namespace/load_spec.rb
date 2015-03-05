@@ -190,7 +190,11 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         #
 
         let(:module_ancestor) {
-          FactoryGirl.build(:metasploit_cache_module_ancestor)
+          FactoryGirl.build(module_ancestor_factory)
+        }
+
+        let(:module_ancestor_factory) {
+          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
         }
 
         #
@@ -234,7 +238,11 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         }
 
         let(:module_ancestor) {
-          FactoryGirl.build(:metasploit_cache_module_ancestor)
+          FactoryGirl.build(module_ancestor_factory)
+        }
+
+        let(:module_ancestor_factory) {
+          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
         }
 
         #
@@ -308,7 +316,11 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         }
 
         let(:module_ancestor) {
-          FactoryGirl.build(:metasploit_cache_module_ancestor)
+          FactoryGirl.build(module_ancestor_factory)
+        }
+
+        let(:module_ancestor_factory) {
+          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
         }
 
         #
@@ -367,7 +379,11 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
 
     context 'after #module_ancestor_eval' do
       let(:module_ancestor) {
-        FactoryGirl.build(:metasploit_cache_module_ancestor)
+        FactoryGirl.build(module_ancestor_factory)
+      }
+
+      let(:module_ancestor_factory) {
+        FactoryGirl.generate :metasploit_cache_module_ancestor_factory
       }
 
       context 'with constant matching Metasploit<n>' do
@@ -608,7 +624,11 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
     }
 
     let(:module_ancestor) {
-      FactoryGirl.build(:metasploit_cache_module_ancestor)
+      FactoryGirl.build(module_ancestor_factory)
+    }
+
+    let(:module_ancestor_factory) {
+      FactoryGirl.generate :metasploit_cache_module_ancestor_factory
     }
 
     context 'with Interrupt' do

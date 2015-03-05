@@ -2,11 +2,23 @@
 class Metasploit::Cache::Payload::Ancestor < Metasploit::Cache::Module::Ancestor
   extend ActiveSupport::Autoload
 
+  autoload :Spec
   autoload :Type
 
-  Metasploit::Cache::Module::Ancestor.restrict(self, to: 'payload')
+  #
+  # CONSTANTS
+  #
 
-  Metasploit::Concern.run(self)
+  # The valid value for {Metasploit::Cache::Module::Ancestor#module_type}.
+  MODULE_TYPE = Metasploit::Cache::Module::Type::PAYLOAD
+  # The directory under {#parent_path} where payload ancestors are stored.
+  MODULE_TYPE_DIRECTORY = MODULE_TYPE.pluralize
+
+  #
+  # Relative path restriction
+  #
+
+  Metasploit::Cache::Module::Ancestor.restrict(self)
 
   #
   # Validations
@@ -21,17 +33,51 @@ class Metasploit::Cache::Payload::Ancestor < Metasploit::Cache::Module::Ancestor
   # Class Methods
   #
 
-  # Ensure that only {#payload_type} matching `payload_type` is valid for `subclass`.
+  # Ensure that only {#payload_type} matching `PAYLOAD_TYPE` is valid for `subclass`.
   #
   # @param subclass [Class<Metasploit::Cache::Payload::Ancestor>] a subclass of {Metasploit::Cache::Payload::Ancestor}.
-  # @param to [String] an element of {Metasploit::Cache::Payload::Ancestor::Type::ALL}.
   # @return [void]
-  def self.restrict(subclass, to:)
+  def self.restrict(subclass)
+    #
+    # Validations
+    #
+
     subclass.validate :payload_type_matches
-    error = "is not #{to}"
+
+    #
+    # Class Methods
+    #
+
+    subclass_relative_path_prefix = "#{relative_path_prefix}/#{subclass::PAYLOAD_TYPE_DIRECTORY}".freeze
+
+    subclass.define_singleton_method(:relative_path_prefix) do
+      subclass_relative_path_prefix
+    end
+
+    #
+    # Initialize
+    #
+
+    def initialize(*args)
+      if self.class == Metasploit::Cache::Payload::Ancestor
+        raise TypeError,
+              "Cannot directly instantiate a Metasploit::Cache::Payload::Ancestor.  Create one of the subclasses:\n" \
+              "* Metasploit::Cache::Payload::Single::Ancestor\n" \
+              "* Metasploit::Cache::Payload::Stage::Ancestor\n" \
+              "* Metasploit::Cache::Payload::Stager::Ancestor"
+      end
+
+      super
+    end
+
+    #
+    # Instance Methods
+    #
+
+    error = "is not #{subclass::PAYLOAD_TYPE}"
 
     subclass.send(:define_method, :payload_type_matches) do
-      if payload_type != to
+      if payload_type != subclass::PAYLOAD_TYPE
         errors.add(:payload_type, error)
       end
     end
@@ -79,4 +125,5 @@ class Metasploit::Cache::Payload::Ancestor < Metasploit::Cache::Module::Ancestor
     end
   end
 
+  Metasploit::Concern.run(self)
 end
