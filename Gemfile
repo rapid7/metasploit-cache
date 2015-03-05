@@ -35,11 +35,6 @@ group :development, :test do
   gem 'ruby-progressbar'
 end
 
-group :documentation do
-  # Entity-Relationship diagrams for developers that need to access database using SQL directly.
-  gem 'rails-erd'
-end
-
 group :test do
   # rails is not used because activerecord should not be included, but rails would normally coordinate the versions
   # between its dependencies, which is now handled by this constraint.
