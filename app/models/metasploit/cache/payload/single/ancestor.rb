@@ -1,3 +1,4 @@
+# Metadata from loading single payload modules.
 class Metasploit::Cache::Payload::Single::Ancestor < Metasploit::Cache::Payload::Ancestor
   #
   # CONSTANTS

@@ -1,3 +1,5 @@
+# Adds {#each_changed} method to {Metasploit::Cache::Module::Path} associations, so that
+# {Metasploit::Cache::Module::Ancestor} from the given association can be populated from the file system.
 module Metasploit::Cache::Module::Path::AssociationExtension
   # @note The yielded {Metasploit::Cache::Module::Ancestor} may contain unsaved changes.  It is the responsibility
   #   of the caller to save the record.

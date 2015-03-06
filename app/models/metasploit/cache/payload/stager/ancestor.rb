@@ -1,3 +1,4 @@
+# Metadata from loading stager payload modules.
 class Metasploit::Cache::Payload::Stager::Ancestor < Metasploit::Cache::Payload::Ancestor
   #
   # CONSTANTS
