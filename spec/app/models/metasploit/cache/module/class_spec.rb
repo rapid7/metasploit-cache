@@ -749,24 +749,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
             module_class.valid?
           end
 
-          context 'with Metasploit::Cache::Module::Ancestor#payload_type' do
-            let(:ancestor) do
-              FactoryGirl.create(ancestor_factory)
-            end
-
-            let(:ancestor_factory) {
-              [
-                  :metasploit_cache_payload_single_ancestor,
-                  :metasploit_cache_payload_stage_ancestor,
-                  :metasploit_cache_payload_stager_ancestor
-              ].sample
-            }
-
-            it 'should record error on ancestors' do
-              expect(module_class.errors[:ancestors]).to include(error)
-            end
-          end
-
           context 'without Metasploit::Cache::Module::Ancestor#payload_type' do
             let(:ancestor) do
               FactoryGirl.create(ancestor_factory)
@@ -1079,18 +1061,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
         end
       end
 
-      context 'with staged' do
-        let(:payload_type) do
-          'staged'
-        end
-
-        it 'should call #derived_staged_payload_reference_name' do
-          expect(module_class).to receive(:derived_staged_payload_reference_name)
-
-          derived_reference_name
-        end
-      end
-
       context 'without single or staged' do
         let(:payload_type) do
           'invalid_payload_type'
@@ -1193,27 +1163,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
     context 'without 1 ancestor' do
       let(:ancestors) do
         []
-      end
-
-      it { should be_nil }
-    end
-  end
-
-  context '#derived_staged_payload_reference_name' do
-    subject(:derived_staged_payload_reference_name) do
-      module_class.send(:derived_staged_payload_reference_name)
-    end
-
-    before(:each) do
-      module_class.ancestors = ancestors
-    end
-
-    context 'without 2 ancestors' do
-      let(:ancestors) do
-        Array.new(3) {
-          factory = FactoryGirl.generate :metasploit_cache_module_ancestor_factory
-          FactoryGirl.create(factory)
-        }
       end
 
       it { should be_nil }

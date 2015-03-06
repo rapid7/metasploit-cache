@@ -170,7 +170,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
   #
 
   validate :ancestors_size
-  validate :ancestor_payload_types
   validate :ancestor_module_types
   
   #
@@ -258,8 +257,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
       case payload_type
         when 'single'
           derived = derived_single_payload_reference_name
-        when 'staged'
-          derived = derived_staged_payload_reference_name
       end
     else
       if ancestors.length == 1
@@ -326,26 +323,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     end
   end
 
-  # Validates that {#ancestors} are payloads when necessary for {#module_type}.
-  #
-  # @return [void]
-  def ancestor_payload_types
-    if payload?
-      ancestors.each do |ancestor|
-        unless ancestor.module_type == Metasploit::Cache::Module::Type::PAYLOAD
-          errors[:ancestors] << "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) " \
-                                "that is not a payload for payload class"
-        end
-      end
-    else
-      ancestors.each do |ancestor|
-        if ancestor.module_type == Metasploit::Cache::Module::Type::PAYLOAD
-          errors[:ancestors] << "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) " \
-                                "that is a payload with for class module_type (#{module_type})"
-        end
-      end
-    end
-  end
 
   # Validates that number of {#ancestors} is correct for the {#module_type}.
   #
@@ -356,10 +333,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
         when 'single'
           unless ancestors.size == 1
             errors[:ancestors] << 'must have exactly one ancestor for single payload module class'
-          end
-        when 'staged'
-          unless ancestors.size == 2
-            errors[:ancestors] << 'must have exactly two ancestors (stager + stage) for staged payload module class'
           end
         # other (invalid) types are handled by validation on payload_type
       end
@@ -386,45 +359,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
 
       if ancestor.module_type == Metasploit::Cache::Module::Type::PAYLOAD
         derived = ancestor.payload_name
-      end
-    end
-
-    derived
-  end
-
-  # @note Caller should check that {#payload?} is `true` and {#payload_type} is 'staged' before calling
-  #   {#derived_staged_payload_reference_name}.
-  #
-  # Derives {#reference_name} for staged payload.
-  #
-  # @return [String] '<stage_ancestor.payload_name>/<stager_ancestor.payload_name>'
-  # @return [nil] unless exactly two {#ancestors ancestor}.
-  # @return [nil] unless {Metasploit::Cache::Module::Ancestor#payload_type} is 'single'.
-  # @return [nil] if {Metasploit::Cache::Module::Ancestor#payload_name} is `nil` for the stage.
-  # @return [nil] if {Metasploit::Cache::Module::Ancestor#payload_name} is `nil` for the stager.
-  def derived_staged_payload_reference_name
-    derived = nil
-
-    if ancestors.length == 2
-      ancestors_by_payload_type = ancestors.group_by(&:payload_type)
-      stage_ancestors = ancestors_by_payload_type.fetch('stage', [])
-
-      # length can be 0..2
-      if stage_ancestors.length == 1
-        stage_ancestor = stage_ancestors.first
-
-        if stage_ancestor.payload_name
-          stager_ancestors = ancestors_by_payload_type.fetch('stager', [])
-
-          # length can be 0..1
-          if stager_ancestors.length == 1
-            stager_ancestor = stager_ancestors.first
-
-            if stager_ancestor.payload_name
-              derived = "#{stage_ancestor.payload_name}/#{stager_ancestor.payload_name}"
-            end
-          end
-        end
       end
     end
 
