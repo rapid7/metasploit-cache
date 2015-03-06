@@ -14,6 +14,15 @@ class Metasploit::Cache::Module::Target::Architecture < ActiveRecord::Base
   belongs_to :module_target, class_name: 'Metasploit::Cache::Module::Target', inverse_of: :target_architectures
 
   #
+  # Attributes
+  #
+
+  # @!method architecture_id
+  #   The primary key of the associated {#architecture}.
+  #
+  #   @return [Integer]
+
+  #
   # Validations
   #
 

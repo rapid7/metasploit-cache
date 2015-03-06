@@ -14,6 +14,15 @@ class Metasploit::Cache::Module::Target::Platform < ActiveRecord::Base
   belongs_to :platform, class_name: 'Metasploit::Cache::Platform', inverse_of: :target_platforms
 
   #
+  # Attributes
+  #
+
+  # @!method platform_id
+  #   The primary key of associated {#platform}.
+  #
+  #   @return [Integer]
+
+  #
   # Validations
   #
 

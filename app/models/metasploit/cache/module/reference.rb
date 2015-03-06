@@ -15,6 +15,15 @@ class Metasploit::Cache::Module::Reference < ActiveRecord::Base
   belongs_to :reference, class_name: 'Metasploit::Cache::Reference', inverse_of: :module_references
 
   #
+  # Attributes
+  #
+
+  # @!method reference_id
+  #   The primary key of the associated {#reference}.
+  #
+  #   @return [Integer]
+
+  #
   # Validations
   #
 

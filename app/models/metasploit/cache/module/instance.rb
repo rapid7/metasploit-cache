@@ -240,6 +240,16 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Attributes
   #
 
+  # @!method default_action_id
+  #   The primary key of the associated {#default_action}.
+  #
+  #   @return [Integer, nil]
+
+  # @!method default_target_id
+  #   The primary key of the associated {#default_target}.
+  #
+  #   @return [Integer, nil]
+
   # @!attribute description
   #   A long, paragraph description of what the module does.
   #
@@ -254,6 +264,11 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #   The name of the software license for the module's code.
   #
   #   @return [String]
+
+  # @!method module_class_id
+  #   The primary key of the associated {#module_class}.
+  #
+  #   @return [Integer, nil]
 
   # @!attribute name
   #   The human readable name of the module.  It is unrelated to {Metasploit::Cache::Module::Class#full_name} or

@@ -16,6 +16,15 @@ class Metasploit::Cache::Module::Relationship < ActiveRecord::Base
   belongs_to :descendant, class_name: 'Metasploit::Cache::Module::Class', inverse_of: :relationships
 
   #
+  # Attributes
+  #
+
+  # @!method ancestor_id
+  #   The primary key of the associated {#ancestor}.
+  #
+  #   @return [Integer]
+
+  #
   # Validations
   #
 

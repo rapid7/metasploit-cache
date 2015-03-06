@@ -18,6 +18,15 @@ class Metasploit::Cache::Module::Author < ActiveRecord::Base
   belongs_to :module_instance, class_name: 'Metasploit::Cache::Module::Instance', inverse_of: :module_authors
 
   #
+  # Attributes
+  #
+
+  # @!method author_id
+  #   The primary key of the associated {#author}.
+  #
+  #   @return [Integer]
+
+  #
   # Validations
   #
 
