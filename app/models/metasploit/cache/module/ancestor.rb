@@ -434,6 +434,13 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     end
   end
 
+  # @!method relative_path=(relative_path)
+  #   Sets the relative path under `#parent_path` {Metasploit::Cache::Module::Path#real_path} where te module file
+  #   exists on-disk.
+  #
+  #   @param relative_path [String] a relative path
+  #   @return [void]
+
   # {#relative_path} as a `Pathname`.
   #
   # @return [Pathname] unless {#relative_path} is `nil`.
