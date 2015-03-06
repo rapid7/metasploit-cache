@@ -34,21 +34,5 @@ class Metasploit::Cache::Module::Architecture < ActiveRecord::Base
   validates :module_instance,
             presence: true
 
-  #
-  # Instance Methods
-  #
-
-  # @!method architecture=(architecture)
-  #   Sets {#architecture}.
-  #
-  #   @param architecture [Metasploit::Cache::Architecture] the architecture supported by the {#module_instance}.
-  #   @return [void]
-
-  # @!method module_instance=(module_instance)
-  #   Sets {#module_instance}.
-  #
-  #   @param module_instance [MEtasploit::Cache::Module::Instance] the module instance that supports {#architecture}.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end
