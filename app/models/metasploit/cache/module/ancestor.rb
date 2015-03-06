@@ -81,9 +81,17 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #   @return [String]
 
   # @!attribute relative_path
-  #   The relative path under {#parent_path} {Metasploit::Cache::Module::Path#real_path} to the module file on-disk.
+  #   The relative path under `#parent_path` {Metasploit::Cache::Module::Path#real_path} to the module file on-disk.
   #
   #   @return [String]
+  #   @see Metasploit::Cache::Auxiliary::Ancestor#parent_path
+  #   @see Metasploit::Cache::Encoder::Ancestor#parent_path
+  #   @see Metasploit::Cache::Exploit::Ancestor#parent_path
+  #   @see Metasploit::Cache::Nop::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Single::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Stage::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Stager::Ancestor#parent_path
+  #   @see Metasploit::Cache::Post::Ancestor#parent_path
 
   #
   # Derivations
@@ -352,8 +360,16 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
 
   # The real (absolute) path to the module file on-disk as a `Pathname`.
   #
-  # @return [Pathname] unless {#parent_path} {Metasploit::Cache::Module::Path#real_path} or {#real_pathname} is `nil`.
+  # @return [Pathname] unless `#parent_path` {Metasploit::Cache::Module::Path#real_path} or {#real_pathname} is `nil`.
   # @return [nil] otherwise
+  # @see Metasploit::Cache::Auxiliary::Ancestor#parent_path
+  # @see Metasploit::Cache::Encoder::Ancestor#parent_path
+  # @see Metasploit::Cache::Exploit::Ancestor#parent_path
+  # @see Metasploit::Cache::Nop::Ancestor#parent_path
+  # @see Metasploit::Cache::Payload::Single::Ancestor#parent_path
+  # @see Metasploit::Cache::Payload::Stage::Ancestor#parent_path
+  # @see Metasploit::Cache::Payload::Stager::Ancestor#parent_path
+  # @see Metasploit::Cache::Post::Ancestor#parent_path
   def real_pathname
     if parent_path
       parent_real_pathname = parent_path.real_pathname
