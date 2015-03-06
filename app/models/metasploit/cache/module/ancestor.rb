@@ -81,7 +81,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #   @return [String]
 
   # @!attribute relative_path
-  #   The relative path under `#parent_path` {Metasploit::Cache::Module::Path#real_path} to the module file on-disk.
+  #   The relative path under {#parent_path} {Metasploit::Cache::Module::Path#real_path} to the module file on-disk.
   #
   #   @return [String]
   #   @see Metasploit::Cache::Auxiliary::Ancestor#parent_path
@@ -358,9 +358,30 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     relative_file_names.first
   end
 
+  # @!method parent_path
+  #   @abstract Subclass and add the following association:
+  #     ```ruby
+  #       # Path under which this module's {Metasploit::Cache::Module::Ancestor#relative_path} exists.
+  #       belongs_to :parent_path,
+  #                  class_name: 'Metasploit::Cache::Module::Path',
+  #                  inverse_of: <association on Metasploit::Cache::Module::Path>
+  #     ```
+  #
+  #   Path under which this module's {#relative_path} exists.
+  #
+  #   @return [Metasploit::Cache::Module::Path]
+  #   @see Metasploit::Cache::Auxiliary::Ancestor#parent_path
+  #   @see Metasploit::Cache::Encoder::Ancestor#parent_path
+  #   @see Metasploit::Cache::Exploit::Ancestor#parent_path
+  #   @see Metasploit::Cache::Nop::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Single::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Stage::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Stager::Ancestor#parent_path
+  #   @see Metasploit::Cache::Post::Ancestor#parent_path
+
   # The real (absolute) path to the module file on-disk as a `Pathname`.
   #
-  # @return [Pathname] unless `#parent_path` {Metasploit::Cache::Module::Path#real_path} or {#real_pathname} is `nil`.
+  # @return [Pathname] unless {#parent_path} {Metasploit::Cache::Module::Path#real_path} or {#real_pathname} is `nil`.
   # @return [nil] otherwise
   # @see Metasploit::Cache::Auxiliary::Ancestor#parent_path
   # @see Metasploit::Cache::Encoder::Ancestor#parent_path
