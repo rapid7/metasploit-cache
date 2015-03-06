@@ -52,7 +52,9 @@ group :test do
   # simplecov test formatter and uploader for Coveralls.io
   gem 'coveralls', require: false
   # for cleaning the database before suite in case previous run was aborted without clean up
-  gem 'database_cleaner' 
+  gem 'database_cleaner'
+  # RSpec formatter
+  gem 'fivemat'
   # Engine tasks are loaded using railtie
   gem 'railties', *rails_version_constraint
   gem 'rspec'
