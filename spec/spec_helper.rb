@@ -1,5 +1,7 @@
 # Configure Rails Environment
 ENV['RAILS_ENV'] = 'test'
+# Enable per file test times
+ENV['FIVEMAT_PROFILE'] = '1'
 require 'bundler'
 Bundler.setup(:default, :test)
 
