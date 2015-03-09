@@ -1,5 +1,7 @@
 # Superclass for all `Metasploit::Cache::*::Class` that have one {#ancestor}.
 class Metasploit::Cache::Direct::Class < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
+
   #
   # Associations
   #
@@ -31,11 +33,24 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   #   @return [Metasploit::Cache::Rank]
 
   #
+  # Attributes
+  #
+
+  # @!method ancestor_id
+  #   The primary key of the associated {#ancestor}.
+  #
+  #   @return [Integer]
+
+  #
   # Validations
   #
 
   validates :ancestor,
             presence: true
+  validates :ancestor_id,
+            uniqueness: {
+                unless: :batched?
+            }
   validates :rank,
             presence: true
 end
