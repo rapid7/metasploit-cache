@@ -1,7 +1,9 @@
 # Superclass for all `Metasploit::Cache::*::Class` that have one {#ancestor}.
 class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   extend ActiveSupport::Autoload
+
   include Metasploit::Cache::Batch::Descendant
+  include Metasploit::Cache::Batch::Root
 
   autoload :Spec
 
