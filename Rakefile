@@ -41,7 +41,7 @@ task :coverage do
   require 'simplecov'
 
   SimpleCov.configure do
-    minimum_coverage 99.93
+    minimum_coverage 99.89
     refuse_coverage_drop
   end
 
