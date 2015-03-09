@@ -9,13 +9,15 @@ module Metasploit::Cache::Direct::Class::Spec
   #
 
   # Factories for {Metasploit::Cache::Direct::Class} subclasses
-  FACTORIES = []
+  FACTORIES = [
+      :metasploit_cache_auxiliary_class
+  ]
 
   #
   # Module Methods
   #
 
-  # Streams of elements of {FACTORIES}
+  # Streams of elements of {FACTORIES}.
   #
   # @return [Enumerator<Symbol>]
   def self.random_factory

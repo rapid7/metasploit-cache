@@ -13,6 +13,12 @@ class Metasploit::Cache::Auxiliary::Ancestor < Metasploit::Cache::Module::Ancest
   # Associations
   #
 
+  # Class defined by this auxiliary ancestor.
+  has_one :auxiliary_class,
+          class_name: 'Metasploit::Cache::Auxiliary::Class',
+          foreign_key: :ancestor_id,
+          inverse_of: :ancestor
+
   # Path under which this module's {Metasploit::Cache::Module::Ancestor#relative_path} exists.
   belongs_to :parent_path,
              class_name: 'Metasploit::Cache::Module::Path',
