@@ -1,4 +1,8 @@
 module Metasploit::Cache::Direct::Class::Spec
+  extends ActiveSupport::Autoload
+
+  autoload :Template
+
   #
   # CONSTANTS
   #
