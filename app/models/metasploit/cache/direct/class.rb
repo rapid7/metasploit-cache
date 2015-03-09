@@ -26,7 +26,7 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   #                   inverse_of: <association on Metasploit::Cache::Rank>
   #      ```
   #
-  #   Reliability of Metasploit MOdule.
+  #   Reliability of Metasploit Module.
   #
   #   @return [Metasploit::Cache::Rank]
 
