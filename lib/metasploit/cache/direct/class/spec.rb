@@ -1,3 +1,4 @@
+# Namespace for `Module`s that help with writing specs for {Metasploit::Cache::Direct::Class}.
 module Metasploit::Cache::Direct::Class::Spec
   extend ActiveSupport::Autoload
 
