@@ -6,7 +6,7 @@ class Metasploit::Cache::Module::Ancestor::Cache < Metasploit::Model::Base
   # Attributes
   #
 
-  # Tagged logger to which to log {#persist} errors.
+  # Tagged logger to which to log {#persist_module_ancestor} errors.
   #
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger
@@ -53,7 +53,7 @@ class Metasploit::Cache::Module::Ancestor::Cache < Metasploit::Model::Base
   # @param options [Hash{Symbol => Metasploit::Cache::Module::Ancestor}]
   # @option options [Metasploit::Cache::Module::Ancestor] :to (module_ancestor) Save cacheable data to `module_ancestor`.
   # @return [Metasploit::Cache::Module::Ancestor] `#persisted?` will be `false` if saving fails
-  def persist(options={})
+  def persist_module_ancestor(options={})
     options.assert_valid_keys(:to)
     module_ancestor = options[:to] || self.module_ancestor
 

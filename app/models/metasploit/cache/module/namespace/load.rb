@@ -165,7 +165,7 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
     else
       if valid?
         metasploit_module.cache.logger = logger
-        metasploit_module.cache.persist(to: module_ancestor)
+        metasploit_module.cache.persist_module_ancestor(to: module_ancestor)
 
         # TODO log module_ancestor.errors
         if module_ancestor.persisted?
