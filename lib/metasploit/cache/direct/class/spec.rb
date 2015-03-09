@@ -1,5 +1,5 @@
 module Metasploit::Cache::Direct::Class::Spec
-  extends ActiveSupport::Autoload
+  extend ActiveSupport::Autoload
 
   autoload :Template
 
