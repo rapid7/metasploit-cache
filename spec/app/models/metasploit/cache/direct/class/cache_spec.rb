@@ -2,7 +2,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Cache do
   subject(:direct_class_cache) {
     described_class.new(
         direct_class_class: expected_direct_class.class,
-        module_ancestor_cache: module_ancestor_cache
+        module_ancestor_ephemeral: module_ancestor_ephemeral
     )
   }
 
@@ -22,8 +22,8 @@ RSpec.describe Metasploit::Cache::Direct::Class::Cache do
     expected_direct_class.ancestor
   }
 
-  let(:module_ancestor_cache) {
-    Metasploit::Cache::Module::Ancestor::Cache.new(
+  let(:module_ancestor_ephemeral) {
+    Metasploit::Cache::Module::Ancestor::Ephemeral.new(
         metasploit_module: metasploit_module,
         real_path_sha1_hex_digest: real_path_sha1_hex_digest
     )
@@ -43,7 +43,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Cache do
         expected_direct_class.save!
 
         # have to stub because real_path_sha1_hex_digest is normally delegated to the namespace parent
-        allow(module_ancestor_cache).to receive(:real_path_sha1_hex_digest).and_return(module_ancestor.real_path_sha1_hex_digest)
+        allow(module_ancestor_ephemeral).to receive(:real_path_sha1_hex_digest).and_return(module_ancestor.real_path_sha1_hex_digest)
       end
 
       it 'is an instance of a subclass of Metasploit::Cache::Direct::Class' do
@@ -59,7 +59,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Cache do
 
   context 'validations' do
     it { is_expected.to validate_presence_of(:direct_class_class) }
-    it { is_expected.to validate_presence_of(:module_ancestor_cache) }
+    it { is_expected.to validate_presence_of(:module_ancestor_ephemeral) }
   end
 
   context '#persist_direct_class' do
@@ -115,7 +115,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Cache do
           before(:each) do
             expected_direct_class.rank = nil
             expected_direct_class.valid?
-            module_ancestor_cache.logger = logger
+            module_ancestor_ephemeral.logger = logger
           end
 
           it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do

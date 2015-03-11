@@ -1,5 +1,5 @@
-RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
-  subject(:module_ancestor_cache) {
+RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
+  subject(:module_ancestor_ephemeral) {
     described_class.new(
         metasploit_module: metasploit_module,
         real_path_sha1_hex_digest: real_path_sha1_hex_digest
@@ -25,13 +25,13 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
   context 'resurrecting attributes' do
     context '#module_ancestor' do
       subject(:module_ancestor) {
-        module_ancestor_cache.module_ancestor
+        module_ancestor_ephemeral.module_ancestor
       }
 
 
       before(:each) do
         # have to stub because real_path_sha1_hex_digest is normally delegated to the namespace parent
-        allow(module_ancestor_cache).to receive(:real_path_sha1_hex_digest).and_return(expected_module_ancestor.real_path_sha1_hex_digest)
+        allow(module_ancestor_ephemeral).to receive(:real_path_sha1_hex_digest).and_return(expected_module_ancestor.real_path_sha1_hex_digest)
       end
 
       it 'is a Metasploit::Cache::Module::Ancestor with matching #real_path_sha1_hex_digest' do
@@ -46,7 +46,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
 
   context '#persist_module_ancestor' do
     subject(:persist_module_ancestor) {
-      module_ancestor_cache.persist_module_ancestor(*args)
+      module_ancestor_ephemeral.persist_module_ancestor(*args)
     }
 
     context 'with :to' do
@@ -67,7 +67,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
       }
 
       it 'does not access default #module_ancestor' do
-        expect(module_ancestor_cache).not_to receive(:module_ancestor)
+        expect(module_ancestor_ephemeral).not_to receive(:module_ancestor)
 
         persist_module_ancestor
       end
@@ -114,7 +114,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
 
           before(:each) do
             module_ancestor.valid?
-            module_ancestor_cache.logger = logger
+            module_ancestor_ephemeral.logger = logger
           end
 
           it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
@@ -153,13 +153,13 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
       }
 
       it 'defaults to #module_ancestor' do
-        expect(module_ancestor_cache).to receive(:module_ancestor).and_call_original
+        expect(module_ancestor_ephemeral).to receive(:module_ancestor).and_call_original
 
         persist_module_ancestor
       end
 
       it 'uses #module_ancestor' do
-        expect(module_ancestor_cache.module_ancestor).to receive(:batched_save).and_call_original
+        expect(module_ancestor_ephemeral.module_ancestor).to receive(:batched_save).and_call_original
 
         persist_module_ancestor
       end

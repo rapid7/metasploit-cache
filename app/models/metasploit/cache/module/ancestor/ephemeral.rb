@@ -1,5 +1,5 @@
 # Ephemeral cache for connecting an in-memory Metasploit Module to its persisted {Metasploit::Cache::Module::Ancestor}.
-class Metasploit::Cache::Module::Ancestor::Cache < Metasploit::Model::Base
+class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   extend Metasploit::Cache::ResurrectingAttribute
 
   #

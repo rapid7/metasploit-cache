@@ -9,8 +9,8 @@ class Metasploit::Cache::Direct::Class::Cache < Metasploit::Model::Base
 
   # The ephemeral cache for just the {Metasploit::Cache::Module::Ancestor} for this Ruby Class.
   #
-  # @return [Metasploit::Cache::Module::Ancestor::Cache]
-  attr_accessor :module_ancestor_cache
+  # @return [Metasploit::Cache::Module::Ancestor::Ephemeral]
+  attr_accessor :module_ancestor_ephemeral
 
   # The subclass of {Metasploit::Cache::Direct::Class} to use to look up {#direct_class}.
   #
@@ -38,7 +38,7 @@ class Metasploit::Cache::Direct::Class::Cache < Metasploit::Model::Base
 
   validates :direct_class_class,
             presence: true
-  validates :module_ancestor_cache,
+  validates :module_ancestor_ephemeral,
             presence: true
 
   #
@@ -49,7 +49,7 @@ class Metasploit::Cache::Direct::Class::Cache < Metasploit::Model::Base
            :metasploit_module,
            :module_ancestor,
            :real_path_sha1_hex_digest,
-           to: :module_ancestor_cache
+           to: :module_ancestor_ephemeral
 
   # @note Validation errors for `direct_class` will be logged as errors tagged with
   # {Metasploit::Cache::Module::Ancestor#real_pathname}/.

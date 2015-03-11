@@ -6,7 +6,7 @@ require 'weakref'
 # the block.
 #
 # @example Defining a resurrecting attribute
-#   class Metasploit::Cache::Module::Ancestor::Cache
+#   class Metasploit::Cache::Module::Ancestor::Ephemeral
 #     extend Metasploit::Cache::ResurrectingAttribute
 #
 #     #
