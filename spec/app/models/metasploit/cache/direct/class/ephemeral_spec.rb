@@ -126,10 +126,6 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
             StringIO.new
           }
 
-          let(:success) {
-            false
-          }
-
           #
           # Callbacks
           #
