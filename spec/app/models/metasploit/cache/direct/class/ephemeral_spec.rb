@@ -1,5 +1,5 @@
-RSpec.describe Metasploit::Cache::Direct::Class::Cache do
-  subject(:direct_class_cache) {
+RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
+  subject(:direct_class_ephemeral) {
     described_class.new(
         direct_class_class: expected_direct_class.class,
         module_ancestor_ephemeral: module_ancestor_ephemeral
@@ -36,7 +36,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Cache do
   context 'resurrecting attributes' do
     context '#direct_class' do
       subject(:direct_class) {
-        direct_class_cache.direct_class
+        direct_class_ephemeral.direct_class
       }
 
       before(:each) do
@@ -64,7 +64,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Cache do
 
   context '#persist_direct_class' do
     subject(:persist_direct_class) do
-      direct_class_cache.persist_direct_class(*args)
+      direct_class_ephemeral.persist_direct_class(*args)
     end
 
     context 'with :to' do
@@ -77,7 +77,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Cache do
       }
 
       it 'does not access default #direct_class' do
-        expect(direct_class_cache).not_to receive(:direct_class)
+        expect(direct_class_ephemeral).not_to receive(:direct_class)
 
         persist_direct_class
       end
@@ -164,13 +164,13 @@ RSpec.describe Metasploit::Cache::Direct::Class::Cache do
       end
 
       it 'defaults to #direct_class' do
-        expect(direct_class_cache).to receive(:direct_class).and_call_original
+        expect(direct_class_ephemeral).to receive(:direct_class).and_call_original
 
         persist_direct_class
       end
 
       it 'uses #module_ancestor' do
-        expect(direct_class_cache.direct_class).to receive(:batched_save).and_call_original
+        expect(direct_class_ephemeral.direct_class).to receive(:batched_save).and_call_original
 
         persist_direct_class
       end

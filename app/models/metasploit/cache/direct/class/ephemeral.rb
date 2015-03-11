@@ -1,6 +1,6 @@
 # Ephemeral Cache for connecting an in-memory Metasploit Module's ruby Class to its persisted
 # {Metasploit::Cache::Module::Class} and {Metasploit::Cache::Module::Ancestor}.
-class Metasploit::Cache::Direct::Class::Cache < Metasploit::Model::Base
+class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   extend Metasploit::Cache::ResurrectingAttribute
 
   #
