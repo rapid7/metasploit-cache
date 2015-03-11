@@ -6,6 +6,7 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   include Metasploit::Cache::Batch::Root
 
   autoload :Ephemeral
+  autoload :Load
   autoload :Spec
 
   #

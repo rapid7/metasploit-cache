@@ -60,21 +60,55 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # @param to [Metasploit::Cache::Direct::Class] Save cacheable data to {Metasploit::Cache::Direct::Class}.
   # @return [Metasploit::Cache::Direct::Class] `#persisted?` will be `false` if saving fails.
   def persist_direct_class(to: direct_class)
-    # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
-    ActiveRecord::Base.connection_pool.with_connection do
-      unless to.batched_save
-        logger.tagged(to.ancestor.real_pathname.to_s) do |tagged|
-          tagged.error {
-            "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
-          }
-        end
+    if metasploit_class.respond_to? :rank
+      rank_number = metasploit_class.rank
+
+      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
+      to.rank = ActiveRecord::Base.connection_pool.with_connection {
+        Metasploit::Cache::Module::Rank.where(number: rank_number).first
+      }
+
+      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
+      saved = ActiveRecord::Base.connection_pool.with_connection {
+        to.batched_save
+      }
+
+      unless saved
+        log_error(to) {
+          "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
+        }
       end
+    else
+      log_error(direct_class) {
+        "#{metasploit_class} does not respond to rank. " \
+        "It should return the `Metasploit::Cache::Module::Rank#number`."
+      }
     end
 
     to
   end
 
   private
+
+  # Logs error to {#logger} tagged with {#direct_class}'s {Metasploit::Cache::Direct::Class#ancestor}'s
+  # {Metasploit::Cache::Module::Ancestor#real_pathname}
+  #
+  # @yield Block called when logger severity is error or worse.
+  # @yieldreturn [String] Message to print to log as error if logger severity leel allows for print of ERROR messages.
+  # @return [void]
+  def log_error(direct_class, &block)
+    if logger.error?
+      real_path = ActiveRecord::Base.connection_pool.with_connection {
+        # accessing ancestor could trigger database connection
+        # accessing ancestor.real_pathname could trigger access to {Metasploit::Cache::Module::Ancestor#real_pathname}.
+        direct_class.ancestor.real_pathname.to_s
+      }
+
+      logger.tagged(real_path) do |tagged|
+        tagged.error(&block)
+      end
+    end
+  end
 
   # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} used to resurrect {#direct_class}.
   #
