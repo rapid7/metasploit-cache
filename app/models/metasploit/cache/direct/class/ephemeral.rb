@@ -1,5 +1,5 @@
 # Ephemeral Cache for connecting an in-memory Metasploit Module's ruby Class to its persisted
-# {Metasploit::Cache::Module::Class} and {Metasploit::Cache::Module::Ancestor}.
+# {Metasploit::Cache::Module::Class}.
 class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   extend Metasploit::Cache::ResurrectingAttribute
 
@@ -7,15 +7,20 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # Attributes
   #
 
-  # The ephemeral cache for just the {Metasploit::Cache::Module::Ancestor} for this Ruby Class.
-  #
-  # @return [Metasploit::Cache::Module::Ancestor::Ephemeral]
-  attr_accessor :module_ancestor_ephemeral
-
   # The subclass of {Metasploit::Cache::Direct::Class} to use to look up {#direct_class}.
   #
   # @return [Class<Metasploit::Cache::Direct::Class>]
   attr_accessor :direct_class_class
+
+  # Tagged logger to which to log {#persist_direct_class} errors.
+  #
+  # @return [ActiveSupport::TaggedLogging]
+  attr_accessor :logger
+
+  # The Metasploit Module's being cached.
+  #
+  # @return [Class]
+  attr_accessor :metasploit_class
 
   #
   # Resurrecting Attributes
@@ -38,21 +43,19 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
 
   validates :direct_class_class,
             presence: true
-  validates :module_ancestor_ephemeral,
+  validates :logger,
+            presence: true
+  validates :metasploit_class,
             presence: true
 
   #
   # Instance Methods
   #
 
-  delegate :logger,
-           :metasploit_module,
-           :module_ancestor,
-           :real_path_sha1_hex_digest,
-           to: :module_ancestor_ephemeral
-
+  # @note This ephemeratl cache should be validated with `valid?` prior to calling {#persist_direct_class} to ensure
+  #   that {#logger} is present in case of error.
   # @note Validation errors for `direct_class` will be logged as errors tagged with
-  # {Metasploit::Cache::Module::Ancestor#real_pathname}/.
+  #   {Metasploit::Cache::Module::Ancestor#real_pathname}/.
   #
   # @param to [Metasploit::Cache::Direct::Class] Save cacheable data to {Metasploit::Cache::Direct::Class}.
   # @return [Metasploit::Cache::Direct::Class] `#persisted?` will be `false` if saving fails.
@@ -60,7 +63,7 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
     # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
     ActiveRecord::Base.connection_pool.with_connection do
       unless to.batched_save
-        logger.tagged(module_ancestor.real_pathname.to_s) do |tagged|
+        logger.tagged(to.ancestor.real_pathname.to_s) do |tagged|
           tagged.error {
             "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
           }
@@ -69,5 +72,14 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
     end
 
     to
+  end
+
+  private
+
+  # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} used to resurrect {#direct_class}.
+  #
+  # @return [String]
+  def real_path_sha1_hex_digest
+    metasploit_class.ephemeral_cache_by_source[:ancestor].real_path_sha1_hex_digest
   end
 end

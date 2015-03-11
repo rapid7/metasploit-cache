@@ -2,7 +2,8 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
   subject(:direct_class_ephemeral) {
     described_class.new(
         direct_class_class: expected_direct_class.class,
-        module_ancestor_ephemeral: module_ancestor_ephemeral
+        logger: logger,
+        metasploit_class: metasploit_class
     )
   }
 
@@ -14,8 +15,16 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
     FactoryGirl.generate :metasploit_cache_direct_class_factory
   }
 
-  let(:metasploit_module) {
-    Module.new
+  let(:logger) {
+    ActiveSupport::TaggedLogging.new(
+        Logger.new(string_io)
+    )
+  }
+
+  let(:metasploit_class) {
+    Class.new.tap { |metasploit_class|
+      metasploit_class.extend Metasploit::Cache::Module::Ancestor::Cacheable
+    }
   }
 
   let(:module_ancestor) {
@@ -24,7 +33,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
 
   let(:module_ancestor_ephemeral) {
     Metasploit::Cache::Module::Ancestor::Ephemeral.new(
-        metasploit_module: metasploit_module,
+        metasploit_module: metasploit_class,
         real_path_sha1_hex_digest: real_path_sha1_hex_digest
     )
   }
@@ -32,6 +41,18 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
   let(:real_path_sha1_hex_digest) {
     module_ancestor.real_path_sha1_hex_digest
   }
+
+  let(:string_io) {
+    StringIO.new
+  }
+
+  #
+  # Callbacks
+  #
+
+  before(:each) do
+    metasploit_class.ephemeral_cache_by_source[:ancestor] = module_ancestor_ephemeral
+  end
 
   context 'resurrecting attributes' do
     context '#direct_class' do
@@ -59,7 +80,8 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
 
   context 'validations' do
     it { is_expected.to validate_presence_of(:direct_class_class) }
-    it { is_expected.to validate_presence_of(:module_ancestor_ephemeral) }
+    it { is_expected.to validate_presence_of(:logger) }
+    it { is_expected.to validate_presence_of(:metasploit_class) }
   end
 
   context '#persist_direct_class' do
