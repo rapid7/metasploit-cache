@@ -23,7 +23,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
 
   let(:metasploit_class) {
     Class.new.tap { |metasploit_class|
-      metasploit_class.extend Metasploit::Cache::Module::Ancestor::Cacheable
+      metasploit_class.extend Metasploit::Cache::Cacheable
     }
   }
 

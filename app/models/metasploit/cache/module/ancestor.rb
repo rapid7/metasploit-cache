@@ -12,7 +12,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   include Metasploit::Cache::Derivation::FullName
   include Metasploit::Model::Translation
 
-  autoload :Cacheable
   autoload :Ephemeral
   autoload :Load
   autoload :Spec

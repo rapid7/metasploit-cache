@@ -100,7 +100,7 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
           # Classes and Modules are Modules
           if metasploit_constant.is_a? Module
             @metasploit_module = metasploit_constant
-            @metasploit_module.extend Metasploit::Cache::Module::Ancestor::Cacheable
+            @metasploit_module.extend Metasploit::Cache::Cacheable
           end
 
           break

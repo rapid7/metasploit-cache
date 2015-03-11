@@ -462,8 +462,8 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
               expect(metasploit_module).to eq(module_namespace.const_get("Metasploit#{n}"))
             end
 
-            it 'extends Metasploit::Cache::Module::Ancestor::Cacheable' do
-              expect(metasploit_module).to be_a Metasploit::Cache::Module::Ancestor::Cacheable
+            it 'extends Metasploit::Cache::Cacheable' do
+              expect(metasploit_module).to be_a Metasploit::Cache::Cacheable
             end
           end
 
@@ -476,8 +476,8 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
               expect(metasploit_module).to eq(module_namespace.const_get("Metasploit#{n}"))
             end
 
-            it 'extends Metasploit::Cache::Module::Ancestor::Cacheable' do
-              expect(metasploit_module).to be_a Metasploit::Cache::Module::Ancestor::Cacheable
+            it 'extends Metasploit::Cache::Cacheable' do
+              expect(metasploit_module).to be_a Metasploit::Cache::Cacheable
             end
           end
 
@@ -517,8 +517,8 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
               expect(metasploit_module).to eq(module_namespace.const_get("Metasploit#{n}"))
             end
 
-            it 'extends Metasploit::Cache::Module::Ancestor::Cacheable' do
-              expect(metasploit_module).to be_a Metasploit::Cache::Module::Ancestor::Cacheable
+            it 'extends Metasploit::Cache::Cacheable' do
+              expect(metasploit_module).to be_a Metasploit::Cache::Cacheable
             end
           end
 
@@ -531,8 +531,8 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
               expect(metasploit_module).to eq(module_namespace.const_get("Metasploit#{n}"))
             end
 
-            it 'extends Metasploit::Cache::Module::Ancestor::Cacheable' do
-              expect(metasploit_module).to be_a Metasploit::Cache::Module::Ancestor::Cacheable
+            it 'extends Metasploit::Cache::Cacheable' do
+              expect(metasploit_module).to be_a Metasploit::Cache::Cacheable
             end
           end
 

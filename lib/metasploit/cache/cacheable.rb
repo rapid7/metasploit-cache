@@ -1,5 +1,5 @@
 # Adds {#ephemeral_cache_by_source} to Metasploit Module.
-module Metasploit::Cache::Module::Ancestor::Cacheable
+module Metasploit::Cache::Cacheable
   # Ephemeral cache by the source the cached metadata.
   #
   # # Non-payload
