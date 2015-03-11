@@ -2,5 +2,7 @@ class <%= metasploit_module_relative_name %> < Metasploit::Model::Base
   <%= render 'constants' %>
   <%= render 'attributes' %>
   <%= render 'validations' %>
-  <%= render 'methods' %>
+  <%= render 'class_methods' %>
+  <%= render 'initialize' %>
+  <%= render 'instance_methods' %>
 end
