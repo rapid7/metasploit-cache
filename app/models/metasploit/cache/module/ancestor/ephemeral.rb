@@ -38,13 +38,19 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   # Validations
   #
 
+  validates :logger,
+            presence: true
   validates :metasploit_module,
+            presence: true
+  validates :real_path_sha1_hex_digest,
             presence: true
 
   #
   # Instance Methods
   #
 
+  # @note This ephemeral cache should be validated with `valid?` prior to calling {#persist_module_ancestor} to ensure
+  #   that {#logger} is present in case of error.
   # @note Validation errors for `module_ancestor` will be logged as errors tagged with
   #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
   #

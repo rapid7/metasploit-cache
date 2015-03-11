@@ -165,11 +165,15 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
     else
       if valid?
         metasploit_module.cache.logger = logger
-        metasploit_module.cache.persist_module_ancestor(to: module_ancestor)
+        metasploit_module.cache.real_path_sha1_hex_digest = module_namespace.cache.real_path_sha1_hex_digest
 
-        # TODO log module_ancestor.errors
-        if module_ancestor.persisted?
-          success = true
+        if metasploit_module.cache.valid?
+          metasploit_module.cache.persist_module_ancestor(to: module_ancestor)
+
+          # TODO log module_ancestor.errors
+          if module_ancestor.persisted?
+            success = true
+          end
         end
       end
     end

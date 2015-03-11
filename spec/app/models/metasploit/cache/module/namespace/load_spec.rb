@@ -32,11 +32,17 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
   }
 
   let(:module_namespace) {
-    Module.new do
+    module_namespace = Module.new do
+      extend Metasploit::Cache::Module::Namespace::Cacheable
+
       def self.module_eval_with_lexical_scope(contents, real_path)
         module_eval(contents, real_path, 1)
       end
     end
+
+    module_namespace.cache.real_path_sha1_hex_digest = Digest::SHA1.hexdigest("")
+
+    module_namespace
   }
 
   context 'validations' do

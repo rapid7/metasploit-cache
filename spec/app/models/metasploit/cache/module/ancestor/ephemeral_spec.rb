@@ -41,7 +41,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
   end
 
   context 'validations' do
+    it { is_expected.to validate_presence_of(:logger) }
     it { is_expected.to validate_presence_of(:metasploit_module) }
+    it { is_expected.to validate_presence_of(:real_path_sha1_hex_digest) }
   end
 
   context '#persist_module_ancestor' do
