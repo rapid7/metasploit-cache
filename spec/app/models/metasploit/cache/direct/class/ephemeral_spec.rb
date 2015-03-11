@@ -8,11 +8,22 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
   }
 
   let(:expected_direct_class) {
-    FactoryGirl.build(expected_direct_class_factory)
+    FactoryGirl.build(
+        expected_direct_class_factory,
+        rank: expected_module_rank
+    ).tap { |direct_class|
+      # Set to nil after build so that record passed to #persist_direct_class must fill in the rank, but the built
+      # template still contains a Rank like a real loading scenario.
+      direct_class.rank = nil
+    }
   }
 
   let(:expected_direct_class_factory) {
     FactoryGirl.generate :metasploit_cache_direct_class_factory
+  }
+
+  let(:expected_module_rank) {
+    FactoryGirl.generate :metasploit_cache_module_rank
   }
 
   let(:logger) {
@@ -24,6 +35,12 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
   let(:metasploit_class) {
     Class.new.tap { |metasploit_class|
       metasploit_class.extend Metasploit::Cache::Cacheable
+
+      rank_number = expected_module_rank.number
+
+      metasploit_class.define_singleton_method(:rank) do
+        rank_number
+      end
     }
   }
 
@@ -61,6 +78,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
       }
 
       before(:each) do
+        expected_direct_class.rank = expected_module_rank
         expected_direct_class.save!
 
         # have to stub because real_path_sha1_hex_digest is normally delegated to the namespace parent
@@ -82,6 +100,28 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
     it { is_expected.to validate_presence_of(:direct_class_class) }
     it { is_expected.to validate_presence_of(:logger) }
     it { is_expected.to validate_presence_of(:metasploit_class) }
+  end
+
+  context '#metasploit_class_module_rank' do
+    subject(:metasploit_class_module_rank) do
+      direct_class_ephemeral.send(:metasploit_class_module_rank, direct_class: expected_direct_class)
+    end
+
+    context 'with #metasploit_class responds to #rank' do
+      it 'returns Metasploit::Cache::Module::Rank with #number equal to metasploit_class.rank' do
+        expect(metasploit_class_module_rank).to eq(expected_module_rank)
+      end
+    end
+
+    context 'without #metasploit_class responds to #rank' do
+      let(:metasploit_class) {
+        Class.new.tap { |metasploit_class|
+          metasploit_class.extend Metasploit::Cache::Cacheable
+        }
+      }
+
+      it { is_expected.to be_nil }
+    end
   end
 
   context '#persist_direct_class' do
@@ -110,56 +150,72 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
         persist_direct_class
       end
 
-      context 'batched save' do
-        context 'failure' do
-          #
-          # lets
-          #
+      context 'with #rank' do
+        context 'batched save' do
+          context 'failure' do
+            #
+            # lets
+            #
 
-          let(:logger) {
-            ActiveSupport::TaggedLogging.new(
-                Logger.new(string_io)
-            )
-          }
+            let(:logger) {
+              ActiveSupport::TaggedLogging.new(
+                  Logger.new(string_io)
+              )
+            }
 
-          let(:string_io) {
-            StringIO.new
-          }
+            let(:string_io) {
+              StringIO.new
+            }
 
-          #
-          # Callbacks
-          #
+            #
+            # Callbacks
+            #
 
-          before(:each) do
-            expected_direct_class.rank = nil
-            expected_direct_class.valid?
-            module_ancestor_ephemeral.logger = logger
+            before(:each) do
+              expected_direct_class.valid?
+
+              expect(expected_direct_class).to receive(:batched_save).and_return(false)
+            end
+
+            it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
+              persist_direct_class
+
+              expect(string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
+            end
+
+
+            it 'logs validation errors' do
+              persist_direct_class
+
+              full_error_messages = expected_direct_class.errors.full_messages.to_sentence
+
+              expect(full_error_messages).not_to be_blank
+              expect(string_io.string).to include("Could not be persisted to #{expected_direct_class.class}: #{full_error_messages}")
+            end
           end
 
-          it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
-            persist_direct_class
 
-            expect(string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
-          end
-
-
-          it 'logs validation errors' do
-            persist_direct_class
-
-            full_error_messages = expected_direct_class.errors.full_messages.to_sentence
-
-            expect(full_error_messages).not_to be_blank
-            expect(string_io.string).to include("Could not be persisted to #{expected_direct_class.class}: #{full_error_messages}")
+          context 'success' do
+            specify {
+              expect {
+                persist_direct_class
+              }.to change(Metasploit::Cache::Direct::Class, :count).by(1)
+            }
           end
         end
+      end
 
+      context 'without #rank' do
+        it 'does not attempt to save' do
+          expect(direct_class_ephemeral).to receive(:metasploit_class_module_rank).with(
+                                                hash_including(
+                                                    direct_class: expected_direct_class
+                                                )
+                                            ).and_return(nil)
 
-        context 'success' do
-          specify {
-            expect {
-              persist_direct_class
-            }.to change(Metasploit::Cache::Direct::Class, :count).by(1)
-          }
+          expect(expected_direct_class).not_to receive(:batched_save)
+
+          persist_direct_class
         end
       end
     end
@@ -178,19 +234,41 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
       #
 
       before(:each) do
+        expected_direct_class.rank = expected_module_rank
         expected_direct_class.save!
       end
 
       it 'defaults to #direct_class' do
+        expect(direct_class_ephemeral).to receive(:metasploit_class_module_rank).with(
+                                              hash_including(
+                                                  direct_class: direct_class_ephemeral.direct_class
+                                              )
+                                          ).and_call_original
         expect(direct_class_ephemeral).to receive(:direct_class).and_call_original
 
         persist_direct_class
       end
 
-      it 'uses #module_ancestor' do
-        expect(direct_class_ephemeral.direct_class).to receive(:batched_save).and_call_original
+      context 'with #rank' do
+        it 'uses #batched_save' do
+          expect(direct_class_ephemeral.direct_class).to receive(:batched_save).and_call_original
 
-        persist_direct_class
+          persist_direct_class
+        end
+      end
+
+      context 'without #rank' do
+        it 'does not attempt to save' do
+          expect(direct_class_ephemeral).to receive(:metasploit_class_module_rank).with(
+                                                hash_including(
+                                                    direct_class: direct_class_ephemeral.direct_class
+                                                )
+                                            ).and_return(nil)
+
+          expect(direct_class_ephemeral.direct_class).not_to receive(:batched_save)
+
+          persist_direct_class
+        end
       end
     end
   end

@@ -60,14 +60,11 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # @param to [Metasploit::Cache::Direct::Class] Save cacheable data to {Metasploit::Cache::Direct::Class}.
   # @return [Metasploit::Cache::Direct::Class] `#persisted?` will be `false` if saving fails.
   def persist_direct_class(to: direct_class)
-    if metasploit_class.respond_to? :rank
-      rank_number = metasploit_class.rank
+    # set directly on `to` so that caller can see `nil` value.
+    to.rank =  metasploit_class_module_rank(direct_class: to)
 
-      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
-      to.rank = ActiveRecord::Base.connection_pool.with_connection {
-        Metasploit::Cache::Module::Rank.where(number: rank_number).first
-      }
-
+    # if rank couldn't be retrieved, there's no point attempting to save, which avoid another trip to the database.
+    if to.rank
       # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
       saved = ActiveRecord::Base.connection_pool.with_connection {
         to.batched_save
@@ -78,11 +75,6 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
           "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
         }
       end
-    else
-      log_error(direct_class) {
-        "#{metasploit_class} does not respond to rank. " \
-        "It should return the `Metasploit::Cache::Module::Rank#number`."
-      }
     end
 
     to
@@ -108,6 +100,33 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
         tagged.error(&block)
       end
     end
+  end
+
+  # Persisted form of {#metasploit_class}'s `rank`.
+  #
+  # @param direct_class [Metasploit::Cache::Direct::Class] Used to log errors if {#metasploit_class} does not
+  #   respond to `rank`.
+  # @return [Metasploit::Cache::Module::Rank] persisted rank corresponding to {#metasploit_class}'s rank.'
+  # @return [nil] if {#metasploit_class} does not respond to `rank`
+  # @return [nil] if {#metasploit_class}'s `rank` is not a seeded {Metasploit::Cache::Module::Rank#number}.
+  def metasploit_class_module_rank(direct_class:)
+    module_rank = nil
+
+    if metasploit_class.respond_to? :rank
+      rank_number = metasploit_class.rank
+
+      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
+      module_rank = ActiveRecord::Base.connection_pool.with_connection {
+        Metasploit::Cache::Module::Rank.where(number: rank_number).first
+      }
+    else
+      log_error(direct_class) {
+        "#{metasploit_class} does not respond to rank. " \
+        "It should return the `Metasploit::Cache::Module::Rank#number`."
+      }
+    end
+
+    module_rank
   end
 
   # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} used to resurrect {#direct_class}.
