@@ -368,6 +368,11 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
                                 direct_class_build: :build_auxiliary_class,
                                 module_path_association: :auxiliary_ancestors,
                                 relative_path_prefix: 'auxiliary'
+
+          it_should_behave_like 'relative_path_prefix',
+                                direct_class_build: :build_nop_class,
+                                module_path_association: :nop_ancestors,
+                                relative_path_prefix: 'nops'
         end
       end
     end

@@ -668,9 +668,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
                                 association: :exploit_ancestors,
                                 relative_path_prefix: 'exploits'
 
-          it_should_behave_like 'relative_path_prefix',
-                                association: :nop_ancestors,
-                                relative_path_prefix: 'nops'
+          # @note Testing of `relative_path_prefix: nop` has been moved to
+          #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Nop::Ancestor loading.
 
           it_should_behave_like 'relative_path_prefix',
                                 association: :single_payload_ancestors,
