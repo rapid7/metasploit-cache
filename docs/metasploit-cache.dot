@@ -1,0 +1,935 @@
+digraph "metasploit-cache" {
+  graph [
+    bgcolor = "black"
+    rankdir = "LR"
+    ranksep = "10"
+  ]
+  node [
+    color = "white"
+    fontcolor = "white"
+    shape = "record"
+  ]
+  edge [
+    color = "white"
+    fontcolor = "white"
+  ]
+
+  "Metasploit::Cache::Actionable::Action" [
+    label = "Metasploit::Cache::Actionable::Action | mc_actionable_actions | <id>id | <actionable_id>actionable_id | <actionable_type>actionable_type | name"
+  ]
+
+  "Metasploit::Cache::Actionable::Action":actionable_id -> "Metasploit::Cache::Auxiliary::Instance":id_for_action [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Actionable::Action":actionable_type -> "Metasploit::Cache::Auxiliary::Instance":type_for_actionable_type [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Actionable::Action":actionable_id -> "Metasploit::Cache::Post::Instance":id_for_action [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Actionable::Action":actionable_type -> "Metasploit::Cache::Post::Instance":type_for_actionable_type [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture" [
+    label = "Metasploit::Cache::Architecturable::Architecture | mc_architecturable_architectures | <architecture_id>architecture_id | <architecturable_id>architecturable_id | <architecturable_type>architecturable_type"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_id -> "Metasploit::Cache::Encoder::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Encoder::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_id -> "Metasploit::Cache::Exploit::Target":id_for_architecturable_id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Exploit::Target":type_for_architecturable_type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_id -> "Metasploit::Cache::Nop::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/4"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Nop::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/4"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_id -> "Metasploit::Cache::Payload::Single::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/5"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Single::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/5"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_id -> "Metasploit::Cache::Payload::Stage::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stage::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_id -> "Metasploit::Cache::Payload::Stager::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Payload::Stager::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_id -> "Metasploit::Cache::Post::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Architecturable::Architecture":architecturable_type -> "Metasploit::Cache::Post::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Contribution" [
+    label = "Metasploit::Cache::Contribution | mc_contributions | author_id | <contributable_id>contributable_id | <contributable_type>contributable_type | email_address_id"
+  ]
+
+  "Metasploit::Cache::Contribution":contributable_id -> "Metasploit::Cache::Auxiliary::Instance":id_for_contributable_id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Contribution":contributable_type -> "Metasploit::Cache::Auxiliary::Instance":type_for_contributable_type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::License" [
+    label = "Metasploit::Cache::License | mc_licenses | <id>id | abbreviation | summary | url"
+  ]
+
+  "Metasploit::Cache::Licensable::License" [
+    label = "Metasploit::Cache::Licensable::License | mc_licensable_licenses | <licensable_id>licensable_id | <licensable_type>licensable_type | <license_id>license_id"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Auxiliary::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Auxiliary::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Encoder::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Encoder::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Exploit::Instance":id_for_licensable_id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Exploit::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Nop::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/4"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Nop::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/4"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Payload::Single::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/5"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Payload::Single::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/5"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Payload::Stage::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Payload::Stage::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Payload::Stager::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Payload::Stager::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_id -> "Metasploit::Cache::Post::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":licensable_type -> "Metasploit::Cache::Post::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Licensable::License":license_id -> "Metasploit::Cache::License":id [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Payload::Handler" [
+    label = "Metasploit::Cache::Payload::Handler | mc_payload_handler | <id>id | handler_type | general_handler_type"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform" [
+    label = "Metasploit::Cache::Platformable::Platform | mc_platformable_platforms | <platformable_id>platformable_id | <platformable_type>platform_type | <platform_id>platform_id"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Encoder::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Encoder::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/2"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Exploit::Target":id_for_platformable_id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Exploit::Target":type_for_platformable_type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Payload::Single::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/5"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Single::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/5"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Payload::Stage::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stage::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/6"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Payload::Stager::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Post::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Post::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_id -> "Metasploit::Cache::Payload::Stager::Instance":id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Platformable::Platform":platformable_type -> "Metasploit::Cache::Payload::Stager::Instance":type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/8"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Referenceable::Reference" [
+    label = "Metasploit::Cache::Referenceable::Reference | mc_referenceable_references | <referenceable_id>referenceable_id | <referenceable_type>referenceable_type | reference_id"
+  ]
+
+  "Metasploit::Cache::Referenceable::Reference":referenceable_id -> "Metasploit::Cache::Auxiliary::Instance":id_for_referenceable_id [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Referenceable::Reference":referenceable_type -> "Metasploit::Cache::Auxiliary::Instance":type_for_referenceable_type [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/1"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Referenceable::Reference":referenceable_id -> "Metasploit::Cache::Exploit::Instance":id_for_referenceable_id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Referenceable::Reference":referenceable_type -> "Metasploit::Cache::Exploit::Instance":type_for_referenceable_type [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Referenceable::Reference":referenceable_id -> "Metasploit::Cache::Post::Instance":id_for_action [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Referenceable::Reference":referenceable_type -> "Metasploit::Cache::Post::Instance":type_for_actionable_type [
+    arrowhead = "crowodot"
+    arrowtail = "teetee"
+    color = "/paired9/9"
+    dir = "both"
+  ]
+
+  "Metasploit::Cache::Exploit::Target" [
+    color = "/paired9/3"
+    fontcolor = "/paired9/3"
+    label = "<type_for_architecturable_type>Metasploit::Cache::Exploit::Target | <type_for_platformable_type>Metasploit::Cache::Exploit::Target | mc_exploit_targets | <id>id | <id_for_architecturable_id>id | <id_for_platformable_id>id | <exploit_instance_id>exploit_instance_id | index | name"
+  ]
+
+  "Metasploit::Cache::Exploit::Target":exploit_instance_id -> "Metasploit::Cache::Exploit::Instance":id_to_exploit_instance_id [
+    arrowhead = "crowtee"
+    arrowtail = "teetee"
+    color = "/paired9/3"
+    dir = "both"
+  ]
+
+  subgraph cluster_mc_module_ancestors {
+    color = "white"
+    fontcolor = "white"
+    label = "Metasploit::Cache::Module::Ancestor STI"
+
+    "Metasploit::Cache::Module::Ancestor" [
+      label = "Metasploit::Cache::Module::Ancestor | mc_module_ancestors | <id>id | <parent_path_id>parent_path_id | relative_path | real_path_modified_at | real_path_sha1_hex_digest | type = 'Metasploit::Cache::Module::Ancestor'"
+      style = "dashed"
+    ]
+
+    "Metasploit::Cache::Auxiliary::Ancestor" [
+      fontcolor = "/paired9/1"
+      label = "Metasploit::Cache::Auxiliary::Ancestor | <id>id | type = 'Metasploit::Cache::Auxiliary::Ancestor'"
+      color = "/paired9/1"
+    ]
+
+    "Metasploit::Cache::Auxiliary::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/1"
+      fontcolor = "/paired9/1"
+      label = "subclasses"
+    ]
+
+    "Metasploit::Cache::Encoder::Ancestor" [
+      color = "/paired9/2"
+      fontcolor = "/paired9/2"
+      label = "Metasploit::Cache::Encoder::Ancestor | <id>id | type = 'Metasploit::Cache::Encoder::Ancestor'"
+    ]
+
+    "Metasploit::Cache::Encoder::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/2"
+      fontcolor = "/paired9/2"
+      label = "subclasses"
+    ]
+
+    "Metasploit::Cache::Exploit::Ancestor" [
+      color = "/paired9/3"
+      fontcolor = "/paired9/3"
+      label = "Metasploit::Cache::Exploit::Ancestor | <id>id | type = 'Metasploit::Cache::Exploit::Ancestor"
+    ]
+
+    "Metasploit::Cache::Exploit::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/3"
+      fontcolot = "/paired9/3"
+      label = "subclasses"
+    ]
+
+    "Metasploit::Cache::Nop::Ancestor" [
+      color = "/paired9/4"
+      fontcolor = "/paired9/4"
+      label = "Metasploit::Cache::Nop::Ancestor | <id>id | type = 'Metasploit::Cache::Nop::Ancestor'"
+    ]
+
+    "Metasploit::Cache::Nop::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/4"
+      fontcolor = "/paired9/4"
+      label = "subclasses"
+    ]
+
+    "Metasploit::Cache::Payload::Single::Ancestor" [
+      color = "/paired9/5"
+      fontcolor = "/paired9/5"
+      label = "Metasploit::Cache::Payload::Single::Ancestor | <id>id | type = 'Metasploit::Cache::Payload::Single::Ancestor'"
+    ]
+
+    "Metasploit::Cache::Payload::Single::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/5"
+      fontcolor = "/paired9/5"
+      label = "subclasses"
+    ]
+
+    "Metasploit::Cache::Payload::Stage::Ancestor" [
+      color = "/paired9/6"
+      fontcolor = "/paired9/6"
+      label = "Metasploit::Cache::Payload::Stage::Ancestor | <id_to_ancestor_id>id | <id_to_stage_payload_ancestor_id>id | type = 'Metasploit::Cache::Payload::Stage::Ancestor'"
+    ]
+
+    "Metasploit::Cache::Payload::Stage::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/6"
+      fontcolor = "/paired9/6"
+      label = "subclasses"
+    ]
+
+    "Metasploit::Cache::Payload::Stager::Ancestor" [
+      color = "/paired9/8"
+      fontcolor = "/paired9/8"
+      label = "Metasploit::Cache::Payload::Stager::Ancestor | <id_to_ancestor_id>id | <id_to_stager_payload_ancestor_id>id | type = 'Metasploit::Cache::Payload::Stager::Ancestor'"
+    ]
+
+    "Metasploit::Cache::Payload::Stager::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/8"
+      fontcolor = "/paired9/8"
+      label = "subclasses"
+    ]
+
+    "Metasploit::Cache::Post::Ancestor" [
+      color = "/paired9/9"
+      fontcolor = "/paired9/9"
+      label = "Metasploit::Cache::Post::Ancestor | <id>id | type = 'Metasploit::Cache::Post::Ancestor'"
+    ]
+
+    "Metasploit::Cache::Post::Ancestor" -> "Metasploit::Cache::Module::Ancestor" [
+      color = "/paired9/9"
+      fontcolor = "/paired9/9"
+      label = "subclasses"
+    ]
+  }
+
+  subgraph cluster_metasploit_cache_class {
+    color = "white"
+    fontcolor = "white"
+    label = "Metasploit::Cache::*::Class"
+
+    subgraph cluster_metasploit_cache_direct_class {
+      color = "white"
+      fontcolor = "white"
+
+      label = "Metasploit::Cache::Direct::Class STI"
+
+      "Metasploit::Cache::Direct::Class" [
+        label = "Metasploit::Cache::Direct::Class | mc_direct_classes | <ancestor_id>ancestor_id | <rank_id>rank_id | type = 'Metasploit::Cache::Direct::Class'"
+        style = "dashed"
+      ]
+
+      "Metasploit::Cache::Direct::Class":ancestor_id -> "Metasploit::Cache::Module::Ancestor":id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        style = "dashed"
+      ]
+
+      "Metasploit::Cache::Auxiliary::Class" [
+        color = "/paired9/1"
+        fontcolor = "/paired9/1"
+        label = "Metasploit::Cache::Auxiliary::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Auxiliary::Class'"
+      ]
+
+      "Metasploit::Cache::Auxiliary::Class" -> "Metasploit::Cache::Direct::Class" [
+        color = "/paired9/1"
+        fontcolor = "/paired9/1"
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Auxiliary::Class":ancestor_id -> "Metasploit::Cache::Auxiliary::Ancestor":id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        color = "/paired9/1"
+        dir = "both"
+      ]
+
+      "Metasploit::Cache::Encoder::Class" [
+        color = "/paired9/2"
+        fontcolor = "/paired9/2"
+        label = "Metasploit::Cache::Encoder::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Encoder::Class'"
+      ]
+
+      "Metasploit::Cache::Encoder::Class" -> "Metasploit::Cache::Direct::Class" [
+        color = "/paired9/2"
+        fontcolor = "/paired9/2"
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Encoder::Class":ancestor_id -> "Metasploit::Cache::Encoder::Ancestor":id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        color = "/paired9/2"
+        dir = "both"
+      ]
+
+      "Metasploit::Cache::Exploit::Class" [
+        color = "/paired9/3"
+        fontcolor = "/paired9/3"
+        label = "Metasploit::Cache::Exploit::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Exploit::Class'"
+      ]
+
+      "Metasploit::Cache::Exploit::Class" -> "Metasploit::Cache::Direct::Class" [
+        color = "/paired9/3"
+        fontcolor = "/paired9/3"
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Exploit::Class":ancestor_id -> "Metasploit::Cache::Exploit::Ancestor":id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        color = "/paired9/3"
+        dir = "both"
+      ]
+
+      "Metasploit::Cache::Nop::Class" [
+        color = "/paired9/4"
+        fontcolor = "/paired9/4"
+        label = "Metasploit::Cache::Nop::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Nop::Class'"
+      ]
+
+      "Metasploit::Cache::Nop::Class" -> "Metasploit::Cache::Direct::Class" [
+        color = "/paired9/4"
+        fontcolor = "/paired9/4"
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Nop::Class":ancestor_id -> "Metasploit::Cache::Nop::Ancestor":id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        color = "/paired9/4"
+        dir = "both"
+      ]
+
+      "Metasploit::Cache::Payload::Single::Class" [
+        color = "/paired9/5"
+        fontcolor = "/paired9/5"
+        label = "Metasploit::Cache::Payload::Single::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Single::Class'"
+      ]
+
+      "Metasploit::Cache::Payload::Single::Class" -> "Metasploit::Cache::Direct::Class" [
+        color = "/paired9/5"
+        fontcolor = "/paired9/5"
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Payload::Single::Class":ancestor_id -> "Metasploit::Cache::Payload::Single::Ancestor":id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        color = "/paired9/5"
+        dir = "both"
+      ]
+
+      "Metasploit::Cache::Payload::Stage::Class" [
+        color = "/paired9/6"
+        fontcolor = "/paired9/6"
+        label = "Metasploit::Cache::Payload::Stage::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Stage::Class'"
+      ]
+
+      "Metasploit::Cache::Payload::Stage::Class" -> "Metasploit::Cache::Direct::Class" [
+        color = "/paired9/6"
+        fontcolor = "/paired9/6"
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Payload::Stage::Class":ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id_to_ancestor_id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        color = "/paired9/6"
+        dir = "both"
+      ]
+
+
+      "Metasploit::Cache::Payload::Stager::Class" [
+        color = "/paired9/8"
+        fontcolor = "/paired9/8"
+        label = "Metasploit::Cache::Payload::Stager::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Payload::Stager::Class'"
+      ]
+
+      "Metasploit::Cache::Payload::Stager::Class" -> "Metasploit::Cache::Direct::Class" [
+        color = "/paired9/8"
+        fontcolor = "/paired9/8"
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Payload::Stager::Class":ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id_to_ancestor_id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        color = "/paired9/8"
+        dir = "both"
+      ]
+
+      "Metasploit::Cache::Post::Class" [
+        color = "/paired9/9"
+        fontcolor = "/paired9/9"
+        label = "Metasploit::Cache::Post::Class | <id>id | <ancestor_id>ancestor_id | type = 'Metasploit::Cache::Post::Class'"
+      ]
+
+      "Metasploit::Cache::Post::Class" -> "Metasploit::Cache::Direct::Class" [
+        color = "/paired9/9"
+        fontcolor = "/paired9/9"
+        label = "subclasses"
+      ]
+
+      "Metasploit::Cache::Post::Class":ancestor_id -> "Metasploit::Cache::Post::Ancestor":id [
+        arrowhead = "teeodot"
+        arrowtail = "teetee"
+        color = "/paired9/9"
+        dir = "both"
+      ]
+    }
+
+    "Metasploit::Cache::Payload::Staged::Class" [
+      color = "/paired9/7"
+      fontcolor = "/paired9/7"
+      label = "Metasploit::Cache::Payload::Staged::Class | mc_payload_staged_classes | <id>id | <rank_id>rank_id | <stage_payload_ancestor_id>stage_ancestor_id | <stager_payload_ancestor_id>stager_payload_ancestor_id"
+    ]
+
+    "Metasploit::Cache::Payload::Staged::Class":stage_payload_ancestor_id -> "Metasploit::Cache::Payload::Stage::Ancestor":id_to_stage_payload_ancestor_id [
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      color = "/paired9/7"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Payload::Staged::Class":stager_payload_ancestor_id -> "Metasploit::Cache::Payload::Stager::Ancestor":id_to_stager_payload_ancestor_id [
+        arrowhead = "crowodot"
+        arrowtail = "teetee"
+        color = "/paired9/7"
+        dir = "both"
+    ]
+  }
+
+  subgraph cluster_metasploit_cache_instance {
+    color = "white"
+    fontcolor = "white"
+    label = "Metasploit::Cache::*::Instance"
+
+    "Metasploit::Cache::Auxiliary::Instance" [
+      color = "/paired9/1"
+      fontcolor = "/paired9/1"
+      label = "<type>Metasploit::Cache::Auxiliary::Instance | <type_for_actionable_type>Metasploit::Cache::Auxiliary::Instance | <type_for_contributable_type>Metasploit::Cache::Auxiliary::Instance | <type_for_referenceable_type>Metasploit::Cache::Auxiliary::Instance | mc_auxiliary_instances | <id>id | <id_for_action>id | <id_for_contributable_id>id | <id_for_referenceable_id>id | <auxiliary_class_id>auxiliary_class_id | <default_module_action_id>default_module_action_id | description | disclosed_on | name | stance"
+    ]
+
+    "Metasploit::Cache::Auxiliary::Instance":auxiliary_class_id -> "Metasploit::Cache::Auxiliary::Class":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/1"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Auxiliary::Instance":default_module_action_id -> "Metasploit::Cache::Actionable::Action":id [
+      arrowhead = "teeodot"
+      arrowtail = "teeodot"
+      color = "/paired9/1"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Encoder::Instance" [
+      color = "/paired9/2"
+      fontcolor = "/paired9/2"
+      label = "<type>Metasploit::Cache::Encoder::Instance | mc_encoder_instances | <id>id | description | <encoder_class_id>encoder_class_id | name"
+    ]
+
+    "Metasploit::Cache::Encoder::Instance":encoder_class_id -> "Metasploit::Cache::Encoder::Class":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/2"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Exploit::Instance" [
+      color = "/paired9/3"
+      fontcolor = "/paired9/3"
+      label = "<type>Metasploit::Cache::Exploit::Instance | <type_for_referenceable_type>Metasploit::Cache::Exploit::Instance | mc_exploit_instances | <id_for_licensable_id>id | <id_for_referenceable_id>id | <id_to_exploit_instance_id>id | <default_target_id>default_target_id | description | disclosed_on | <exploit_class_id>exploit_class_id | name | privileged | stance"
+    ]
+
+    "Metasploit::Cache::Exploit::Instance":default_target_id -> "Metasploit::Cache::Exploit::Target":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/3"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Exploit::Instance":exploit_class_id -> "Metasploit::Cache::Exploit::Class":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/3"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Nop::Instance" [
+      color = "/paired9/4"
+      fontcolor = "/paired9/4"
+      label = "<type>Metasploit::Cache::Nop::Instance | mc_nop_instances | <id>id | description | <nop_class_id>nop_class_id | name"
+    ]
+
+    "Metasploit::Cache::Nop::Instance":nop_class_id -> "Metasploit::Cache::Nop::Class":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/4"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Payload::Single::Instance" [
+      color = "/paired9/5"
+      fontcolor = "/paired9/5"
+      label = "<type>Metasploit::Cache::Payload::Single::Instance | mc_payload_single_instances | <id>id | description | <handler_id>handler_id | name | privileged | <single_payload_class_id>single_payload_class_id"
+    ]
+
+    "Metasploit::Cache::Payload::Single::Instance":handler_id -> "Metasploit::Cache::Payload::Handler":id [
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      color = "/paired9/5"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Payload::Single::Instance":single_payload_class_id -> "Metasploit::Cache::Payload::Single::Class":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/5"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Payload::Stage::Instance" [
+      color = "/paired9/6"
+      fontcolor = "/paired9/6"
+      label = "<type>Metasploit::Cache::Payload::Stage::Instance | mc_payload_stage_instances | <id>id | <id_for_stage_payload_instance_id>id | description | name | privileged | <stage_payload_class_id>stage_payload_class_id"
+    ]
+
+    "Metasploit::Cache::Payload::Stage::Instance":stage_payload_class_id -> "Metasploit::Cache::Payload::Stage::Class":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/6"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Payload::Staged::Instance" [
+      color = "/paired9/7"
+      fontcolor = "/paired9/7"
+      label = "Metasploit::Cache::Payload::Staged::Instance | mc_payload_staged_instances | <id>id | <stage_payload_instance_id>stage_payload_instance_id | <staged_payload_class_id>staged_payload_class_id | <stager_payload_instance_id>stager_payload_instance_id"
+    ]
+
+    "Metasploit::Cache::Payload::Staged::Instance":stage_payload_instance_id -> "Metasploit::Cache::Payload::Stage::Instance":id_for_stage_payload_instance_id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/7"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Payload::Staged::Instance":staged_payload_class_id -> "Metasploit::Cache::Payload::Staged::Class":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/7"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Payload::Staged::Instance":stager_payload_instance_id -> "Metasploit::Cache::Payload::Stager::Instance":id_for_stager_payload_instance_id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/7"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Payload::Stager::Instance" [
+      color = "/paired9/8"
+      fontcolor = "/paired9/8"
+      label = "<type>Metasploit::Cache::Payload::Stager::Instance | mc_payload_stager_instances | <id>id | <id_for_stager_payload_instance_id>id | description | <handler_id>handler_id | handler_type_alias | name | privileged | <stager_payload_class_id>stager_payload_class_id"
+    ]
+
+    "Metasploit::Cache::Payload::Stager::Instance":handler_id -> "Metasploit::Cache::Payload::Handler":id [
+      arrowhead = "crowodot"
+      arrowtail = "teetee"
+      color = "/paired9/8"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Payload::Stager::Instance":stager_payload_class_id -> "Metasploit::Cache::Payload::Stager::Class":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/8"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Post::Instance" [
+      color = "/paired9/9"
+      fontcolor = "/paired9/9"
+      label = "<type>Metasploit::Cache::Post::Instance | <type_for_actionable_type>Metasploit::Cache::Post::Instance | mc_post_instances | <id>id | <id_for_action>id | <default_module_action_id>default_module_action_id | description | disclosed_on | <post_class_id>post_class_id | name | privileged"
+    ]
+
+    "Metasploit::Cache::Post::Instance":default_module_action_id -> "Metasploit::Cache::Actionable::Action":id [
+      arrowhead = "teeodot"
+      arrowtail = "teeodot"
+      color = "/paired9/9"
+      dir = "both"
+    ]
+
+    "Metasploit::Cache::Post::Instance":post_class_id -> "Metasploit::Cache::Post::Class":id [
+      arrowhead = "teeodot"
+      arrowtail = "teetee"
+      color = "/paired9/9"
+      dir = "both"
+    ]
+  }
+}
