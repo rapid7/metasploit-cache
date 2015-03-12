@@ -657,9 +657,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
             )
           end
 
-          it_should_behave_like 'relative_path_prefix',
-                                association: :auxiliary_ancestors,
-                                relative_path_prefix: 'auxiliary'
+          # @note Testing of `relative_path_prefix: auxiliary` has been moved to
+          #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Auxiliary::Ancestor loading.
 
           it_should_behave_like 'relative_path_prefix',
                                 association: :encoder_ancestors,

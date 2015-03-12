@@ -341,9 +341,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
                   }
 
                   it 'loads Metasploit Class' do
-                    # prerequisite loading of {Metasploit::Cache::Module::Ancestor} as ancestor of `direct_class`
-                    expect(module_ancestor_load).to be_valid
-                    expect(module_ancestor).to be_persisted
+                    expect(module_ancestor_load).to load_metasploit_module
 
                     expect(direct_class_load).to be_valid
                     expect(direct_class).to be_persisted
