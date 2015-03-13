@@ -684,9 +684,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
                                 association: :stager_payload_ancestors,
                                 relative_path_prefix: 'payloads/stagers'
 
-          it_should_behave_like 'relative_path_prefix',
-                                association: :post_ancestors,
-                                relative_path_prefix: 'post'
+          # @note Testing of `relative_path_prefix: post` has been moved to
+          #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Post::Ancestor loading.
         end
       end
     end
