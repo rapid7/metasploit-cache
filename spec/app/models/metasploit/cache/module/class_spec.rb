@@ -1132,11 +1132,16 @@ RSpec.describe Metasploit::Cache::Module::Class do
         let(:ancestor) do
           FactoryGirl.build(
               :metasploit_cache_payload_single_ancestor,
+              content?: content?,
               relative_path: relative_path
           )
         end
 
         context 'with Metasploit::Cache::Module::Ancestor#relative_path' do
+          let(:content?) {
+            false
+          }
+
           let(:payload_name) do
             'payload/name'
           end
@@ -1151,6 +1156,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
         end
 
         context 'without Metasploit::Cache::Module::Ancestor#relative_path' do
+          let(:content?) {
+            false
+          }
+
           let(:relative_path) do
             nil
           end

@@ -35,6 +35,7 @@ FactoryGirl.define do
 
   trait :metasploit_cache_module_ancestor do
     transient do
+      content? { true }
       metasploit_module_relative_name { generate :metasploit_cache_module_ancestor_metasploit_module_relative_name }
       reference_name { generate :metasploit_cache_module_ancestor_reference_name }
       superclass { 'Metasploit::Model::Base' }
@@ -45,21 +46,32 @@ FactoryGirl.define do
     #
 
     after(:build) do |module_ancestor, evaluator|
-      context = Object.new
-      cell = Cell::Base.cell_for(
-          'metasploit/cache/module/ancestor',
-          context,
-          module_ancestor,
-          metasploit_module_relative_name: evaluator.metasploit_module_relative_name,
-          superclass: evaluator.superclass
-      )
+      # needed to allow for usage of trait with invalid relative_path, when `content: false` should be set
+      if evaluator.content?
+        context = Object.new
+        cell = Cell::Base.cell_for(
+            'metasploit/cache/module/ancestor',
+            context,
+            module_ancestor,
+            metasploit_module_relative_name: evaluator.metasploit_module_relative_name,
+            superclass: evaluator.superclass
+        )
 
-      # make directory
-      module_ancestor.real_pathname.parent.mkpath
+        real_pathname = module_ancestor.real_pathname
 
-      module_ancestor.real_pathname.open('wb') { |f|
-        f.write(cell.call)
-      }
+        unless real_pathname
+          raise ArgumentError,
+                "#{module_ancestor.class}#real_pathname is `nil` and content cannot be written.  " \
+                "If this is expected, set `content?: false` when using the :metasploit_cache_module_ancestor trait."
+        end
+
+        # make directory
+        real_pathname.parent.mkpath
+
+        real_pathname.open('wb') { |f|
+          f.write(cell.call)
+        }
+      end
     end
 
     #

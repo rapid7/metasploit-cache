@@ -680,6 +680,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       let(:module_ancestor) {
         FactoryGirl.build(
             module_ancestor_factory,
+            content?: false,
             relative_path: nil
         )
       }

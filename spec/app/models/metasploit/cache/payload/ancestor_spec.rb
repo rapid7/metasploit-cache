@@ -72,6 +72,7 @@ RSpec.describe Metasploit::Cache::Payload::Ancestor do
     let(:payload_ancestor) {
       FactoryGirl.build(
                      payload_ancestor_factory,
+                     content?: content?,
                      relative_path: relative_path
       )
     }
@@ -81,6 +82,10 @@ RSpec.describe Metasploit::Cache::Payload::Ancestor do
     }
 
     context 'with #relative_path' do
+      let(:content?) {
+        true
+      }
+
       let(:first_relative_file_name) {
         'payload'
       }
@@ -103,6 +108,10 @@ RSpec.describe Metasploit::Cache::Payload::Ancestor do
     end
 
     context 'without #relative_path' do
+      let(:content?) {
+        false
+      }
+
       let(:relative_path) {
         nil
       }

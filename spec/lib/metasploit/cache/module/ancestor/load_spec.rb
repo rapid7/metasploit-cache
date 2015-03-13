@@ -521,7 +521,13 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
     context 'without valid for loading' do
       let(:module_ancestor) do
-        FactoryGirl.build(module_ancestor_factory, module_type: nil, reference_name: nil, relative_path: nil)
+        FactoryGirl.build(
+            module_ancestor_factory,
+            content?: false,
+            module_type: nil,
+            reference_name: nil,
+            relative_path: nil
+        )
       end
 
       let(:module_ancestor_factory) {
