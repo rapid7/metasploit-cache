@@ -13,7 +13,7 @@ module Metasploit
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 4
       # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'post-class'
+      PRERELEASE = 'load-post-class-from-framework'
 
       #
       # Module Methods
