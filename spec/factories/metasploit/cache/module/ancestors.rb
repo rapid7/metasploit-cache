@@ -35,9 +35,33 @@ FactoryGirl.define do
 
   trait :metasploit_cache_module_ancestor do
     transient do
+      reference_name { generate :metasploit_cache_module_ancestor_reference_name }
+    end
+
+    #
+    # Associations
+    #
+
+    association :parent_path, :factory => :metasploit_cache_module_path
+
+    #
+    # Attributes
+    #
+
+    # depends on module_type and reference_name
+    relative_path {
+      if module_type
+        module_type_directory = Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE.fetch(module_type, module_type)
+
+        "#{module_type_directory}/#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
+      end
+    }
+  end
+
+  trait :metasploit_cache_module_ancestor_content do
+    transient do
       content? { true }
       metasploit_module_relative_name { generate :metasploit_cache_module_ancestor_metasploit_module_relative_name }
-      reference_name { generate :metasploit_cache_module_ancestor_reference_name }
       superclass { 'Metasploit::Model::Base' }
     end
 
@@ -73,24 +97,5 @@ FactoryGirl.define do
         }
       end
     end
-
-    #
-    # Associations
-    #
-
-    association :parent_path, :factory => :metasploit_cache_module_path
-
-    #
-    # Attributes
-    #
-
-    # depends on module_type and reference_name
-    relative_path {
-      if module_type
-        module_type_directory = Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE.fetch(module_type, module_type)
-
-        "#{module_type_directory}/#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
-      end
-    }
   end
 end
