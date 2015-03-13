@@ -35,20 +35,9 @@ FactoryGirl.define do
 
   trait :metasploit_cache_module_ancestor do
     transient do
+      metasploit_module_relative_name { generate :metasploit_cache_module_ancestor_metasploit_module_relative_name }
       reference_name { generate :metasploit_cache_module_ancestor_reference_name }
-
-      #
-      # Callback helpers
-      #
-
-      before_write_template {
-        ->(module_ancestor, evaluator){}
-      }
-      write_template {
-        ->(module_ancestor, evaluator){
-          Metasploit::Cache::Module::Ancestor::Spec::Template.write(module_ancestor: module_ancestor)
-        }
-      }
+      superclass { 'Metasploit::Model::Base' }
     end
 
     #
@@ -56,8 +45,21 @@ FactoryGirl.define do
     #
 
     after(:build) do |module_ancestor, evaluator|
-      instance_exec(module_ancestor, evaluator, &evaluator.before_write_template)
-      instance_exec(module_ancestor, evaluator, &evaluator.write_template)
+      context = Object.new
+      cell = Cell::Base.cell_for(
+          'metasploit/cache/module/ancestor',
+          context,
+          module_ancestor,
+          metasploit_module_relative_name: evaluator.metasploit_module_relative_name,
+          superclass: evaluator.superclass
+      )
+
+      # make directory
+      module_ancestor.real_pathname.parent.mkpath
+
+      module_ancestor.real_pathname.open('wb') { |f|
+        f.write(cell.call)
+      }
     end
 
     #
