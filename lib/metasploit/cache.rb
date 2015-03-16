@@ -48,6 +48,7 @@ module Metasploit
     autoload :Platform
     autoload :Post
     autoload :ProxiedValidation
+    autoload :Ranked
     autoload :RealPathname
     autoload :Realm
     autoload :Reference
