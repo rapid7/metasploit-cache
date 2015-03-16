@@ -58,7 +58,7 @@ FactoryGirl.define do
     }
   end
 
-  trait :metasploit_cache_module_ancestor_content do
+  trait :metasploit_cache_module_ancestor_contents do
     transient do
       content? { true }
       metasploit_module_relative_name { generate :metasploit_cache_module_ancestor_metasploit_module_relative_name }
@@ -87,7 +87,7 @@ FactoryGirl.define do
           raise ArgumentError,
                 "#{module_ancestor.class}#real_pathname is `nil` and content cannot be written.  " \
                 "If this is expected, set `content?: false` " \
-                "when using the :metasploit_cache_module_ancestor_content trait."
+                "when using the :metasploit_cache_module_ancestor_contents trait."
         end
 
         # make directory

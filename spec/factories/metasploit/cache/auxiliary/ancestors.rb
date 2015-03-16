@@ -3,7 +3,7 @@ FactoryGirl.define do
           class: Metasploit::Cache::Auxiliary::Ancestor,
           traits: [
               :metasploit_cache_module_ancestor,
-              :metasploit_cache_module_ancestor_content
+              :metasploit_cache_module_ancestor_contents
           ] do
     transient do
       module_type { 'auxiliary' }

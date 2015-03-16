@@ -14,7 +14,7 @@ RSpec.describe Metasploit::Cache::Payload::Ancestor do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'traits' do
-    context ':metasploit_cache_payload_ancestor_content' do
+    context ':metasploit_cache_payload_ancestor_contents' do
       context 'with content?' do
         context 'with #real_pathname' do
           subject(:payload_ancestor) {
@@ -56,7 +56,7 @@ RSpec.describe Metasploit::Cache::Payload::Ancestor do
             }.to raise_error ArgumentError,
                              "Metasploit::Cache::Payload::Single::Ancestor#real_pathname is `nil` and " \
                              "content cannot be written.  If this is expected, set `content?: false` " \
-                             "when using the :metasploit_cache_payload_ancestor_content trait."
+                             "when using the :metasploit_cache_payload_ancestor_contents trait."
           }
         end
       end

@@ -82,14 +82,14 @@ RSpec.describe Metasploit::Cache::Direct::Class do
   end
 
   context 'traits' do
-    context ':metasploit_cache_direct_class_ancestor_content' do
-      context 'with ancestor_content?' do
+    context ':metasploit_cache_direct_class_ancestor_contents' do
+      context 'with ancestor_contents?' do
         context 'without #ancestor' do
           subject(:direct_class) {
             FactoryGirl.build(
                 :metasploit_cache_auxiliary_class,
                 ancestor: nil,
-                ancestor_content?: true
+                ancestor_contents?: true
             )
           }
 
@@ -98,8 +98,8 @@ RSpec.describe Metasploit::Cache::Direct::Class do
               direct_class
             }.to raise_error ArgumentError,
                              "Metasploit::Cache::Auxiliary::Class#ancestor is `nil` and content cannot be written.  " \
-                             "If this is expected, set `ancestor_content?: false` when using the " \
-                             ":metasploit_cache_direct_class_ancestor_content trait."
+                             "If this is expected, set `ancestor_contents?: false` when using the " \
+                             ":metasploit_cache_direct_class_ancestor_contents trait."
           }
         end
 
@@ -109,7 +109,7 @@ RSpec.describe Metasploit::Cache::Direct::Class do
               FactoryGirl.build(
                   :metasploit_cache_auxiliary_class,
                   ancestor: module_ancestor,
-                  ancestor_content?: true
+                  ancestor_contents?: true
               )
             }
 
@@ -131,7 +131,7 @@ RSpec.describe Metasploit::Cache::Direct::Class do
             subject(:direct_class) {
               FactoryGirl.build(
                   :metasploit_cache_auxiliary_class,
-                  ancestor_content?: true,
+                  ancestor_contents?: true,
                   ancestor: module_ancestor
               )
             }
@@ -149,20 +149,20 @@ RSpec.describe Metasploit::Cache::Direct::Class do
                 direct_class
               }.to raise_error ArgumentError,
                                "Metasploit::Cache::Auxiliary::Ancestor#real_pathname is `nil` and content cannot be " \
-                               "written.  If this is expected, set `ancestor_content?: false` when using the " \
-                               ":metasploit_cache_direct_class_ancestor_content trait."
+                               "written.  If this is expected, set `ancestor_contents?: false` when using the " \
+                               ":metasploit_cache_direct_class_ancestor_contents trait."
             }
           end
         end
       end
 
-      context 'without ancestor_content?' do
+      context 'without ancestor_contents?' do
         context 'without #ancestor' do
           subject(:direct_class) {
             FactoryGirl.build(
                 :metasploit_cache_auxiliary_class,
                 ancestor: false,
-                ancestor_content?: false
+                ancestor_contents?: false
             )
           }
 
@@ -178,7 +178,7 @@ RSpec.describe Metasploit::Cache::Direct::Class do
             subject(:direct_class) {
               FactoryGirl.build(
                   :metasploit_cache_auxiliary_class,
-                  ancestor_content?: false
+                  ancestor_contents?: false
               )
             }
 
@@ -194,7 +194,7 @@ RSpec.describe Metasploit::Cache::Direct::Class do
               FactoryGirl.build(
                   :metasploit_cache_auxiliary_class,
                   ancestor: module_ancestor,
-                  ancestor_content?: false
+                  ancestor_contents?: false
               )
             }
 

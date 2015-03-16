@@ -3,7 +3,7 @@ FactoryGirl.define do
           class: Metasploit::Cache::Payload::Stage::Ancestor,
           traits: [
               :metasploit_cache_payload_ancestor,
-              :metasploit_cache_payload_ancestor_content
+              :metasploit_cache_payload_ancestor_contents
           ] do
     transient do
       payload_type { 'stage' }
