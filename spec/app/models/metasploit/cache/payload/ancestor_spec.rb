@@ -13,6 +13,99 @@ RSpec.describe Metasploit::Cache::Payload::Ancestor do
 
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context 'traits' do
+    context ':metasploit_cache_payload_ancestor_content' do
+      context 'with content?' do
+        context 'with #real_pathname' do
+          subject(:payload_ancestor) {
+            FactoryGirl.build(
+                           :metasploit_cache_payload_single_ancestor,
+                           content?: true,
+                           parent_path: parent_path,
+                           relative_path: relative_path
+            )
+          }
+
+          let(:parent_path) {
+            FactoryGirl.build(:metasploit_cache_module_path)
+          }
+
+          let(:relative_path) {
+            'payloads/singles/payload/name.rb'
+          }
+
+          it 'write file' do
+            expect {
+              payload_ancestor
+            }.to change { parent_path.real_pathname.join(relative_path).exist? }.from(false).to(true)
+          end
+        end
+
+        context 'without #real_pathnam' do
+          subject(:payload_ancestor) {
+            FactoryGirl.build(
+                :metasploit_cache_payload_single_ancestor,
+                content?: true,
+                relative_path: nil
+            )
+          }
+
+          specify {
+            expect {
+              payload_ancestor
+            }.to raise_error ArgumentError,
+                             "Metasploit::Cache::Payload::Single::Ancestor#real_pathname is `nil` and " \
+                             "content cannot be written.  If this is expected, set `content?: false` " \
+                             "when using the :metasploit_cache_payload_ancestor_content trait."
+          }
+        end
+      end
+
+      context 'without content?' do
+        context 'with #real_pathname' do
+          subject(:payload_ancestor) {
+            FactoryGirl.build(
+                           :metasploit_cache_payload_single_ancestor,
+                           content?: false,
+                           parent_path: parent_path,
+                           relative_path: relative_path
+            )
+          }
+
+          let(:parent_path) {
+            FactoryGirl.build(:metasploit_cache_module_path)
+          }
+
+          let(:relative_path) {
+            'payloads/singles/payload/name.rb'
+          }
+
+          it 'does not write file' do
+            expect {
+              payload_ancestor
+            }.not_to change { parent_path.real_pathname.join(relative_path).exist? }.from(false)
+          end
+        end
+
+        context 'without #real_pathnam' do
+          subject(:payload_ancestor) {
+            FactoryGirl.build(
+                :metasploit_cache_payload_single_ancestor,
+                content?: false,
+                relative_path: nil
+            )
+          }
+
+          specify {
+            expect {
+              payload_ancestor
+            }.not_to raise_error
+          }
+        end
+      end
+    end
+  end
+
   context '#initialize' do
     it 'prevents initialization of Metasploit::Cache::Payload::Ancestors' do
       expect {
