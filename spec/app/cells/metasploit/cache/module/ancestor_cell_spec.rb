@@ -16,10 +16,6 @@ RSpec.describe Metasploit::Cache::Module::AncestorCell, type: :cell do
     FactoryGirl.create(module_ancestor_factory)
   }
 
-  let(:module_ancestor_factory) {
-    FactoryGirl.generate :metasploit_cache_module_ancestor_factory
-  }
-
   context 'cell rendering' do
     context 'rendering template' do
       subject(:template) {
