@@ -70,7 +70,7 @@ FactoryGirl.define do
     #
 
     after(:build) do |module_ancestor, evaluator|
-      # needed to allow for usage of trait with invalid relative_path, when `content: false` should be set
+      # needed to allow for usage of trait with invalid relative_path, when `content?: false` should be set
       if evaluator.content?
         context = Object.new
         cell = Cell::Base.cell_for(
@@ -92,9 +92,9 @@ FactoryGirl.define do
         # make directory
         real_pathname.parent.mkpath
 
-        real_pathname.open('wb') { |f|
+        real_pathname.open('wb') do |f|
           f.write(cell.call)
-        }
+        end
       end
     end
   end
