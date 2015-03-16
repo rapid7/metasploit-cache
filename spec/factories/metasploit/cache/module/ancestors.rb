@@ -86,7 +86,8 @@ FactoryGirl.define do
         unless real_pathname
           raise ArgumentError,
                 "#{module_ancestor.class}#real_pathname is `nil` and content cannot be written.  " \
-                "If this is expected, set `content?: false` when using the :metasploit_cache_module_ancestor trait."
+                "If this is expected, set `content?: false` " \
+                "when using the :metasploit_cache_module_ancestor_content trait."
         end
 
         # make directory
