@@ -1,5 +1,6 @@
 require 'cell/twin'
 
+# Cell for rendering {Metasploit::Cache::Payload::Ancestor} {Metasploit::Cache::Module::Ancestor#contents}.
 class Metasploit::Cache::Payload::AncestorCell < Cell::ViewModel
   extend ActiveSupport::Autoload
 

@@ -1,5 +1,6 @@
 require 'cell/twin'
 
+# Fields used in {Metasploit::Cache::Payload::AncestorCell} template.
 class Metasploit::Cache::Payload::AncestorCell::Twin < Cell::Twin
   #
   # Options
