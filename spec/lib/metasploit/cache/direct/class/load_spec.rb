@@ -104,11 +104,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
 
           context 'without nil' do
             let(:metasploit_class) {
-              Class.new do
-                def self.is_usable
-                  true
-                end
-              end
+              Class.new
             }
 
             it 'does not add error on :metasploit_class' do
