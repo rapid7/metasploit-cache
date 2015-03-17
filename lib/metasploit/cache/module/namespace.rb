@@ -183,14 +183,8 @@ module Metasploit::Cache::Module::Namespace
   def self.transaction(module_ancestor, &block)
     namespace_module_names = self.names(module_ancestor)
 
-    previous_namespace_module = Metasploit::Cache::Constant.current(namespace_module_names)
+    previous_namespace_module = Metasploit::Cache::Constant.remove(namespace_module_names)
     relative_name = namespace_module_names.last
-
-    if previous_namespace_module
-      parent_module = previous_namespace_module.parent
-      # remove_const is private, so use send to bypass
-      parent_module.send(:remove_const, relative_name)
-    end
 
     namespace_module = create(namespace_module_names)
 

@@ -20,4 +20,22 @@ module Metasploit::Cache::Constant
 
     named_constant
   end
+
+  # Remove the constant with `names` from its parent if it exists.
+  #
+  # @param names (see current)
+  # @return [Object] the removed value of the constant with `names`.
+  # @return [nil] if no constant has `names`.
+  def self.remove(names)
+    removable_constant = current(names)
+
+    if removable_constant
+      parent_module = removable_constant.parent
+      relative_name = names.last
+      # remove_const is private, so use send to bypass
+      parent_module.send(:remove_const, relative_name)
+    end
+
+    removable_constant
+  end
 end

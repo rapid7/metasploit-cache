@@ -54,4 +54,66 @@ RSpec.describe Metasploit::Cache::Constant do
       it { is_expected.to be_nil }
     end
   end
+
+  context 'remove' do
+    subject(:remove) {
+      described_class.remove(names)
+    }
+
+    #
+    # lets
+    #
+
+    let(:names) {
+      ['Grandparent', 'Parent', 'Child']
+    }
+
+    #
+    # Callbacks
+    #
+
+    after(:each) do
+      if defined? Grandparent
+        Object.send(:remove_const, :Grandparent)
+      end
+    end
+
+    context 'with all module_names defined' do
+      before(:each) do
+        module Grandparent
+          module Parent
+            module Child
+
+            end
+          end
+        end
+      end
+
+      it 'is named Module' do
+        expect(remove.name).to eq('Grandparent::Parent::Child')
+      end
+
+      it 'removes the named Module' do
+        expect {
+          remove
+        }.to change { defined? Grandparent::Parent::Child }.from('constant').to(nil)
+      end
+    end
+
+    context 'with some module_names defined' do
+      before(:each) do
+        module Grandparent
+          module Parent
+
+          end
+        end
+      end
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'without any module_names defined' do
+      it { is_expected.to be_nil }
+    end
+  end
 end
