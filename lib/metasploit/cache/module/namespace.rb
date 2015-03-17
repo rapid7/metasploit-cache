@@ -113,30 +113,9 @@ module Metasploit::Cache::Module::Namespace
     Object.module_eval(content, CONTENT_FILE, line_with_wrapping)
 
     # The namespace_module exists now, so no need to use constantize to do const_missing
-    namespace_module = current(names)
+    namespace_module = Metasploit::Cache::Constant.current(names)
 
     namespace_module
-  end
-
-  # Returns the module with `module_names` if it exists.
-  #
-  # @param [Array<String>] module_names a list of module names to resolve from Object downward.
-  # @return [Module] module that wraps the previously loaded content from {Metasploit::Cache::Module::Ancestor#content}.
-  # @return [nil] if any module name along the chain does not exist.
-  def self.current(module_names)
-    # dont' look at ancestor for constant for faster const_defined? calls.
-    inherit = false
-
-    # Don't want to trigger ActiveSupport's const_missing, so can't use constantize.
-    named_module = module_names.inject(Object) { |parent, module_name|
-      if parent.const_defined?(module_name, inherit)
-        parent.const_get(module_name)
-      else
-        break
-      end
-    }
-
-    named_module
   end
 
   # Returns an Array of names to make a fully qualified module name to wrap the Metasploit<n> class so that it
@@ -204,7 +183,7 @@ module Metasploit::Cache::Module::Namespace
   def self.transaction(module_ancestor, &block)
     namespace_module_names = self.names(module_ancestor)
 
-    previous_namespace_module = current(namespace_module_names)
+    previous_namespace_module = Metasploit::Cache::Constant.current(namespace_module_names)
     relative_name = namespace_module_names.last
 
     if previous_namespace_module
