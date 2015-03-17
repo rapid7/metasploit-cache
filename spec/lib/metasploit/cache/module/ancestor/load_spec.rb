@@ -89,101 +89,11 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
           context 'without nil' do
             let(:metasploit_module) do
-              Module.new do
-                def self.is_usable
-                  true
-                end
-              end
-            end
-
-            it 'should not add error on :metasploit_module' do
-              expect(module_ancestor_load.errors[:metasploit_module]).not_to include(error)
-            end
-          end
-        end
-      end
-
-      context 'usability' do
-        let(:error) do
-          I18n.translate('metasploit.model.errors.models.metasploit/cache/module/ancestor/load.attributes.metasploit_module.unusable')
-        end
-
-        before(:each) do
-          allow(module_ancestor_load).to receive(:metasploit_module).and_return(metasploit_module)
-
-          # for #module_ancestor_valid
-          module_ancestor_load.valid?(validation_context)
-        end
-
-        context 'with :loading validation context' do
-          let(:validation_context) do
-            :loading
-          end
-
-          context 'with nil' do
-            let(:metasploit_module) do
-              nil
-            end
-
-            it 'should not add error on :metasploit_module' do
-              expect(module_ancestor_load.errors[:metasploit_module]).not_to include(error)
-            end
-          end
-
-          context 'without nil' do
-            let(:metasploit_module) do
               Module.new
             end
 
             it 'should not add error on :metasploit_module' do
               expect(module_ancestor_load.errors[:metasploit_module]).not_to include(error)
-            end
-          end
-        end
-
-        context 'without validation context' do
-          let(:validation_context) do
-            nil
-          end
-
-          context 'with nil' do
-            let(:metasploit_module) do
-              nil
-            end
-
-            it 'should not add error on :metasploit_module' do
-              expect(module_ancestor_load.errors[:metasploit_module]).not_to include(error)
-            end
-          end
-
-          context 'without nil' do
-            let(:metasploit_module) do
-              usable = self.usable
-              Module.new do
-                define_singleton_method(:is_usable) do
-                  usable
-                end
-              end
-            end
-
-            context 'with is_usable' do
-              let(:usable) {
-                true
-              }
-
-              it 'does not add error on :metasploit_module' do
-                expect(module_ancestor_load.errors[:metasploit_module]).not_to include(error)
-              end
-            end
-
-            context 'without is_usable' do
-              let(:usable) {
-                false
-              }
-
-              it 'adds error on :metasploit_module' do
-                expect(module_ancestor_load.errors[:metasploit_module]).to include(error)
-              end
             end
           end
         end
@@ -306,65 +216,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
       end
 
       it { should be_nil }
-    end
-  end
-
-  context '#metasploit_module_usable' do
-    subject(:metasploit_module_usable) do
-      module_ancestor_load.send(:metasploit_module_usable)
-    end
-
-    let(:error) do
-      I18n.translate('metasploit.model.errors.models.metasploit/cache/module/ancestor/load.attributes.metasploit_module.unusable')
-    end
-
-    before(:each) do
-      allow(module_ancestor_load).to receive(:metasploit_module).and_return(metasploit_module)
-    end
-
-    context 'with #metasploit_module' do
-      let(:metasploit_module) do
-        double(
-            'Metasploit Module',
-            is_usable: is_usable
-        )
-      end
-
-      context 'with is_usable' do
-        let(:is_usable) {
-          true
-        }
-
-        it 'should not add error on :metasploit_module' do
-          metasploit_module_usable
-
-          expect(module_ancestor_load.errors[:metasploit_module]).not_to include(error)
-        end
-      end
-
-      context 'without is_usable' do
-        let(:is_usable) {
-          false
-        }
-
-        it 'should not add error on :metasploit_module' do
-          metasploit_module_usable
-
-          expect(module_ancestor_load.errors[:metasploit_module]).to include(error)
-        end
-      end
-    end
-
-    context 'without #metasploit_module' do
-      let(:metasploit_module) do
-        nil
-      end
-
-      it 'should not add error on :metasploit_module' do
-        metasploit_module_usable
-
-        expect(module_ancestor_load.errors[:metasploit_module]).not_to include(error)
-      end
     end
   end
 
