@@ -55,7 +55,6 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
   #
 
   validate :module_ancestor_eval_valid
-  validate :metasploit_module_usable
 
   #
   # Attribute Validations
@@ -222,15 +221,6 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
           "#{module_ancestor_eval_exception.class} #{module_ancestor_eval_exception}:\n" \
           "#{module_ancestor_eval_exception.backtrace.join("\n")}"
       )
-    end
-  end
-
-  # Validates that {#metasploit_module} is usable on this local platform, but only if {#metasploit_module} is not `nil`.
-  #
-  # @return [void]
-  def metasploit_module_usable
-    if metasploit_module && !metasploit_module.is_usable
-      errors.add(:metasploit_module, :unusable)
     end
   end
 end
