@@ -38,6 +38,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
   let(:metasploit_module) {
     Class.new.tap { |metasploit_module|
       metasploit_module.extend Metasploit::Cache::Cacheable
+      metasploit_module.extend Metasploit::Cache::Direct::Class::Usability
 
       module_rank = self.module_rank
 
