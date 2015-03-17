@@ -142,6 +142,11 @@ en:
           taken: "has already been taken"
 
         models:
+          metasploit/cache/direct/class/load:
+            attributes:
+              metasploit_class:
+                unusable: "is unusable on this local host"
+
           metasploit/cache/module/instance:
             attributes:
               actions:

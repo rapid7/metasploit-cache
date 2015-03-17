@@ -103,7 +103,11 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
 
           context 'without nil' do
             let(:metasploit_class) {
-              Class.new
+              Class.new do
+                def self.is_usable
+                  true
+                end
+              end
             }
 
             it 'does not add error on :metasploit_class' do
@@ -129,7 +133,11 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
 
           context 'without nil' do
             let(:metasploit_class) {
-              Class.new
+              Class.new do
+                def self.is_usable
+                  true
+                end
+              end
             }
 
             it 'does not add error on :metasploit_class' do
@@ -267,6 +275,65 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
 
           it { is_expected.to be_nil }
         end
+      end
+    end
+  end
+
+  context '#metasploit_class_usable' do
+    subject(:metasploit_class_usable) do
+      direct_class_load.send(:metasploit_class_usable)
+    end
+
+    let(:error) do
+      I18n.translate('metasploit.model.errors.models.metasploit/cache/direct/class/load.attributes.metasploit_class.unusable')
+    end
+
+    before(:each) do
+      allow(direct_class_load).to receive(:metasploit_class).and_return(metasploit_class)
+    end
+
+    context 'with #metasploit_class' do
+      let(:metasploit_class) do
+        double(
+            'Metasploit Class',
+            is_usable: is_usable
+        )
+      end
+
+      context 'with is_usable' do
+        let(:is_usable) {
+          true
+        }
+
+        it 'should not add error on :metasploit_class' do
+          metasploit_class_usable
+
+          expect(direct_class_load.errors[:metasploit_class]).not_to include(error)
+        end
+      end
+
+      context 'without is_usable' do
+        let(:is_usable) {
+          false
+        }
+
+        it 'should not add error on :metasploit_class' do
+          metasploit_class_usable
+
+          expect(direct_class_load.errors[:metasploit_class]).to include(error)
+        end
+      end
+    end
+
+    context 'without #metasploit_class' do
+      let(:metasploit_class) do
+        nil
+      end
+
+      it 'should not add error on :metasploit_class' do
+        metasploit_class_usable
+
+        expect(direct_class_load.errors[:metasploit_class]).not_to include(error)
       end
     end
   end

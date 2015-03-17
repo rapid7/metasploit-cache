@@ -31,6 +31,8 @@ class Metasploit::Cache::Direct::Class::Load < Metasploit::Model::Base
 
   validate :direct_class_valid,
            unless: :loading_context?
+  validate :metasploit_class_usable,
+           unless: :loading_context?
 
   #
   # Attribute Validations
@@ -99,5 +101,14 @@ class Metasploit::Cache::Direct::Class::Load < Metasploit::Model::Base
   # @return [false] otherwise
   def loading_context?
     validation_context == :loading
+  end
+
+  # Validates that {#metasploit_class} is usable on this local platform, but only if {#metasploit_class} is not `nil`.
+  #
+  # @return [void]
+  def metasploit_class_usable
+    if metasploit_class && !metasploit_class.is_usable
+      errors.add(:metasploit_class, :unusable)
+    end
   end
 end
