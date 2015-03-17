@@ -146,7 +146,7 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
   #
   # @return [void]
   def metasploit_module_usable
-    if metasploit_module && metasploit_module.respond_to?(:is_usable) && !metasploit_module.is_usable
+    if metasploit_module && !metasploit_module.is_usable
       errors.add(:metasploit_module, :unusable)
     end
   end
