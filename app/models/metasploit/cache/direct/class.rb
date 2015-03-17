@@ -10,6 +10,7 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   autoload :Load
   autoload :Ranking
   autoload :Spec
+  autoload :Superclass
   autoload :Usability
 
   #
