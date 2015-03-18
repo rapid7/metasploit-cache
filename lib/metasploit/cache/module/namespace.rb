@@ -131,39 +131,6 @@ module Metasploit::Cache::Module::Namespace
     NAMES + ["RealPathSha1HexDigest#{module_ancestor.real_path_sha1_hex_digest}"]
   end
 
-  # Restores the namespace `Module` to it's original name under it's original parent `Module` if there was a previous
-  # namespace `Module`.
-  #
-  # @param parent_module [Module] The `#parent` of `namespace_module` before it was removed from the constant tree.
-  # @param relative_name [String] The name of the constant under `parent_module` where `namespace_module` was attached.
-  # @param namespace_module [Module, nil] The previous namespace `Module` containing the old `Module` content.  If
-  #   `nil`, then the `relative_name` constant is removed from `parent_module`, but nothing is set as the new constant.
-  # @return [void]
-  def self.restore(parent_module, relative_name, namespace_module)
-    if parent_module
-      inherit = false
-
-      # If there is a current module with relative_name
-      if parent_module.const_defined?(relative_name, inherit)
-        # if the current value isn't the value to be restored.
-        if parent_module.const_get(relative_name, inherit) != namespace_module
-          # remove_const is private, so use send to bypass
-          parent_module.send(:remove_const, relative_name)
-
-          # if there was a previous module, not set it to the name
-          if namespace_module
-            parent_module.const_set(relative_name, namespace_module)
-          end
-        end
-      else
-        # if there was a previous module, but there isn't a current module, then restore the previous module
-        if namespace_module
-          parent_module.const_set(relative_name, namespace_module)
-        end
-      end
-    end
-  end
-
   # Creates a new namespace `Module` for `module_ancestor`'s `Metasploit::Model::Module::Ancestor#contents` to be
   # evaluated within.  If there was a previous module with the same name, then it is moved aside and restored if
   # the `Metasploit::Model::Module::Ancestor#contents` are invalid.
@@ -202,13 +169,21 @@ module Metasploit::Cache::Module::Namespace
     begin
       commit = block.call(module_ancestor, namespace_module)
     rescue Exception
-      restore(parent_module, relative_name, previous_namespace_module)
+      Metasploit::Cache::Constant.swap_on_parent(
+          constant: previous_namespace_module,
+          parent: parent_module,
+          relative_name: relative_name
+      )
 
       # re-raise the original exception in the original context
       raise
     else
       unless commit
-        restore(parent_module, relative_name, previous_namespace_module)
+        Metasploit::Cache::Constant.swap_on_parent(
+            constant: previous_namespace_module,
+            parent: parent_module,
+            relative_name: relative_name
+        )
       end
 
       commit
