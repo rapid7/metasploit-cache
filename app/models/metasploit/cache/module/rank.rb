@@ -38,8 +38,15 @@ class Metasploit::Cache::Module::Rank < ActiveRecord::Base
            class_name: 'Metasploit::Cache::Auxiliary::Class',
            dependent: :destroy,
            inverse_of: :rank
+
   # {Metasploit::Cache::Module::Class Module classes} assigned this rank.
   has_many :module_classes, class_name: 'Metasploit::Cache::Module::Class', dependent: :destroy, inverse_of: :rank
+
+  # {Metasploit::Cache::Payload::Single::Class Single payload classes} assigned this rank.
+  has_many :single_payload_classes,
+           class_name: 'Metasploit::Cache::Payload::Single::Class',
+           dependent: :destroy,
+           inverse_of: :rank
 
   #
   # Attributes

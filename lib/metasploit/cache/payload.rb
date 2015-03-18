@@ -5,6 +5,7 @@ module Metasploit::Cache::Payload
 
   autoload :Ancestor
   autoload :AncestorCell
+  autoload :Direct
   autoload :Single
   autoload :Stage
   autoload :Stager

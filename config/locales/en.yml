@@ -176,6 +176,11 @@ en:
                 too_short: "is too short (minimum is %{count} targets)"
                 wrong_length: "cannot have any targets"
 
+          metasploit/cache/payload/direct/class/load:
+            attributes:
+              metasploit_class:
+                unusable: "is unusable on this local host"
+
           metasploit/cache/search/operation/date:
             attributes:
               value:
