@@ -4,6 +4,7 @@ module Metasploit::Cache::Payload
   extend ActiveSupport::Autoload
 
   autoload :Ancestor
+  autoload :AncestorCell
   autoload :Single
   autoload :Stage
   autoload :Stager

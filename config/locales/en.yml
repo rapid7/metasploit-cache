@@ -142,9 +142,9 @@ en:
           taken: "has already been taken"
 
         models:
-          metasploit/cache/module/ancestor/load:
+          metasploit/cache/direct/class/load:
             attributes:
-              metasploit_module:
+              metasploit_class:
                 unusable: "is unusable on this local host"
 
           metasploit/cache/module/instance:
@@ -175,11 +175,6 @@ en:
               targets:
                 too_short: "is too short (minimum is %{count} targets)"
                 wrong_length: "cannot have any targets"
-
-          metasploit/cache/module/namespace/load:
-            attributes:
-              metasploit_module:
-                unusable: "is unusable on this local host"
 
           metasploit/cache/search/operation/date:
             attributes:

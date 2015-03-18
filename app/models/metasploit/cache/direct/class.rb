@@ -5,9 +5,13 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   include Metasploit::Cache::Batch::Descendant
   include Metasploit::Cache::Batch::Root
 
+  autoload :AncestorCell
   autoload :Ephemeral
   autoload :Load
+  autoload :Ranking
   autoload :Spec
+  autoload :Superclass
+  autoload :Usability
 
   #
   # Associations

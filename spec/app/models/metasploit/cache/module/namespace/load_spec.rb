@@ -97,82 +97,6 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
       end
     end
 
-    context '#metasploit_module_usable' do
-      #
-      # lets
-      #
-
-      let(:error) {
-        I18n.translate!('metasploit.model.errors.models.metasploit/cache/module/namespace/load.attributes.metasploit_module.unusable')
-      }
-
-      let(:metasploit_module_errors) {
-        module_namespace_load.valid?
-
-        module_namespace_load.errors[:metasploit_module]
-      }
-
-      #
-      # Callbacks
-      #
-
-      before(:each) do
-        allow(module_namespace_load).to receive(:metasploit_module).and_return(metasploit_module)
-      end
-
-      context 'with #metasploit_module' do
-        let(:metasploit_module) {
-          Module.new
-        }
-
-        context 'that responds to #is_usable' do
-          before(:each) do
-            usable = self.usable
-
-            metasploit_module.define_singleton_method(:is_usable) do
-              usable
-            end
-          end
-
-          context 'with true' do
-            let(:usable) {
-              true
-            }
-
-            it 'does not add error' do
-              expect(metasploit_module_errors).not_to include(error)
-            end
-          end
-
-          context 'with false' do
-            let(:usable) {
-              false
-            }
-
-            it 'adds error' do
-              expect(metasploit_module_errors).to include(error)
-            end
-          end
-        end
-
-        context 'with does not respond to #is_usable' do
-          it 'does not add error' do
-            expect(metasploit_module_errors).not_to include(error)
-          end
-        end
-      end
-
-      context 'without #metasploit_module' do
-        let(:metasploit_module) {
-          nil
-        }
-
-        it 'does not add error' do
-          expect(metasploit_module_errors).not_to include(error)
-        end
-      end
-    end
-
     context 'on #metasploit_module' do
       let(:error) {
         I18n.translate('errors.messages.blank')
@@ -682,44 +606,28 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
     end
 
     context 'without Exception' do
-      context 'with valid' do
-        context 'with persisted' do
-          it { is_expected.to eq(true) }
+      context 'with persisted' do
+        it { is_expected.to eq(true) }
 
-          specify {
-            expect {
-              module_ancestor_eval
-            }.to change(Metasploit::Cache::Module::Ancestor, :count).by(1)
-          }
-        end
-
-        context 'without persisted' do
-          before(:each) do
-            expect(module_ancestor).to receive(:batched_save).and_return(false)
-          end
-
-          it { is_expected.to eq(false) }
-
-          it 'logs to #logger' do
+        specify {
+          expect {
             module_ancestor_eval
-
-            expect(log_string_io.string).not_to be_empty
-          end
-        end
+          }.to change(Metasploit::Cache::Module::Ancestor, :count).by(1)
+        }
       end
 
-      context 'without valid' do
+      context 'without persisted' do
         before(:each) do
-          module_ancestor.real_pathname.open('w') do |f|
-            f.puts "module Metasploit4"
-            f.puts "  def self.is_usable"
-            f.puts "    false"
-            f.puts "  end"
-            f.puts "end"
-          end
+          expect(module_ancestor).to receive(:batched_save).and_return(false)
         end
 
         it { is_expected.to eq(false) }
+
+        it 'logs to #logger' do
+          module_ancestor_eval
+
+          expect(log_string_io.string).not_to be_empty
+        end
       end
     end
   end

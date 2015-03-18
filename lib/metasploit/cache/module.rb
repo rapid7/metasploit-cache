@@ -20,6 +20,7 @@ module Metasploit::Cache::Module
 
   autoload :Action
   autoload :Ancestor
+  autoload :AncestorCell
   autoload :Architecture
   autoload :Author
   autoload :Class

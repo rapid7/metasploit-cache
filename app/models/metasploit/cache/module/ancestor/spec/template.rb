@@ -66,12 +66,14 @@ class Metasploit::Cache::Module::Ancestor::Spec::Template < Metasploit::Cache::S
       if module_ancestor
         destination_pathname = module_ancestor.real_pathname
 
+        # :nocov:
         unless destination_pathname
           # validate to derive real_path and therefore real_pathname
           module_ancestor.valid?
 
           destination_pathname = module_ancestor.real_pathname
         end
+        # :nocov:
 
         @destination_pathname = destination_pathname
       end
