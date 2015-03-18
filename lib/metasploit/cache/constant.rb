@@ -6,19 +6,29 @@ module Metasploit::Cache::Constant
   # @return [Object] the current value of the constant with `names`.
   # @return [nil] if no constant has `names`.
   def self.current(names)
-    # dont' look at ancestor for constant for faster const_defined? calls.
+    inject(names) {
+      break
+    }
+  end
+
+  # Yields each `parent` constant along with the `name` in `names` that is relative to that parent.
+  #
+  # @yield [parent, relative_name]
+  # @yieldparam parent [Object] the current parent constant, normally a `Module`.
+  # @yieldparam name [Object] the name of the constant under `parent` that should be returned from the block.
+  # @yieldreturn [Object] the new value of `parent` for the next call of the block if `name` is not defined under
+  #   `parent`.
+  def self.inject(names)
+    # don't look at ancestor constant for faster `const_defined?` calls
     inherit = false
 
-    # Don't want to trigger ActiveSupport's const_missing, so can't use constantize.
-    named_constant = names.inject(Object) { |parent, name|
+    names.inject(Object) { |parent, name|
       if parent.const_defined?(name, inherit)
         parent.const_get(name)
       else
-        break
+        yield parent, name
       end
     }
-
-    named_constant
   end
 
   # Remove the constant with `names` from its parent if it exists.
