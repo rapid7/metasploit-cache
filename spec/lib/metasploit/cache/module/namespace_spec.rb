@@ -179,7 +179,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
   end
 
   context 'transaction' do
-    include_context 'Metasploit::Cache::Module::Ancestor::Spec::Unload.unload'
+    include_context 'Metasploit::Cache::Spec::Unload.unload'
 
     #
     # Methods

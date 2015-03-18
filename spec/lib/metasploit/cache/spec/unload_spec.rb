@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload do
+RSpec.describe Metasploit::Cache::Spec::Unload do
   context 'CONSTANTS' do
     context 'LOADED_MODULE_CHILD_CONSTANT_REGEXP' do
       subject(:loaded_module_child_constant_regexp) {
@@ -40,8 +40,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload do
     }
 
     it 'defines Suite and Each tasks' do
-      expect(Metasploit::Cache::Module::Ancestor::Spec::Unload::Each).to receive(:define_task)
-      expect(Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite).to receive(:define_task)
+      expect(Metasploit::Cache::Spec::Unload::Each).to receive(:define_task)
+      expect(Metasploit::Cache::Spec::Unload::Suite).to receive(:define_task)
 
       define_task
     end
@@ -80,7 +80,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload do
       hide_const('Msf::Modules')
       stub_const('Msf::Modules::Loader', persistent_loader)
       stub_const('Msf::Modules::FirstNonPersistent', first_non_persistent)
-      stub_const('Msf::Modules::SecondNonPersistent', second_non_persistent)
+      stub_const('Msf::Payloads::SecondNonPersistent', second_non_persistent)
     end
 
     it 'does not yield constants in PERSISTENT_CHILD_CONSTANT_NAMES' do
@@ -90,8 +90,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload do
     it 'yields constants not in PERSISTENT_CHILD_CONSTANT_NAMES' do
       leaked_constants = described_class.to_enum(:each).to_a
 
-      expect(leaked_constants).to include(:FirstNonPersistent)
-      expect(leaked_constants).to include(:SecondNonPersistent)
+      expect(leaked_constants).to include([Msf::Modules, :FirstNonPersistent])
+      expect(leaked_constants).to include([Msf::Payloads,:SecondNonPersistent])
     end
 
     it 'returns number of leaked constants' do
@@ -99,21 +99,50 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload do
           each {
 
           }
-      ).to eq(2)
+      ).to eq(
+                     {
+                         Msf::Modules => 1,
+                         Msf::Payloads => 1
+                     }
+                 )
     end
   end
 
-  context 'parent_constant' do
-    subject(:parent_constant) {
-      described_class.parent_constant
-    }
-
+  context 'each_parent_constant' do
     context 'with Msf::Modules defined' do
       before(:each) do
         stub_const('Msf::Modules', Module.new)
       end
 
-      it { is_expected.to eq(Msf::Modules) }
+      context 'with Msf::Payloads defined' do
+        before(:each) do
+          stub_const('Msf::Payloads', Module.new)
+        end
+
+        it 'yields both' do
+          expect { |b|
+            described_class.each_parent_constant(&b)
+          }.to yield_successive_args(Msf::Modules, Msf::Payloads)
+        end
+      end
+
+      context 'without Msf::Payloads defined' do
+        before(:each) do
+          hide_const('Msf::Payloads')
+        end
+
+        it 'yields only Msf::Modules' do
+          expect { |b|
+            described_class.each_parent_constant(&b)
+          }.to yield_successive_args(Msf::Modules)
+        end
+
+        it 'does not load Msf::Payloads' do
+          expect {
+            described_class.to_enum(:each_parent_constant).to_a
+          }.not_to change { defined? Msf::Payloads }
+        end
+      end
     end
 
     context 'without Msf::Modules defined' do
@@ -121,22 +150,54 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload do
         hide_const('Msf::Modules')
       end
 
-      it 'does not load Msf::Modules' do
-        expect {
-          parent_constant
-        }.not_to change { defined? Msf::Modules }
+      context 'with Msf::Payloads defined' do
+        before(:each) do
+          stub_const('Msf::Payloads', Module.new)
+        end
+
+        it 'yields only Msf::Payloads' do
+          expect { |b|
+            described_class.each_parent_constant(&b)
+          }.to yield_successive_args(Msf::Payloads)
+        end
+
+        it 'does not load Msf::Modules' do
+          expect {
+            described_class.to_enum(:each_parent_constant).to_a
+          }.not_to change { defined? Msf::Modules }
+        end
       end
 
-      it 'returns an anonymous Module' do
-        expect(parent_constant).to be_a(Module)
-        expect(parent_constant.name).to be_nil
+
+      context 'without Msf::Payalods defined' do
+        before(:each) do
+          hide_const('Msf::Payloads')
+        end
+
+        it 'does not yield' do
+          expect { |b|
+            described_class.each_parent_constant(&b)
+          }.not_to yield_control
+        end
+
+        it 'does not load Msf::Modules' do
+          expect {
+            described_class.to_enum(:each_parent_constant).to_a
+          }.not_to change { defined? Msf::Modules }
+        end
+
+        it 'does not load Msf::Payloads' do
+          expect {
+            described_class.to_enum(:each_parent_constant).to_a
+          }.not_to change { defined? Msf::Payloads }
+        end
       end
     end
   end
 
   context 'unload' do
     subject(:unload) {
-      Metasploit::Cache::Module::Ancestor::Spec::Unload.unload
+      Metasploit::Cache::Spec::Unload.unload
     }
 
     #

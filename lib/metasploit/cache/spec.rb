@@ -3,4 +3,5 @@ module Metasploit::Cache::Spec
   extend ActiveSupport::Autoload
 
   autoload :Template
+  autoload :Unload
 end

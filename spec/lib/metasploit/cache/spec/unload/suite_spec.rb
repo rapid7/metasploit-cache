@@ -1,11 +1,11 @@
-RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
+RSpec.describe Metasploit::Cache::Spec::Unload::Suite do
   context 'CONSTANTS' do
     context 'LOGS_PATHNAME' do
       subject(:logs_pathname) {
         described_class::LOGS_PATHNAME
       }
 
-      it { is_expected.to eq(Pathname.new('log/metasploit/cache/module/ancestor/spec/unload/suite')) }
+      it { is_expected.to eq(Pathname.new('log/metasploit/cache/spec/unload/suite')) }
     end
   end
 
@@ -136,7 +136,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
         false
       }
 
-      it 'prints instructions to stderr for adding Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure! to `spec/spec_helper.rb`' do
+      it 'prints instructions to stderr for adding Metasploit::Cache::Spec::Unload::Each.configure! to `spec/spec_helper.rb`' do
         binding = double
 
         allow(binding).to receive(:exit)
@@ -147,9 +147,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
 
         expect(stderr).to eq(
                               "\n" \
-                              "Add `Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure!` to " \
+                              "Add `Metasploit::Cache::Spec::Unload::Each.configure!` to " \
                               "`spec/spec_helper.rb` **NOTE: " \
-                              "`Metasploit::Cache::Module::Ancestor::Spec::Unload::Each` may report false leaks if " \
+                              "`Metasploit::Cache::Spec::Unload::Each` may report false leaks if " \
                               "`after(:all)` is used to clean up constants instead of `after(:each)`**\n"
                           )
       end
@@ -197,7 +197,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
     }
 
     let(:log_pathname) {
-      Pathname.new("log/metasploit/cache/module/ancestor/spec/unload/suite/#{hook}.log")
+      Pathname.new("log/metasploit/cache/spec/unload/suite/#{hook}.log")
     }
 
     let(:message) {
@@ -214,6 +214,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
       if log_pathname.exist?
         # :nocov:
         log_content_before = log_pathname.read
+        log_pathname.delete
         # :nocov:
       end
 
@@ -239,7 +240,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
     context 'with leaks' do
       before(:each) do
         stub_const('Msf::Modules::FirstLeakedConstant', Module.new)
-        stub_const('Msf::Modules::SecondLeakedConstant', Module.new)
+        stub_const('Msf::Payloads::SecondLeakedConstant', Module.new)
       end
 
       it 'prints leaked constants to hook log' do
@@ -248,8 +249,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
         }
 
         expect(log_pathname.read).to eq(
-                                         "FirstLeakedConstant\n" \
-                                         "SecondLeakedConstant\n"
+                                         "Msf::Modules::FirstLeakedConstant\n" \
+                                         "Msf::Payloads::SecondLeakedConstant\n"
                                      )
       end
 
@@ -258,15 +259,16 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
           log_leaked_constants
         }
 
-        expect(stderr).to eq("2 constants leaked under Msf::Modules. #{message} See #{log_pathname} for details.\n")
+        expect(stderr).to include("1 constant leaked under Msf::Modules. #{message} See #{log_pathname} for details.\n")
+        expect(stderr).to include("1 constant leaked under Msf::Payloads. #{message} See #{log_pathname} for details.\n")
       end
     end
 
     context 'without leaks' do
       it 'does not leave a hook log' do
-        log_leaked_constants
-
-        expect(log_pathname).not_to exist
+        expect {
+          log_leaked_constants
+        }.not_to change(log_pathname, :exist?).from(false)
       end
     end
   end
@@ -307,7 +309,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
     }
 
     let(:log_pathname) {
-      Pathname.new("log/metasploit/cache/module/ancestor/spec/unload/suite/#{hook}.log")
+      Pathname.new("log/metasploit/cache/spec/unload/suite/#{hook}.log")
     }
 
     #
@@ -323,11 +325,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
     context 'with log' do
       before(:each) do
         log_pathname.open('w') do |f|
-          f.puts "FirstLeakedConstant"
-          f.puts "SecondLeakedConstant"
+          f.puts "Msf::Modules::FirstLeakedConstant"
+          f.puts "Msf::Payloads::SecondLeakedConstant"
         end
 
         stub_const('Msf::Modules', Module.new)
+        stub_const('Msf::Payloads', Module.new)
       end
 
       it 'indented leaked constants under explanation of their origin' do
@@ -336,9 +339,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite do
               print_leaked_constants
             }
         ).to eq(
-                 "Leaked constants detected under Msf::Modules spec suite:\n" \
-                 "  FirstLeakedConstant\n" \
-                 "  SecondLeakedConstant\n"
+                 "Leaked constants detected under spec suite:\n" \
+                 "  Msf::Modules::FirstLeakedConstant\n" \
+                 "  Msf::Payloads::SecondLeakedConstant\n"
                )
       end
 

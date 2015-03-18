@@ -1,5 +1,5 @@
 RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
-  include_context 'Metasploit::Cache::Module::Ancestor::Spec::Unload.unload'
+  include_context 'Metasploit::Cache::Spec::Unload.unload'
 
   subject(:payload_direct_class_load) {
     described_class.new(
