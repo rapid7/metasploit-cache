@@ -4,4 +4,5 @@ module Metasploit::Cache::Payload::Stager
   extend ActiveSupport::Autoload
 
   autoload :Ancestor
+  autoload :Class
 end
