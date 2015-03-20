@@ -4,4 +4,5 @@ module Metasploit::Cache::Payload::Stage
   extend ActiveSupport::Autoload
 
   autoload :Ancestor
+  autoload :Class
 end
