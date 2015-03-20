@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150320145848) do
+ActiveRecord::Schema.define(:version => 20150320170728) do
 
   create_table "api_keys", :force => true do |t|
     t.text     "token"
@@ -177,6 +177,13 @@ ActiveRecord::Schema.define(:version => 20150320145848) do
     t.binary   "actions"
     t.binary   "prefs"
   end
+
+  create_table "mc_actionable_actions", :force => true do |t|
+    t.integer "actionable_id",   :null => false
+    t.string  "actionable_type", :null => false
+  end
+
+  add_index "mc_actionable_actions", ["actionable_type", "actionable_id"], :name => "mc_actionable_actions_index"
 
   create_table "mc_architectures", :force => true do |t|
     t.integer "bits"
