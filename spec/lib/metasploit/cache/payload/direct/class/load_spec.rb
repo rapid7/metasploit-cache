@@ -432,6 +432,11 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
                                 payload_direct_class_build: :build_single_payload_class,
                                 module_path_association: :single_payload_ancestors,
                                 relative_path_prefix: 'payloads/singles'
+
+          it_should_behave_like 'relative_path_prefix',
+                                payload_direct_class_build: :build_stager_payload_class,
+                                module_path_association: :stager_payload_ancestors,
+                                relative_path_prefix: 'payloads/stagers'
         end
       end
     end
