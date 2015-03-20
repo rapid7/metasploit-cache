@@ -48,6 +48,12 @@ class Metasploit::Cache::Module::Rank < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :rank
 
+  # {Metasploit::Cache::Payload::Stage::Class Stage payload classes} assigned this rank.
+  has_many :stage_payload_classes,
+           class_name: 'Metasploit::Cache::Payload::Stage::Class',
+           dependent: :destroy,
+           inverse_of: :rank
+
   #
   # Attributes
   #
