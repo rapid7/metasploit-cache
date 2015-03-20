@@ -530,10 +530,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
                                 relative_path_prefix: 'nops'
 
           it_should_behave_like 'relative_path_prefix',
-                                association: :single_payload_ancestors,
-                                relative_path_prefix: 'payloads/singles'
-
-          it_should_behave_like 'relative_path_prefix',
                                 association: :stage_payload_ancestors,
                                 relative_path_prefix: 'payloads/stages'
 
