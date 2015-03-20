@@ -4,6 +4,14 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # Associations
   #
 
+  # The actions that are allowed for the auxiliary Metasploit Module.
+  #
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Actionable::Action>]
+  has_many :actions,
+           as: :actionable,
+           class_name: 'Metasploit::Cache::Actionable::Action',
+           inverse_of: :actionable
+
   # The class-level metadata for this instance metadata.
   #
   # @return [Metasploit::Cache::Auxiliary::Class]
