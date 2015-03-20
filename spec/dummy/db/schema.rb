@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150306192052) do
+ActiveRecord::Schema.define(:version => 20150320145848) do
 
   create_table "api_keys", :force => true do |t|
     t.text     "token"
@@ -206,6 +206,12 @@ ActiveRecord::Schema.define(:version => 20150306192052) do
   end
 
   add_index "mc_authors", ["name"], :name => "index_mc_authors_on_name", :unique => true
+
+  create_table "mc_auxiliary_instances", :force => true do |t|
+    t.integer "auxiliary_class_id", :null => false
+  end
+
+  add_index "mc_auxiliary_instances", ["auxiliary_class_id"], :name => "index_mc_auxiliary_instances_on_auxiliary_class_id", :unique => true
 
   create_table "mc_direct_classes", :force => true do |t|
     t.integer "ancestor_id", :null => false
