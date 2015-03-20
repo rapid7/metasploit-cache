@@ -3,6 +3,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Auxiliary::Ancestor') }
+    it { is_expected.to have_one(:auxiliary_instance).class_name('Metasploit::Cache::Auxiliary::Instance').foreign_key(:auxiliary_class_id).inverse_of(:auxiliary_class) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
