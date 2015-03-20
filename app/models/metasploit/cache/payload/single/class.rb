@@ -12,7 +12,7 @@ class Metasploit::Cache::Payload::Single::Class < Metasploit::Cache::Payload::Di
   # Reliability of Metasploit Module.
   belongs_to :rank,
              class_name: 'Metasploit::Cache::Module::Rank',
-             inverse_of: :auxiliary_classes
+             inverse_of: :single_payload_classes
 
   Metasploit::Concern.run(self)
 end
