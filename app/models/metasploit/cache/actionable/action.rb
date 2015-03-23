@@ -25,4 +25,6 @@ class Metasploit::Cache::Actionable::Action < ActiveRecord::Base
                 ],
                 unless: :batched?
             }
+
+  Metasploit::Concern.run(self)
 end
