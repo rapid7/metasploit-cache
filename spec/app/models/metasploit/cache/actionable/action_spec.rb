@@ -65,12 +65,6 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
         I18n.translate!('metasploit.model.errors.messages.taken')
       end
 
-      let(:existing_actionable) {
-        FactoryGirl.build(
-            :metasploit_cache_auxiliary_instance
-        )
-      }
-
       let(:existing_name) {
         'Existing Action'
       }
@@ -79,9 +73,15 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
       # let!s
       #
 
+      let!(:existing_actionable) {
+        FactoryGirl.create(
+            :metasploit_cache_auxiliary_instance
+        )
+      }
+
       let!(:existing_actionable_action) {
         FactoryGirl.create(
-            :metasploit_cache_actionable_action,
+            :metasploit_cache_auxiliary_action,
             actionable: existing_actionable,
             name: existing_name
         )
@@ -91,8 +91,8 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
         context 'with same #actionable_id' do
           context 'with same #name' do
             let(:new_actionable_action) {
-              FactoryGirl.create(
-                  :metasploit_cache_actionable_action,
+              FactoryGirl.build(
+                  :metasploit_cache_auxiliary_action,
                   actionable: existing_actionable,
                   name: existing_name
               )
@@ -125,8 +125,8 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
 
           context 'with different #name' do
             let(:new_actionable_action) {
-              FactoryGirl.create(
-                  :metasploit_cache_actionable_action,
+              FactoryGirl.build(
+                  :metasploit_cache_auxiliary_action,
                   actionable: existing_actionable
               )
             }
@@ -148,13 +148,12 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
 
           context 'with same #name' do
             let(:new_actionable_action) {
-              FactoryGirl.create(
-                  :metasploit_cache_actionable_action,
+              FactoryGirl.build(
+                  :metasploit_cache_auxiliary_action,
                   actionable: new_actionable,
                   name: existing_name
               )
             }
-
 
             it 'does not add error on #name' do
               new_actionable_action.valid?
@@ -166,7 +165,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           context 'with different #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
-                  :metasploit_cache_actionable_action,
+                  :metasploit_cache_auxiliary_action,
                   actionable: new_actionable
               )
             }
@@ -192,7 +191,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           context 'with same #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
-                  :metasploit_cache_actionable_action,
+                  :metasploit_cache_post_action,
                   actionable: new_actionable,
                   name: existing_name
               )
@@ -208,7 +207,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           context 'with different #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
-                  :metasploit_cache_actionable_action,
+                  :metasploit_cache_post_action,
                   actionable: new_actionable
               )
             }
@@ -227,7 +226,8 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
                 :metasploit_cache_post_instance
             )
           }
-                   context 'with same #name' do
+
+          context 'with same #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
                   :metasploit_cache_actionable_action,

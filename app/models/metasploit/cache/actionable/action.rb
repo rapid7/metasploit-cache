@@ -1,5 +1,7 @@
 # Actions that can be performed by {Metasploit::Cache::Auxiliary::Instance#actions auxiliary Metasploit Modules}.
 class Metasploit::Cache::Actionable::Action < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
+
   #
   # CONSTANTS
   #
@@ -14,4 +16,13 @@ class Metasploit::Cache::Actionable::Action < ActiveRecord::Base
 
   validates :actionable,
             presence: true
+  validates :name,
+            presence: true,
+            uniqueness: {
+                scope: [
+                    :actionable_type,
+                    :actionable_id
+                ],
+                unless: :batched?
+            }
 end
