@@ -1,4 +1,11 @@
 en:
+  activerecord:
+    errors:
+      models:
+        metasploit/cache/auxiliary/instance:
+          attributes:
+            actions:
+              too_short: "has too few actions (minimum is %{count} action)"
   metasploit:
     model:
       ancestors:

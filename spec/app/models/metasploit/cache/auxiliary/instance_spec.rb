@@ -30,7 +30,10 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
     # validate_lenght_of from shoulda-matchers assumes attribute is String and doesn't work on associations
     context 'validates length of actions is at least 1' do
       let(:error) {
-        I18n.translate!('activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.actions.too_short')
+        I18n.translate!(
+          'activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.actions.too_short',
+           count: 1
+        )
       }
 
       context 'without actions' do
