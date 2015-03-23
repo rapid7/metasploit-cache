@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Auxiliary::Instance do
+RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
   context 'associations' do
     it { is_expected.to belong_to(:auxiliary_class).class_name('Metasploit::Cache::Auxiliary::Class').inverse_of(:auxiliary_instance) }
     it { is_expected.to have_many(:actions).class_name('Metasploit::Cache::Actionable::Action').inverse_of(:actionable) }
@@ -11,6 +11,16 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance do
 
     context 'indices' do
       it { is_expected.to have_db_index([:auxiliary_class_id]).unique(true) }
+    end
+  end
+
+  context 'factories' do
+    context 'metasploit_cache_auxiliary_instance' do
+      subject(:metasploit_cache_auxiliary_instance) {
+        FactoryGirl.build(:metasploit_cache_auxiliary_instance)
+      }
+
+      it { is_expected.to be_valid }
     end
   end
 
