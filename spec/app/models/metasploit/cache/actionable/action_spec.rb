@@ -1,6 +1,6 @@
 RSpec.describe Metasploit::Cache::Actionable::Action do
   context 'associations' do
-    it { is_expected.to belong_to(:actionable).inverse_of(:actions) }
+    it { is_expected.to belong_to(:actionable) }
   end
 
   context 'database' do
