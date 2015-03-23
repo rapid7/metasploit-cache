@@ -16,43 +16,39 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
   end
 
   context 'factories' do
-    context 'metasploit_cache_actionable_action' do
-      subject(:metasploit_cache_actionable_action) {
-        FactoryGirl.build(:metasploit_cache_actionable_action)
+    context 'metasploit_cache_auxiliary_action' do
+      subject(:metasploit_cache_auxiliary_action) {
+        FactoryGirl.build(:metasploit_cache_auxiliary_action)
       }
 
       it { is_expected.to be_valid }
 
-      context 'Metasploit::Cache::Actionable::Action#actionable' do
-        context 'with Metasploit::Cache::Auxiliary::Instance' do
-          subject(:metasploit_cache_actionable_action) {
-            FactoryGirl.build(
-                           :metasploit_cache_actionable_action,
-                           actionable: auxiliary_instance
-            )
-          }
+      it { is_expected.to be_a described_class }
 
-          let(:auxiliary_instance) {
-            FactoryGirl.build(:metasploit_cache_auxiliary_instance)
-          }
+      context '#actionable' do
+        subject(:actionable) {
+          metasploit_cache_auxiliary_action.actionable
+        }
 
-          it { is_expected.to be_valid }
-        end
+        it { is_expected.to be_a Metasploit::Cache::Auxiliary::Instance }
+      end
+    end
 
-        context 'with Metasploit::Cache::Post::Instance', pending: 'metasploit_cache_post_instance factory' do
-          subject(:metasploit_cache_actionable_action) {
-            FactoryGirl.build(
-                           :metasploit_cache_actionable_action,
-                           actionable: post_instance
-            )
-          }
+    context 'metasploit_cache_post_action', pending: 'Metasploit::Cache::Post::Instance and metasploit_cache_post_instance factory' do
+      subject(:metasploit_cache_post_action) {
+        FactoryGirl.build(:metasploit_cache_post_action)
+      }
 
-          let(:post_instance) {
-            FactoryGirl.build(:metasploit_cache_post_instance)
-          }
+      it { is_expected.to be_valid }
 
-          it { is_expected.to be_valid }
-        end
+      it { is_expected.to be_a described_class }
+
+      context '#actionable' do
+        subject(:actionable) {
+          metasploit_cache_post_action.actionable
+        }
+
+        it { is_expected.to be_a Metasploit::Cache::Post::Instance }
       end
     end
   end
