@@ -40,7 +40,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
         subject(:auxiliary_instance) {
           FactoryGirl.build(
               :metasploit_cache_auxiliary_instance,
-              actions: []
+              actions_count: 0
           )
         }
 
@@ -55,13 +55,8 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
         subject(:auxiliary_instance) {
           FactoryGirl.build(
               :metasploit_cache_auxiliary_instance,
-              actions: []
-          ).tap { |actionable|
-            actionable.actions << FactoryGirl.build(
-                :metasploit_cache_auxiliary_action,
-                actionable: actionable
-            )
-          }
+              actions_count: 1
+          )
         }
 
         it 'does not adds error on #actions' do
