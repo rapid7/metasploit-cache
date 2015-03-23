@@ -54,6 +54,10 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
             presence: true
   validates :name,
             presence: true
+  validates :stance,
+            inclusion: {
+                in: Metasploit::Cache::Module::Stance::ALL
+            }
 
   private
 

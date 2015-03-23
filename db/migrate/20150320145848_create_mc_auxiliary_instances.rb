@@ -28,6 +28,8 @@ class CreateMcAuxiliaryInstances < ActiveRecord::Migration
              null: true
       t.string :name,
                null: false
+      t.string :stance,
+               null: false
 
       #
       # References

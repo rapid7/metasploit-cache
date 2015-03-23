@@ -219,6 +219,7 @@ ActiveRecord::Schema.define(:version => 20150320170728) do
     t.text    "description",        :null => false
     t.date    "disclosed_on"
     t.string  "name",               :null => false
+    t.string  "stance",             :null => false
     t.integer "auxiliary_class_id", :null => false
     t.integer "default_action_id"
   end
