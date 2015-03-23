@@ -8,6 +8,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:default_action_id).of_type(:integer).with_options(null: true) }
+      it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
       it { is_expected.to have_db_column(:auxiliary_class_id).of_type(:integer).with_options(null: false) }
     end
 
@@ -221,5 +222,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
         end
       end
     end
+
+    it { is_expected.to validate_presence_of :description }
   end
 end
