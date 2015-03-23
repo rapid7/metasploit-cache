@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Actionable::Action do
+  it_should_behave_like 'Metasploit::Concern.run'
+
   context 'associations' do
     it { is_expected.to belong_to(:actionable) }
   end

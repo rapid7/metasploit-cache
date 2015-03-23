@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
+  it_should_behave_like 'Metasploit::Concern.run'
+
   context 'associations' do
     it { is_expected.to belong_to(:auxiliary_class).class_name('Metasploit::Cache::Auxiliary::Class').inverse_of(:auxiliary_instance) }
     it { is_expected.to have_many(:actions).class_name('Metasploit::Cache::Actionable::Action').inverse_of(:actionable) }
