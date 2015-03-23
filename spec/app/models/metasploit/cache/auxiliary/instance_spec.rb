@@ -175,7 +175,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
             ).tap { |auxiliary_instance|
               auxiliary_instance.default_action = FactoryGirl.build(
                   :metasploit_cache_auxiliary_action,
-                  actionable: action
+                  actionable: auxiliary_instance
               )
             }
           }

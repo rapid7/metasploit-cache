@@ -19,8 +19,29 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Auxiliary::Class',
              inverse_of: :auxiliary_instance
 
+  # @note The default action must be manually added to {#actions}.
+  #
+  # The (optional) default action for the auxiliary Metasploit Module.
+  #
+  # @return [Metasploit::Cache::Actionable::Action]
+  belongs_to :default_action,
+             class_name: 'Metasploit::Cache::Actionable::Action',
+             inverse_of: :actionable
+
+  #
   #
   # Validations
+  #
+  #
+
+  #
+  # Method Validations
+  #
+
+  validate :actions_contains_default_action
+
+  #
+  # Attribute Validations
   #
 
   validates :actions,
@@ -29,4 +50,15 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
             }
   validates :auxiliary_class,
             presence: true
+
+  private
+
+  # Validates that {#default_action}, when it is set, is in {#actions}.
+  #
+  # @return [void]
+  def actions_contains_default_action
+    unless default_action.nil? || actions.include?(default_action)
+      errors.add(:actions, :does_not_contain_default_action)
+    end
+  end
 end

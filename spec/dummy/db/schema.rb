@@ -217,6 +217,7 @@ ActiveRecord::Schema.define(:version => 20150320170728) do
 
   create_table "mc_auxiliary_instances", :force => true do |t|
     t.integer "auxiliary_class_id", :null => false
+    t.integer "default_action_id"
   end
 
   add_index "mc_auxiliary_instances", ["auxiliary_class_id"], :name => "index_mc_auxiliary_instances_on_auxiliary_class_id", :unique => true
