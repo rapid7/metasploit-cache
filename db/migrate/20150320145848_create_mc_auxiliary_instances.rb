@@ -24,6 +24,8 @@ class CreateMcAuxiliaryInstances < ActiveRecord::Migration
     create_table TABLE_NAME do |t|
       t.text :description,
              null: false
+      t.date :disclosed_on,
+             null: true
 
       #
       # References
