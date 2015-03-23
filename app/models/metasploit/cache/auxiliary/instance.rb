@@ -29,6 +29,35 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
              inverse_of: :actionable
 
   #
+  # Attributes
+  #
+
+  # @!attribute description
+  #   The long-form human-readable description of this auxiliary Metasploit Module.
+  #
+  #   @return [String]
+
+  # @!attribute disclosed_on
+  #   The date when the bug this Metasploit Module exercises was disclosed publicly.
+  #
+  #   @return [Date]
+  #   @return [nil] No bug is exercised by this Metasploit Module, it uses the normal behavior of a client or service.
+
+  # @!attribute name
+  #   The human-readable name of this auxiliary Metasploit Module.  This can be thought of as the title or summary of
+  #   the Metasploit Module.
+  #
+  #   @return [String]
+
+  # @!attribute stance
+  #   Whether this Metasploit Module is aggressive or passive.
+  #
+  #   @return ['aggressive'] This Metasploit Module connects to a remote server, so the Metasploit Module is a client
+  #     exploiting a server.
+  #   @return ['passive'] This Metasploit Module waits for remote clients to connect to it, so the Metasploit Module is
+  #     a server exploiting clients.
+
+  #
   #
   # Validations
   #
@@ -62,6 +91,34 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   #
   # Instance Methods
   #
+
+  # @!method description=(description)
+  #   Sets {#description}.
+  #
+  #   @param description [String] The long-form human-readable description of this auxiliary Metasploit Module.
+  #   @return [void]
+
+  # @!method disclosed_on=(disclosed_on)
+  #   Sets {#disclosed_on}.
+  #
+  #   @param disclosed_on [Date, nil] The date when the bug this Metasploit Module exercises was disclosed publicly
+  #   @return [void]
+
+  # @!method name=(name)
+  #   Sets {#name}.
+  #
+  #   @param name [String] The human-readable name of this auxiliary Metasploit Module.  This can be thought of as the
+  #     title or summary of the Metasploit Module.
+  #   @return [void]
+
+  # @!method stance=(stance)
+  #   Sets {#stance}.
+  #
+  #   @param stance ['aggressive', 'passive'] Use ``'aggressive'` when this Metasploit Module connects to a remote
+  #     server, so the Metasploit Module is a client exploiting a server.  Use `'passive'` when this Metasploit Module
+  #     waits for remote clients to connect to it, so the Metasploit Module is a server exploiting clients.
+  #   @return [void]
+
 
   private
 
