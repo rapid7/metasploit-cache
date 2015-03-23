@@ -59,6 +59,10 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
                 in: Metasploit::Cache::Module::Stance::ALL
             }
 
+  #
+  # Instance Methods
+  #
+
   private
 
   # Validates that {#default_action}, when it is set, is in {#actions}.
