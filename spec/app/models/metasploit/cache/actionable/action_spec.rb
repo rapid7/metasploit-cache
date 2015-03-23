@@ -15,6 +15,48 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
     end
   end
 
+  context 'factories' do
+    context 'metasploit_cache_actionable_action' do
+      subject(:metasploit_cache_actionable_action) {
+        FactoryGirl.build(:metasploit_cache_actionable_action)
+      }
+
+      it { is_expected.to be_valid }
+
+      context 'Metasploit::Cache::Actionable::Action#actionable' do
+        context 'with Metasploit::Cache::Auxiliary::Instance' do
+          subject(:metasploit_cache_actionable_action) {
+            FactoryGirl.build(
+                           :metasploit_cache_actionable_action,
+                           actionable: auxiliary_instance
+            )
+          }
+
+          let(:auxiliary_instance) {
+            FactoryGirl.build(:metasploit_cache_auxiliary_instance)
+          }
+
+          it { is_expected.to be_valid }
+        end
+
+        context 'with Metasploit::Cache::Post::Instance', pending: 'metasploit_cache_post_instance factory' do
+          subject(:metasploit_cache_actionable_action) {
+            FactoryGirl.build(
+                           :metasploit_cache_actionable_action,
+                           actionable: post_instance
+            )
+          }
+
+          let(:post_instance) {
+            FactoryGirl.build(:metasploit_cache_post_instance)
+          }
+
+          it { is_expected.to be_valid }
+        end
+      end
+    end
+  end
+
   context 'validations' do
     it { is_expected.to validate_presence_of :actionable }
 
