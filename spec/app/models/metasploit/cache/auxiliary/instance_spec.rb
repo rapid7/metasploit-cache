@@ -12,6 +12,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
       it { is_expected.to have_db_column(:disclosed_on).of_type(:date).with_options(null: true) }
       it { is_expected.to have_db_column(:name).of_type(:string).with_options(null: false) }
+      it { is_expected.to have_db_column(:stance).of_type(:string).with_options(null: false) }
     end
 
     context 'indices' do
@@ -227,5 +228,6 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
 
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_inclusion_of(:stance).in_array(Metasploit::Cache::Module::Stance::ALL) }
   end
 end
