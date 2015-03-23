@@ -26,6 +26,8 @@ class CreateMcAuxiliaryInstances < ActiveRecord::Migration
              null: false
       t.date :disclosed_on,
              null: true
+      t.string :name,
+               null: false
 
       #
       # References
