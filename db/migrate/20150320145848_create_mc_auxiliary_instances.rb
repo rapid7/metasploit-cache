@@ -22,6 +22,13 @@ class CreateMcAuxiliaryInstances < ActiveRecord::Migration
   # @return [void]
   def up
     create_table TABLE_NAME do |t|
+      t.text :description,
+             null: false
+
+      #
+      # References
+      #
+
       t.references :auxiliary_class, null: false
       t.references :default_action,
                    null: true

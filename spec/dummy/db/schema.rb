@@ -216,6 +216,7 @@ ActiveRecord::Schema.define(:version => 20150320170728) do
   add_index "mc_authors", ["name"], :name => "index_mc_authors_on_name", :unique => true
 
   create_table "mc_auxiliary_instances", :force => true do |t|
+    t.text    "description",        :null => false
     t.integer "auxiliary_class_id", :null => false
     t.integer "default_action_id"
   end

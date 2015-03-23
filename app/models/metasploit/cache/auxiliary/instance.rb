@@ -50,6 +50,8 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
             }
   validates :auxiliary_class,
             presence: true
+  validates :description,
+            presence: true
 
   private
 
