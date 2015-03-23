@@ -6,7 +6,6 @@ class Metasploit::Cache::Actionable::Action < ActiveRecord::Base
 
   # The record that has actions.
   belongs_to :actionable,
-             inverse_of: :actions,
              polymorphic: true
 
   #
