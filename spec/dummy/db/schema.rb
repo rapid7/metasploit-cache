@@ -179,11 +179,12 @@ ActiveRecord::Schema.define(:version => 20150320170728) do
   end
 
   create_table "mc_actionable_actions", :force => true do |t|
+    t.string  "name",            :null => false
     t.integer "actionable_id",   :null => false
     t.string  "actionable_type", :null => false
   end
 
-  add_index "mc_actionable_actions", ["actionable_type", "actionable_id"], :name => "mc_actionable_actions_index"
+  add_index "mc_actionable_actions", ["actionable_type", "actionable_id", "name"], :name => "unique_mc_actionable_actions", :unique => true
 
   create_table "mc_architectures", :force => true do |t|
     t.integer "bits"

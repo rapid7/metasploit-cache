@@ -22,14 +22,22 @@ class CreateMcActionableActions < ActiveRecord::Migration
   # @return [void]
   def up
     create_table TABLE_NAME do |t|
+      t.string :name,
+               null: false
+
+      #
+      # References
+      #
+
       t.references :actionable,
                    null: false,
                    polymorphic: true
     end
 
     change_table TABLE_NAME do |t|
-      t.index [:actionable_type, :actionable_id],
-              name: :mc_actionable_actions_index
+      t.index [:actionable_type, :actionable_id, :name],
+              name: :unique_mc_actionable_actions,
+              unique: true
     end
   end
 end
