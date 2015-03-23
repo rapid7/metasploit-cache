@@ -11,6 +11,7 @@ FactoryGirl.define do
 
     description { generate :metasploit_cache_auxiliary_instance_description }
     name { generate :metasploit_cache_auxiliary_instance_name }
+    stance { generate :metasploit_cache_module_stance }
 
     #
     # Associations
