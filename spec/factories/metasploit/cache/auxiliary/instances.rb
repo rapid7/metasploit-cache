@@ -10,6 +10,7 @@ FactoryGirl.define do
     end
 
     description { generate :metasploit_cache_auxiliary_instance_description }
+    name { generate :metasploit_cache_auxiliary_instance_name }
 
     #
     # Associations
@@ -36,5 +37,9 @@ FactoryGirl.define do
 
   sequence :metasploit_cache_auxiliary_instance_description do |n|
     "Metasploit::Cache::Auxiliary::Instance#description #{n}"
+  end
+
+  sequence :metasploit_cache_auxiliary_instance_name do |n|
+    "Metasploit::Cache::Auxiliary::Instance#name #{n}"
   end
 end
