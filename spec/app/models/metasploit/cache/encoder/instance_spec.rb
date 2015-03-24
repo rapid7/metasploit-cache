@@ -2,7 +2,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
-    it { belongs_to(:encoder_class).class_name('Metasploit::Cache::Encoder::Class').inverse_of(:encoder_instance) }
+    it { is_expected.to belong_to(:encoder_class).class_name('Metasploit::Cache::Encoder::Class').inverse_of(:encoder_instance) }
   end
 
   context 'database' do

@@ -1,6 +1,17 @@
 # Instance-level metadata for an encoder  Metasploit Module.
 class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   #
+  # Associations
+  #
+
+  # The class-level metadata for this instance metadata.
+  #
+  # @return [Metasploit::Cache::Encoder::Class]
+  belongs_to :encoder_class,
+             class_name: 'Metasploit::Cache::Encoder::Class',
+             inverse_of: :encoder_instance
+
+  #
   # Attributes
   #
 
@@ -20,6 +31,8 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   #
 
   validates :description,
+            presence: true
+  validates :encoder_class,
             presence: true
   validates :name,
             presence: true
