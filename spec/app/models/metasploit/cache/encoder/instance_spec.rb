@@ -16,6 +16,16 @@ RSpec.describe Metasploit::Cache::Encoder::Instance do
     end
   end
 
+  context 'factories' do
+    context 'metasploit_cache_encoder_instance' do
+      subject(:metasploit_cache_encoder_instance) {
+        FactoryGirl.build(:metasploit_cache_encoder_instance)
+      }
+
+      it { is_expected.to be_valid }
+    end
+  end
+
   context 'validations' do
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :encoder_class }
