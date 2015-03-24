@@ -226,7 +226,8 @@ ActiveRecord::Schema.define(:version => 20150324175014) do
   add_index "mc_email_addresses", ["local"], :name => "index_mc_email_addresses_on_local"
 
   create_table "mc_encoder_instances", :force => true do |t|
-    t.text "description", :null => false
+    t.text   "description", :null => false
+    t.string "name",        :null => false
   end
 
   create_table "mc_module_actions", :force => true do |t|
