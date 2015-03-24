@@ -181,6 +181,8 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
         end
       end
 
+      # TODO remove :nocov: when pending is removed
+      # :nocov:
       context 'with different #actionable_type', pending: 'More than one actionable_type defined' do
         context 'with same #actionable_id' do
           let!(:new_actionable) {
@@ -261,6 +263,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           end
         end
       end
+      # :nocov:
     end
   end
 end
