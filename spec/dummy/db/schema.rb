@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150306192052) do
+ActiveRecord::Schema.define(:version => 20150330203014) do
 
   create_table "api_keys", :force => true do |t|
     t.text     "token"
@@ -224,6 +224,10 @@ ActiveRecord::Schema.define(:version => 20150306192052) do
   add_index "mc_email_addresses", ["domain"], :name => "index_mc_email_addresses_on_domain"
   add_index "mc_email_addresses", ["full"], :name => "index_mc_email_addresses_on_full", :unique => true
   add_index "mc_email_addresses", ["local"], :name => "index_mc_email_addresses_on_local"
+
+  create_table "mc_exploit_instances", :force => true do |t|
+    t.text "description", :null => false
+  end
 
   create_table "mc_module_actions", :force => true do |t|
     t.integer "module_instance_id", :null => false
