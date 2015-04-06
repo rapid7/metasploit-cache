@@ -55,6 +55,8 @@ group :test do
   gem 'builder'
   # simplecov test formatter and uploader for Coveralls.io
   gem 'coveralls', require: false
+  # Prevent forcing upgrading to cucumber 2.0
+  gem 'cucumber', '~> 1.0'
   # for cleaning the database before suite in case previous run was aborted without clean up
   gem 'database_cleaner'
   # RSpec formatter
