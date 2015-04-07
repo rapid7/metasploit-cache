@@ -300,6 +300,7 @@ ActiveRecord::Schema.define(:version => 20150330203014) do
     t.date    "disclosed_on",     :null => false
     t.string  "name",             :null => false
     t.boolean "privileged",       :null => false
+    t.string  "stance",           :null => false
     t.integer "exploit_class_id", :null => false
   end
 
