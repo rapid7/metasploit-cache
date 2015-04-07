@@ -298,6 +298,7 @@ ActiveRecord::Schema.define(:version => 20150330203014) do
   create_table "mc_exploit_instances", :force => true do |t|
     t.text    "description",      :null => false
     t.date    "disclosed_on",     :null => false
+    t.string  "name",             :null => false
     t.integer "exploit_class_id", :null => false
   end
 
