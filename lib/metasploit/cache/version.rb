@@ -12,8 +12,6 @@ module Metasploit
       MINOR = 62
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 1
-      # The pre-release version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'contributing-code-blocks'
 
       #
       # Module Methods
