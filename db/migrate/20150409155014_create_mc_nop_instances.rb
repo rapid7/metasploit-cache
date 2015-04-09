@@ -25,6 +25,18 @@ class CreateMcNopInstances < ActiveRecord::Migration
              null: false
       t.string :name,
                null: false
+
+      #
+      # References
+      #
+
+      t.references :nop_class,
+                   null: false
+    end
+
+    change_table TABLE_NAME do |t|
+      t.index :nop_class_id,
+              unique: true
     end
   end
 end

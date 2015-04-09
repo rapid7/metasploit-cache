@@ -352,9 +352,12 @@ ActiveRecord::Schema.define(:version => 20150409155014) do
   add_index "mc_module_targets", ["module_instance_id", "name"], :name => "index_mc_module_targets_on_module_instance_id_and_name", :unique => true
 
   create_table "mc_nop_instances", :force => true do |t|
-    t.text   "description", :null => false
-    t.string "name",        :null => false
+    t.text    "description",  :null => false
+    t.string  "name",         :null => false
+    t.integer "nop_class_id", :null => false
   end
+
+  add_index "mc_nop_instances", ["nop_class_id"], :name => "index_mc_nop_instances_on_nop_class_id", :unique => true
 
   create_table "mc_platforms", :force => true do |t|
     t.text    "fully_qualified_name", :null => false

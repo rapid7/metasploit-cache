@@ -1,6 +1,15 @@
 # Instance-level metadata for a nop Metasploit Module
 class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   #
+  # Associations
+  #
+
+  # The class level metadata for this nop Metasploit Module.
+  belongs_to :nop_class,
+             class_name: 'Metasploit::Cache::Nop::Class',
+             inverse_of: :nop_instance
+
+  #
   # Attributes
   #
 
@@ -23,6 +32,10 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
             presence: true
   validates :name,
             presence: true
+  validates :nop_class,
+            presence: true
+  validates :nop_class_id,
+            uniqueness: true
 
   #
   # Instance Methods
