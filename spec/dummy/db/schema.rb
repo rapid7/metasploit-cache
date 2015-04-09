@@ -19,54 +19,6 @@ ActiveRecord::Schema.define(:version => 20150330203014) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "automatic_exploitation_match_results", :force => true do |t|
-    t.integer  "match_id"
-    t.integer  "run_id"
-    t.string   "state",      :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "automatic_exploitation_match_results", ["match_id"], :name => "index_automatic_exploitation_match_results_on_match_id"
-  add_index "automatic_exploitation_match_results", ["run_id"], :name => "index_automatic_exploitation_match_results_on_run_id"
-
-  create_table "automatic_exploitation_match_sets", :force => true do |t|
-    t.integer  "workspace_id"
-    t.integer  "user_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
-
-  add_index "automatic_exploitation_match_sets", ["user_id"], :name => "index_automatic_exploitation_match_sets_on_user_id"
-  add_index "automatic_exploitation_match_sets", ["workspace_id"], :name => "index_automatic_exploitation_match_sets_on_workspace_id"
-
-  create_table "automatic_exploitation_matches", :force => true do |t|
-    t.integer  "module_detail_id"
-    t.string   "state"
-    t.integer  "nexpose_data_vulnerability_definition_id"
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
-    t.integer  "match_set_id"
-    t.string   "matchable_type"
-    t.integer  "matchable_id"
-    t.text     "module_fullname"
-  end
-
-  add_index "automatic_exploitation_matches", ["module_detail_id"], :name => "index_automatic_exploitation_matches_on_ref_id"
-  add_index "automatic_exploitation_matches", ["module_fullname"], :name => "index_automatic_exploitation_matches_on_module_fullname"
-
-  create_table "automatic_exploitation_runs", :force => true do |t|
-    t.integer  "workspace_id"
-    t.integer  "user_id"
-    t.integer  "match_set_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
-
-  add_index "automatic_exploitation_runs", ["match_set_id"], :name => "index_automatic_exploitation_runs_on_match_set_id"
-  add_index "automatic_exploitation_runs", ["user_id"], :name => "index_automatic_exploitation_runs_on_user_id"
-  add_index "automatic_exploitation_runs", ["workspace_id"], :name => "index_automatic_exploitation_runs_on_workspace_id"
-
   create_table "clients", :force => true do |t|
     t.integer  "host_id"
     t.datetime "created_at"
@@ -203,21 +155,18 @@ ActiveRecord::Schema.define(:version => 20150330203014) do
   end
 
   create_table "loots", :force => true do |t|
-    t.integer  "workspace_id",                  :default => 1, :null => false
+    t.integer  "workspace_id",                 :default => 1, :null => false
     t.integer  "host_id"
     t.integer  "service_id"
-    t.string   "ltype",         :limit => 512
-    t.string   "path",          :limit => 1024
+    t.string   "ltype",        :limit => 512
+    t.string   "path",         :limit => 1024
     t.text     "data"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.string   "content_type"
     t.text     "name"
     t.text     "info"
-    t.integer  "module_run_id"
   end
-
-  add_index "loots", ["module_run_id"], :name => "index_loots_on_module_run_id"
 
   create_table "macros", :force => true do |t|
     t.datetime "created_at",  :null => false
@@ -228,14 +177,6 @@ ActiveRecord::Schema.define(:version => 20150330203014) do
     t.binary   "actions"
     t.binary   "prefs"
   end
-
-  create_table "mc_actionable_actions", :force => true do |t|
-    t.string  "name",            :null => false
-    t.integer "actionable_id",   :null => false
-    t.string  "actionable_type", :null => false
-  end
-
-  add_index "mc_actionable_actions", ["actionable_type", "actionable_id", "name"], :name => "unique_mc_actionable_actions", :unique => true
 
   create_table "mc_architectures", :force => true do |t|
     t.integer "bits"
@@ -265,17 +206,6 @@ ActiveRecord::Schema.define(:version => 20150330203014) do
   end
 
   add_index "mc_authors", ["name"], :name => "index_mc_authors_on_name", :unique => true
-
-  create_table "mc_auxiliary_instances", :force => true do |t|
-    t.text    "description",        :null => false
-    t.date    "disclosed_on"
-    t.string  "name",               :null => false
-    t.string  "stance",             :null => false
-    t.integer "auxiliary_class_id", :null => false
-    t.integer "default_action_id"
-  end
-
-  add_index "mc_auxiliary_instances", ["auxiliary_class_id"], :name => "index_mc_auxiliary_instances_on_auxiliary_class_id", :unique => true
 
   create_table "mc_direct_classes", :force => true do |t|
     t.integer "ancestor_id", :null => false
@@ -633,26 +563,6 @@ ActiveRecord::Schema.define(:version => 20150330203014) do
   add_index "module_refs", ["detail_id"], :name => "index_module_refs_on_module_detail_id"
   add_index "module_refs", ["name"], :name => "index_module_refs_on_name"
 
-  create_table "module_runs", :force => true do |t|
-    t.datetime "attempted_at"
-    t.text     "fail_detail"
-    t.string   "fail_reason"
-    t.text     "module_fullname"
-    t.integer  "port"
-    t.string   "proto"
-    t.integer  "session_id"
-    t.string   "status"
-    t.integer  "trackable_id"
-    t.string   "trackable_type"
-    t.integer  "user_id"
-    t.string   "username"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
-  add_index "module_runs", ["session_id"], :name => "index_module_runs_on_session_id"
-  add_index "module_runs", ["user_id"], :name => "index_module_runs_on_user_id"
-
   create_table "module_targets", :force => true do |t|
     t.integer "detail_id"
     t.integer "index"
@@ -687,11 +597,9 @@ ActiveRecord::Schema.define(:version => 20150330203014) do
     t.boolean  "critical"
     t.boolean  "seen"
     t.text     "data"
-    t.integer  "vuln_id"
   end
 
   add_index "notes", ["ntype"], :name => "index_notes_on_ntype"
-  add_index "notes", ["vuln_id"], :name => "index_notes_on_vuln_id"
 
   create_table "profiles", :force => true do |t|
     t.datetime "created_at",                   :null => false
@@ -775,15 +683,12 @@ ActiveRecord::Schema.define(:version => 20150330203014) do
     t.integer  "port"
     t.string   "platform"
     t.text     "datastore"
-    t.datetime "opened_at",     :null => false
+    t.datetime "opened_at",    :null => false
     t.datetime "closed_at"
     t.string   "close_reason"
     t.integer  "local_id"
     t.datetime "last_seen"
-    t.integer  "module_run_id"
   end
-
-  add_index "sessions", ["module_run_id"], :name => "index_sessions_on_module_run_id"
 
   create_table "tags", :force => true do |t|
     t.integer  "user_id"
