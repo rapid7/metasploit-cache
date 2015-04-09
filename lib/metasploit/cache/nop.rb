@@ -7,4 +7,15 @@ module Metasploit::Cache::Nop
   autoload :Ancestor
   autoload :Class
   autoload :Instance
+
+  #
+  # Module Methods
+  #
+
+  # The prefix for `ActiveRecord::Base` subclass table names in this namespace.
+  #
+  # @return [String]
+  def self.table_name_prefix
+    "#{parent.table_name_prefix}nop_"
+  end
 end

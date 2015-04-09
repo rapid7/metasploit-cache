@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150306192052) do
+ActiveRecord::Schema.define(:version => 20150409155014) do
 
   create_table "api_keys", :force => true do |t|
     t.text     "token"
@@ -350,6 +350,10 @@ ActiveRecord::Schema.define(:version => 20150306192052) do
 
   add_index "mc_module_targets", ["module_instance_id", "index"], :name => "index_mc_module_targets_on_module_instance_id_and_index", :unique => true
   add_index "mc_module_targets", ["module_instance_id", "name"], :name => "index_mc_module_targets_on_module_instance_id_and_name", :unique => true
+
+  create_table "mc_nop_instances", :force => true do |t|
+    t.text "description", :null => false
+  end
 
   create_table "mc_platforms", :force => true do |t|
     t.text    "fully_qualified_name", :null => false
