@@ -3,6 +3,7 @@ RSpec.describe Metasploit::Cache::Nop::Class do
 
   context 'associations' do
     it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Nop::Ancestor') }
+    it { is_expected.to have_one(:nop_instance).class_name('Metasploit::Cache::Nop::Instance').dependent(:destroy).inverse_of(:nop_class) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
