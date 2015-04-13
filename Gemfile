@@ -65,6 +65,8 @@ group :test do
   gem 'builder'
   # simplecov test formatter and uploader for Coveralls.io
   gem 'coveralls', require: false
+  # Test shared examples and matchers.  Used with aruba
+  gem 'cucumber', '~> 2.0'
   # for cleaning the database before suite in case previous run was aborted without clean up
   gem 'database_cleaner' 
   # Engine tasks are loaded using railtie
