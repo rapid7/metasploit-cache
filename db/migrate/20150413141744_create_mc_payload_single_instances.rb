@@ -27,6 +27,18 @@ class CreateMcPayloadSingleInstances < ActiveRecord::Migration
                null: false
       t.boolean :privileged,
                 null: false
+
+      #
+      # References
+      #
+
+      t.references :payload_single_class,
+                   null: false
+    end
+
+    change_table TABLE_NAME do |t|
+      t.index :payload_single_class_id,
+              unique: true
     end
   end
 end

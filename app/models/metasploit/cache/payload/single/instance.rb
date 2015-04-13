@@ -1,6 +1,15 @@
 # Instance-level metadata for single payload Metasploit Modules
 class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
+  # Associations
+  #
+
+  # The class-level metadata for this single payload Metasploit Module.
+  belongs_to :payload_single_class,
+             class_name: 'Metasploit::Cache::Payload::Single::Class',
+             inverse_of: :payload_single_instance
+
+  #
   # Attributes
   #
 
@@ -15,6 +24,11 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
   #   @return [String]
 
+  # @!attribute payload_single_class_id
+  #   The foreign key for the {#payload_single_class} association.
+  #
+  #   @return [Integer]
+  
   # @!attribute privileged
   #   Whether this payload requires privileged access to the remote machine.
   #
@@ -30,6 +44,10 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
             presence: true
   validates :name,
             presence: true
+  validates :payload_single_class,
+            presence: true
+  validates :payload_single_class_id,
+            uniqueness: true
   validates :privileged,
             inclusion: {
                 in: [
@@ -53,6 +71,13 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
   #   @param name [String] The human-readable name of this single payload Metasploit Module.  This can be thought of as
   #     the title or summary of the Metasploit Module.
+  #   @return [void]
+
+  # @!method payload_single_class_id=(payload_single_class_id)
+  #   Sets {#payload_single_class_id} and causes cache of {#payload_single_class} to be invalidated and reloaded on next
+  #   access.
+  #
+  #   @param payload_single_class_id [Integer]
   #   @return [void]
 
   # @!method privileged=(privileged)

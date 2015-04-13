@@ -9,6 +9,12 @@ class Metasploit::Cache::Payload::Single::Class < Metasploit::Cache::Payload::Di
              class_name: 'Metasploit::Cache::Payload::Single::Ancestor',
              inverse_of: :single_payload_class
 
+  # Instance-level metadata for this single payload Metasploit Module.
+  has_one :payload_single_instance,
+          class_name: 'Metasploit::Cache::Payload::Single::Instance',
+          dependent: :destroy,
+          inverse_of: :payload_single_class
+
   # Reliability of Metasploit Module.
   belongs_to :rank,
              class_name: 'Metasploit::Cache::Module::Rank',
