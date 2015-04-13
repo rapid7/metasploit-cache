@@ -363,6 +363,7 @@ ActiveRecord::Schema.define(:version => 20150413193613) do
   create_table "mc_payload_stage_instances", :force => true do |t|
     t.text    "description",            :null => false
     t.string  "name",                   :null => false
+    t.boolean "privileged",             :null => false
     t.integer "payload_stage_class_id", :null => false
   end
 
