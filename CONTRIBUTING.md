@@ -73,6 +73,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 - [ ] `rake yard`
 - [ ] VERIFY no warnings
 - [ ] VERIFY no undocumented objects
+```
 
 You should also include at least one scenario to manually check the changes outside of specs.
 
