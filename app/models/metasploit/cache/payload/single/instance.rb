@@ -15,6 +15,13 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
   #   @return [String]
 
+  # @!attribute privileged
+  #   Whether this payload requires privileged access to the remote machine.
+  #
+  #   @return [true] privileged access is granted.
+  #   @return [false] privileged access is NOT granted.
+
+
   #
   # Validations
   #
@@ -23,6 +30,13 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
             presence: true
   validates :name,
             presence: true
+  validates :privileged,
+            inclusion: {
+                in: [
+                    false,
+                    true
+                ]
+            }
 
   #
   # Instance Methods
@@ -39,6 +53,12 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
   #   @param name [String] The human-readable name of this single payload Metasploit Module.  This can be thought of as
   #     the title or summary of the Metasploit Module.
+  #   @return [void]
+
+  # @!method privileged=(privileged)
+  #   Sets {#privileged}.
+  #
+  #   @param priviliged [Boolean] `true` if privileged access is required; `false` if privileged access is not required.
   #   @return [void]
 
   Metasploit::Concern.run(self)
