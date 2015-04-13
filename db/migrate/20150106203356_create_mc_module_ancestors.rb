@@ -23,17 +23,18 @@ class CreateMcModuleAncestors < ActiveRecord::Migration
   def up
     create_table TABLE_NAME do |t|
       #
+      # Single Table Inheritance (STI)
+      #
+
+      t.string :type
+
+      #
       # Columns
       #
 
-      t.text :full_name, null: false
-      t.string :handler_type, null: true
-      t.string :module_type, null: false
-      t.string :payload_type, null: true
-      t.text :reference_name, null: false
-      t.text :real_path, null: false
       t.datetime :real_path_modified_at, null: false
       t.string :real_path_sha1_hex_digest, limit: 40, null: false
+      t.text :relative_path, null: false
 
       #
       # References
@@ -53,10 +54,9 @@ class CreateMcModuleAncestors < ActiveRecord::Migration
       # Unique Indices
       #
 
-      t.index :full_name, unique: true
-      t.index [:module_type, :reference_name], unique: true
-      t.index :real_path, unique: true
       t.index :real_path_sha1_hex_digest, unique: true
+      # relative_path is unique because all parent_paths must be able to be unified.
+      t.index :relative_path, unique: true
     end
   end
 end

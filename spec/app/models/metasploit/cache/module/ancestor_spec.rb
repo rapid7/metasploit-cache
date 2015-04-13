@@ -1,13 +1,11 @@
-RSpec.describe Metasploit::Cache::Module::Ancestor do
+RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
   subject(:module_ancestor) {
-    FactoryGirl.build(:metasploit_cache_module_ancestor)
+    FactoryGirl.build(module_ancestor_factory)
   }
 
-  it_should_behave_like 'Metasploit::Cache::RealPathname' do
-    let(:base_instance) do
-      FactoryGirl.build(:metasploit_cache_module_ancestor)
-    end
-  end
+  let(:module_ancestor_factory) {
+    FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+  }
 
   context 'CONSTANTS' do
     context 'DIRECTORY_BY_MODULE_TYPE' do
@@ -58,23 +56,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       end
     end
 
-    context 'HANDLED_TYPES' do
-      subject(:handled_types) do
-        described_class::HANDLED_TYPES
-      end
-
-      it { should include('single') }
-      it { should_not include('stage') }
-      it { should include('stager') }
-
-      it 'should be a subset of PAYLOAD_TYPES' do
-        handled_type_set = Set.new(handled_types)
-        payload_type_set = Set.new(described_class::PAYLOAD_TYPES)
-
-        expect(handled_type_set).to be_a_subset(payload_type_set)
-      end
-    end
-
     context 'MODULE_TYPE_BY_DIRECTORY' do
       subject(:module_type_by_directory) do
         described_class::MODULE_TYPE_BY_DIRECTORY
@@ -113,21 +94,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       end
     end
 
-    context 'PAYLOAD_TYPES' do
-      subject(:payload_types) do
-        described_class::PAYLOAD_TYPES
-      end
-
-      it { should include('single') }
-      it { should include('stage') }
-      it { should include('stager') }
-    end
-
-    # pattern is tested in validation tests below
-    it 'should define REFERENCE_NAME_REGEXP' do
-      expect(described_class::REFERENCE_NAME_REGEXP).to be_a Regexp
-    end
-
     context 'REFERENCE_NAME_SEPARATOR' do
       subject(:reference_name_separator) do
         described_class::REFERENCE_NAME_SEPARATOR
@@ -142,6 +108,35 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
     end
   end
 
+  context 'associations' do
+    it { should have_many(:descendants).class_name('Metasploit::Cache::Module::Class').through(:relationships) }
+    it { should belong_to(:parent_path).class_name('Metasploit::Cache::Module::Path') }
+    it { should have_many(:relationships).class_name('Metasploit::Cache::Module::Relationship').dependent(:destroy) }
+  end
+
+  context 'database' do
+    context 'columns' do
+      it { should have_db_column(:real_path_modified_at).of_type(:datetime).with_options(:null => false) }
+      it { should have_db_column(:real_path_sha1_hex_digest).of_type(:string).with_options(:limit => 40, :null => false) }
+    end
+
+    context 'indices' do
+      context 'foreign key' do
+        it { should have_db_index(:parent_path_id) }
+      end
+
+      context 'unique' do
+        it 'should have unique index on relative_path because only ancestor one can have a given relative path because they map directly to full_names which are unique' do
+          expect(module_ancestor).to have_db_index(:relative_path).unique(true)
+        end
+
+        it 'should have unique index on real_path_sha1_hex_digest so renames can be detected' do
+          expect(module_ancestor).to have_db_index(:real_path_sha1_hex_digest).unique(true)
+        end
+      end
+    end
+  end
+
   context 'derivation' do
     include_context 'ActiveRecord attribute_type'
 
@@ -149,79 +144,31 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       Metasploit::Cache::Module::Ancestor
     }
 
-    it_should_behave_like 'derives', :full_name, :validates => true
-    it_should_behave_like 'derives', :real_path, :validates => true
-
     context 'with only module_path and real_path' do
       subject(:module_ancestor) do
         # make sure real_path is derived
         expect(real_path_creator).to be_valid
 
-        module_ancestor = described_class.new
+        module_ancestor = real_path_creator.class.new
 
         # work-around mass-assignment security
         module_ancestor.parent_path = real_path_creator.parent_path
-        module_ancestor.real_path = real_path_creator.real_path
+        module_ancestor.relative_path = real_path_creator.relative_path
 
         module_ancestor
       end
 
-      before(:each) do
-        # run before validation callbacks to trigger derivations
-        module_ancestor.valid?
-      end
-
       context 'with payload' do
         let(:real_path_creator) do
-          FactoryGirl.build(
-              :metasploit_cache_module_ancestor,
-              module_type: 'payload',
-              payload_type: payload_type
-          )
+          FactoryGirl.build(real_path_creator_factory)
         end
 
         context 'with single' do
-          let(:payload_type) do
-            'single'
-          end
-
-          it 'should be handled' do
-            expect(module_ancestor).to be_handled
-          end
-
-          it { should_not be_valid }
-
-          it 'should be valid for loading' do
-            module_ancestor.valid?(:loading)
-          end
-        end
-
-        context 'with stage' do
-          let(:payload_type) do
-            'stage'
-          end
-
-          it 'should not be handled' do
-            expect(module_ancestor).not_to be_handled
-          end
+          let(:real_path_creator_factory) {
+            :metasploit_cache_payload_single_ancestor
+          }
 
           it { should be_valid }
-
-          it 'should be valid for loading' do
-            module_ancestor.valid?(:loading)
-          end
-        end
-
-        context 'with stager' do
-          let(:payload_type) do
-            'stager'
-          end
-
-          it 'should be handled' do
-            expect(module_ancestor).to be_handled
-          end
-
-          it { should_not be_valid }
 
           it 'should be valid for loading' do
             module_ancestor.valid?(:loading)
@@ -231,19 +178,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
 
       context 'without payload' do
         let(:real_path_creator) do
-          FactoryGirl.build(
-              :metasploit_cache_module_ancestor,
-              module_type: module_type
-          )
+          FactoryGirl.build(real_path_creator_factory)
         end
 
-        let(:module_type) do
-          FactoryGirl.generate :metasploit_cache_non_payload_module_type
-        end
-
-        it 'should not be handled' do
-          expect(module_ancestor).not_to be_handled
-        end
+        let(:real_path_creator_factory) {
+          FactoryGirl.generate :metasploit_cache_non_payload_ancestor_factory
+        }
 
         it { should be_valid }
 
@@ -253,224 +193,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       end
     end
 
-    context 'with payload' do
-      subject(:module_ancestor) do
-        FactoryGirl.build(
-            :metasploit_cache_module_ancestor,
-            # {Metasploit::Cache::Module::Ancestor#derived_payload_type} will be `nil` unless {Metasploit::Cache::Module::Ancestor#module_type} is
-            # `'payload'`
-            :module_type => 'payload',
-            # Ensure {Metasploit::Cache::Module::Ancestor#derived_payload} will be a valid {Metasploit::Cache::Module::Ancestor#payload_type}.
-            :reference_name => reference_name
-        )
-      end
-
-      let(:reference_name) do
-        FactoryGirl.generate :metasploit_cache_module_ancestor_payload_reference_name
-      end
-
-      it_should_behave_like 'derives', :payload_type, :validates => true
-    end
-
     context 'with real_path' do
-      before(:each) do
-        # {Metasploit::Cache::Module::Ancestor#derived_real_path_modified_at} and
-        # {Metasploit::Cache::Module::Ancestor#derived_real_path_sha1_hex_digest} both depend on real_path being
-        # populated or they will return nil, so need set real_path = derived_real_path before testing as would happen
-        # with the normal order of before validation callbacks.
-        module_ancestor.real_path = module_ancestor.derived_real_path
-
-        # blank out {Metasploit::Cache::Module::Ancestor#module_type} and
-        # {Metasploit::Cache::Module::Ancestor#reference_name} so they will be rederived from
-        # {Metasploit::Cache::Module::Ancestor#real_path} to simulate module cache construction usage.
-        module_ancestor.module_type = nil
-        module_ancestor.reference_name = nil
-      end
-
-      it_should_behave_like 'derives', :module_type, :validates => false
       it_should_behave_like 'derives', :real_path_modified_at, :validates => false
       it_should_behave_like 'derives', :real_path_sha1_hex_digest, :validates => false
-      it_should_behave_like 'derives', :reference_name, :validates => false
-    end
-  end
-
-  context 'factories' do
-    context 'metasploit_cache_module_ancestor' do
-      subject(:metasploit_cache_module_ancestor) do
-        FactoryGirl.build(:metasploit_cache_module_ancestor)
-      end
-
-      it { should be_valid }
-
-      context 'contents' do
-        include_context 'Metasploit::Cache::Module::Ancestor factory contents'
-
-        let(:module_ancestor) do
-          metasploit_cache_module_ancestor
-        end
-
-        context 'metasploit_module' do
-          include_context 'Metasploit::Cache::Module::Ancestor factory contents metasploit_module'
-
-          # Classes are Modules, so this checks that it is either a Class or a Module.
-          it { should be_a Module }
-
-          context '#module_type' do
-            let(:module_ancestor) do
-              FactoryGirl.build(
-                  :metasploit_cache_module_ancestor,
-                  module_type: module_type
-              )
-            end
-
-            context 'with payload' do
-              let(:module_type) do
-                Metasploit::Cache::Module::Type::PAYLOAD
-              end
-
-              it { should_not be_a Class }
-
-              it 'should define #initalize that takes an option hash' do
-                unbound_method = metasploit_module.instance_method(:initialize)
-
-                expect(unbound_method.parameters.length).to eq(1)
-                expect(unbound_method.parameters[0][0]).to eq(:opt)
-              end
-            end
-
-            context 'without payload' do
-              let(:module_type) do
-                FactoryGirl.generate :metasploit_cache_non_payload_module_type
-              end
-
-              it { should be_a Class }
-
-              context '#initialize' do
-                subject(:instance) do
-                  metasploit_module.new(attributes)
-                end
-
-                context 'with :framework' do
-                  let(:attributes) do
-                    {
-                        framework: framework
-                    }
-                  end
-
-                  let(:framework) do
-                    double('Msf::Framework')
-                  end
-
-                  it 'should set #framework' do
-                    expect(instance.framework).to eq(framework)
-                  end
-                end
-              end
-            end
-          end
-        end
-      end
-
-      context 'module_type' do
-        subject(:metasploit_cache_module_ancestor) {
-          FactoryGirl.build(
-                         :metasploit_cache_module_ancestor,
-                         module_type: module_type
-          )
-        }
-
-        context 'with payload' do
-          let(:module_type) {
-            'payload'
-          }
-
-          it 'has derived payload type' do
-            expect(described_class::PAYLOAD_TYPES).to include(metasploit_cache_module_ancestor.derived_payload_type)
-          end
-        end
-
-        context 'without payload' do
-          let(:module_type) {
-            FactoryGirl.generate :metasploit_cache_non_payload_module_type
-          }
-
-          it 'does not have payload type' do
-            expect(metasploit_cache_module_ancestor.derived_payload_type).to eq(nil)
-          end
-        end
-      end
-    end
-
-    context :payload_metasploit_cache_module_ancestor do
-      subject(:payload_metasploit_cache_module_ancestor) do
-        FactoryGirl.build(:payload_metasploit_cache_module_ancestor)
-      end
-
-      it { should be_valid }
-
-      it 'has a derived_payload_type' do
-        expect(payload_metasploit_cache_module_ancestor.derived_payload_type).not_to be_nil
-      end
-
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory' do
-        let(:module_ancestor) do
-          payload_metasploit_cache_module_ancestor
-        end
-      end
-    end
-
-    context :single_payload_metasploit_cache_module_ancestor do
-      subject(:single_payload_metasploit_cache_module_ancestor) do
-        FactoryGirl.build(:single_payload_metasploit_cache_module_ancestor)
-      end
-
-      it { should be_valid }
-
-      it "has a derived_payload_type of 'single'" do
-        expect(single_payload_metasploit_cache_module_ancestor.derived_payload_type).to eq('single')
-      end
-
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory', handler_type: true do
-        let(:module_ancestor) do
-          single_payload_metasploit_cache_module_ancestor
-        end
-      end
-    end
-
-    context :stage_payload_metasploit_cache_module_ancestor do
-      subject(:stage_payload_metasploit_cache_module_ancestor) do
-        FactoryGirl.build(:stage_payload_metasploit_cache_module_ancestor)
-      end
-
-      it { should be_valid }
-
-      it "has a derived_payload_type of 'stage'" do
-        expect(stage_payload_metasploit_cache_module_ancestor.derived_payload_type).to eq('stage')
-      end
-
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory', handler_type: false do
-        let(:module_ancestor) do
-          stage_payload_metasploit_cache_module_ancestor
-        end
-      end
-    end
-
-    context :stager_payload_metasploit_cache_module_ancestor do
-      subject(:stager_payload_metasploit_cache_module_ancestor) do
-        FactoryGirl.build(:stager_payload_metasploit_cache_module_ancestor)
-      end
-
-      it { should be_valid }
-
-      it "has a derived_payload_type of 'stager'" do
-        expect(stager_payload_metasploit_cache_module_ancestor.derived_payload_type).to eq('stager')
-      end
-
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor payload factory', handler_type: true do
-        let(:module_ancestor) do
-          stager_payload_metasploit_cache_module_ancestor
-        end
-      end
     end
   end
 
@@ -479,15 +204,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       expect(module_ancestor).not_to allow_mass_assignment_of(:full_name)
     end
 
-    it { should allow_mass_assignment_of(:handler_type) }
-    it { should allow_mass_assignment_of(:module_type) }
-
     it 'should not allow mass assignment of payload_type since it must match derived_payload_type' do
       expect(module_ancestor).not_to allow_mass_assignment_of(:payload_type)
-    end
-
-    it 'should allow mass assignment of real_path to allow derivation of module_type and reference_name' do
-      expect(module_ancestor).to allow_mass_assignment_of(:real_path)
     end
 
     it 'should not allow mass assignment of real_path_modified_at since it is derived' do
@@ -504,361 +222,120 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
   context 'validations' do
     subject(:module_ancestor) do
       # Don't use factory so that nil values can be tested without the nil being replaced with derived value
-      described_class.new
+      module_ancestor_class.new
+    end
+    
+    let(:module_ancestor_class) {
+      [
+          Metasploit::Cache::Auxiliary::Ancestor,
+          Metasploit::Cache::Encoder::Ancestor,
+          Metasploit::Cache::Exploit::Ancestor,
+          Metasploit::Cache::Nop::Ancestor,
+          Metasploit::Cache::Payload::Single::Ancestor,
+          Metasploit::Cache::Payload::Stage::Ancestor,
+          Metasploit::Cache::Payload::Stager::Ancestor,
+          Metasploit::Cache::Post::Ancestor
+      ].sample
+    }
+
+    let(:taken_error) do
+      I18n.translate!('metasploit.model.errors.messages.taken')
     end
 
-    context 'handler_type' do
-      subject(:module_ancestor) do
+    context 'validates inclusion of #module_type in array Metasploit::Cache::Module::Type::ALL' do
+      subject(:module_type_errors) {
+        module_ancestor.valid?
+
+        module_ancestor.errors[:module_type]
+      }
+
+      let(:error) {
+        I18n.translate!('errors.messages.inclusion')
+      }
+
+      let(:module_ancestor) {
         FactoryGirl.build(
-            :metasploit_cache_module_ancestor,
-            :handler_type => handler_type,
-            :module_type => module_type,
-            :payload_type => payload_type
+                       module_ancestor_factory,
+                       module_type: module_type
         )
+      }
+
+      context 'with invalid module_type' do
+        let(:module_type) {
+          'not_a_module_type'
+        }
+
+        it { is_expected.to include(error) }
       end
 
-      context 'with payload' do
-        let(:module_type) do
-          'payload'
-        end
+      Metasploit::Cache::Module::Type::ALL.each do |context_module_type|
+        context "with '#{context_module_type}'" do
+          let(:module_type) {
+            context_module_type
+          }
 
-        context 'with payload_type' do
-          context 'single' do
-            let(:payload_type) do
-              'single'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should be_valid }
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              context 'with :loading validation_context' do
-                let(:validation_context) do
-                  :loading
-                end
-
-                it 'should be valid' do
-                  expect(module_ancestor.valid?(validation_context)).to eq(true)
-                end
-              end
-
-              context 'without validation_context' do
-                it { should_not be_valid }
-
-                it 'should record error on handler_type' do
-                  module_ancestor.valid?
-
-                  expect(module_ancestor.errors[:handler_type]).to include(I18n.translate!('errors.messages.blank'))
-                end
-              end
-            end
-          end
-
-          context 'stage' do
-            let(:payload_type) do
-              'stage'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should_not be_valid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-              end
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it { should be_valid }
-            end
-          end
-
-          context 'stager' do
-            let(:payload_type) do
-              'stager'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should be_valid }
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it { should_not be_valid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include(I18n.translate!('errors.messages.blank'))
-              end
-            end
-          end
-        end
-      end
-
-      context 'without payload' do
-        let(:module_type) do
-          FactoryGirl.generate :metasploit_cache_non_payload_module_type
-        end
-
-        context 'with payload_type' do
-          # force payload_type to NOT be derived to check invalid setups
-          before(:each) do
-            module_ancestor.payload_type = payload_type
-          end
-
-          context 'single' do
-            let(:payload_type) do
-              'single'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should be_invalid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-              end
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it 'should not record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to be_empty
-              end
-            end
-          end
-
-          context 'stage' do
-            let(:payload_type) do
-              'stage'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should_not be_valid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-              end
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it 'should not record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to be_empty
-              end
-            end
-          end
-
-          context 'stager' do
-            let(:payload_type) do
-              'stager'
-            end
-
-            context 'with handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it { should_not be_valid }
-
-              it 'should record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-              end
-            end
-
-            context 'without handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it 'should not record error on handler_type' do
-                module_ancestor.valid?
-
-                expect(module_ancestor.errors[:handler_type]).to be_empty
-              end
-            end
-          end
-        end
-
-        context 'without payload_type' do
-          let(:payload_type) do
-            nil
-          end
-
-          context 'with handler_type' do
-            let(:handler_type) do
-              FactoryGirl.generate :metasploit_cache_module_handler_type
-            end
-
-            it { should_not be_valid }
-
-            it 'should record error on handler_type' do
-              module_ancestor.valid?
-
-              expect(module_ancestor.errors[:handler_type]).to include('must be nil')
-            end
-          end
-
-          context 'without handler_type' do
-            let(:handler_type) do
-              nil
-            end
-
-            it { should be_valid }
-          end
+          it { is_expected.not_to include(error) }
         end
       end
     end
 
-    it { should validate_inclusion_of(:module_type).in_array(Metasploit::Cache::Module::Type::ALL) }
     it { should validate_presence_of(:parent_path) }
+    it { should validate_presence_of(:real_path_modified_at) }
 
-    context 'payload_type' do
-      subject(:module_ancestor) do
-        FactoryGirl.build(
-            :metasploit_cache_module_ancestor,
-            :module_type => module_type,
-            :reference_name => reference_name
-        )
-      end
+    context 'relative_path' do
+      context 'validate uniqueness' do
+        #
+        # lets
+        #
 
-      before(:each) do
-        # payload is ignored in metasploit_cache_module_ancestor trait so need set it directly
-        module_ancestor.payload_type = payload_type
-      end
+        let(:original_ancestor_factory) {
+          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+        }
 
-      context 'with payload?' do
-        let(:module_type) do
-          'payload'
+        #
+        # let!s
+        #
+
+        let!(:original_ancestor) do
+          FactoryGirl.create(original_ancestor_factory)
         end
 
-        context 'with payload_type' do
-          Metasploit::Cache::Module::Ancestor::PAYLOAD_TYPES.each do |allowed_payload_type|
-            context "with #{allowed_payload_type}" do
-              let(:payload_type) do
-                nil
-              end
+        context 'with same relative_path' do
+          subject(:same_relative_path_ancestor) do
+            # Don't use factory as it will try to write real_pathname, which cause a path collision
+            association_name = original_ancestor.class.reflect_on_association(:parent_path).inverse_of.name
+            association = original_ancestor.parent_path.send(association_name)
+            association.new(
+                relative_path: original_ancestor.relative_path
+            )
+          end
 
-              let(:payload_type_directory) do
-                allowed_payload_type.pluralize
-              end
+          context 'with batched' do
+            include_context 'Metasploit::Cache::Batch.batch'
 
-              let(:reference_name) do
-                "#{payload_type_directory}/name"
-              end
+            it 'should not add error on #relative_path' do
+              same_relative_path_ancestor.valid?
 
-              it { should be_valid }
+              expect(same_relative_path_ancestor.errors[:relative_path]).not_to include(taken_error)
+            end
+
+            it 'should raise ActiveRecord::RecordNotUnique when saved' do
+              expect {
+                same_relative_path_ancestor.save
+              }.to raise_error(ActiveRecord::RecordNotUnique)
+            end
+          end
+
+          context 'without batched' do
+            it 'should add error on #real_path' do
+              same_relative_path_ancestor.valid?
+
+              expect(same_relative_path_ancestor.errors[:relative_path]).to include(taken_error)
             end
           end
         end
-
-        context 'without payload_type' do
-          let(:payload_type) do
-            nil
-          end
-
-          let(:reference_name) do
-            FactoryGirl.generate :metasploit_cache_module_ancestor_non_payload_reference_name
-          end
-
-          it { should_not be_valid }
-
-          it 'should record error on payload_type' do
-            module_ancestor.valid?
-
-            expect(module_ancestor.errors[:payload_type]).to include('is not included in the list')
-          end
-        end
-      end
-
-      context 'without payload?' do
-        let(:module_type) do
-          FactoryGirl.generate :metasploit_cache_non_payload_module_type
-        end
-
-        context 'with payload_type' do
-          # force payload to not be nil so that derive_payload_type is not called.
-          let(:payload_type) do
-            FactoryGirl.generate :metasploit_cache_module_ancestor_payload_type
-          end
-
-          let(:reference_name) do
-            "#{payload_type.pluralize}/name"
-          end
-
-          it { should_not be_valid }
-
-          it 'should record error on payload_type' do
-            module_ancestor.valid?
-
-            expect(module_ancestor.errors[:payload_type]).to include('must be nil')
-          end
-        end
-
-        context 'without payload_type' do
-          let(:payload_type) do
-            nil
-          end
-
-          let(:reference_name) do
-            FactoryGirl.generate :metasploit_cache_module_ancestor_non_payload_reference_name
-          end
-
-          it { should be_valid }
-        end
       end
     end
-
-    it { should validate_presence_of(:real_path_modified_at) }
 
     context 'real_path_sha1_hex_digest' do
       context 'validates format with SHA1_HEX_DIGEST_REGEXP' do
@@ -880,115 +357,61 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
 
         it { should_not allow_value(nil).for(:real_path_sha1_hex_digest) }
       end
-    end
 
-    context 'reference_name' do
-      context 'validates format with REFERENCE_NAME_REGEXP' do
-        context 'without slashes' do
-          context 'first character' do
-            it 'should not allow space' do
-              expect(module_ancestor).not_to allow_value(' ').for(:reference_name)
-            end
+      context 'validates uniqueness' do
+        #
+        # lets
+        #
 
-            it 'should allow dash' do
-              expect(module_ancestor).to allow_value('-').for(:reference_name)
-            end
+        let(:original_ancestor_factory) {
+          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+        }
 
-            it 'should allow digit' do
-              expect(module_ancestor).to allow_value('0').for(:reference_name)
-            end
+        #
+        # let!s
+        #
 
-            it 'should allow uppercase letter' do
-              expect(module_ancestor).to allow_value('A').for(:reference_name)
-            end
-
-            it 'should allow underscore' do
-              expect(module_ancestor).to allow_value('_').for(:reference_name)
-            end
-
-            it 'should allow lowercase letter' do
-              expect(module_ancestor).to allow_value('a').for(:reference_name)
-            end
-          end
-
-          context 'later letters' do
-            let(:lowercase_letters) do
-              ('a'..'z').to_a
-            end
-
-            let(:first_letter) do
-              lowercase_letters.sample
-            end
-
-            it 'should not allow space' do
-              expect(module_ancestor).not_to allow_value("#{first_letter} ").for(:reference_name)
-            end
-
-            it 'should allow dash' do
-              expect(module_ancestor).to allow_value("#{first_letter}-").for(:reference_name)
-            end
-
-            it 'should allow digit' do
-              expect(module_ancestor).to allow_value("#{first_letter}1").for(:reference_name)
-            end
-
-            it 'should allow uppercase letter' do
-              expect(module_ancestor).to allow_value("#{first_letter}A").for(:reference_name)
-            end
-
-            it 'should allow underscore' do
-              expect(module_ancestor).to allow_value("#{first_letter}_").for(:reference_name)
-            end
-
-            it 'should allow lowercase letter' do
-              expect(module_ancestor).to allow_value("#{first_letter}a").for(:reference_name)
-            end
-          end
+        let!(:original_ancestor) do
+          FactoryGirl.create(original_ancestor_factory)
         end
 
-        context 'with slashes' do
-          let(:section) do
-            "-_0a"
+        context 'with same real_path_sha1_hex_digest' do
+          subject(:same_real_path_sha1_hex_digest_ancestor) do
+            FactoryGirl.build(
+                same_real_path_sha1_hex_digest_ancestor_factory,
+                # real_path_sha1_hex_digest is derived, but not validated (as it would take too long)
+                # so it can just be set directly
+                :real_path_sha1_hex_digest => original_ancestor.real_path_sha1_hex_digest
+            )
           end
 
-          context 'leading' do
-            it "should not allow '/'" do
-              expect(module_ancestor).not_to allow_value("/#{section}").for(:reference_name)
+          let(:same_real_path_sha1_hex_digest_ancestor_factory) {
+            FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+          }
+
+          context 'with batched' do
+            include_context 'Metasploit::Cache::Batch.batch'
+
+            it 'should not add error on #real_path_sha1_hex_digest' do
+              same_real_path_sha1_hex_digest_ancestor.valid?
+
+              expect(same_real_path_sha1_hex_digest_ancestor.errors[:real_path_sha1_hex_digest]).not_to include(taken_error)
             end
 
-            it "should not allow '\\'" do
-              expect(module_ancestor).not_to allow_value("\\#{section}").for(:reference_name)
-            end
-          end
-
-          context 'infix' do
-            it "should allow '/'" do
-              expect(module_ancestor).to allow_value("#{section}/#{section}").for(:reference_name)
-            end
-
-            it "should not allow '\\'" do
-              expect(module_ancestor).not_to allow_value("#{section}\\#{section}").for(:reference_name)
-            end
-          end
-
-          context 'trailing' do
-            it "should not allow '/'" do
-              expect(module_ancestor).not_to allow_value("#{section}/").for(:reference_name)
-            end
-
-            it "should not allow '\\'" do
-              expect(module_ancestor).not_to allow_value("#{section}\\").for(:reference_name)
+            it 'should raise ActiveRecord::RecordNotUnique when saved' do
+              expect {
+                same_real_path_sha1_hex_digest_ancestor.save
+              }.to raise_error(ActiveRecord::RecordNotUnique)
             end
           end
-        end
 
-        context 'real-world examples' do
-          it { should allow_value('admin/2wire/xslt_password_reset').for(:reference_name) }
-          it { should allow_value('dos/http/3com_superstack_switch').for(:reference_name) }
-          it { should allow_value('windows/brightstor/tape_engine_8A').for(:reference_name) }
-          it { should allow_value('windows/fileformat/a-pdf_wav_to_mp3').for(:reference_name) }
-          it { should allow_value('windows/ftp/32bitftp_list_reply').for(:reference_name) }
-          it { should allow_value('windows/ftp/3cdaemon_ftp_user').for(:reference_name) }
+          context 'without batched' do
+            it 'should add error on #real_path_sha1_hex_digest' do
+              same_real_path_sha1_hex_digest_ancestor.valid?
+
+              expect(same_real_path_sha1_hex_digest_ancestor.errors[:real_path_sha1_hex_digest]).to include(taken_error)
+            end
+          end
         end
       end
     end
@@ -1000,13 +423,17 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
     end
 
     before(:each) do
-      module_ancestor.real_path = real_path
+      module_ancestor.relative_path = relative_path
     end
 
-    context 'with #real_path' do
-      let(:real_path) do
-        module_ancestor.derived_real_path
+    context 'with #relative_path' do
+      let(:relative_path) do
+        module_ancestor.relative_path
       end
+
+      let(:real_pathname) {
+        module_ancestor.real_pathname
+      }
 
       context 'with file' do
         let(:file_contents) do
@@ -1014,7 +441,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
         end
 
         before(:each) do
-          File.open(real_path, 'wb') do |f|
+          real_pathname.open('wb') do |f|
             f.write(file_contents)
           end
         end
@@ -1026,233 +453,15 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
 
       context 'without file' do
         before(:each) do
-          File.delete(real_path)
+          real_pathname.delete
         end
 
         it { should be_nil }
       end
     end
 
-    context 'without #real_path' do
-      let(:real_path) do
-        nil
-      end
-
-      it { should be_nil }
-    end
-  end
-
-  context '#derived_full_name' do
-    subject(:derived_full_name) do
-      module_ancestor.derived_full_name
-    end
-
-    let(:module_ancestor) do
-      FactoryGirl.build(
-          :metasploit_cache_module_ancestor,
-          :module_type => module_type,
-          # don't create parent_path since it's unneeded for tests
-          :parent_path => nil
-      )
-    end
-
-    context 'with module_type' do
-      let(:module_type) do
-        FactoryGirl.generate :metasploit_cache_module_type
-      end
-
-      it "should equal <module_type>/<reference_name>" do
-        expect(derived_full_name).to eq("#{module_ancestor.module_type}/#{module_ancestor.reference_name}")
-      end
-    end
-
-    context 'without module_type' do
-      let(:module_type) do
-        nil
-      end
-
-      it { should be_nil }
-    end
-  end
-
-  context '#derived_module_type' do
-    subject(:derived_module_type) do
-      module_ancestor.derived_module_type
-    end
-
-    before(:each) do
-      module_ancestor.real_path = real_path
-    end
-
-    context 'with #real_path' do
-      let(:real_path) do
-        module_ancestor.derived_real_path
-      end
-
-      before(:each) do
-        module_ancestor.parent_path = module_path
-      end
-
-      context 'with Metasploit::Cache::Module::Path' do
-        let(:module_path) do
-          module_ancestor.parent_path
-        end
-
-        before(:each) do
-          module_path.real_path = module_path_real_path
-        end
-
-        context 'with Metasploit::Cache::Module::Path#real_path' do
-          let(:module_path_real_path) do
-            module_path.real_path
-          end
-
-          it { should_not be_nil }
-        end
-
-        context 'without Metasploit::Cache::Module::Path#real_path' do
-          let(:module_path_real_path) do
-            nil
-          end
-
-          it { should be_nil }
-        end
-      end
-
-      context 'without Metasploit::Cache::Module::Path' do
-        let(:module_path) do
-          nil
-        end
-
-        it { should be_nil }
-      end
-    end
-
-    context 'without #real_path' do
-      let(:real_path) do
-        nil
-      end
-
-      it { should be_nil }
-    end
-  end
-
-  context '#derived_payload_type' do
-    subject(:derived_payload_type) do
-      module_ancestor.derived_payload_type
-    end
-
-    let(:module_ancestor) do
-      FactoryGirl.build(
-          :metasploit_cache_module_ancestor,
-          :module_type => module_type
-      )
-    end
-
-    context 'with payload' do
-      let(:module_type) do
-        'payload'
-      end
-
-      it 'should singularize payload_type_directory' do
-        expect(derived_payload_type).to eq(module_ancestor.payload_type_directory.singularize)
-      end
-    end
-
-    context 'without payload' do
-      let(:module_type) do
-        FactoryGirl.generate :metasploit_cache_non_payload_module_type
-      end
-
-      it { should be_nil }
-    end
-  end
-
-  context '#derived_real_path' do
-    subject(:derived_real_path) do
-      module_ancestor.derived_real_path
-    end
-
-    let(:module_ancestor) do
-      FactoryGirl.build(
-          :metasploit_cache_module_ancestor,
-          :module_type => module_type,
-          :parent_path => parent_path,
-          :reference_name => reference_name
-      )
-    end
-
-    let(:module_type) do
-      nil
-    end
-
-    let(:reference_name) do
-      nil
-    end
-
-    context 'with parent_path' do
-      let(:parent_path) do
-        FactoryGirl.build(
-            :metasploit_cache_module_path,
-            :real_path => parent_path_real_path
-        )
-      end
-
-      context 'with parent_path.real_path' do
-        let(:parent_path_real_path) do
-          FactoryGirl.generate :metasploit_cache_module_path_real_path
-        end
-
-        context 'with module_type' do
-          let(:module_type) do
-            FactoryGirl.generate :metasploit_cache_module_type
-          end
-
-          context 'with reference_name' do
-            let(:reference_name) do
-              FactoryGirl.generate :metasploit_cache_module_ancestor_non_payload_reference_name
-            end
-
-            it 'should be full path including parent_path.real_path, type_directory, and reference_path' do
-              expect(derived_real_path).to eq(
-                                               File.join(
-                                                   parent_path_real_path,
-                                                   module_ancestor.module_type_directory,
-                                                   module_ancestor.reference_path
-                                               )
-                                           )
-            end
-          end
-
-          context 'without reference_name' do
-            let(:reference_name) do
-              nil
-            end
-
-            it { should be_nil }
-          end
-        end
-
-        context 'without module_type' do
-          let(:module_type) do
-            nil
-          end
-
-          it { should be_nil }
-        end
-      end
-
-      context 'without parent_path.real_path' do
-        let(:parent_path_real_path) do
-          nil
-        end
-
-        it { should be_nil }
-      end
-    end
-
-    context 'without parent_path' do
-      let(:parent_path) do
+    context 'without #relative_path' do
+      let(:relative_path) do
         nil
       end
 
@@ -1265,23 +474,18 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       module_ancestor.derived_real_path_modified_at
     end
 
-    let(:module_ancestor) do
-      FactoryGirl.build(:metasploit_cache_module_ancestor)
-    end
-
-    context 'with real_path' do
+    context 'with relative_path' do
       before(:each) do
-        module_ancestor.real_path = real_path
+        module_ancestor.relative_path = relative_path
       end
 
       context 'that exists' do
-        let(:real_path) do
-          # derived real path will have been created by factory's after(:build)
-          module_ancestor.derived_real_path
+        let(:relative_path) do
+          module_ancestor.relative_path
         end
 
         it 'should be modification time of file' do
-          expect(derived_real_path_modified_at).to eq(File.mtime(real_path))
+          expect(derived_real_path_modified_at).to eq(module_ancestor.parent_path.real_pathname.join(relative_path).mtime)
         end
 
         it 'should be in UTC' do
@@ -1290,7 +494,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       end
 
       context 'that does not exist' do
-        let(:real_path) do
+        let(:relative_path) do
           'non/existent/path'
         end
 
@@ -1298,13 +502,13 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       end
     end
 
-    context 'without real_path' do
+    context 'without relative_path' do
       before(:each) do
-        module_ancestor.real_path = nil
+        module_ancestor.relative_path = nil
       end
 
-      it 'should have nil for real_path' do
-        expect(module_ancestor.real_path).to be_nil
+      it 'should have nil for relative_path' do
+        expect(module_ancestor.relative_path).to be_nil
       end
 
       it { should be_nil }
@@ -1316,18 +520,10 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       module_ancestor.derived_real_path_sha1_hex_digest
     end
 
-    let(:module_ancestor) do
-      FactoryGirl.build(:metasploit_cache_module_ancestor)
-    end
-
-    context 'with real_path' do
-      before(:each) do
-        module_ancestor.real_path = module_ancestor.derived_real_path
-      end
-
+    context 'with real_pathname' do
       context 'that exists' do
         it 'should read the using Digest::SHA1.file' do
-          expect(Digest::SHA1).to receive(:file).with(module_ancestor.real_path).and_call_original
+          expect(Digest::SHA1).to receive(:file).with(module_ancestor.real_pathname.to_s).and_call_original
 
           derived_real_path_sha1_hex_digest
         end
@@ -1338,7 +534,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
           end
 
           before(:each) do
-            File.open(module_ancestor.real_path, 'wb') do |f|
+            module_ancestor.real_pathname.open('wb') do |f|
               f.write(content)
             end
           end
@@ -1349,7 +545,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
             end
 
             it 'should have empty file at real_path' do
-              expect(File.size(module_ancestor.real_path)).to be_zero
+              expect(module_ancestor.real_pathname.size).to be_zero
             end
 
             it 'should have SHA1 hex digest for empty string' do
@@ -1371,261 +567,31 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
 
       context 'that does not exist' do
         before(:each) do
-          File.delete(module_ancestor.real_path)
+          module_ancestor.real_pathname.delete
         end
 
         it { should be_nil }
       end
     end
 
-    context 'without real_path' do
+    context 'without #relative_path' do
       before(:each) do
-        module_ancestor.real_path = nil
+        module_ancestor.relative_path = nil
       end
 
-      it 'should have nil for real_path' do
-        expect(module_ancestor.real_path).to be_nil
-      end
-
-      it { should be_nil }
-    end
-  end
-
-  context '#derived_reference_name' do
-    subject(:derived_reference_name) do
-      module_ancestor.derived_reference_name
-    end
-
-    before(:each) do
-      allow(module_ancestor).to receive(:relative_file_names).and_return(relative_file_names)
-    end
-
-    context 'with empty #relative_file_names' do
-      let(:relative_file_names) do
-        Enumerator.new { }
+      it 'should have nil for relative_path' do
+        expect(module_ancestor.relative_path).to be_nil
       end
 
       it { should be_nil }
     end
-
-    context 'without empty #relative_file_names' do
-      context 'with one element' do
-        context 'with EXTENSION' do
-          let(:relative_file_names) do
-            ["a#{described_class::EXTENSION}"].each
-          end
-
-          it { is_expected.to be_nil }
-        end
-
-        context 'without EXTENSION' do
-          let(:relative_file_names) do
-            ['a'].each
-          end
-
-          it { is_expected.to be_nil }
-        end
-      end
-
-      context 'with more than one element' do
-        context 'with EXTENSION' do
-          let(:relative_file_names) do
-            ['a', 'b', "c#{described_class::EXTENSION}"].each
-          end
-
-          it 'should not include first file name' do
-            expect(derived_reference_name.split(described_class::REFERENCE_NAME_SEPARATOR)).not_to include('a')
-          end
-
-          it 'should match REFERENCE_NAME_REGEXP' do
-            expect(derived_reference_name).to match(described_class::REFERENCE_NAME_REGEXP)
-          end
-
-          it 'should not include EXTENSION' do
-            expect(derived_reference_name).not_to end_with(described_class::EXTENSION)
-          end
-
-          it 'should be all file names except the first joined with the REFERENCE_NAME_SEPARATOR with EXTENSION' do
-            expect(derived_reference_name).to eq("b#{described_class::REFERENCE_NAME_SEPARATOR}c")
-          end
-        end
-
-        context 'without EXTENSION' do
-          let(:relative_file_names) do
-            ['a', 'b', 'c'].each
-          end
-
-          it { should be_nil }
-        end
-      end
-    end
   end
 
-  # class method
-  context 'handled?' do
-    subject(:handled?) do
-      described_class.handled?(
-          :module_type => module_type,
-          :payload_type => payload_type
-      )
-    end
-
-    context 'with module_type' do
-      context 'payload' do
-        let(:module_type) do
-          'payload'
-        end
-
-        context 'with payload_type' do
-          context 'single' do
-            let(:payload_type) do
-              'single'
-            end
-
-            it { is_expected.to eq(true) }
-          end
-
-          context 'stage' do
-            let(:payload_type) do
-              'stage'
-            end
-
-            it { is_expected.to eq(false) }
-          end
-
-          context 'stager' do
-            let(:payload_type) do
-              'stager'
-            end
-
-            it { is_expected.to eq(true) }
-          end
-        end
-
-        context 'without payload_type' do
-          let(:payload_type) do
-            nil
-          end
-
-          it { is_expected.to eq(false) }
-        end
-      end
-
-      context 'non-payload' do
-        let(:module_type) do
-          FactoryGirl.generate :metasploit_cache_non_payload_module_type
-        end
-
-        context 'with payload_type' do
-          context 'single' do
-            let(:payload_type) do
-              'single'
-            end
-
-            it { is_expected.to eq(false) }
-          end
-
-          context 'stage' do
-            let(:payload_type) do
-              'stage'
-            end
-
-            it { is_expected.to eq(false) }
-          end
-
-          context 'stager' do
-            let(:payload_type) do
-              'stager'
-            end
-
-            it { is_expected.to eq(false) }
-          end
-        end
-
-        context 'without payload_type' do
-          let(:payload_type) do
-            nil
-          end
-
-          it { is_expected.to eq(false) }
-        end
-      end
-    end
-
-    context 'without module_type' do
-      let(:module_type) do
-        nil
-      end
-
-      context 'with payload_type' do
-        context 'single'  do
-          let(:payload_type) do
-            'single'
-          end
-
-          it { is_expected.to eq(false) }
-        end
-
-        context 'stage' do
-          let(:payload_type) do
-            'stage'
-          end
-
-          it { is_expected.to eq(false) }
-        end
-
-        context 'stager' do
-          let(:payload_type) do
-            'stager'
-          end
-
-          it { is_expected.to eq(false) }
-        end
-      end
-
-      context 'without payload_type' do
-        let(:payload_type) do
-          nil
-        end
-
-        it { is_expected.to eq(false) }
-      end
-    end
-  end
-
-  # instance method
-  context '#handled?' do
-    subject(:handled?) do
-      module_ancestor.handled?
-    end
-
-    let(:module_ancestor) do
-      FactoryGirl.build(
-          :metasploit_cache_module_ancestor,
-          :module_type => module_type,
-          :payload_type => payload_type
-      )
-    end
-
-    let(:module_type) do
-      'payload'
-    end
-
-    let(:payload_type) do
-      FactoryGirl.generate :metasploit_cache_module_ancestor_payload_type
-    end
-
-    before(:each) do
-      module_ancestor.payload_type = module_ancestor.derived_payload_type
-    end
-
-    it 'should delegate to class method' do
-      expect(described_class).to receive(:handled?).with(
-                                     :module_type => module_type,
-                                     :payload_type => payload_type
-                                 )
-
-      handled?
+  context '#initialize' do
+    it 'prevents initialization of Metasploit::Cache::Module::Ancestors' do
+      expect {
+        described_class.new
+      }.to raise_error(TypeError)
     end
   end
 
@@ -1652,238 +618,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
 
         module_ancestor.valid?(:loading)
       end
-    end
-  end
-
-  context '#payload?' do
-    subject(:module_ancestor) do
-      described_class.new(:module_type => module_type)
-    end
-
-    context "with 'payload' module_type" do
-      let(:module_type) do
-        'payload'
-      end
-
-      it { should be_payload }
-    end
-
-    context "without 'payload' module_type" do
-      let(:module_type) do
-        FactoryGirl.generate :metasploit_cache_non_payload_module_type
-      end
-
-      it { should_not be_payload }
-    end
-  end
-
-  context '#payload_name' do
-    subject(:payload_name) do
-      module_ancestor.payload_name
-    end
-
-    let(:module_ancestor) do
-      FactoryGirl.build(
-          :metasploit_cache_module_ancestor,
-          handler_type: handler_type,
-          module_type: module_type,
-          payload_type: payload_type
-      )
-    end
-
-    context '#module_type' do
-      context 'with payload' do
-        #
-        # Shared examples
-        #
-
-        shared_examples_for 'prefix payload_name' do
-          let(:handler_type) do
-            nil
-          end
-
-          context 'with #reference_name' do
-            #
-            # lets
-            #
-
-            let(:expected_payload_name) do
-              'expected/payload/name'
-            end
-
-            let(:reference_name) do
-              "#{payload_type_directory}/#{expected_payload_name}"
-            end
-
-            #
-            # Callbacks
-            #
-
-            before(:each) do
-              module_ancestor.reference_name = reference_name
-            end
-
-            it "strips #payload_type_directory and '/' from #reference_name" do
-              expect(payload_name).to eq(expected_payload_name)
-            end
-          end
-
-          context 'without #reference_name' do
-            before(:each) do
-              module_ancestor.reference_name = nil
-            end
-
-            it { should be_nil }
-          end
-        end
-
-        #
-        # lets
-        #
-
-        let(:module_type) do
-          'payload'
-        end
-
-        context '#payload_type' do
-          context 'with single' do
-            let(:payload_type) do
-              'single'
-            end
-
-            it_should_behave_like 'prefix payload_name' do
-              let(:payload_type_directory) do
-                'singles'
-              end
-            end
-          end
-
-          context 'with stage' do
-            let(:payload_type) do
-              'stage'
-            end
-
-            it_should_behave_like 'prefix payload_name' do
-              let(:payload_type_directory) do
-                'stages'
-              end
-            end
-          end
-
-          context 'with stager' do
-            let(:payload_type) do
-              'stager'
-            end
-
-            context 'with #handler_type' do
-              let(:handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it 'uses #handler_type' do
-                expect(payload_name).to eq(handler_type)
-              end
-            end
-
-            context 'without #handler_type' do
-              let(:handler_type) do
-                nil
-              end
-
-              it { should be_nil }
-            end
-          end
-
-          context 'with other' do
-            let(:handler_type) do
-              nil
-            end
-
-            let(:payload_type) do
-              'unknown_payload_type'
-            end
-
-            it { should be_nil }
-          end
-        end
-      end
-
-      context 'without payload' do
-        let(:handler_type) do
-          nil
-        end
-
-        let(:module_type) do
-          FactoryGirl.generate :metasploit_cache_non_payload_module_type
-        end
-
-        let(:payload_type) do
-          nil
-        end
-
-        it { should be_nil }
-      end
-    end
-  end
-
-  context '#payload_type_directory' do
-    subject(:payload_type_directory) do
-      module_ancestor.payload_type_directory
-    end
-
-    let(:module_ancestor) do
-      FactoryGirl.build(
-          :metasploit_cache_module_ancestor,
-          module_type: module_type
-      )
-    end
-
-    context 'with payload' do
-      let(:module_type) do
-        'payload'
-      end
-
-      before(:each) do
-        module_ancestor.reference_name = reference_name
-      end
-
-      context 'with #reference_name' do
-        let(:expected_payload_type_directory) do
-          payload_type_directories.sample
-        end
-
-        let(:payload_type_directories) do
-          [
-              'singles',
-              'stages',
-              'stagers'
-          ]
-        end
-
-        let(:reference_name) do
-          "#{expected_payload_type_directory}/reference/name/tail"
-        end
-
-        it 'is name before REFERENCE_NAME_SEPARATOR' do
-          expect(payload_type_directory).to eq(expected_payload_type_directory)
-        end
-      end
-
-      context 'without #reference_name' do
-        let(:reference_name) do
-          nil
-        end
-
-        it { should be_nil }
-      end
-    end
-
-    context 'without payload' do
-      let(:module_type) do
-        FactoryGirl.generate :metasploit_cache_non_payload_module_type
-      end
-
-      it { should be_nil }
     end
   end
 
@@ -1934,65 +668,23 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       module_ancestor.relative_pathname
     end
 
-    before(:each) do
-      allow(module_ancestor).to receive(:real_pathname).and_return(real_pathname)
-    end
+    context 'with #relative_path' do
+      it { is_expected.to be_a Pathname }
 
-    context 'with #real_pathname' do
-      let(:real_pathname) do
-        Pathname.new('a/b/c')
-      end
-
-      before(:each) do
-        module_ancestor.parent_path = parent_path
-      end
-
-      context 'with #parent_path' do
-        let(:parent_path) do
-          module_ancestor.parent_path
-        end
-
-        before(:each) do
-          allow(parent_path).to receive(:real_pathname).and_return(parent_path_real_pathname)
-        end
-
-        context 'with Metasploit::Cache::Module::Path#real_pathname' do
-          let(:parent_path_real_pathname) do
-            Pathname.new('a')
-          end
-
-          it { should be_a Pathname }
-          it { should be_relative }
-
-          it 'should be relative to parent_path.real_pathname' do
-            expect(relative_pathname).to eq(Pathname.new('b/c'))
-          end
-        end
-
-        context 'without Metasploit::Cache::Module::Path#real_pathname' do
-          let(:parent_path_real_pathname) do
-            nil
-          end
-
-          it { should be_nil }
-        end
-      end
-
-      context 'without #parent_path' do
-        let(:parent_path) do
-          nil
-        end
-
-        it { should be_nil }
+      it 'is #relative_path as a Pathname' do
+        expect(relative_pathname).to eq(Pathname.new(module_ancestor.relative_path))
       end
     end
 
-    context 'without #real_pathname' do
-      let(:real_pathname) do
-        nil
-      end
+    context 'without #relative_path' do
+      let(:module_ancestor) {
+        FactoryGirl.build(
+            module_ancestor_factory,
+            relative_path: nil
+        )
+      }
 
-      it { should be_nil }
+      it { is_expected.to be_nil }
     end
   end
 
@@ -2002,14 +694,15 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
     end
 
     let(:module_ancestor) do
-      described_class.new(
-          :reference_name => reference_name
+      FactoryGirl.build(
+          module_ancestor_factory,
+          reference_name: reference_name
       )
     end
 
     context 'with reference_name' do
       let(:reference_name) do
-        FactoryGirl.generate :metasploit_cache_module_ancestor_non_payload_reference_name
+        FactoryGirl.generate :metasploit_cache_module_ancestor_reference_name
       end
 
       it 'should be reference_name + EXTENSION' do
@@ -2031,17 +724,21 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       module_ancestor.module_type_directory
     end
 
-    let(:module_ancestor) do
-      described_class.new(
-          :module_type => module_type
-      )
-    end
-
     context 'with module_type' do
       context 'in known types' do
-        let(:module_type) do
-          FactoryGirl.generate :metasploit_cache_module_type
-        end
+        let(:module_ancestor_factory) {
+          {
+              'auxiliary' => :metasploit_cache_auxiliary_ancestor,
+              'encoder' => :metasploit_cache_encoder_ancestor,
+              'exploit' => :metasploit_cache_exploit_ancestor,
+              'nop' => :metasploit_cache_nop_ancestor,
+              'post' => :metasploit_cache_post_ancestor
+          }.fetch(module_type)
+        }
+
+        let(:module_type) {
+          FactoryGirl.generate :metasploit_cache_non_payload_module_type
+        }
 
         it 'should use Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE' do
           expect(module_type_directory).to eq(Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE[module_type])
@@ -2049,18 +746,28 @@ RSpec.describe Metasploit::Cache::Module::Ancestor do
       end
 
       context 'in unknown types' do
+        let(:module_ancestor) {
+          super().tap { |module_ancestor|
+            module_ancestor.relative_path = "#{module_type}/#{module_ancestor.reference_name}.rb"
+          }
+        }
+
         let(:module_type) do
           'not_a_type'
         end
 
-        it { should be_nil }
+        it 'returns the unknown type without filtering for validity' do
+          expect(module_type_directory).to eq(module_type)
+        end
       end
     end
 
     context 'without module_type' do
-      let(:module_type) do
-        nil
-      end
+      let(:module_ancestor) {
+        super().tap { |module_ancestor|
+          module_ancestor.relative_path = nil
+        }
+      }
 
       it { should be_nil }
     end

@@ -27,18 +27,24 @@ module Metasploit
     autoload :Association
     autoload :Author
     autoload :Authority
+    autoload :Auxiliary
     autoload :Base
     autoload :Batch
     autoload :Derivation
     autoload :EmailAddress
+    autoload :Encoder
     autoload :Error
+    autoload :Exploit
     autoload :File
     autoload :Invalid
     autoload :Login
     autoload :Module
     autoload :NilifyBlanks
+    autoload :Nop
     autoload :NullProgressBar
+    autoload :Payload
     autoload :Platform
+    autoload :Post
     autoload :ProxiedValidation
     autoload :RealPathname
     autoload :Realm

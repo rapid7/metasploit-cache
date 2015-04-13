@@ -1,5 +1,7 @@
 # Configure Rails Environment
 ENV['RAILS_ENV'] = 'test'
+# Enable per file test times
+ENV['FIVEMAT_PROFILE'] = '1'
 require 'bundler'
 Bundler.setup(:default, :test)
 
@@ -21,6 +23,7 @@ roots = []
 metasploit_version_gem_specification = Gem::Specification.find_all_by_name('metasploit-version').first
 roots << metasploit_version_gem_specification.gem_dir
 
+roots << Metasploit::Concern::Engine.root
 roots << Metasploit::Model::Engine.root
 roots << Metasploit::Cache::Engine.root
 
@@ -41,10 +44,6 @@ RSpec.configure do |config|
   # get run.
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
-
-  unless ENV['METASPLOIT_FRAMEWORK_ROOT']
-    config.filter_run_excluding :content
-  end
 
   # allow more verbose output when running an individual spec file.
   if config.files_to_run.one?

@@ -156,7 +156,7 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
     success = false
 
     begin
-      module_namespace.module_eval_with_lexical_scope(module_ancestor.contents, module_ancestor.real_path)
+      module_namespace.module_eval_with_lexical_scope(module_ancestor.contents, module_ancestor.real_pathname.to_path)
     rescue Interrupt
       # handle Interrupt as pass-through unlike other Exceptions so users can bail with Ctrl+C
       raise

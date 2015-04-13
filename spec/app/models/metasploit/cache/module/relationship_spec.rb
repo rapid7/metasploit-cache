@@ -36,8 +36,12 @@ RSpec.describe Metasploit::Cache::Module::Relationship do
         end
 
       let(:existing_ancestor) do
-        FactoryGirl.create(:metasploit_cache_module_ancestor)
+        FactoryGirl.create(existing_ancestor_factory)
       end
+
+      let(:existing_ancestor_factory) {
+        FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+      }
 
       let!(:existing_relationship) do
         FactoryGirl.create(

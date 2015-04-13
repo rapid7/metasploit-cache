@@ -8,17 +8,20 @@ class Metasploit::Cache::Module::Platform < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute module_instance
-  #   Module that supports {#platform}.
-  #
-  #   @return [Metasploit::Cache::Module::Instance]
+  # Module that supports {#platform}.
   belongs_to :module_instance, class_name: 'Metasploit::Cache::Module::Instance', inverse_of: :module_platforms
 
-  # @!attribute platform
-  #  Platform supported by {#module_instance}.
-  #
-  #  @return [Metasploit::Cache::Platform]
+  # Platform supported by {#module_instance}.
   belongs_to :platform, class_name: 'Metasploit::Cache::Platform', inverse_of: :module_platforms
+
+  #
+  # Attributes
+  #
+
+  # @!method platform_id
+  #   The primary key of the associated {#platform}.
+  #
+  #   @return [Integer]
 
   #
   # Validations

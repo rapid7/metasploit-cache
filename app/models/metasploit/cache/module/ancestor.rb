@@ -10,7 +10,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   include Metasploit::Cache::Batch::Root
   include Metasploit::Cache::Derivation
   include Metasploit::Cache::Derivation::FullName
-  include Metasploit::Cache::RealPathname
   include Metasploit::Model::Translation
 
   autoload :Cache
@@ -22,9 +21,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # CONSTANTS
   #
 
-  # The directory for a given {#module_type} is a not always the pluralization of #module_type, so this maps the
-  # #module_type to the type directory that is used to generate the #real_path from the #module_type and
-  # #reference_name.
+  # The directory for a given {#module_type} is a not always the pluralization of {#module_type}.
   DIRECTORY_BY_MODULE_TYPE = {
       Metasploit::Cache::Module::Type::AUX => Metasploit::Cache::Module::Type::AUX,
       Metasploit::Cache::Module::Type::ENCODER => Metasploit::Cache::Module::Type::ENCODER.pluralize,
@@ -37,24 +34,8 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # File extension used for metasploit modules.
   EXTENSION = '.rb'
 
-  # The {#payload_type payload types} that require {#handler_type}.
-  HANDLED_TYPES = [
-      'single',
-      'stager'
-  ]
-
-  # Maps directory to {#module_type} for converting a {#real_path} into a {#module_type} and {#reference_name}
+  # Maps directory to {#module_type} for converting a {#relative_path} into a {#module_type} and {#reference_name}
   MODULE_TYPE_BY_DIRECTORY = DIRECTORY_BY_MODULE_TYPE.invert
-
-  # Valid values for {#payload_type} if {#payload?} is `true`.
-  PAYLOAD_TYPES = [
-      'single',
-      'stage',
-      'stager'
-  ]
-
-  # Regexp to keep '\' out of reference names
-  REFERENCE_NAME_REGEXP = /\A[\-0-9A-Z_a-z]+(?:\/[\-0-9A-Z_a-z]+)*\Z/
 
   # Separator used to join names in {#reference_name}.  It is always '/', even on Windows, where '\' is a valid
   # file separator.
@@ -69,101 +50,52 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #
   #
 
-  # @!attribute parent_path
-  #   Path under which this load's type directory, {Metasploit::Cache::Module::Ancestor#module_type_directory}, and
-  #   reference name path, {Metasploit::Cache::Module::Ancestor#reference_path} exists.
-  #
-  #   @return [Metasploit::Cache::Module::Path]
-  belongs_to :parent_path, class_name: 'Metasploit::Cache::Module::Path', inverse_of: :module_ancestors
-
-  # @!attribute relationships
-  #   Relates this {Metasploit::Cache::Module::Ancestor} to the {Metasploit::Cache::Module::Class Metasploit::Cache::Module::Classes} that
-  #   {Metasploit::Cache::Module::Relationship#descendant descend} from the {Metasploit::Cache::Module::Ancestor}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Relationship>]
+  # Relates this {Metasploit::Cache::Module::Ancestor} to the
+  # {Metasploit::Cache::Module::Class Metasploit::Cache::Module::Classes} that
+  # {Metasploit::Cache::Module::Relationship#descendant descend} from the {Metasploit::Cache::Module::Ancestor}.
   has_many :relationships, class_name: 'Metasploit::Cache::Module::Relationship', dependent: :destroy, inverse_of: :ancestor
 
   #
   # through: :relationships
   #
 
-  # @!attribute [r] descendants
-  #   {Metasploit::Cache::Module::Class Classes} that either subclass the ruby Class in {#real_path} or include the ruby Module in
-  #   {#real_path}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Class>]
+  # {Metasploit::Cache::Module::Class Classes} that either subclass the ruby Class in {#real_pathname} or include the
+  # ruby Module in {#real_pathname}.
   has_many :descendants, class_name: 'Metasploit::Cache::Module::Class', through: :relationships
 
   #
   # Attributes
   #
 
-  # @!attribute full_name
-  #   The full name of the module.  The full name is `"#{module_type}/#{reference_name}"`.
-  #
-  #   @return [String]
-
-  # @!attribute handler_type
-  #   The handler type (in the case of singles) or (in the case of stagers) the handler type alias.  Handler type is
-  #   appended to the end of the single's or stage's {#reference_name} to get the {Metasploit::Cache::Module::Class#reference_name}.
-  #
-  #   @return [String] if `Metasploit::Module::Module::Ancestor#handled?` is `true`.
-  #   @return [nil] if `Metasploit::Module::Module::Ancestor#handled?` is `false`.
-
-  # @!attribute module_type
-  #   The type of the module. This would be called #type, but #type is reserved for ActiveRecord's single table
-  #   inheritance.
-  #
-  #   @return [String] key in {Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE}.
-
-  # @!attribute payload_type
-  #   For payload modules, the type of payload, either 'single', 'stage', or 'stager'.
-  #
-  #   @return ['single', 'stage', 'stager'] if {Metasploit::Cache::Module::Ancestor#payload?} is `true`.
-  #   @return [nil] if {Metasploit::Cache::Module::Ancestor#payload?} is `false`
-  #   @see Metasploit::Cache::Module::Ancestor::PAYLOAD_TYPES
-
-  # @!attribute real_path
-  #   The real (absolute) path to module file on-disk.
-  #
-  #   @return [String]
-
   # @!attribute real_path_modified_at
-  #   The modification time of the module {#real_path file on-disk}.
+  #   The modification time of the module {#real_pathname file on-disk}.
   #
   #   @return [DateTime]
 
   # @!attribute real_path_sha1_hex_digest
-  #   The SHA1 hexadecimal digest of contents of the file at {#real_path}.  Stored as a string because postgres does not
-  #   have support for a 160 bit numerical type and the hexdigest format is more recognizable when using SQL directly.
+  #   The SHA1 hexadecimal digest of contents of the file at {#real_pathname}.  Stored as a string because postgres does
+  #   not have support for a 160 bit numerical type and the hexdigest format is more recognizable when using SQL
+  #   directly.
   #
   #   @see Digest::SHA1#hexdigest
   #   @return [String]
 
-  # @!attribute reference_name
-  #   The reference name of the module.  The name of the module under its {#module_type type}.
+  # @!attribute relative_path
+  #   The relative path under {#parent_path} {Metasploit::Cache::Module::Path#real_path} to the module file on-disk.
   #
   #   @return [String]
+  #   @see Metasploit::Cache::Auxiliary::Ancestor#parent_path
+  #   @see Metasploit::Cache::Encoder::Ancestor#parent_path
+  #   @see Metasploit::Cache::Exploit::Ancestor#parent_path
+  #   @see Metasploit::Cache::Nop::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Single::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Stage::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Stager::Ancestor#parent_path
+  #   @see Metasploit::Cache::Post::Ancestor#parent_path
 
   #
   # Derivations
   #
-
-  #
-  # Module Cache Construction derivation of {#module_type} and {#reference_name} from {#real_path} and
-  # {Metasploit::Cache::Module::Path#real_path}.
-  #
-
-  derives :module_type, :validate => false
-  derives :reference_name, :validate => false
-
-  #
-  # Normal derivation from setting {#module_type} and {#reference_name}
-  #
-
-  derives :full_name, :validate => true
-  derives :payload_type, :validate => true
-  derives :real_path, :validate => true
 
   # Don't validate attributes that require accessing file system to derive value
   derives :real_path_modified_at, :validate => false
@@ -173,18 +105,8 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Mass Assignment Security
   #
 
-  # full_name is NOT accessible since it's derived and must match {#derived_full_name} so there's no reason for a
-  # user to set it.
-  # handler_type is accessible because it's needed to derive {Metasploit::Cache::Module::Class#reference_name}.
-  attr_accessible :handler_type
-  # module_type is accessible because it's needed to derive {#full_name} and {#real_path}.
-  attr_accessible :module_type
-  # parent_path_id is NOT accessible since it should be supplied from context
-  # payload_type is NOT accessible since it's derived and must match {#derived_payload_type}.
-  # reference_name is accessible because it's needed to derive {#full_name} and {#real_path}.
-  attr_accessible :reference_name
-  # real_path is accessible since {#module_type} and {#reference_name} can be derived from real_path.
-  attr_accessible :real_path
+  # relative_path is accessible since it is set when building cache.
+  attr_accessible :relative_path
   # real_path_modified_at is NOT accessible since it's derived
   # real_path_sha1_hex_digest is NOT accessible since it's derived
 
@@ -192,36 +114,12 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Validations
   #
 
-  validates :handler_type,
-            unless: :loading_context?,
-            nil: {
-                unless: :handled?
-            },
-            presence: {
-                if: :handled?
-            }
-  validates :full_name,
-            uniqueness: {
-                unless: :batched?
-            }
   validates :module_type,
             inclusion: {
                 in: Metasploit::Cache::Module::Type::ALL
             }
   validates :parent_path,
             presence: true
-  validates :payload_type,
-            inclusion: {
-                if: :payload?,
-                in: PAYLOAD_TYPES
-            },
-            nil: {
-                unless: :payload?
-            }
-  validates :real_path,
-            uniqueness: {
-                unless: :batched?
-            }
   validates :real_path_modified_at,
             presence: true
   validates :real_path_sha1_hex_digest,
@@ -231,12 +129,8 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
             uniqueness: {
                 unless: :batched?
             }
-  validates :reference_name,
-            format: {
-                with: REFERENCE_NAME_REGEXP
-            },
+  validates :relative_path,
             uniqueness: {
-                scope: :module_type,
                 unless: :batched?
             }
 
@@ -244,26 +138,145 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Class Methods
   #
 
-  # Returns whether {#handler_type} is required or must be `nil` for the given payload_type.
+  # @note The yielded {Metasploit::Cache::Module::Ancestor} may contain unsaved changes.  It is the responsibility of
+  #   the caller to save the record.
   #
-  # @param options [Hash{Symbol => String,nil}]
-  # @option options [String, nil] module_type (nil) `nil` or an element of
-  #   `Metasploit::Cache::Module::Ancestor::MODULE_TYPES`.
-  # @option options [String, nil] payload_type (nil) `nil` or an element of {PAYLOAD_TYPES}.
-  # @return [true] if {#handler_type} must be present.
-  # @return [false] if {#handler_type} must be `nil`.
-  def self.handled?(options={})
-    options.assert_valid_keys(:module_type, :payload_type)
+  # @overload each_changed(assume_changed: false, progress_bar: Metasploit::Cache::NullProgressBar.new, relative_paths:, scope:)
+  #   Yields each module ancestor that is changed on `relative_paths`.
+  #
+  #   @yield [module_ancestor]
+  #   @yieldparam module_ancestor [Metasploit::Cache::Module::Ancestor] a changed, or in the case `assume_changed` is
+  #     `true`, assumed changed, {Metasploit::Cache::Module::Ancestor}.
+  #   @yieldreturn [void]
+  #   @return [void]
+  #
+  # @overload each_changed(assume_changed: false, progress_bar: Metasploit::Cache::NullProgressBar.new, relative_paths:, scope:)
+  #   Returns enumerator that yields each module ancestor that is changed under `relative_paths`.
+  #
+  #   @return [Enumerator<Metasploit::Cache::Module::Ancestor>]
+  #
+  # @param assume_changed [Boolean] if `true`, assume the {Metasploit::Cache::Module::Ancestor#real_path_modified_at}
+  #   and {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} have changed and that
+  #   {Metasploit::Cache::Module::Ancestor} should be yielded.
+  # @param progress_bar [ProgressBar, #total=, #increment] a ruby `ProgressBar` or similar object that supports the
+  #   `#total=` and `#increment` API for monitoring the progress of the enumerator.  `#total` will be set to total
+  #   number of `relative_paths`, not just the number of changed (updated or new) relative_paths.  `#increment` will be
+  #   called whenever a relative path is visited, which means it can be called when there is no yielded module ancestor
+  #   because that module ancestor was unchanged.  When {each_changed} returns, `#increment` will have been called the
+  #   same number of times as the value passed to `#total=` and `#finished?` will be `true`.
+  # @param relative_paths [Array<String>] an `Array` of {Metasploit::Cache::Module::Ancestor#real_path}.
+  # @param scope [ActiveRecord::Relation<Class<Metasploit::Cache::Module::Ancestor>>] scope for a
+  #   `Class<Metasploit::Cache::Module::Ancestor>`.
+  def self.each_changed(assume_changed: false, progress_bar: Metasploit::Cache::NullProgressBar.new, relative_paths:, scope:)
+    if block_given?
+      progress_bar.total = relative_paths.length
 
-    handled = false
-    module_type = options[:module_type]
-    payload_type = options[:payload_type]
+      ActiveRecord::Base.connection_pool.with_connection do
+        updatable_module_ancestors = scope.where(relative_path: relative_paths)
+        new_relative_path_set = Set.new relative_paths
 
-    if module_type == 'payload' and HANDLED_TYPES.include? payload_type
-      handled = true
+        # use find_each since this is expected to exceed default batch size of 1000 records.
+        updatable_module_ancestors.find_each do |updatable_module_ancestor|
+          new_relative_path_set.delete(updatable_module_ancestor.relative_path)
+
+          changed = assume_changed
+
+          # real_path_modified_at and real_path_sha1_hex_digest should be updated even if assume_changed is true so
+          # that database stays in-sync with file system
+
+          updatable_module_ancestor.real_path_modified_at = updatable_module_ancestor.derived_real_path_modified_at
+
+          # only derive the SHA1 Hex Digest if modification time has changed to save time
+          if updatable_module_ancestor.real_path_modified_at_changed?
+            updatable_module_ancestor.real_path_sha1_hex_digest = updatable_module_ancestor.derived_real_path_sha1_hex_digest
+
+            changed ||= updatable_module_ancestor.real_path_sha1_hex_digest_changed?
+          end
+
+          if changed
+            yield updatable_module_ancestor
+            progress_bar.increment
+          else
+            # increment even when no yield so that increment occurs for each path and matches totally without jumps
+            progress_bar.increment
+          end
+        end
+
+        # after all pre-existing relative_paths are subtracted, new_relative_path_set contains only relative_paths not
+        # in the database
+        new_relative_path_set.each do |relative_path|
+          new_module_ancestor = scope.new(relative_path: relative_path)
+
+          yield new_module_ancestor
+          progress_bar.increment
+        end
+      end
+    else
+      enum_for(
+          __method__,
+          assume_changed: assume_changed,
+          progress_bar: progress_bar,
+          relative_paths: relative_paths,
+          scope: scope
+      )
+    end
+  end
+
+  # Ensure that only {#module_type} matching `MODULE_TYPE` is valid for `subclass`.
+  #
+  # @param subclass [Class<Metasploit::Cache::Module::Ancestor>] a subclass of {Metasploit::Cache::Module::Ancestor}.
+  # @return [void]
+  def self.restrict(subclass)
+    #
+    # Validations
+    #
+
+    subclass.validate :module_type_matches
+
+    #
+    # Class Methods
+    #
+
+    subclass_relative_path_prefix = "#{subclass::MODULE_TYPE_DIRECTORY}".freeze
+
+    subclass.define_singleton_method(:relative_path_prefix) do
+      subclass_relative_path_prefix
     end
 
-    handled
+    #
+    # Instance Methods
+    #
+
+    error = "is not #{subclass::MODULE_TYPE}"
+
+    subclass.send(:define_method, :module_type_matches) do
+      if module_type != subclass::MODULE_TYPE
+        errors.add(:module_type, error)
+      end
+    end
+
+    subclass.send(:private, :module_type_matches)
+  end
+
+  #
+  # Initialize
+  #
+
+  def initialize(*args)
+    if self.class == Metasploit::Cache::Module::Ancestor
+      raise TypeError,
+            "Cannot directly instantiate a Metasploit::Cache::Module::Ancestor.  Create one of the subclasses:\n" \
+            "* Metasploit::Cache::Auxiliary::Ancestor\n" \
+            "* Metasploit::Cache::Encoder::Ancestor\n" \
+            "* Metasploit::Cache::Exploit::Ancestor\n" \
+            "* Metasploit::Cache::Nop::Ancestor\n" \
+            "* Metasploit::Cache::Payload::Single::Ancestor\n" \
+            "* Metasploit::Cache::Payload::Stage::Ancestor\n" \
+            "* Metasploit::Cache::Payload::Stager::Ancestor\n" \
+            "* Metasploit::Cache::Post::Ancestor"
+    end
+
+    super
   end
 
   #
@@ -273,21 +286,24 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   def batched?
     super || loading_context?
   end
-  # The contents of {#real_path}.
+
+  # The contents of {#real_pathname}.
   #
-  # @return [String] contents of file at {#real_path}.
-  # @return [nil] if {#real_path} is `nil`.
-  # @return [nil] if {#real_path} does not exist on-disk.
+  # @return [String] contents of file at {#real_pathname}.
+  # @return [nil] if {#real_pathname} is `nil`.
+  # @return [nil] if {#real_pathname} does not exist on-disk.
   def contents
     contents = nil
 
-    if real_path
+    real_pathname = self.real_pathname
+
+    if real_pathname
       # rescue around both File calls since file could be deleted before size or after size and before read
       begin
-        size = File.size(real_path)
+        size = real_pathname.size
         # Specify full size of file for faster read on Windows (less chance of context switching mid-read).
         # Open in binary mode in Windows to handle non-text content embedded in file.
-        contents = File.read(real_path, size, 0, mode: 'rb')
+        contents = real_pathname.read(size, 0, mode: 'rb')
       rescue Errno::ENOENT
         contents = nil
       end
@@ -296,80 +312,28 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     contents
   end
 
-  # Derives {#module_type} from {#real_path} and {Metasploit::Cache::Module::Path#real_path}.
-  #
-  # @return [String]
-  # @return [nil] if {#real_path} is `nil`
-  # @return [nil] if {#relative_file_names} does not start with a module type directory.
-  def derived_module_type
-    module_type_directory = relative_file_names.first
-    derived = MODULE_TYPE_BY_DIRECTORY[module_type_directory]
-
-    derived
-  end
-
-  # Derives {#payload_type} from {#reference_name}.
-  #
-  # @return [String]
-  # @return [nil] if {#payload_type_directory} is `nil`
-  def derived_payload_type
-    derived = nil
-    directory = payload_type_directory
-
-    if directory
-      derived = directory.singularize
-    end
-
-    derived
-  end
-
-  # Derives {#real_path} by combining {Metasploit::Cache::Module::Path#real_path parent_path.real_path},
-  # {#module_type_directory}, and {#reference_path} in the same way the module loader does in
-  # metasploit-framework.
-  #
-  # @return [String] the real path to the file holding the ruby Module or ruby Class represented by this ancestor.
-  # @return [nil] if {#parent_path} is `nil`.
-  # @return [nil] if {Metasploit::Cache::Module::Path#real_path parent_path.real_path} is `nil`.
-  # @return [nil] if {#module_type_directory} is `nil`.
-  # @return [nil] if {#reference_name} is `nil`.
-  def derived_real_path
-    derived_real_path = nil
-
-    if parent_path and parent_path.real_path and module_type_directory and reference_path
-      derived_real_path = File.join(
-          parent_path.real_path,
-          module_type_directory,
-          reference_path
-      )
-    end
-
-    derived_real_path
-  end
-
   # Derives {#real_path_modified_at} by getting the modification time of the file on-disk.
   #
-  # @return [Time] modification time of {#real_path} if {#real_path} exists on disk and modification time can be
+  # @return [Time] modification time of {#real_pathname} if {#real_pathname} exists on disk and modification time can be
   #   queried by user.
-  # @return [nil] if {#real_path} does not exist or user cannot query the file's modification time.
+  # @return [nil] if {#real_pathname} does not exist or user cannot query the file's modification time.
   def derived_real_path_modified_at
-    real_path_string = real_path.to_s
-
     begin
-      mtime = File.mtime(real_path_string)
+      mtime = real_pathname.try(:mtime)
     rescue Errno::ENOENT
       nil
     else
-      mtime.utc
+      mtime.try(:utc)
     end
   end
 
-  # Derives {#real_path_sha1_hex_digest} by running the contents of {#real_path} through Digest::SHA1.hexdigest.
+  # Derives {#real_path_sha1_hex_digest} by running the contents of {#real_pathname} through Digest::SHA1.hexdigest.
   #
-  # @return [String] 40 character SHA1 hex digest if {#real_path} can be read.
-  # @return [nil] if {#real_path} cannot be read.
+  # @return [String] 40 character SHA1 hex digest if {#real_pathname} can be read.
+  # @return [nil] if {#real_pathname} cannot be read.
   def derived_real_path_sha1_hex_digest
     begin
-      sha1 = Digest::SHA1.file(real_path.to_s)
+      sha1 = Digest::SHA1.file(real_pathname.to_s)
     rescue Errno::ENOENT
       hex_digest = nil
     else
@@ -379,11 +343,69 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     hex_digest
   end
 
-  # Derives {#reference_name} from {#real_path} and {Metasploit::Cache::Module::Path#real_path}.
+  # The type of the module. This would be called #type, but #type is reserved for ActiveRecord's single table
+  # inheritance.
+  #
+  # @return [String] value in {Metasploit::Cache::Module::Ancestor::MODULE_TYPE_BY_DIRECTORY}.
+  def module_type
+    MODULE_TYPE_BY_DIRECTORY[module_type_directory]
+  end
+
+  # The directory under {Metasploit::Cache::Module::Path parent_path.real_path}.
   #
   # @return [String]
-  # @return [nil] if {#real_path} is `nil`.
-  def derived_reference_name
+  def module_type_directory
+    relative_file_names.first
+  end
+
+  # @!method parent_path
+  #   @abstract Subclass and add the following association:
+  #     ```ruby
+  #       # Path under which this module's {Metasploit::Cache::Module::Ancestor#relative_path} exists.
+  #       belongs_to :parent_path,
+  #                  class_name: 'Metasploit::Cache::Module::Path',
+  #                  inverse_of: <association on Metasploit::Cache::Module::Path>
+  #     ```
+  #
+  #   Path under which this module's {#relative_path} exists.
+  #
+  #   @return [Metasploit::Cache::Module::Path]
+  #   @see Metasploit::Cache::Auxiliary::Ancestor#parent_path
+  #   @see Metasploit::Cache::Encoder::Ancestor#parent_path
+  #   @see Metasploit::Cache::Exploit::Ancestor#parent_path
+  #   @see Metasploit::Cache::Nop::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Single::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Stage::Ancestor#parent_path
+  #   @see Metasploit::Cache::Payload::Stager::Ancestor#parent_path
+  #   @see Metasploit::Cache::Post::Ancestor#parent_path
+
+  # The real (absolute) path to the module file on-disk as a `Pathname`.
+  #
+  # @return [Pathname] unless {#parent_path} {Metasploit::Cache::Module::Path#real_path} or {#real_pathname} is `nil`.
+  # @return [nil] otherwise
+  # @see Metasploit::Cache::Auxiliary::Ancestor#parent_path
+  # @see Metasploit::Cache::Encoder::Ancestor#parent_path
+  # @see Metasploit::Cache::Exploit::Ancestor#parent_path
+  # @see Metasploit::Cache::Nop::Ancestor#parent_path
+  # @see Metasploit::Cache::Payload::Single::Ancestor#parent_path
+  # @see Metasploit::Cache::Payload::Stage::Ancestor#parent_path
+  # @see Metasploit::Cache::Payload::Stager::Ancestor#parent_path
+  # @see Metasploit::Cache::Post::Ancestor#parent_path
+  def real_pathname
+    if parent_path
+      parent_real_pathname = parent_path.real_pathname
+
+      if parent_real_pathname && relative_path
+        parent_real_pathname.join(relative_path)
+      end
+    end
+  end
+
+  # The reference name of the module.  The name of the module under its {#module_type type}.
+  #
+  # @return [String] if {#real_pathname} is set and ends with {EXTENSION}.
+  # @return [nil] otherwise.
+  def reference_name
     derived = nil
     reference_name_file_names = relative_file_names.drop(1)
     reference_name_base_name = reference_name_file_names[-1]
@@ -398,129 +420,16 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     derived
   end
 
-  # @!method full_name=(full_name)
-  #   Sets {#full_name}.
-  #
-  #   @param full_name [String] `"#{module_type}/#{reference_name}"`.
-  #   @return [void]
-
-  # Returns whether {#handler_type} is required or must be `nil`.
-  #
-  # @return (see handled?)
-  # @see handled?
-  def handled?
-    self.class.handled?(
-        :module_type => module_type,
-        :payload_type => payload_type
-    )
-  end
-
-  # @!method handler_type=(handler_type)
-  #   Sets {#handler_type}.
-  #
-  #   @param handler_type [String, nil] The handler type (in the case of singles) or (in the case of stagers) the
-  #     handler type alias.  Handler type is appended to the end of the single's or stage's {#reference_name} to get the
-  #     {Metasploit::Cache::Module::Class#reference_name}; `nil` if {Metasploit::Cache::Module::Ancestor#handled?} is
-  #     `false`.
-  #   @return [void]
-
-  # @!method module_type=(module_type)
-  #   Sets {#module_type}.
-  #
-  #   @param module_type [String] key in {Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE}. The type of
-  #     the module. This would be called #type, but #type is reserved for ActiveRecord's single table inheritance.
-  #   @return [void]
-
-  # The directory for {#module_type} under {Metasploit::Cache::Module::Path parent_path.real_path}.
-  #
-  # @return [String]
-  # @see Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE
-  def module_type_directory
-    Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE[module_type]
-  end
-
-  # @!method parent_path=(parent_path)
-  #   Sets {#parent_path}.
-  #
-  #   @param parent_path [Metasploit::Cache::Module::Path] Path under which this ancestor exists on-disk.
-  #   @return [void]
-
-  # Return whether this forms part of a payload (either a single, stage, or stager).
-  #
-  # @return [true] if {#module_type} == 'payload'
-  # @return [false] if {#module_type} != 'payload'
-  def payload?
-    if module_type == Metasploit::Cache::Module::Type::PAYLOAD
-      true
-    else
-      false
-    end
-  end
-
-  # The name used to forming the {Metasploit::Cache::Module::Class#reference_name} for payloads.
-  #
-  # @return [String] The {#reference_name} without the {#payload_type_directory} if {#payload_type} is `'single'`
-  #   or `'stage'`
-  # @return [String] The {#handler_type} if {#payload_type} is `'stager'`
-  # @return [nil] if {#module_type} is not `'payload'`
-  def payload_name
-    payload_name = nil
-
-    if module_type == Metasploit::Cache::Module::Type::PAYLOAD
-      case payload_type
-        when 'single', 'stage'
-          if reference_name && payload_type_directory
-            escaped_payload_type_directory = Regexp.escape(payload_type_directory)
-            payload_type_directory_regexp = /^#{escaped_payload_type_directory}\//
-            payload_name = reference_name.gsub(payload_type_directory_regexp, '')
-          end
-        when 'stager'
-          payload_name = handler_type
-      end
-    end
-
-    payload_name
-  end
-
-  # @!method payload_type=(payload_type)
-  #   Sets {#payload_type}.
-  #
-  #   @param payload_type ['single', 'stage', 'stager'] if `Metasploit::Cache::Module::Ancestor#payload?` is `true`,
-  #     the type of the payload; otherwise `nil`.
-  #   @return [void]
-
-  # The directory for {#payload_type} under {#module_type_directory} in {#real_path}.
-  #
-  # @return [String] first directory in reference_name
-  # @return [nil] if {#payload?} is `false`.
-  # @return [nil] if {#reference_name} is `nil`.
-  def payload_type_directory
-    directory = nil
-
-    if payload? and reference_name
-      head, _tail = reference_name.split(REFERENCE_NAME_SEPARATOR, 2)
-      directory = head
-    end
-
-    directory
-  end
-
-  # @!method real_path=(real_path)
-  #   Sets {#real_path}.
-  #
-  #   @param real_path [String] The real (absolute) path to module file on-disk.
-  #   @return [void]
-
   # @!method real_path_modified_at=(real_path_modified_at)
   #   Sets {#real_path_modified_at}.
   #
-  #   @param real_path_modified_at [String] The modification time of the module {#real_path file on-disk}.
+  #   @param real_path_modified_at [String] The modification time of the module {#real_pathname file on-disk}.
   #   @return [void]
 
   # @!method real_path_sha1_hex_digest=(real_path_sha1_hex_digest)
   #   Sets {#real_path_sha1_hex_digest}.
   #
-  #   @param real_path_sha1_hex_digest [String] The SHA1 hexadecimal digest of contents of the file at {#real_path}.
+  #   @param real_path_sha1_hex_digest [String] The SHA1 hexadecimal digest of contents of the file at {#real_pathname}.
   #   @return [void]
 
   # @!method relationships=(relationships)
@@ -546,26 +455,21 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     end
   end
 
-  # {#real_path} relative to {Metasploit::Cache::Module::Path#real_path}
+  # @!method relative_path=(relative_path)
+  #   Sets the relative path under `#parent_path` {Metasploit::Cache::Module::Path#real_path} where te module file
+  #   exists on-disk.
   #
-  # @return [Pathname]
+  #   @param relative_path [String] a relative path
+  #   @return [void]
+
+  # {#relative_path} as a `Pathname`.
+  #
+  # @return [Pathname] unless {#relative_path} is `nil`.
+  # @return [nil] if {#relative_path} is `nil`.
   def relative_pathname
-    relative_pathname = nil
-    real_pathname = self.real_pathname
-
-    if real_pathname
-      parent_path = self.parent_path
-
-      if parent_path
-        parent_path_real_pathname = parent_path.real_pathname
-
-        if parent_path_real_pathname
-          relative_pathname = real_pathname.relative_path_from parent_path_real_pathname
-        end
-      end
+    if relative_path
+      Pathname.new(relative_path)
     end
-
-    relative_pathname
   end
 
   # @!method reference_name=(reference_name)

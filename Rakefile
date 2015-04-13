@@ -24,7 +24,7 @@ require 'cucumber/rake/task'
 require 'rspec/core/rake_task'
 
 Cucumber::Rake::Task.new do |t|
-  t.cucumber_opts = 'features --format pretty'
+  t.cucumber_opts = 'features --format Fivemat'
 end
 
 # Depend on app:db:test:prepare so that test database is recreated just like in a full rails app

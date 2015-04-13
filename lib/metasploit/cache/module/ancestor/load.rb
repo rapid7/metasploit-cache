@@ -141,11 +141,12 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
     validation_context == :loading
   end
 
-  # Validates that {#metasploit_module} is usable on this local platform, but only if {#metasploit_module} is not `nil`.
+  # Validates that {#metasploit_module} is usable on this local platform, but only if {#metasploit_module} is not `nil`
+  # and it responds to `:is_usable`.
   #
   # @return [void]
   def metasploit_module_usable
-    if metasploit_module and !metasploit_module.is_usable
+    if metasploit_module && metasploit_module.respond_to?(:is_usable) && !metasploit_module.is_usable
       errors.add(:metasploit_module, :unusable)
     end
   end

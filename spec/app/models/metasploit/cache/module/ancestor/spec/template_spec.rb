@@ -6,8 +6,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Spec::Template do
   end
 
   let(:module_ancestor) do
-    FactoryGirl.build(:metasploit_cache_module_ancestor)
+    FactoryGirl.build(module_ancestor_factory)
   end
+
+  let(:module_ancestor_factory) {
+    FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+  }
 
   context 'CONSTANTS' do
     context 'DEFAULT_SEARCH_PATHNAMES' do

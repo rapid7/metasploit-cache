@@ -11,10 +11,7 @@ class Metasploit::Cache::Module::Action < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute module_instance
-  #   Module that has this action.
-  #
-  #   @return [Metasploit::Cache::Module::Instance]
+  # Module that has this action.
   belongs_to :module_instance, class_name: 'Metasploit::Cache::Module::Instance', inverse_of: :actions
 
   #

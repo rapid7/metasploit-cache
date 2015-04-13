@@ -1662,7 +1662,7 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
     it { should validate_presence_of :description }
     it { should validate_presence_of :license }
-    it { should ensure_length_of(:module_authors) }
+    it { should validate_length_of(:module_authors) }
 
     it_should_behave_like 'Metasploit::Cache::Module::Instance validates dynamic length of',
                           :actions,

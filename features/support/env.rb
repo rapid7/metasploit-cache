@@ -17,6 +17,8 @@ require 'aruba/cucumber'
 # only does jruby customization if actually in JRuby
 require 'aruba/jruby'
 
+ENV['FIVEMAT_PROFILE'] = '1'
+
 if defined? SimpleCov
   Before do |scenario|
     command_name = case scenario

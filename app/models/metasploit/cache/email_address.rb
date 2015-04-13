@@ -9,26 +9,17 @@ class Metasploit::Cache::EmailAddress < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute module_authors
-  #   Credits where {#authors} used this email address for {#module_instances modules}.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Author>]
+  # Credits where {#authors} used this email address for {#module_instances modules}.
   has_many :module_authors, class_name: 'Metasploit::Cache::Module::Author', dependent: :destroy, inverse_of: :email_address
 
   #
   # through: :module_authors
   #
 
-  # @!attribute [r] authors
-  #   Authors that used this email address.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Author>]
+  # Authors that used this email address.
   has_many :authors, class_name: 'Metasploit::Cache::Author', through: :module_authors
 
-  # @!attribute [r] module_instances
-  #   Modules where this email address was used.
-  #
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
+  # Modules where this email address was used.
   has_many :module_instances, class_name: 'Metasploit::Cache::Module::Instance', through: :module_authors
 
   #

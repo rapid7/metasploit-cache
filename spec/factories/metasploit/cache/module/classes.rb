@@ -36,27 +36,32 @@ FactoryGirl.define do
     # Associations
     #
 
+    ancestor_factory_by_module_type = {
+              'auxiliary' => :metasploit_cache_auxiliary_ancestor,
+              'encoder' => :metasploit_cache_encoder_ancestor,
+              'exploit' => :metasploit_cache_exploit_ancestor,
+              'nop' => :metasploit_cache_nop_ancestor,
+              'post' => :metasploit_cache_post_ancestor
+    }
+
     # depends on module_type and payload_type
     ancestors {
       ancestors  = []
 
       # ignored attribute from factory; NOT the instance attribute
-      case module_type
-      when 'payload'
+      if module_type == 'payload'
         # ignored attribute from factory; NOT the instance attribute
         case payload_type
         when 'single'
-          ancestors << FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
-        when 'staged'
-          ancestors << FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor)
-          ancestors << FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor)
+          ancestors << FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
         else
           raise ArgumentError,
                 "Don't know how to create Metasploit::Cache::Module::Class#ancestors " \
                     "for Metasploit::Cache::Module::Class#payload_type (#{payload_type})"
         end
       else
-        ancestors << FactoryGirl.create(:metasploit_cache_module_ancestor, :module_type => module_type)
+        module_type_ancestor_factory = ancestor_factory_by_module_type.fetch(module_type)
+        ancestors << FactoryGirl.create(module_type_ancestor_factory)
       end
 
       ancestors

@@ -15,14 +15,6 @@
 # If you're trying to convert your SQL queries from metasploit_data_models <= 0.16.5 and the Metasploit::Cache::Module::Details cache
 # to the new Metasploit::Cache::Module::Instance cache available in metasploit_data_models >= 0.17.2, then see this
 # {file:docs/mdm_module_sql_translation.md guide}.
-#
-# Entity-Relationship Diagram
-# ===========================
-# The below Entity-Relationship Diagram (ERD) shows all direct relationships between the models in the Metasploit::Cache::Module
-# namespace.
-# All columns are included for ease-of-use with manually written SQL.
-#
-# ![Metasploit::Cache::Module (Direct) Entity-Relationship Diagram](../images/metasploit-cache-module.erd.png)
 module Metasploit::Cache::Module
   extend ActiveSupport::Autoload
 

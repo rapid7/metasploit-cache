@@ -218,7 +218,6 @@ module Metasploit::Cache::Module::Namespace
     # Set metadata from module_ancestor that is required for metasploit_module methods
     cache = namespace_module.cache
     cache.module_type = module_ancestor.module_type
-    cache.payload_type = module_ancestor.payload_type
     # record directly so it doesn't have to be derived from namespace_module.name
     cache.real_path_sha1_hex_digest = module_ancestor.real_path_sha1_hex_digest
 

@@ -1,4 +1,4 @@
-# Defines constants for {Metasploit::Cache::Module} types as used in {Metasploit::Cache::Module::Ancestor}.
+# Defines constants for {Metasploit::Cache::Module::Ancestor#module_type}.
 module Metasploit::Cache::Module::Type
   #
   # CONSTANTS

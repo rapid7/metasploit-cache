@@ -10,7 +10,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
       end
 
       it { should include('single') }
-      it { should include('staged') }
     end
 
     context 'STAGED_ANCESTOR_PAYLOAD_TYPES' do
@@ -205,14 +204,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
               it { should be_valid }
             end
 
-            context 'staged' do
-              let(:payload_type) do
-                'staged'
-              end
-
-              it { should be_valid }
-            end
-
             context 'other' do
               let(:payload_type) do
                 'not_a_payload_type'
@@ -257,18 +248,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
         context 'single payload' do
           let!(:ancestors) do
             [
-                FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
-            ]
-          end
-
-          it { should be_valid }
-        end
-
-        context 'stage payload and stager payload' do
-          let!(:ancestors) do
-            [
-                FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor),
-                FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor)
+                FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
             ]
           end
 
@@ -295,8 +275,8 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
       let!(:generic_payload_ancestor) {
         FactoryGirl.create(
-                       :single_payload_metasploit_cache_module_ancestor,
-                       reference_name: 'singles/generic/shell_bind_tcp'
+                       :metasploit_cache_payload_single_ancestor,
+                       payload_name: 'generic/shell_bind_tcp'
         )
       }
 
@@ -467,7 +447,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
             context 'with 1 ancestor' do
               let(:ancestors) do
                 [
-                    FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
+                    FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
                 ]
               end
 
@@ -479,41 +459,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
             context 'without 1 ancestor' do
               let(:ancestors) do
                 []
-              end
-
-              it 'should record error on ancestors' do
-                expect(module_class.errors[:ancestors]).to include(error)
-              end
-            end
-          end
-
-          context 'with staged payload_type' do
-            let(:error) do
-              'must have exactly two ancestors (stager + stage) for staged payload module class'
-            end
-
-            let(:payload_type) do
-              'staged'
-            end
-
-            context 'with 2 ancestors' do
-              let(:ancestors) do
-                [
-                    FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor),
-                    FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor)
-                ]
-              end
-
-              it 'should not record error on ancestors' do
-                expect(module_class.errors[:ancestors]).not_to include(error)
-              end
-            end
-
-            context 'without 2 ancestors' do
-              let(:ancestors) do
-                [
-                    FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor)
-                ]
               end
 
               it 'should record error on ancestors' do
@@ -541,9 +486,17 @@ RSpec.describe Metasploit::Cache::Module::Class do
           end
 
           context 'with 1 ancestor' do
+            let(:ancestor) {
+              FactoryGirl.create(ancestor_factory)
+            }
+
+            let(:ancestor_factory) {
+              FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+            }
+
             let(:ancestors) do
               [
-                  FactoryGirl.create(:non_payload_metasploit_cache_module_ancestor)
+                  ancestor
               ]
             end
 
@@ -576,7 +529,8 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           def error(module_class, ancestor)
             "can contain ancestors only with same module_type (#{module_class.module_type}); " \
-            "#{ancestor.full_name} cannot be an ancestor due to its module_type (#{ancestor.module_type})"
+            "#{ancestor.module_type}/#{ancestor.reference_name} cannot be an ancestor due to its module_type " \
+            "(#{ancestor.module_type})"
           end
 
           before(:each) do
@@ -588,16 +542,21 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'with module_type' do
             let(:module_type) do
-              FactoryGirl.generate :metasploit_cache_module_type
+              FactoryGirl.generate :metasploit_cache_non_payload_module_type
             end
 
             context 'with same Metasploit::Cache::Module::Ancestor#module_type and Metasploit::Cache::Module::Class#module_type' do
+              let(:ancestor) {
+                FactoryGirl.create(ancestor_factory)
+              }
+
+              let(:ancestor_factory) {
+                Metasploit::Cache::Module::Ancestor::Spec::FACTORIES_BY_MODULE_TYPE.fetch(module_type).sample
+              }
+
               let(:ancestors) do
                 [
-                    FactoryGirl.create(
-                        :metasploit_cache_module_ancestor,
-                        :module_type => module_type
-                    )
+                    ancestor
                 ]
               end
 
@@ -609,10 +568,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
             context 'without same Metasploit::Cache::Module::Ancestor#module_type and Metasploit::Cache::Module::Class#module_type' do
               let(:ancestors) do
                 [
-                    FactoryGirl.create(
-                        :metasploit_cache_module_ancestor,
-                        :module_type => 'exploit'
-                    )
+                    FactoryGirl.create(:metasploit_cache_exploit_ancestor)
                 ]
               end
 
@@ -629,10 +585,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
           context 'without module_type' do
             # with a nil module_type, module_type will be derived from
             let(:ancestors) do
-              [
-                  FactoryGirl.create(:metasploit_cache_module_ancestor),
-                  FactoryGirl.create(:metasploit_cache_module_ancestor)
-              ]
+              Array.new(2) {
+                factory = FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+                FactoryGirl.create(factory)
+              }
             end
 
             let(:module_type) do
@@ -670,17 +626,12 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
           context 'with same Metasploit::Cache::Module::Ancestor#module_type' do
             let(:ancestors) do
-              [
-                  FactoryGirl.create(
-                      :metasploit_cache_module_ancestor,
-                      :module_type => module_type
-                  ),
-                  FactoryGirl.create(
-                      :metasploit_cache_module_ancestor,
-                      :module_type => module_type
-                  )
-              ]
+              FactoryGirl.create_list(ancestors_factory, 2)
             end
+
+            let(:ancestors_factory) {
+              Metasploit::Cache::Module::Ancestor::Spec::FACTORIES_BY_MODULE_TYPE[module_type].sample
+            }
 
             let(:module_type) do
               FactoryGirl.generate :metasploit_cache_module_type
@@ -698,10 +649,9 @@ RSpec.describe Metasploit::Cache::Module::Class do
           context 'without same Metasploit::Cache::Module::Ancestor#module_type' do
             let(:ancestors) do
               module_type_set.collect { |module_type|
-                FactoryGirl.create(
-                    :metasploit_cache_module_ancestor,
-                    :module_type => module_type
-                )
+                factory = Metasploit::Cache::Module::Ancestor::Spec::FACTORIES_BY_MODULE_TYPE.fetch(module_type).sample
+
+                FactoryGirl.create(factory)
               }
             end
 
@@ -758,9 +708,8 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
             context 'single' do
               let(:error) do
-                "cannot have an ancestor (#{ancestor.full_name}) " \
-                "with payload_type (#{ancestor.payload_type}) " \
-                "for class payload_type (#{payload_type})"
+                "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) that is not a payload " \
+                "for payload class"
               end
 
               let(:payload_type) do
@@ -769,156 +718,11 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
               context "with 'single' Metasploit::Cache::Module::Ancestor#payload_type" do
                 let(:ancestor) do
-                  FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
+                  FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
                 end
 
                 it 'should not record error on ancestors' do
                   expect(module_class.errors[:ancestors]).not_to include(error)
-                end
-              end
-
-              context "without 'single' Metasploit::Cache::Module::Ancestor#payload_type" do
-                let(:ancestor) do
-                  FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor)
-                end
-
-                it 'should record error on ancestors' do
-                  expect(module_class.errors[:ancestors]).to include(error)
-                end
-              end
-            end
-
-            context 'staged' do
-              let(:payload_type) do
-                'staged'
-              end
-
-              context "Metasploit::Cache::Module::Ancestor#payload_type" do
-                let(:few_error) do
-                  "needs exactly one ancestor with payload_type (#{ancestor_payload_type}), " \
-                  "but there are none."
-                end
-
-                let(:many_error) do
-                  "needs exactly one ancestor with payload_type (#{ancestor_payload_type}), " \
-                  "but there are #{ancestors.count} (#{ancestors.map(&:full_name).sort.to_sentence})"
-                end
-
-                context 'single' do
-                  context 'without zero' do
-                    let(:ancestor) do
-                      FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
-                    end
-
-                    let(:ancestors) do
-                      [
-                          ancestor
-                      ]
-                    end
-
-                    let(:error) do
-                      "cannot have ancestors (#{ancestor.full_name}) " \
-                      "with payload_type (#{ancestor.payload_type}) " \
-                      "for class payload_type (#{payload_type}); " \
-                      "only one stage and one stager ancestor is allowed"
-                    end
-
-                    it 'should record error on ancestors' do
-                      module_class.valid?
-
-                      expect(module_class.errors[:ancestors]).to include(error)
-                    end
-                  end
-                end
-
-                context 'stage' do
-                  let(:ancestor_payload_type) do
-                    'stage'
-                  end
-
-                  context 'with < 1' do
-                    # 1 stager and 0 stages, so stages count < 1
-                    let(:ancestors) do
-                      [
-                          FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor)
-                      ]
-                    end
-
-                    it 'should record error on ancestors' do
-                      expect(module_class.errors[:ancestors]).to include(few_error)
-                    end
-                  end
-
-                  context 'with 1' do
-                    # 1 stager and 1 stage, so stages count == 1
-                    let(:ancestors) do
-                      [
-                          FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor),
-                          FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor)
-                      ]
-                    end
-
-                    it 'should not record error on ancestors' do
-                      expect(module_class.errors[:ancestors]).not_to include(few_error)
-                      expect(module_class.errors[:ancestors]).not_to include(many_error)
-                    end
-                  end
-
-                  context 'with > 1' do
-                    # 0 stager, 2 stages, so stages count > 1
-                    let(:ancestors) do
-                      FactoryGirl.create_list(:stage_payload_metasploit_cache_module_ancestor, 2)
-                    end
-
-                    it 'should record error on ancestors' do
-                      expect(module_class.errors[:ancestors]).to include(many_error)
-                    end
-                  end
-                end
-
-                context 'stager' do
-                  let(:ancestor_payload_type) do
-                    'stager'
-                  end
-
-                  context 'with < 1' do
-                    # 0 stager and 1 stages, so stagers count < 1
-                    let(:ancestors) do
-                      [
-                          FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor)
-                      ]
-                    end
-
-                    it 'should record error on ancestors' do
-                      expect(module_class.errors[:ancestors]).to include(few_error)
-                    end
-                  end
-
-                  context 'with 1' do
-                    # 1 stager and 1 stage, so stagers count == 1
-                    let(:ancestors) do
-                      [
-                          FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor),
-                          FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor)
-                      ]
-                    end
-
-                    it 'should not record error on ancestors' do
-                      expect(module_class.errors[:ancestors]).not_to include(few_error)
-                      expect(module_class.errors[:ancestors]).not_to include(many_error)
-                    end
-                  end
-
-                  context 'with > 1' do
-                    # 2 stagers, 0 stages, so stagers count > 1
-                    let(:ancestors) do
-                      FactoryGirl.create_list(:stager_payload_metasploit_cache_module_ancestor, 2)
-                    end
-
-                    it 'should record error on ancestors' do
-                      expect(module_class.errors[:ancestors]).to include(many_error)
-                    end
-                  end
                 end
               end
             end
@@ -933,8 +737,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
           end
 
           let(:error) do
-            "cannot have an ancestor (#{ancestor.full_name}) " \
-            "with a payload_type (#{ancestor.payload_type}) " \
+            "cannot have an ancestor (#{ancestor.module_type}/#{ancestor.reference_name}) that is a payload with " \
             "for class module_type (#{module_type})"
           end
 
@@ -946,20 +749,14 @@ RSpec.describe Metasploit::Cache::Module::Class do
             module_class.valid?
           end
 
-          context 'with Metasploit::Cache::Module::Ancestor#payload_type' do
-            let(:ancestor) do
-              FactoryGirl.create(:payload_metasploit_cache_module_ancestor)
-            end
-
-            it 'should record error on ancestors' do
-              expect(module_class.errors[:ancestors]).to include(error)
-            end
-          end
-
           context 'without Metasploit::Cache::Module::Ancestor#payload_type' do
             let(:ancestor) do
-              FactoryGirl.create(:non_payload_metasploit_cache_module_ancestor)
+              FactoryGirl.create(ancestor_factory)
             end
+
+            let(:ancestor_factory) {
+              FactoryGirl.generate :metasploit_cache_non_payload_ancestor_factory
+            }
 
             it 'should not record error on ancestors' do
               expect(module_class.errors[:ancestors]).not_to include(error)
@@ -1162,8 +959,12 @@ RSpec.describe Metasploit::Cache::Module::Class do
       context 'non-empty' do
         context 'with same Metasploit::Cache::Module::Ancestor#module_type' do
           let(:ancestors) do
-            FactoryGirl.create_list(:metasploit_cache_module_ancestor, 2, :module_type => module_type)
+            FactoryGirl.create_list(ancestors_factory, 2)
           end
+
+          let(:ancestors_factory) {
+            Metasploit::Cache::Module::Ancestor::Spec::FACTORIES_BY_MODULE_TYPE.fetch(module_type).sample
+          }
 
           let(:module_type) do
             FactoryGirl.generate :metasploit_cache_module_type
@@ -1176,7 +977,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
         context 'with different Metasploit::Cache::Module;:Ancestor#module_type' do
           let(:ancestors) do
-            FactoryGirl.create_list(:metasploit_cache_module_ancestor, 2)
+            [
+                FactoryGirl.create(:metasploit_cache_auxiliary_ancestor),
+                FactoryGirl.create(:metasploit_cache_encoder_ancestor)
+            ]
           end
 
           it 'should return nil because there is no consensus' do
@@ -1206,57 +1010,14 @@ RSpec.describe Metasploit::Cache::Module::Class do
       end
 
       context 'with 1 ancestor' do
-        let(:ancestors) do
-          [
-              FactoryGirl.create(
-                  :metasploit_cache_module_ancestor,
-                  :module_type => 'payload',
-                  :payload_type => payload_type
-              )
-          ]
-        end
-
         context 'with single' do
-          let(:payload_type) do
-            'single'
-          end
+          let(:ancestors) {
+            [
+                FactoryGirl.create(:metasploit_cache_payload_single_ancestor)
+            ]
+          }
 
           it { should == 'single' }
-        end
-
-        context 'without single' do
-          let(:payload_type) do
-            'stage'
-          end
-
-          it { should be_nil }
-        end
-      end
-
-      context 'with 2 ancestors' do
-        context 'with stager and stage' do
-          let(:ancestors) do
-            ['stager', 'stage'].collect { |payload_type|
-              FactoryGirl.create(
-                  :payload_metasploit_cache_module_ancestor,
-                  :payload_type => payload_type
-              )
-            }
-          end
-
-          it { should == 'staged' }
-        end
-
-        context 'without stager and stage' do
-          let(:ancestors) do
-            FactoryGirl.create_list(
-                :payload_metasploit_cache_module_ancestor,
-                2,
-                :payload_type => 'stage'
-            )
-          end
-
-          it { should be_nil }
         end
       end
     end
@@ -1300,18 +1061,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
         end
       end
 
-      context 'with staged' do
-        let(:payload_type) do
-          'staged'
-        end
-
-        it 'should call #derived_staged_payload_reference_name' do
-          expect(module_class).to receive(:derived_staged_payload_reference_name)
-
-          derived_reference_name
-        end
-      end
-
       context 'without single or staged' do
         let(:payload_type) do
           'invalid_payload_type'
@@ -1332,8 +1081,12 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
       context 'with 1 ancestor' do
         let(:ancestor) do
-          FactoryGirl.create(:non_payload_metasploit_cache_module_ancestor)
+          FactoryGirl.create(ancestor_factory)
         end
+
+        let(:ancestor_factory) {
+          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+        }
 
         let(:ancestors) do
           [
@@ -1348,7 +1101,10 @@ RSpec.describe Metasploit::Cache::Module::Class do
 
       context 'without 1 ancestor' do
         let(:ancestors) do
-          FactoryGirl.create_list(:metasploit_cache_module_ancestor, 2)
+          Array.new(2) {
+            factory = FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+            FactoryGirl.create(factory)
+          }
         end
 
         it { should be_nil }
@@ -1366,13 +1122,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
     end
 
     context 'with 1 ancestor' do
-      let(:ancestor) do
-        FactoryGirl.create(
-            :payload_metasploit_cache_module_ancestor,
-            :payload_type => payload_type
-        )
-      end
-
       let(:ancestors) do
         [
             ancestor
@@ -1380,25 +1129,20 @@ RSpec.describe Metasploit::Cache::Module::Class do
       end
 
       context 'with single' do
-        let(:payload_type) do
-          'single'
+        let(:ancestor) do
+          FactoryGirl.build(
+              :metasploit_cache_payload_single_ancestor,
+              relative_path: relative_path
+          )
         end
 
-        before(:each) do
-          ancestor.reference_name = reference_name
-        end
-
-        context 'with reference_name' do
+        context 'with Metasploit::Cache::Module::Ancestor#relative_path' do
           let(:payload_name) do
             'payload/name'
           end
 
-          let(:payload_type_directory) do
-            'singles'
-          end
-
-          let(:reference_name) do
-            "#{payload_type_directory}/#{payload_name}"
+          let(:relative_path) do
+            "payloads/singles/#{payload_name}"
           end
 
           it 'should return Metasploit::Cache::Module::Ancestor#payload_name' do
@@ -1406,140 +1150,19 @@ RSpec.describe Metasploit::Cache::Module::Class do
           end
         end
 
-        context 'without reference_name' do
-          let(:reference_name) do
+        context 'without Metasploit::Cache::Module::Ancestor#relative_path' do
+          let(:relative_path) do
             nil
           end
 
           it { is_expected.to be_nil }
         end
       end
-
-      context 'without single' do
-        let(:payload_type) do
-          'stage'
-        end
-
-        it { should be_nil }
-      end
     end
 
     context 'without 1 ancestor' do
       let(:ancestors) do
         []
-      end
-
-      it { should be_nil }
-    end
-  end
-
-  context '#derived_staged_payload_reference_name' do
-    subject(:derived_staged_payload_reference_name) do
-      module_class.send(:derived_staged_payload_reference_name)
-    end
-
-    before(:each) do
-      module_class.ancestors = ancestors
-    end
-
-    context 'with 2 ancestors' do
-      context 'with 1 stage' do
-        let(:stage_ancestor) do
-          FactoryGirl.create(:stage_payload_metasploit_cache_module_ancestor)
-        end
-
-        before(:each) do
-          stage_ancestor.reference_name = stage_reference_name
-        end
-
-        context 'with reference_name' do
-          let(:stage_payload_name) do
-            'payload/name'
-          end
-
-          let(:stage_reference_name) do
-            "#{stage_type_directory}/#{stage_payload_name}"
-          end
-
-          let(:stage_type_directory) do
-            'stages'
-          end
-
-          context 'with 1 stager' do
-            let(:ancestors) do
-              [
-                  stager_ancestor,
-                  stage_ancestor
-              ]
-            end
-
-            let(:stager_ancestor) do
-              FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor)
-            end
-
-            before(:each) do
-              stager_ancestor.handler_type = stager_handler_type
-            end
-
-            context 'with handler_type' do
-              let(:stager_handler_type) do
-                FactoryGirl.generate :metasploit_cache_module_handler_type
-              end
-
-              it 'should be <stage.payload_name>/<stager.handler_type>' do
-                expect(derived_staged_payload_reference_name).to eq("#{stage_payload_name}/#{stager_handler_type}")
-              end
-            end
-
-            context 'without handler_type' do
-              let(:stager_handler_type) do
-                nil
-              end
-
-              it { should be_nil }
-            end
-          end
-
-          context 'without 1 stager' do
-            let(:ancestors) do
-              [
-                  stage_ancestor,
-                  FactoryGirl.create(:single_payload_metasploit_cache_module_ancestor)
-              ]
-            end
-
-            it { should be_nil }
-          end
-        end
-
-        context 'without reference_name' do
-          let(:ancestors) do
-            [
-                FactoryGirl.create(:stager_payload_metasploit_cache_module_ancestor),
-                stage_ancestor
-            ]
-          end
-
-          let(:stage_reference_name) do
-            nil
-          end
-
-          it { should be_nil }
-        end
-      end
-
-      context 'without 1 stage' do
-        let(:ancestors) do
-          FactoryGirl.create_list(:stager_payload_metasploit_cache_module_ancestor, 2)
-        end
-
-        it { should be_nil }
-      end
-    end
-
-    context 'without 2 ancestors' do
-      let(:ancestors) do
-        FactoryGirl.create_list(:metasploit_cache_module_ancestor, 3)
       end
 
       it { should be_nil }
@@ -1575,89 +1198,6 @@ RSpec.describe Metasploit::Cache::Module::Class do
       end
 
       it { is_expected.to eq(false) }
-    end
-  end
-
-  context '#staged_payload_type_count' do
-    subject(:staged_payload_type_count) do
-      module_class.send(
-          :staged_payload_type_count,
-          ancestors_by_payload_type,
-          ancestor_payload_type
-      )
-    end
-
-    let(:ancestor_payload_type) do
-      FactoryGirl.generate :metasploit_cache_module_ancestor_payload_type
-    end
-
-    before(:each) do
-      staged_payload_type_count
-    end
-
-    context 'with ancestors with payload_type' do
-      context 'with 1' do
-        let(:ancestors_by_payload_type) do
-          {
-              ancestor_payload_type => FactoryGirl.create_list(
-                  :payload_metasploit_cache_module_ancestor,
-                  1,
-                  :payload_type => ancestor_payload_type
-              )
-          }
-        end
-
-        it 'should not record error on ancestors' do
-          expect(module_class.errors[:ancestors]).to be_empty
-        end
-      end
-
-      context 'without 1' do
-        let(:ancestors_by_payload_type) do
-          {
-              ancestor_payload_type => payload_type_ancestors
-          }
-        end
-
-        let(:full_name_sentence) do
-          payload_type_ancestors.map(&:full_name).sort.to_sentence
-        end
-
-        let(:payload_type_ancestors) do
-          FactoryGirl.create_list(
-              :payload_metasploit_cache_module_ancestor,
-              payload_type_ancestor_count,
-              :payload_type => ancestor_payload_type
-          )
-        end
-
-        let(:payload_type_ancestor_count) do
-          2
-        end
-
-        let(:error) do
-          "needs exactly one ancestor with payload_type (#{ancestor_payload_type}), " \
-          "but there are #{payload_type_ancestor_count} (#{full_name_sentence})"
-        end
-
-        it 'should record error on ancestors' do
-          expect(module_class.errors[:ancestors]).to include(error)
-        end
-      end
-    end
-
-    context 'without ancestors with payload_type' do
-      let(:ancestors_by_payload_type) do
-        {}
-      end
-
-      let(:error) do
-        "needs exactly one ancestor with payload_type (#{ancestor_payload_type}), but there are none."
-      end
-
-      it 'should record error on ancestors' do
-        expect(module_class.errors[:ancestors]).to include(error)
-      end
     end
   end
 end

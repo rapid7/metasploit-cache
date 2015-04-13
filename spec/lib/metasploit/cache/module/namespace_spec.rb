@@ -124,18 +124,21 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
     it 'sets path and line so that backtrace appears in CONTENT' do
       namespace_module = create
 
-      module_ancestor = FactoryGirl.build(:metasploit_cache_module_ancestor)
+      module_ancestor_factory = FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+      module_ancestor = FactoryGirl.build(module_ancestor_factory)
 
-      File.open(module_ancestor.real_path, 'w') do |f|
+      module_ancestor.real_pathname.open('w') do |f|
         f.puts 'raise "Error in module_eval_with_lexical_scope"'
       end
 
+      module_ancestor_real_path = module_ancestor.real_pathname.to_path
+
       expect {
-        namespace_module.module_eval_with_lexical_scope(module_ancestor.contents, module_ancestor.real_path)
+        namespace_module.module_eval_with_lexical_scope(module_ancestor.contents, module_ancestor_real_path)
       }.to raise_error(RuntimeError) { |error|
              backtrace = error.backtrace
 
-             expect(backtrace[0]).to start_with(module_ancestor.real_path)
+             expect(backtrace[0]).to start_with(module_ancestor_real_path)
              expect(backtrace[1]).to match(/#{Regexp.escape(described_class::CONTENT_FILE)}:\d+:in `module_eval'/)
 
              path, line, code = backtrace[2].split(':')
@@ -208,10 +211,14 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
     }
 
     let(:module_ancestor) {
-      FactoryGirl.build(:metasploit_cache_module_ancestor).tap { |module_ancestor|
+      FactoryGirl.build(module_ancestor_factory).tap { |module_ancestor|
         # validate to populate #real_path_sha1_hex_digest
         module_ancestor.valid?
       }
+    }
+
+    let(:module_ancestor_factory) {
+      FactoryGirl.generate :metasploit_cache_module_ancestor_factory
     }
 
     it 'starts with NAMES' do
@@ -404,7 +411,11 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
     #
 
     let(:module_ancestor) {
-      FactoryGirl.build(:metasploit_cache_module_ancestor)
+      FactoryGirl.build(module_ancestor_factory)
+    }
+
+    let(:module_ancestor_factory) {
+      FactoryGirl.generate :metasploit_cache_module_ancestor_factory
     }
 
     context 'with previous namespace module' do
@@ -479,26 +490,6 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
         }
 
         expect(block_ran).to eq(true)
-      end
-
-      context 'with Metasploit::Cache::Module::Ancestor#payload_type' do
-        let(:module_ancestor) {
-          FactoryGirl.build(:payload_metasploit_cache_module_ancestor)
-        }
-
-        it 'sets payload_type on namespace module passed to block' do
-          block_ran = false
-
-          expect(module_ancestor.payload_type).not_to be_nil
-
-          transaction { |_, namespace_module|
-            expect(namespace_module.cache.payload_type).to eq(module_ancestor.payload_type)
-
-            block_ran = true
-          }
-
-          expect(block_ran).to eq(true)
-        end
       end
 
       context 'with Exception' do
@@ -627,26 +618,6 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
         }
 
         expect(block_ran).to eq(true)
-      end
-
-      context 'with Metasploit::Cache::Module::Ancestor#payload_type' do
-        let(:module_ancestor) {
-          FactoryGirl.build(:payload_metasploit_cache_module_ancestor)
-        }
-
-        it 'sets payload_type on namespace module passed to block' do
-          block_ran = false
-
-          expect(module_ancestor.payload_type).not_to be_nil
-
-          transaction { |_, namespace_module|
-            expect(namespace_module.cache.payload_type).to eq(module_ancestor.payload_type)
-
-            block_ran = true
-          }
-
-          expect(block_ran).to eq(true)
-        end
       end
 
       context 'with Exception' do

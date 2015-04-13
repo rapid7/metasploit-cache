@@ -8,17 +8,20 @@ class Metasploit::Cache::Module::Reference < ActiveRecord::Base
   # Associations
   #
 
-  # @!attribute [rw] module_instance
-  #   {Metasploit::Cache::Module::Instance Module} with {#reference}.
-  #
-  #   @return [Metasploit::Cache::Module::Instance]
+  # {Metasploit::Cache::Module::Instance Module} with {#reference}.
   belongs_to :module_instance, class_name: 'Metasploit::Cache::Module::Instance', inverse_of: :module_references
 
-  # @!attribute reference
-  #   {Metasploit::Cache::Reference reference} to exploit or proof-of-concept (PoC) code for {#module_instance}.
-  #
-  #   @return [Metasploit::Cache::Reference]
+  # {Metasploit::Cache::Reference reference} to exploit or proof-of-concept (PoC) code for {#module_instance}.
   belongs_to :reference, class_name: 'Metasploit::Cache::Reference', inverse_of: :module_references
+
+  #
+  # Attributes
+  #
+
+  # @!method reference_id
+  #   The primary key of the associated {#reference}.
+  #
+  #   @return [Integer]
 
   #
   # Validations

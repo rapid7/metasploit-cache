@@ -15,8 +15,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
   }
 
   let(:expected_module_ancestor) do
-    FactoryGirl.create(:metasploit_cache_module_ancestor)
+    FactoryGirl.create(expected_module_ancestor_factory)
   end
+
+  let(:expected_module_ancestor_factory) {
+    FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+  }
 
   context 'resurrecting attributes' do
     context '#module_ancestor' do
@@ -55,7 +59,11 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
       }
 
       let(:module_ancestor) {
-        FactoryGirl.build(:metasploit_cache_module_ancestor)
+        FactoryGirl.build(module_ancestor_factory)
+      }
+
+      let(:module_ancestor_factory) {
+        FactoryGirl.generate :metasploit_cache_module_ancestor_factory
       }
 
       it 'does not access default #module_ancestor' do
@@ -86,6 +94,12 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
             )
           }
 
+          let(:module_ancestor) {
+            super().tap { |module_ancestor|
+              module_ancestor.relative_path = File.join('does', 'not', 'exist.rb')
+            }
+          }
+
           let(:string_io) {
             StringIO.new
           }
@@ -99,13 +113,14 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Cache do
           #
 
           before(:each) do
+            module_ancestor.valid?
             module_ancestor_cache.logger = logger
           end
 
           it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
             persist
 
-            expect(string_io.string).to include("[#{module_ancestor.real_path}]")
+            expect(string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
           end
 
           it 'logs validation errors' do
