@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150306192052) do
+ActiveRecord::Schema.define(:version => 20150413211925) do
 
   create_table "api_keys", :force => true do |t|
     t.text     "token"
@@ -351,6 +351,28 @@ ActiveRecord::Schema.define(:version => 20150306192052) do
   add_index "mc_module_targets", ["module_instance_id", "index"], :name => "index_mc_module_targets_on_module_instance_id_and_index", :unique => true
   add_index "mc_module_targets", ["module_instance_id", "name"], :name => "index_mc_module_targets_on_module_instance_id_and_name", :unique => true
 
+  create_table "mc_payload_single_instances", :force => true do |t|
+    t.text    "description",             :null => false
+    t.string  "name",                    :null => false
+    t.boolean "privileged",              :null => false
+    t.integer "payload_single_class_id", :null => false
+  end
+
+  add_index "mc_payload_single_instances", ["payload_single_class_id"], :name => "index_mc_payload_single_instances_on_payload_single_class_id", :unique => true
+
+  create_table "mc_payload_stage_instances", :force => true do |t|
+    t.text    "description",            :null => false
+    t.string  "name",                   :null => false
+    t.boolean "privileged",             :null => false
+    t.integer "payload_stage_class_id", :null => false
+  end
+
+  add_index "mc_payload_stage_instances", ["payload_stage_class_id"], :name => "index_mc_payload_stage_instances_on_payload_stage_class_id", :unique => true
+
+  create_table "mc_payload_stager_instances", :force => true do |t|
+    t.text "description", :null => false
+  end
+
   create_table "mc_platforms", :force => true do |t|
     t.text    "fully_qualified_name", :null => false
     t.text    "relative_name",        :null => false
@@ -586,11 +608,9 @@ ActiveRecord::Schema.define(:version => 20150306192052) do
     t.boolean  "critical"
     t.boolean  "seen"
     t.text     "data"
-    t.integer  "vuln_id"
   end
 
   add_index "notes", ["ntype"], :name => "index_notes_on_ntype"
-  add_index "notes", ["vuln_id"], :name => "index_notes_on_vuln_id"
 
   create_table "profiles", :force => true do |t|
     t.datetime "created_at",                   :null => false
