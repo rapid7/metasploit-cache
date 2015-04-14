@@ -372,6 +372,7 @@ ActiveRecord::Schema.define(:version => 20150413211925) do
   create_table "mc_payload_stager_instances", :force => true do |t|
     t.text   "description",        :null => false
     t.string "handler_type_alias"
+    t.string "name",               :null => false
   end
 
   create_table "mc_platforms", :force => true do |t|

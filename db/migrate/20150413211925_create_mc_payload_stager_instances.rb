@@ -25,6 +25,8 @@ class CreateMcPayloadStagerInstances < ActiveRecord::Migration
              null: false
       t.string :handler_type_alias,
                null: true
+      t.string :name,
+               null: false
     end
   end
 end
