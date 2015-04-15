@@ -7,6 +7,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
       it { is_expected.to have_db_column(:handler_type_alias).of_type(:string).with_options(null: true) }
       it { is_expected.to have_db_column(:name).of_type(:string).with_options(null: false) }
       it { is_expected.to have_db_column(:payload_stager_class_id).of_type(:integer).with_options(null: false) }
+      it { is_expected.to have_db_column(:privileged).of_type(:boolean).with_options(null: false) }
     end
 
     context 'indices' do
@@ -29,6 +30,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
     it { is_expected.not_to validate_presence_of :handler_type_alias }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :payload_stager_class }
+    it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
