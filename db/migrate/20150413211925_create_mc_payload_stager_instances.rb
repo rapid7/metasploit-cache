@@ -27,6 +27,18 @@ class CreateMcPayloadStagerInstances < ActiveRecord::Migration
                null: true
       t.string :name,
                null: false
+
+      #
+      # References
+      #
+
+      t.references :payload_stager_class,
+                   null: false
+    end
+
+    change_table TABLE_NAME do |t|
+      t.index :payload_stager_class_id,
+              unique: true
     end
   end
 end

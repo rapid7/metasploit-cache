@@ -9,6 +9,12 @@ class Metasploit::Cache::Payload::Stager::Class < Metasploit::Cache::Payload::Di
              class_name: 'Metasploit::Cache::Payload::Stager::Ancestor',
              inverse_of: :stager_payload_class
 
+  # Instance-level metadata for this stager payload Metasploit Module.
+  has_one :payload_stager_instance,
+          class_name: 'Metasploit::Cache::Payload::Stager::Instance',
+          dependent: :destroy,
+          inverse_of: :payload_stager_class
+
   # Reliability of Metasploit Module.
   belongs_to :rank,
              class_name: 'Metasploit::Cache::Module::Rank',

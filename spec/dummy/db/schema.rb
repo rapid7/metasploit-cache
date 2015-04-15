@@ -370,10 +370,13 @@ ActiveRecord::Schema.define(:version => 20150413211925) do
   add_index "mc_payload_stage_instances", ["payload_stage_class_id"], :name => "index_mc_payload_stage_instances_on_payload_stage_class_id", :unique => true
 
   create_table "mc_payload_stager_instances", :force => true do |t|
-    t.text   "description",        :null => false
-    t.string "handler_type_alias"
-    t.string "name",               :null => false
+    t.text    "description",             :null => false
+    t.string  "handler_type_alias"
+    t.string  "name",                    :null => false
+    t.integer "payload_stager_class_id", :null => false
   end
+
+  add_index "mc_payload_stager_instances", ["payload_stager_class_id"], :name => "index_mc_payload_stager_instances_on_payload_stager_class_id", :unique => true
 
   create_table "mc_platforms", :force => true do |t|
     t.text    "fully_qualified_name", :null => false
