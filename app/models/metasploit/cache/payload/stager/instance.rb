@@ -35,6 +35,12 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #
   #   @return [Integer]
 
+  # @!attribute privileged
+  #   Whether this payload requires privileged access to the remote machine.
+  #
+  #   @return [true] privileged access is required.
+  #   @return [false] privileged access is NOT required.
+
   #
   # Validations
   #
@@ -77,6 +83,12 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #   access.
   #
   #   @param payload_stager_class_id [Integer]
+  #   @return [void]
+
+  # @!method privileged=(privileged)
+  #   Sets {#privileged}.
+  #
+  #   @param priviliged [Boolean] `true` if privileged access is required; `false` if privileged access is not required.
   #   @return [void]
 
   Metasploit::Concern.run(self)

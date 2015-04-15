@@ -27,6 +27,8 @@ class CreateMcPayloadStagerInstances < ActiveRecord::Migration
                null: true
       t.string :name,
                null: false
+      t.boolean :privileged,
+                null: false
 
       #
       # References

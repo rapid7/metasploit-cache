@@ -373,6 +373,7 @@ ActiveRecord::Schema.define(:version => 20150413211925) do
     t.text    "description",             :null => false
     t.string  "handler_type_alias"
     t.string  "name",                    :null => false
+    t.boolean "privileged",              :null => false
     t.integer "payload_stager_class_id", :null => false
   end
 
