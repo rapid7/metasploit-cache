@@ -31,7 +31,7 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #   @return [String]
 
   # @!attribute payload_stager_class_id
-  #   The foreign key for the {#payloadr_stage_class} association.
+  #   The foreign key for the {#payload_stager_class} association.
   #
   #   @return [Integer]
 
