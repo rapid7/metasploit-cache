@@ -71,6 +71,7 @@ Test coverage should not differ between the database adapters.
 ### Postgres
 - [ ] `rm Gemfile.lock`
 - [ ] `bundle install --without sqlite`
+- [ ] `rake db:drop db:create db:migrate`
 - [ ] `DATABASE_ADAPTER=postgres rake cucumber spec coverage`
 - [ ] VERIFY no failures
 - [ ] VERIFY 100% coverage
@@ -78,6 +79,7 @@ Test coverage should not differ between the database adapters.
 ### Sqlite3
 - [ ] `rm Gemfile.lock`
 - [ ] `bundle install --without postgres`
+- [ ] `rake db:drop db:create db:migrate`
 - [ ] `DATABASE_ADAPTER=sqlite3 rake cucumber spec coverage`
 - [ ] VERIFY no failures
 - [ ] VERIFY 100% coverage
@@ -89,6 +91,7 @@ Documentation coverage should not differ between the database adapters.
 ### Postgres
 - [ ] `rm Gemfile.lock`
 - [ ] `bundle install --without sqlite`
+- [ ] `rake db:drop db:create db:migrate`
 - [ ] `DATABASE_ADAPTER=postgres rake yard`
 - [ ] `rake yard`
 - [ ] VERIFY no warnings
@@ -97,6 +100,7 @@ Documentation coverage should not differ between the database adapters.
 ### Sqlite3
 - [ ] `rm Gemfile.lock`
 - [ ] `bundle install --without postgres`
+- [ ] `rake db:drop db:create db:migrate`
 - [ ] `DATABASE_ADAPTER=sqlite3 rake yard`
 - [ ] `rake yard`
 - [ ] VERIFY no warnings
