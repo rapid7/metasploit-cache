@@ -1,22 +1,48 @@
 # Please only use postgresql bound to a TCP port.
-development: &pgsql
+postgres: &postgres
   adapter: postgresql
-  database: metasploit_cache_development
-  username: metasploit_cache_development
-  password: ____________________________
   host: localhost
+  pool: 5
   port: 5432
+  timeout: 5
+
+postgres_development: &postgres_development
+  <<: &postgres
+  database: metasploit_cache_development
+  password: ____________________________
+  username: metasploit_cache_development
+
+postgres_test: &postgres_production
+  <<: &postgres
+  database: metasploit_cache_test
+  username: metasploit_cache_test
+  password: _____________________
+
+sqlite3: &sqlite3
+  adapter: sqlite3
   pool: 5
   timeout: 5
+
+sqlite3_development: &sqlite3_development
+  database: db/development.sqlite3
+
+sqlite3_test: &sqlite3_test
+  database: db/test.sqlite3
+
+<%
+database_adapter = ENV['DATABASE_ADAPTER']
+
+unless ['postgres', 'sqlite'].include? database_adapter
+  raise ArgumentError,
+  "The DATABASE_ADAPTER environment variable must be set to 'postgres' or 'sqlite3', but is 'database_adaper'"
+end
+%>
+
+development: <%= "*#{database_adapter}_development" %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 #
 # Note also, sqlite3 is totally unsupported by Metasploit now.
-test:
-  <<: *pgsql
-  database: metasploit_cache_test
-  username: metasploit_cache_test
-  password: _____________________
-
+test: <%= "*#{database_adapter}_test" %>
