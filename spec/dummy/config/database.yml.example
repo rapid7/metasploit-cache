@@ -7,13 +7,13 @@ postgres: &postgres
   timeout: 5
 
 postgres_development: &postgres_development
-  <<: &postgres
+  <<: *postgres
   database: metasploit_cache_development
   password: ____________________________
   username: metasploit_cache_development
 
 postgres_test: &postgres_production
-  <<: &postgres
+  <<: *postgres
   database: metasploit_cache_test
   username: metasploit_cache_test
   password: _____________________
@@ -24,17 +24,37 @@ sqlite3: &sqlite3
   timeout: 5
 
 sqlite3_development: &sqlite3_development
+  <<: *sqlite3
   database: db/development.sqlite3
 
 sqlite3_test: &sqlite3_test
+  <<: *sqlite3
   database: db/test.sqlite3
 
 <%
 database_adapter = ENV['DATABASE_ADAPTER']
 
-unless ['postgres', 'sqlite'].include? database_adapter
+available_adapters = ['postgres', 'sqlite3']
+without_names = Bundler.settings.without.map(&:to_s)
+with_adapters = available_adapters - without_names
+
+if database_adapter.blank?
+  available_adapters = ['postgres', 'sqlite3']
+  without_names = Bundler.settings.without.map(&:to_s)
+  with_adapters = available_adapters - without_names
+
+  if with_adapters.length == 1
+    database_adapter = with_adapters.first
+  elsif with_adapters > 1
+    raise ArgumentError,
+          "The DATABASE_ADAPTER environment variable must be set to choose the installed adapter ('postges' or 'sqlite3') to use"
+  else
+    raise ArgumentError,
+          "Neither 'postgres' nor 'sqlite3' database adapter is installed"
+  end
+elsif !['postgres', 'sqlite3'].include? database_adapter
   raise ArgumentError,
-  "The DATABASE_ADAPTER environment variable must be set to 'postgres' or 'sqlite3', but is 'database_adaper'"
+        "The DATABASE_ADAPTER environment variable must be set to 'postgres' or 'sqlite3', but is #{database_adapter.inspect}"
 end
 %>
 
