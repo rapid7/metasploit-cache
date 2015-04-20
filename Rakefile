@@ -100,6 +100,15 @@ end
 
 task default: :coverage
 
+namespace :app do
+  namespace :db do
+    # Add onto the task so that it can undo engine paths added by metasploit-framework and its dependencies
+    task :load_config do
+      ActiveRecord::Migrator.migrations_paths = Metasploit::Cache::Engine.instance.paths['db/migrate'].to_a
+    end
+  end
+end
+
 # Use find_all_by_name instead of find_by_name as find_all_by_name will return pre-release versions
 gem_specification = Gem::Specification.find_all_by_name('metasploit-yard').first
 
