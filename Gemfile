@@ -81,3 +81,7 @@ group :test do
   # defines time zones for activesupport.  Must be explicit since it is normally implicit with activerecord
   gem 'tzinfo'
 end
+
+group :postgres do
+  gem 'pg'
+end
