@@ -1,18 +1,19 @@
 before_script:
 - cp spec/dummy/config/database.yml.travis spec/dummy/config/database.yml
 - bundle exec rake db:setup
+bundler_args: --without $BUNDLER_INSTALL_WITHOUT
 cache: bundler
 env:
   matrix:
-  - RAKE_TASKS="spec cucumber coverage"
+  - BUNDLER_INSTALL_WITHOUT="sqlite3" RAKE_TASKS="spec cucumber coverage"
+  - BUNDLER_INSTALL_WITHOUT="sqlite3" RAKE_TASKS="yard"
+  - BUNDLER_INSTALL_WITHOUT="postgres" RAKE_TASKS="spec cucumber coverage"
+  - BUNDLER_INSTALL_WITHOUT="postgres" RAKE_TASKS="yard"
   global:
     secure: cOCoUB1zTvnl274EftNxbbmkL8MIlXa9a2/NLXpJFfJaL39JLYLCvrj85ndLO75fl8W5j7Xnx1w3kyNCL0FUumWzrIfcJFwTADv20EggrmrrJaEJDdqi3+oxFA8/AHQK7GUXws2AEhbs1ujXO7wA44qeQmO1daWdbXmN5t2qoxc=
 language: ruby
 matrix:
   fast_finish: true
-  include:
-  - rvm: 2.1
-    env: RAKE_TASKS="yard"
 rvm:
 - 2.1
 script: bundle exec rake $RAKE_TASKS
