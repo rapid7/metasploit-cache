@@ -7,8 +7,8 @@ env:
   matrix:
   - BUNDLER_INSTALL_WITHOUT="sqlite3" RAKE_TASKS="spec cucumber coverage"
   - BUNDLER_INSTALL_WITHOUT="sqlite3" RAKE_TASKS="yard"
-  - BUNDLER_INSTALL_WITHOUT="postgres" RAKE_TASKS="spec cucumber coverage"
-  - BUNDLER_INSTALL_WITHOUT="postgres" RAKE_TASKS="yard"
+  - BUNDLER_INSTALL_WITHOUT="postgresql" RAKE_TASKS="spec cucumber coverage"
+  - BUNDLER_INSTALL_WITHOUT="postgresql" RAKE_TASKS="yard"
   global:
     secure: cOCoUB1zTvnl274EftNxbbmkL8MIlXa9a2/NLXpJFfJaL39JLYLCvrj85ndLO75fl8W5j7Xnx1w3kyNCL0FUumWzrIfcJFwTADv20EggrmrrJaEJDdqi3+oxFA8/AHQK7GUXws2AEhbs1ujXO7wA44qeQmO1daWdbXmN5t2qoxc=
 language: ruby

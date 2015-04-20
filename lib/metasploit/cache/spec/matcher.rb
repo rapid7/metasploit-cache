@@ -12,7 +12,7 @@ module Metasploit::Cache::Spec::Matcher
       adapter = ActiveRecord::Base.connection_config[:adapter]
 
       case adapter
-      when "postgres"
+      when "postgresql"
         expect(error).to be_an ActiveRecord::RecordNotUnique
       when "sqlite3"
         expect(error).to be_an ActiveRecord::StatementInvalid

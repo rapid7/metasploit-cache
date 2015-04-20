@@ -82,7 +82,7 @@ group :test do
   gem 'tzinfo'
 end
 
-group :postgres do
+group :postgresql do
   gem 'pg'
 end
 
