@@ -85,3 +85,7 @@ end
 group :postgres do
   gem 'pg'
 end
+
+group :sqlite do
+  gem 'sqlite3'
+end
