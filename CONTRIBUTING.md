@@ -40,12 +40,32 @@ Make your changes or however many commits you like, committing each with `git co
 
 ### Pre-Pull Request Steps
 
-#### Testing
+#### Postgres
+1. `rm Gemfile.lock`
+2. `bundle install --without sqlite3`
+3. `rake db:drop db:create db:migrate`
+
+##### Testing
 1. `rake cucumber spec coverage`
 2. Verify there were no failures.
 3. Verify there was 100% coverage.
 
-#### Documentation
+##### Documentation
+1. `rake yard`
+2. Verify there were no warnings.
+2. Verify there were no undocumented objects.
+
+#### Sqlite3
+1. `rm Gemfile.lock`
+2. `bundle install --without postgres`
+3. `rake db:drop db:create db:migrate`
+
+##### Testing
+1. `rake cucumber spec coverage`
+2. Verify there were no failures.
+3. Verify there was 100% coverage.
+
+##### Documentation
 1. `rake yard`
 2. Verify there were no warnings.
 2. Verify there were no undocumented objects.
