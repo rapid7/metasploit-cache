@@ -18,7 +18,7 @@ postgres_development: &postgres_development
   <<: *postgres
   database: metasploit_cache_development
 
-postgres_test: &postgres_production
+postgres_test: &postgres_test
   <<: *postgres
   database: metasploit_cache_test
 

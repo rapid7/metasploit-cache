@@ -12,7 +12,7 @@ postgres_development: &postgres_development
   password: ____________________________
   username: metasploit_cache_development
 
-postgres_test: &postgres_production
+postgres_test: &postgres_test
   <<: *postgres
   database: metasploit_cache_test
   username: metasploit_cache_test
