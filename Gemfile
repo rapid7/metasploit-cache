@@ -86,6 +86,6 @@ group :postgres do
   gem 'pg'
 end
 
-group :sqlite do
+group :sqlite3 do
   gem 'sqlite3'
 end
