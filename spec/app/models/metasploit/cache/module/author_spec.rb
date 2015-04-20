@@ -79,6 +79,8 @@ RSpec.describe Metasploit::Cache::Module::Author do
 
         context 'with same #module_instance_id' do
           context 'with same #author_id' do
+            include Metasploit::Cache::Spec::Matcher
+
             let(:new_module_author) do
               existing_module_instance.module_authors.build.tap { |module_author|
                 module_author.author = existing_author
@@ -94,7 +96,7 @@ RSpec.describe Metasploit::Cache::Module::Author do
             it 'should raise ActiveRecord::RecordNotUnique when saved' do
               expect {
                 new_module_author.save
-              }.to raise_error(ActiveRecord::RecordNotUnique)
+              }.to raise_record_not_unique
             end
           end
         end
