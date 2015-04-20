@@ -65,11 +65,39 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 - [ ] `bundle install`
 
 ## Test coverage
-- [ ] `rake cucumber spec coverage`
+
+Test coverage should not differ between the database adapters.
+
+### Postgres
+- [ ] `rm Gemfile.lock`
+- [ ] `bundle install --without sqlite`
+- [ ] `DATABASE_ADAPTER=postgres rake cucumber spec coverage`
+- [ ] VERIFY no failures
+- [ ] VERIFY 100% coverage
+
+### Sqlite3
+- [ ] `rm Gemfile.lock`
+- [ ] `bundle install --without postgres`
+- [ ] `DATABASE_ADAPTER=sqlite3 rake cucumber spec coverage`
 - [ ] VERIFY no failures
 - [ ] VERIFY 100% coverage
 
 ## Documentation coverage
+
+Documentation coverage should not differ between the database adapters.
+
+### Postgres
+- [ ] `rm Gemfile.lock`
+- [ ] `bundle install --without sqlite`
+- [ ] `DATABASE_ADAPTER=postgres rake yard`
+- [ ] `rake yard`
+- [ ] VERIFY no warnings
+- [ ] VERIFY no undocumented objects
+
+### Sqlite3
+- [ ] `rm Gemfile.lock`
+- [ ] `bundle install --without postgres`
+- [ ] `DATABASE_ADAPTER=sqlite3 rake yard`
 - [ ] `rake yard`
 - [ ] VERIFY no warnings
 - [ ] VERIFY no undocumented objects
