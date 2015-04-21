@@ -41,7 +41,8 @@ task :coverage do
   require 'simplecov'
 
   SimpleCov.configure do
-    minimum_coverage 99.89
+    # Has to be the minimum between postgresql and sqlite3
+    minimum_coverage 99.79
     refuse_coverage_drop
   end
 
