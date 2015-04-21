@@ -11,6 +11,9 @@ module Metasploit::Cache::Spec::Matcher
     RSpec::Matchers::BuiltIn::RaiseError.new do |error|
       adapter = ActiveRecord::Base.connection_config[:adapter]
 
+      # Has to be marked nocov as only one when/else will be tested on each branch and the else will only be covered if
+      # there is a build configuration error
+      # :nocov:
       case adapter
       when "postgresql"
         expect(error).to be_an ActiveRecord::RecordNotUnique
@@ -24,6 +27,7 @@ module Metasploit::Cache::Spec::Matcher
       else
         raise ArgumentError, "Expected error for #{adapter.inspect} adapter unknown"
       end
+      # :nocov:
     end
   end
 end
