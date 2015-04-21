@@ -118,6 +118,7 @@ RSpec.describe Metasploit::Cache::Module::Target::Platform do
       end
 
       context 'with batched' do
+        include Metasploit::Cache::Spec::Matcher
         include_context 'Metasploit::Cache::Batch.batch'
 
         it 'should include error' do
@@ -129,7 +130,7 @@ RSpec.describe Metasploit::Cache::Module::Target::Platform do
         it 'should raise ActiveRecord::RecordNotUnique when saved' do
           expect {
             new_module_target_platform.save
-          }.to raise_error(ActiveRecord::RecordNotUnique)
+          }.to raise_record_not_unique
         end
       end
 
