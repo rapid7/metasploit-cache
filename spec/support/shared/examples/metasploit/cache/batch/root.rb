@@ -170,7 +170,10 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
         end
       end
     else
+      # Would only be covered if build was misconfigured
+      # :nocov:
       raise ArgumentError, 'Unknown adapter'
+      # :nocov:
     end
   end
 
@@ -212,7 +215,10 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
               raise ActiveRecord::StatementInvalid, "Wraps SQLite3::ConstraintException"
             end
           else
+            # Would only be covered if build was misconfigured
+            # :nocov:
             fail ArgumentError, "Expected error for #{adapter.inspect} adapter unknown"
+            # :nocov:
           end
         end
 
