@@ -1,6 +1,26 @@
 shared_examples_for 'Metasploit::Cache::Batch::Root' do
   let(:error) do
-    ActiveRecord::RecordNotUnique.new("not unique", original_exception)
+    adapter = ActiveRecord::Base.connection_config[:adapter]
+
+    case adapter
+    when 'postgresql'
+      ActiveRecord::RecordNotUnique.new("not unique", original_exception)
+    when 'sqlite3'
+      begin
+        # Exception#cause can't be set explicitly so have to simulate what happens in the sqlite3 driver
+        begin
+          fail SQLite3::ConstraintException.new("UNIQUE constraint failed")
+        rescue SQLite3::ConstraintException
+          # will cause the SQLite3::ConstraintException as #cause
+          raise ActiveRecord::StatementInvalid, "Wraps SQLite3::ConstraintException"
+        end
+      rescue ActiveRecord::StatementInvalid => active_record_statement_invalid
+        active_record_statement_invalid
+      end
+    else
+      fail ArgumentError, "Expected error for #{adapter.inspect} adapter unknown"
+    end
+
   end
 
   let(:original_exception) do
@@ -24,7 +44,7 @@ shared_examples_for 'Metasploit::Cache::Batch::Root' do
       batched_save
     end
 
-    context 'with ActiveRecord::RecordNotUnique raised' do
+    context 'with adapter-specific record not unique error raised' do
       before(:each) do
         expect(base_instance).to receive(:recoverable_save).and_raise(error)
       end
@@ -66,7 +86,7 @@ shared_examples_for 'Metasploit::Cache::Batch::Root' do
           ActiveRecord::Base.transaction do
             begin
               recoverable_save
-            rescue ActiveRecord::RecordNotUnique
+            rescue error.class
               expect {
                 Metasploit::Cache::Architecture.count
               }.not_to raise_error
