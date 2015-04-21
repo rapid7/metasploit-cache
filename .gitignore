@@ -44,3 +44,6 @@ mkmf.log
 .ruby-version
 .ruby-gemset
 .versions.conf
+
+# Keep dummy app's SQLite3 out of VCS
+spec/dummy/db/*.sqlite3
