@@ -40,9 +40,16 @@ task :coverage do
   ENV['SIMPLECOV_MERGE'] = 'true'
   require 'simplecov'
 
+  adapter = ActiveRecord::Base.connection_config[:adapter]
+  # coverage differs by adapter because different adapters have different handling in Metasploit::Cache::Batched::Root
+  # and its specs.
+  minimum_coverage_by_adapter = {
+      'postgresql' => '99.56',
+      'sqlite3' => '99.51'
+  }
+
   SimpleCov.configure do
-    # Has to be the minimum between postgresql and sqlite3
-    minimum_coverage 99.79
+    minimum_coverage minimum_coverage_by_adapter.fetch(adapter)
     refuse_coverage_drop
   end
 
