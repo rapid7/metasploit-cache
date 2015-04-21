@@ -1,26 +1,37 @@
-shared_examples_for 'Metasploit::Cache::Batch::Root' do
-  let(:error) do
+RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
+  #
+  # Methods
+  #
+
+  def raise_adapter_error
     adapter = ActiveRecord::Base.connection_config[:adapter]
 
     case adapter
     when 'postgresql'
-      ActiveRecord::RecordNotUnique.new("not unique", original_exception)
+      fail ActiveRecord::RecordNotUnique.new("not unique", original_exception)
     when 'sqlite3'
+      # Exception#cause can't be set explicitly so have to simulate what happens in the sqlite3 driver
       begin
-        # Exception#cause can't be set explicitly so have to simulate what happens in the sqlite3 driver
-        begin
-          fail SQLite3::ConstraintException.new("UNIQUE constraint failed")
-        rescue SQLite3::ConstraintException
-          # will cause the SQLite3::ConstraintException as #cause
-          raise ActiveRecord::StatementInvalid, "Wraps SQLite3::ConstraintException"
-        end
-      rescue ActiveRecord::StatementInvalid => active_record_statement_invalid
-        active_record_statement_invalid
+        fail SQLite3::ConstraintException.new("UNIQUE constraint failed")
+      rescue SQLite3::ConstraintException
+        # will cause the SQLite3::ConstraintException as #cause
+        raise ActiveRecord::StatementInvalid, "Wraps SQLite3::ConstraintException"
       end
     else
       fail ArgumentError, "Expected error for #{adapter.inspect} adapter unknown"
     end
+  end
 
+  #
+  # lets
+  #
+
+  let(:error) do
+    begin
+      raise_adapter_error
+    rescue => adapter_error
+      adapter_error
+    end
   end
 
   let(:original_exception) do
@@ -46,7 +57,9 @@ shared_examples_for 'Metasploit::Cache::Batch::Root' do
 
     context 'with adapter-specific record not unique error raised' do
       before(:each) do
-        expect(base_instance).to receive(:recoverable_save).and_raise(error)
+        expect(base_instance).to receive(:recoverable_save) {
+                                   raise_adapter_error
+                                 }
       end
 
       it 'should call recoverable_save outside batch mode' do
@@ -79,7 +92,9 @@ shared_examples_for 'Metasploit::Cache::Batch::Root' do
     context 'inside another transaction' do
       context 'with an exception raised by save' do
         before(:each) do
-          expect(base_instance).to receive(:save).and_raise(error)
+          expect(base_instance).to receive(:save) {
+                                     raise_adapter_error
+                                   }
         end
 
         it 'should not kill outer transaction' do
