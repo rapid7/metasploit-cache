@@ -6,13 +6,13 @@ postgresql: &postgresql
   port: 5432
   timeout: 5
 
-postgres_development: &postgres_development
+postgresql_development: &postgresql_development
   <<: *postgresql
   database: metasploit_cache_development
   password: ____________________________
   username: metasploit_cache_development
 
-postgres_test: &postgres_test
+postgresql_test: &postgresql_test
   <<: *postgresql
   database: metasploit_cache_test
   username: metasploit_cache_test
