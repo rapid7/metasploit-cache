@@ -23,7 +23,10 @@ module Metasploit::Cache::Spec::Matcher
         cause = error.cause
 
         expect(cause).to be_a SQLite3::ConstraintException
-        expect(cause.message).to start_with('UNIQUE constraint failed')
+        # Local and travis-ci sqlite appear to return different mesages, so support both.
+        expect(cause.message).to start_with('UNIQUE constraint failed').or(
+                                     match_regex(/column(s .* are| .* is) not unique/)
+                                 )
       else
         raise ArgumentError, "Expected error for #{adapter.inspect} adapter unknown"
       end
