@@ -311,6 +311,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
           end
 
           context 'with batched' do
+            include Metasploit::Cache::Spec::Matcher
             include_context 'Metasploit::Cache::Batch.batch'
 
             it 'should not add error on #relative_path' do
@@ -322,7 +323,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
             it 'should raise ActiveRecord::RecordNotUnique when saved' do
               expect {
                 same_relative_path_ancestor.save
-              }.to raise_error(ActiveRecord::RecordNotUnique)
+              }.to raise_record_not_unique
             end
           end
 
@@ -390,6 +391,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
           }
 
           context 'with batched' do
+            include Metasploit::Cache::Spec::Matcher
             include_context 'Metasploit::Cache::Batch.batch'
 
             it 'should not add error on #real_path_sha1_hex_digest' do
@@ -401,7 +403,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
             it 'should raise ActiveRecord::RecordNotUnique when saved' do
               expect {
                 same_real_path_sha1_hex_digest_ancestor.save
-              }.to raise_error(ActiveRecord::RecordNotUnique)
+              }.to raise_record_not_unique
             end
           end
 
