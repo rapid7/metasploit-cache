@@ -209,6 +209,7 @@ RSpec.describe Metasploit::Cache::Authority do
         end
 
         context 'with batched' do
+          include Metasploit::Cache::Spec::Matcher
           include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on #abbreviation' do
@@ -220,7 +221,7 @@ RSpec.describe Metasploit::Cache::Authority do
           it 'should raise ActiveRecord::RecordNotUnique when saved' do
             expect {
               new_authority.save
-            }.to raise_error(ActiveRecord::RecordNotUnique)
+            }.to raise_record_not_unique
           end
         end
 
@@ -244,6 +245,7 @@ RSpec.describe Metasploit::Cache::Authority do
         end
 
         context 'with batched' do
+          include Metasploit::Cache::Spec::Matcher
           include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on #summary' do
@@ -255,7 +257,7 @@ RSpec.describe Metasploit::Cache::Authority do
           it 'should raise ActiveRecord::RecordNotUnique when saved' do
             expect {
               new_authority.save
-            }.to raise_error(ActiveRecord::RecordNotUnique)
+            }.to raise_record_not_unique
           end
         end
 
@@ -279,6 +281,7 @@ RSpec.describe Metasploit::Cache::Authority do
         end
 
         context 'with batched' do
+          include Metasploit::Cache::Spec::Matcher
           include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on #url' do
@@ -290,7 +293,7 @@ RSpec.describe Metasploit::Cache::Authority do
           it 'should raise ActiveRecord::RecordNotUnique when saved' do
             expect {
               new_authority.save
-            }.to raise_error(ActiveRecord::RecordNotUnique)
+            }.to raise_record_not_unique
           end
         end
 
