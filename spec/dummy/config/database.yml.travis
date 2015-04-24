@@ -8,15 +8,66 @@
 # Using the postgres user locally without a host and port is the supported configuration from Travis-CI
 #
 # @see http://about.travis-ci.org/docs/user/database-setup/#PostgreSQL
-development: &pgsql
+postgresql: &postgresql
   adapter: postgresql
-  database: metasploit_cache_development
+  pool: 5
+  timeout: 5
   username: postgres
+
+postgresql_development: &postgresql_development
+  <<: *postgresql
+  database: metasploit_cache_development
+
+postgresql_test: &postgresql_test
+  <<: *postgresql
+  database: metasploit_cache_test
+
+sqlite3: &sqlite3
+  adapter: sqlite3
   pool: 5
   timeout: 5
 
-# Warning: The database defined as "test" will be erased and re-generated from your development database when you run
-# `rake`.  Do not set this db to the same as development or production.
-test:
-  <<: *pgsql
-  database: metasploit_cache_test
+sqlite3_development: &sqlite3_development
+  <<: *sqlite3
+  database: db/development.sqlite3
+
+sqlite3_test: &sqlite3_test
+  <<: *sqlite3
+  database: db/test.sqlite3
+
+<%
+database_adapter = ENV['DATABASE_ADAPTER']
+
+available_adapters = ['postgresql', 'sqlite3']
+without_names = Bundler.settings.without.map(&:to_s)
+with_adapters = available_adapters - without_names
+
+if database_adapter.blank?
+  available_adapters = ['postgresql', 'sqlite3']
+  without_names = Bundler.settings.without.map(&:to_s)
+  with_adapters = available_adapters - without_names
+  with_adapter_count = with_adapters.length
+
+  if with_adapter_count == 1
+    database_adapter = with_adapters.first
+  elsif with_adapter_count > 1
+    raise ArgumentError,
+          "The DATABASE_ADAPTER environment variable must be set to choose the installed adapter ('postges' or 'sqlite3') to use"
+  else
+    raise ArgumentError,
+          "Neither 'postgresql' nor 'sqlite3' database adapter is installed"
+  end
+elsif !['postgresql', 'sqlite3'].include? database_adapter
+  raise ArgumentError,
+        "The DATABASE_ADAPTER environment variable must be set to 'postgresql' or 'sqlite3', but is #{database_adapter.inspect}"
+end
+%>
+
+development: <%= "*#{database_adapter}_development" %>
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+#
+# Note also, sqlite3 is totally unsupported by Metasploit now.
+test: <%= "*#{database_adapter}_test" %>
