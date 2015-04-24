@@ -44,6 +44,18 @@ module Metasploit::Cache::Batch::Root
       }
     rescue ActiveRecord::RecordNotUnique
       recoverable_save
+    rescue ActiveRecord::StatementInvalid => active_record_statement_invalid
+      if defined? SQLite3::ConstraintException
+        if active_record_statement_invalid.cause.is_a? SQLite3::ConstraintException
+          recoverable_save
+        else
+          # reraise
+          raise
+        end
+      else
+        # reraise
+        raise
+      end
     end
   end
 
