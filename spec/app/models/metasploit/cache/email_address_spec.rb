@@ -114,6 +114,7 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         end
 
         context 'with batched' do
+          include Metasploit::Cache::Spec::Matcher
           include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on local' do
@@ -125,7 +126,7 @@ RSpec.describe Metasploit::Cache::EmailAddress do
           it 'should raise ActiveRecord::RecordNotUnique when saved' do
             expect {
               new_email_address.save
-            }.to raise_error(ActiveRecord::RecordNotUnique)
+            }.to raise_record_not_unique
           end
         end
 
@@ -152,6 +153,7 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         end
 
         context 'with batched' do
+          include Metasploit::Cache::Spec::Matcher
           include_context 'Metasploit::Cache::Batch.batch'
 
           it 'should not add error on local' do
@@ -163,7 +165,7 @@ RSpec.describe Metasploit::Cache::EmailAddress do
           it 'should raise ActiveRecord::RecordNotUnique when saved' do
             expect {
               new_email_address.save
-            }.to raise_error(ActiveRecord::RecordNotUnique)
+            }.to raise_record_not_unique
           end
         end
 

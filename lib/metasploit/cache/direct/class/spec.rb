@@ -8,7 +8,11 @@ module Metasploit::Cache::Direct::Class::Spec
 
   # Factories for {Metasploit::Cache::Direct::Class} subclasses
   FACTORIES = [
-      :metasploit_cache_auxiliary_class
+      :metasploit_cache_auxiliary_class,
+      :metasploit_cache_encoder_class,
+      :metasploit_cache_exploit_class,
+      :metasploit_cache_nop_class,
+      :metasploit_cache_post_class
   ]
 
   #
