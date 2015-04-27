@@ -11,9 +11,8 @@ module Metasploit
       # The minor version number, scoped to the {MAJOR} version number.
       MINOR = 64
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-      PATCH = 8
-      # Remove on master
-      PRERELEASE = 'nop-instance'
+      PATCH = 9
+
       #
       # Module Methods
       #
