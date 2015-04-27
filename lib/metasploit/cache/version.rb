@@ -11,11 +11,11 @@ module Metasploit
       # The minor version number, scoped to the {MAJOR} version number.
       MINOR = 64
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-      PATCH = 4
-      # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
+      PATCH = 10
+      # Remove on master
       PRERELEASE = 'post-class'
 
-      #
+
       # Module Methods
       #
 
