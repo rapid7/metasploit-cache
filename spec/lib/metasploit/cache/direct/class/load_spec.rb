@@ -368,6 +368,16 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
                                 direct_class_build: :build_auxiliary_class,
                                 module_path_association: :auxiliary_ancestors,
                                 relative_path_prefix: 'auxiliary'
+
+          it_should_behave_like 'relative_path_prefix',
+                                direct_class_build: :build_encoder_class,
+                                module_path_association: :encoder_ancestors,
+                                relative_path_prefix: 'encoders'
+
+          it_should_behave_like 'relative_path_prefix',
+                                direct_class_build: :build_exploit_class,
+                                module_path_association: :exploit_ancestors,
+                                relative_path_prefix: 'exploits'
         end
       end
     end

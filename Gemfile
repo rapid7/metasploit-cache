@@ -60,6 +60,8 @@ group :test do
   gem 'builder'
   # simplecov test formatter and uploader for Coveralls.io
   gem 'coveralls', require: false
+  # Test shared examples and matchers.  Used with aruba
+  gem 'cucumber', '~> 2.0'
   # for cleaning the database before suite in case previous run was aborted without clean up
   gem 'database_cleaner'
   # RSpec formatter
@@ -78,4 +80,12 @@ group :test do
   gem 'simplecov', require: false
   # defines time zones for activesupport.  Must be explicit since it is normally implicit with activerecord
   gem 'tzinfo'
+end
+
+group :postgresql do
+  gem 'pg'
+end
+
+group :sqlite3 do
+  gem 'sqlite3'
 end
