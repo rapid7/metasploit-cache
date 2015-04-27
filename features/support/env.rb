@@ -22,12 +22,8 @@ ENV['FIVEMAT_PROFILE'] = '1'
 if defined? SimpleCov
   Before do |scenario|
     command_name = case scenario
-                   when Cucumber::Ast::Scenario, Cucumber::Ast::ScenarioOutline
+                   when Cucumber::RunningTestCase::Scenario
                      "#{scenario.feature.title} #{scenario.name}"
-                   when Cucumber::Ast::OutlineTable::ExampleRow
-                     scenario_outline = scenario.scenario_outline
-
-                     "#{scenario_outline.feature.title} #{scenario_outline.name} #{scenario.name}"
                    else
                      raise TypeError, "Don't know how to extract command name from #{scenario.class}"
                    end

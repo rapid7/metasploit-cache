@@ -56,6 +56,7 @@ RSpec.describe Metasploit::Cache::Direct::Class do
       }
 
       context 'with batched' do
+        include Metasploit::Cache::Spec::Matcher
         include_context 'Metasploit::Cache::Batch.batch'
 
         it 'does not add error on #ancestor_id' do
@@ -64,10 +65,10 @@ RSpec.describe Metasploit::Cache::Direct::Class do
           expect(new_direct_class.errors[:ancestor_id]).not_to include(error)
         end
 
-        it 'raises ActiveRecod::RecordNotUnique when saved' do
+        it 'raises adapter-specific record not unique exception when saved' do
           expect {
             new_direct_class.save
-          }.to raise_error(ActiveRecord::RecordNotUnique)
+          }.to raise_record_not_unique
         end
       end
 

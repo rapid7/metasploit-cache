@@ -1,16 +1,15 @@
-RSpec.describe Metasploit::Cache::Nop::Class do
+RSpec.describe Metasploit::Cache::Encoder::Class do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
-    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Nop::Ancestor') }
-    it { is_expected.to have_one(:nop_instance).class_name('Metasploit::Cache::Nop::Instance').dependent(:destroy).inverse_of(:nop_class) }
+    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Encoder::Ancestor') }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do
-    context 'metasploit_cache_nop_class' do
-      subject(:metasploit_cache_nop_class) {
-        FactoryGirl.build(:metasploit_cache_nop_class)
+    context 'metasploit_cache_encoder_class' do
+      subject(:metasploit_cache_encoder_class) {
+        FactoryGirl.build(:metasploit_cache_encoder_class)
       }
 
       it { is_expected.to be_valid }
@@ -28,7 +27,7 @@ RSpec.describe Metasploit::Cache::Nop::Class do
           Metasploit::Cache::Module::Ancestor::Load.new(
               logger: logger,
               maximum_version: 4,
-              module_ancestor: metasploit_cache_nop_class.ancestor
+              module_ancestor: metasploit_cache_encoder_class.ancestor
           )
         }
 
@@ -38,7 +37,7 @@ RSpec.describe Metasploit::Cache::Nop::Class do
 
         before(:each) do
           # To prove Direct::Class::Load is set rank
-          metasploit_cache_nop_class.rank = nil
+          metasploit_cache_encoder_class.rank = nil
         end
 
         context 'Metasploit::Cache::Module::Ancestor::Load' do
@@ -52,7 +51,7 @@ RSpec.describe Metasploit::Cache::Nop::Class do
         context 'Metasploit::Cache::Direct::Class::Load' do
           subject(:direct_class_load) {
             Metasploit::Cache::Direct::Class::Load.new(
-                direct_class: metasploit_cache_nop_class,
+                direct_class: metasploit_cache_encoder_class,
                 logger: logger,
                 metasploit_module: module_ancestor_load.metasploit_module
             )
