@@ -219,6 +219,99 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     it { should_not allow_mass_assignment_of(:parent_path_id) }
   end
 
+  context 'traits' do
+    context ':metasploit_cache_module_ancestor_contents' do
+      context 'with content?' do
+        context 'with #real_pathname' do
+          subject(:module_ancestor) {
+            FactoryGirl.build(
+                           :metasploit_cache_auxiliary_ancestor,
+                           content?: true,
+                           parent_path: parent_path,
+                           relative_path: relative_path
+            )
+          }
+
+          let(:parent_path) {
+            FactoryGirl.build(:metasploit_cache_module_path)
+          }
+
+          let(:relative_path) {
+            'auxiliary/reference/name.rb'
+          }
+
+          it 'write file' do
+            expect {
+              module_ancestor
+            }.to change { parent_path.real_pathname.join(relative_path).exist? }.from(false).to(true)
+          end
+        end
+
+        context 'without #real_pathnam' do
+          subject(:module_ancestor) {
+            FactoryGirl.build(
+                :metasploit_cache_auxiliary_ancestor,
+                content?: true,
+                relative_path: nil
+            )
+          }
+
+          specify {
+            expect {
+              module_ancestor
+            }.to raise_error ArgumentError,
+                             "Metasploit::Cache::Auxiliary::Ancestor#real_pathname is `nil` and " \
+                             "content cannot be written.  If this is expected, set `content?: false` " \
+                             "when using the :metasploit_cache_module_ancestor_contents trait."
+          }
+        end
+      end
+
+      context 'without content?' do
+        context 'with #real_pathname' do
+          subject(:module_ancestor) {
+            FactoryGirl.build(
+                           :metasploit_cache_auxiliary_ancestor,
+                           content?: false,
+                           parent_path: parent_path,
+                           relative_path: relative_path
+            )
+          }
+
+          let(:parent_path) {
+            FactoryGirl.build(:metasploit_cache_module_path)
+          }
+
+          let(:relative_path) {
+            'auxiliary/reference/name.rb'
+          }
+
+          it 'does not write file' do
+            expect {
+              module_ancestor
+            }.not_to change { parent_path.real_pathname.join(relative_path).exist? }.from(false)
+          end
+        end
+
+        context 'without #real_pathnam' do
+          subject(:module_ancestor) {
+            FactoryGirl.build(
+                :metasploit_cache_auxiliary_ancestor,
+                content?: false,
+                relative_path: nil
+            )
+          }
+
+          specify {
+            expect {
+              module_ancestor
+            }.not_to raise_error
+          }
+        end
+      end
+    end
+  end
+
   context 'validations' do
     subject(:module_ancestor) do
       # Don't use factory so that nil values can be tested without the nil being replaced with derived value
@@ -311,6 +404,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
           end
 
           context 'with batched' do
+            include Metasploit::Cache::Spec::Matcher
             include_context 'Metasploit::Cache::Batch.batch'
 
             it 'should not add error on #relative_path' do
@@ -322,7 +416,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
             it 'should raise ActiveRecord::RecordNotUnique when saved' do
               expect {
                 same_relative_path_ancestor.save
-              }.to raise_error(ActiveRecord::RecordNotUnique)
+              }.to raise_record_not_unique
             end
           end
 
@@ -390,6 +484,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
           }
 
           context 'with batched' do
+            include Metasploit::Cache::Spec::Matcher
             include_context 'Metasploit::Cache::Batch.batch'
 
             it 'should not add error on #real_path_sha1_hex_digest' do
@@ -401,7 +496,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
             it 'should raise ActiveRecord::RecordNotUnique when saved' do
               expect {
                 same_real_path_sha1_hex_digest_ancestor.save
-              }.to raise_error(ActiveRecord::RecordNotUnique)
+              }.to raise_record_not_unique
             end
           end
 
@@ -680,6 +775,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       let(:module_ancestor) {
         FactoryGirl.build(
             module_ancestor_factory,
+            content?: false,
             relative_path: nil
         )
       }

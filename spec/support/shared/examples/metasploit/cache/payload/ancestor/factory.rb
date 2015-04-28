@@ -15,13 +15,6 @@ RSpec.shared_examples_for 'Metasploit::Cache::Payload::Ancestor factory' do |pay
 
       it { should be_a Module }
       it { should_not be_a Class }
-
-      it 'should define #initalize that takes an option hash' do
-        unbound_method = metasploit_module.instance_method(:initialize)
-
-        expect(unbound_method.parameters.length).to eq(1)
-        expect(unbound_method.parameters[0][0]).to eq(:opt)
-      end
     end
   end
 

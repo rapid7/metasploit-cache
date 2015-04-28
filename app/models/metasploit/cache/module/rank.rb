@@ -39,7 +39,13 @@ class Metasploit::Cache::Module::Rank < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :rank
 
-  # {Metasploit::Cache::Exploit::Class Auxiliary classes} assigned this rank.
+  # {Metasploit::Cache::Encoder::Class Encoder classes} assigned this rank.
+  has_many :encoder_classes,
+           class_name: 'Metasploit::Cache::Encoder::Class',
+           dependent: :destroy,
+           inverse_of: :rank
+
+  # {Metasploit::Cache::Exploit::Class Exploit classes} assigned this rank.
   has_many :exploit_classes,
            class_name: 'Metasploit::Cache::Exploit::Class',
            dependent: :destroy,
@@ -47,6 +53,18 @@ class Metasploit::Cache::Module::Rank < ActiveRecord::Base
 
   # {Metasploit::Cache::Module::Class Module classes} assigned this rank.
   has_many :module_classes, class_name: 'Metasploit::Cache::Module::Class', dependent: :destroy, inverse_of: :rank
+  
+  # {Metasploit::Cache::Nop::Class Nop classes} assigned this rank.
+  has_many :nop_classes,
+           class_name: 'Metasploit::Cache::Nop::Class',
+           dependent: :destroy,
+           inverse_of: :rank
+  
+  # {Metasploit::Cache::Post::Class Post classes} assigned this rank.
+  has_many :post_classes,
+           class_name: 'Metasploit::Cache::Post::Class',
+           dependent: :destroy,
+           inverse_of: :rank
 
   #
   # Attributes

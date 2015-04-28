@@ -33,6 +33,10 @@ end
 
 # used by dummy application
 group :development, :test do
+  # Templates for Metasploit Modules
+  gem 'cells', '~> 3.11'
+  # Twins for cells so that options can be passed to cell() calls
+  gem 'disposable', '~> 0.0.9'
   # supplies factories for producing model instance for specs
   # Version 4.1.0 or newer is needed to support generate calls without the 'FactoryGirl.' in factory definitions syntax.
   gem 'factory_girl', '>= 4.1.0'
@@ -60,6 +64,8 @@ group :test do
   gem 'builder'
   # simplecov test formatter and uploader for Coveralls.io
   gem 'coveralls', require: false
+  # Test shared examples and matchers.  Used with aruba
+  gem 'cucumber', '~> 2.0'
   # for cleaning the database before suite in case previous run was aborted without clean up
   gem 'database_cleaner'
   # RSpec formatter
@@ -67,6 +73,8 @@ group :test do
   # Engine tasks are loaded using railtie
   gem 'railties', *rails_version_constraint
   gem 'rspec'
+  # Test cells used to generate templates for Metasploit Modules
+  gem 'rspec-cells', '~> 0.2.2'
   # need rspec-rails >= 2.12.0 as 2.12.0 adds support for redefining named subject in nested context that uses the
   # named subject from the outer context without causing a stack overflow.
   gem 'rspec-rails', '>= 2.12.0'
@@ -78,4 +86,12 @@ group :test do
   gem 'simplecov', require: false
   # defines time zones for activesupport.  Must be explicit since it is normally implicit with activerecord
   gem 'tzinfo'
+end
+
+group :postgresql do
+  gem 'pg'
+end
+
+group :sqlite3 do
+  gem 'sqlite3'
 end
