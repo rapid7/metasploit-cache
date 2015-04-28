@@ -217,7 +217,8 @@ ActiveRecord::Schema.define(:version => 20150428142801) do
   add_index "mc_platforms", ["parent_id", "relative_name"], :name => "index_mc_platforms_on_parent_id_and_relative_name", :unique => true
 
   create_table "mc_post_instances", :force => true do |t|
-    t.text "description", :null => false
+    t.text "description",  :null => false
+    t.date "disclosed_on", :null => false
   end
 
   create_table "mc_references", :force => true do |t|
