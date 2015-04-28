@@ -9,6 +9,12 @@ class Metasploit::Cache::Post::Class < Metasploit::Cache::Direct::Class
              class_name: 'Metasploit::Cache::Post::Ancestor',
              inverse_of: :post_class
 
+  # Instance level metadata for this post Metasploit Module
+  has_one :post_instance,
+          class_name: 'Metasploit::Cache::Post::Instance',
+          dependent: :destroy,
+          inverse_of: :post_class
+
   # Reliability of Metasploit Module.
   belongs_to :rank,
              class_name: 'Metasploit::Cache::Module::Rank',

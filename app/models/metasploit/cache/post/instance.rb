@@ -1,6 +1,15 @@
 # Instance-level metadata for a post Metasploit Module.
 class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   #
+  # Associations
+  #
+
+  # The class level metadata for this post Metasploit Module
+  belongs_to :post_class,
+             class_name: 'Metasploit::Cache::Post::Class',
+             inverse_of: :post_instance
+
+  #
   # Attributes
   #
 
@@ -24,6 +33,10 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
             presence: true
   validates :name,
             presence: true
+  validates :post_class,
+            presence: true
+  validates :post_class_id,
+            uniqueness: true
 
   #
   # Instance Methods

@@ -217,10 +217,13 @@ ActiveRecord::Schema.define(:version => 20150428142801) do
   add_index "mc_platforms", ["parent_id", "relative_name"], :name => "index_mc_platforms_on_parent_id_and_relative_name", :unique => true
 
   create_table "mc_post_instances", :force => true do |t|
-    t.text   "description",  :null => false
-    t.date   "disclosed_on", :null => false
-    t.string "name",         :null => false
+    t.text    "description",   :null => false
+    t.date    "disclosed_on",  :null => false
+    t.string  "name",          :null => false
+    t.integer "post_class_id", :null => false
   end
+
+  add_index "mc_post_instances", ["post_class_id"], :name => "index_mc_post_instances_on_post_class_id", :unique => true
 
   create_table "mc_references", :force => true do |t|
     t.string  "designation"
