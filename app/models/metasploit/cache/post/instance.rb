@@ -22,6 +22,8 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
             presence: true
   validates :disclosed_on,
             presence: true
+  validates :name,
+            presence: true
 
   #
   # Instance Methods

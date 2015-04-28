@@ -25,6 +25,8 @@ class CreateMcPostInstances < ActiveRecord::Migration
              null: false
       t.date :disclosed_on,
              null: false
+      t.string :name,
+               null: false
     end
   end
 end
