@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150409155014) do
+ActiveRecord::Schema.define(:version => 20150428142801) do
 
   create_table "mc_architectures", :force => true do |t|
     t.integer "bits"
@@ -59,6 +59,17 @@ ActiveRecord::Schema.define(:version => 20150409155014) do
   add_index "mc_email_addresses", ["domain"], :name => "index_mc_email_addresses_on_domain"
   add_index "mc_email_addresses", ["full"], :name => "index_mc_email_addresses_on_full", :unique => true
   add_index "mc_email_addresses", ["local"], :name => "index_mc_email_addresses_on_local"
+
+  create_table "mc_exploit_instances", :force => true do |t|
+    t.text    "description",      :null => false
+    t.date    "disclosed_on",     :null => false
+    t.string  "name",             :null => false
+    t.boolean "privileged",       :null => false
+    t.string  "stance",           :null => false
+    t.integer "exploit_class_id", :null => false
+  end
+
+  add_index "mc_exploit_instances", ["exploit_class_id"], :name => "index_mc_exploit_instances_on_exploit_class_id", :unique => true
 
   create_table "mc_module_actions", :force => true do |t|
     t.integer "module_instance_id", :null => false
@@ -204,6 +215,10 @@ ActiveRecord::Schema.define(:version => 20150409155014) do
 
   add_index "mc_platforms", ["fully_qualified_name"], :name => "index_mc_platforms_on_fully_qualified_name", :unique => true
   add_index "mc_platforms", ["parent_id", "relative_name"], :name => "index_mc_platforms_on_parent_id_and_relative_name", :unique => true
+
+  create_table "mc_post_instances", :force => true do |t|
+    t.text "description", :null => false
+  end
 
   create_table "mc_references", :force => true do |t|
     t.string  "designation"
