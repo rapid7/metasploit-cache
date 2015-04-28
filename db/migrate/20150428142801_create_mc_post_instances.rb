@@ -27,6 +27,8 @@ class CreateMcPostInstances < ActiveRecord::Migration
              null: false
       t.string :name,
                null: false
+      t.boolean :privileged,
+                null: false
 
       #
       # References

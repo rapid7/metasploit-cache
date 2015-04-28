@@ -220,6 +220,7 @@ ActiveRecord::Schema.define(:version => 20150428142801) do
     t.text    "description",   :null => false
     t.date    "disclosed_on",  :null => false
     t.string  "name",          :null => false
+    t.boolean "privileged",    :null => false
     t.integer "post_class_id", :null => false
   end
 

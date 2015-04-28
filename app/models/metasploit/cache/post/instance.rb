@@ -37,6 +37,13 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
             presence: true
   validates :post_class_id,
             uniqueness: true
+  validates :privileged,
+            inclusion: {
+                in: [
+                    false,
+                    true
+                ]
+            }
 
   #
   # Instance Methods
