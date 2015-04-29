@@ -4,6 +4,11 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # Associations
   #
 
+  # The connection handler
+  belongs_to :handler,
+             class_name: 'Metasploit::Cache::Payload::Handler',
+             inverse_of: :payload_single_instances
+
   # The class-level metadata for this single payload Metasploit Module.
   belongs_to :payload_single_class,
              class_name: 'Metasploit::Cache::Payload::Single::Class',
@@ -41,6 +46,8 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
 
   validates :description,
+            presence: true
+  validates :handler,
             presence: true
   validates :name,
             presence: true

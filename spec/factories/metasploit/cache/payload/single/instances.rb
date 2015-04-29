@@ -5,6 +5,11 @@ FactoryGirl.define do
     name { generate :metasploit_cache_payload_single_instance_name }
     privileged { generate :metasploit_cache_payload_single_instance_privileged }
 
+    #
+    # Associations
+    #
+
+    association :handler, factory: :metasploit_cache_payload_handler
     association :payload_single_class, factory: :metasploit_cache_payload_single_class
   end
 

@@ -6,6 +6,16 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
   autoload :GeneralType
 
   #
+  # Associations
+  #
+
+  # Single payload Metasploit Modules whose connections are handled by this handler.
+  has_many :payload_single_instances,
+           class_name: 'Metasploit::Cache::Payload::Single::Instance',
+           dependent: :destroy,
+           inverse_of: :handler
+
+  #
   # Attributes
   #
 
