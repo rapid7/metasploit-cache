@@ -363,7 +363,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
           # Shared examples
           #
 
-          shared_examples_for 'relative_path_prefix' do |direct_class_build:, module_path_association:, relative_path_prefix:|
+          shared_examples_for 'relative_path_prefix' do |payload_direct_class_build:, module_path_association:, relative_path_prefix:|
             context relative_path_prefix do
                             real_prefix_pathname = module_path_real_pathname.join(relative_path_prefix)
 
@@ -379,8 +379,8 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
                 relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
 
                 context display_pathname.to_s do
-                  let(:direct_class) {
-                    module_ancestor.send(direct_class_build)
+                  let(:payload_direct_class) {
+                    module_ancestor.send(payload_direct_class_build)
                   }
 
                   let(:metasploit_module) {
@@ -408,7 +408,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
                     expect(module_ancestor_load).to load_metasploit_module
 
                     expect(payload_direct_class_load).to be_valid
-                    expect(direct_class).to be_persisted
+                    expect(payload_direct_class).to be_persisted
                   end
                 end
               end
@@ -428,10 +428,10 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
             )
           end
 
-          # it_should_behave_like 'relative_path_prefix',
-          #                       direct_class_build: :build_auxiliary_class,
-          #                       module_path_association: :auxiliary_ancestors,
-          #                       relative_path_prefix: 'auxiliary'
+          it_should_behave_like 'relative_path_prefix',
+                                payload_direct_class_build: :build_single_payload_class,
+                                module_path_association: :single_payload_ancestors,
+                                relative_path_prefix: 'payloads/singles'
         end
       end
     end
