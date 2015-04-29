@@ -4,6 +4,11 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   # Associations
   #
 
+  # The connection handler
+  belongs_to :handler,
+             class_name: 'Metasploit::Cache::Payload::Handler',
+             inverse_of: :payload_stager_instances
+
   # The class-level metadata for this stager payload Metasploit Module.
   belongs_to :payload_stager_class,
              class_name: 'Metasploit::Cache::Payload::Stager::Class',
@@ -46,6 +51,8 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #
 
   validates :description,
+            presence: true
+  validates :handler,
             presence: true
   validates :name,
             presence: true

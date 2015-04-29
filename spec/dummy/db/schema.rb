@@ -217,9 +217,11 @@ ActiveRecord::Schema.define(:version => 20150429155157) do
     t.string  "handler_type_alias"
     t.string  "name",                    :null => false
     t.boolean "privileged",              :null => false
+    t.integer "handler_id",              :null => false
     t.integer "payload_stager_class_id", :null => false
   end
 
+  add_index "mc_payload_stager_instances", ["handler_id"], :name => "index_mc_payload_stager_instances_on_handler_id"
   add_index "mc_payload_stager_instances", ["payload_stager_class_id"], :name => "index_mc_payload_stager_instances_on_payload_stager_class_id", :unique => true
 
   create_table "mc_platforms", :force => true do |t|

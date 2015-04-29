@@ -15,6 +15,12 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :handler
 
+  # Stager payload Metasploit Modules whose connections are handled by this handler.
+  has_many :payload_stager_instances,
+           class_name: 'Metasploit::Cache::Payload::Stager::Instance',
+           dependent: :destroy,
+           inverse_of: :handler
+
   #
   # Attributes
   #
