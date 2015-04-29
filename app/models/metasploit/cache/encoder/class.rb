@@ -8,6 +8,12 @@ class Metasploit::Cache::Encoder::Class < Metasploit::Cache::Direct::Class
   belongs_to :ancestor,
              class_name: 'Metasploit::Cache::Encoder::Ancestor',
              inverse_of: :encoder_class
+  
+  # Metadata for instances of the class whose metadata this record stores.
+  has_one :encoder_instance,
+          class_name: 'Metasploit::Cache::Encoder::Instance',
+          dependent: :destroy,
+          inverse_of: :encoder_class
 
   # Reliability of Metasploit Module.
   belongs_to :rank,

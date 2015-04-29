@@ -3,6 +3,7 @@ RSpec.describe Metasploit::Cache::Encoder::Class do
 
   context 'associations' do
     it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Encoder::Ancestor') }
+    it { is_expected.to have_one(:encoder_instance).class_name('Metasploit::Cache::Encoder::Instance').dependent(:destroy).inverse_of(:encoder_class) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 

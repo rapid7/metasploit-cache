@@ -477,6 +477,14 @@ ActiveRecord::Schema.define(:version => 20150409155014) do
   add_index "mc_email_addresses", ["full"], :name => "index_mc_email_addresses_on_full", :unique => true
   add_index "mc_email_addresses", ["local"], :name => "index_mc_email_addresses_on_local"
 
+  create_table "mc_encoder_instances", :force => true do |t|
+    t.text    "description",      :null => false
+    t.string  "name",             :null => false
+    t.integer "encoder_class_id", :null => false
+  end
+
+  add_index "mc_encoder_instances", ["encoder_class_id"], :name => "index_mc_encoder_instances_on_encoder_class_id", :unique => true
+
   create_table "mc_module_actions", :force => true do |t|
     t.integer "module_instance_id", :null => false
     t.text    "name",               :null => false
