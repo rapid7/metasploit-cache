@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150413211925) do
+ActiveRecord::Schema.define(:version => 20150429155157) do
 
   create_table "mc_architectures", :force => true do |t|
     t.integer "bits"
@@ -193,6 +193,12 @@ ActiveRecord::Schema.define(:version => 20150413211925) do
   end
 
   add_index "mc_nop_instances", ["nop_class_id"], :name => "index_mc_nop_instances_on_nop_class_id", :unique => true
+
+  create_table "mc_payload_handlers", :force => true do |t|
+    t.string "handler_type", :null => false
+  end
+
+  add_index "mc_payload_handlers", ["handler_type"], :name => "index_mc_payload_handlers_on_handler_type", :unique => true
 
   create_table "mc_payload_single_instances", :force => true do |t|
     t.text    "description",             :null => false
