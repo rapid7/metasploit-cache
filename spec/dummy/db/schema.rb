@@ -195,7 +195,8 @@ ActiveRecord::Schema.define(:version => 20150429155157) do
   add_index "mc_nop_instances", ["nop_class_id"], :name => "index_mc_nop_instances_on_nop_class_id", :unique => true
 
   create_table "mc_payload_handlers", :force => true do |t|
-    t.string "handler_type", :null => false
+    t.string "general_handler_type", :null => false
+    t.string "handler_type",         :null => false
   end
 
   add_index "mc_payload_handlers", ["handler_type"], :name => "index_mc_payload_handlers_on_handler_type", :unique => true

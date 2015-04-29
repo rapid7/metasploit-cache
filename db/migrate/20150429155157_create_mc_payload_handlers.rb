@@ -21,6 +21,8 @@ class CreateMcPayloadHandlers < ActiveRecord::Migration
   # @return [void]
   def up
     create_table TABLE_NAME do |t|
+      t.string :general_handler_type,
+               null: false
       t.string :handler_type,
                null: false
     end

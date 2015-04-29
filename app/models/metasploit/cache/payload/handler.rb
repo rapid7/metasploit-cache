@@ -9,6 +9,11 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
   # Attributes
   #
 
+  # @!attribute general_handler_type
+  #   The {Metasploit::Cache::Payload::Handler::GeneralType general handler type}.
+  #
+  #   @return [String]
+
   # @!attribute handler_type
   #   The type of this handler.  Normally, in metasploit-framework, this is a Module method, `handler_type` that returns
   #   the underscored relative `Module#name`.
@@ -19,6 +24,10 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
   # Validations
   #
 
+  validates :general_handler_type,
+            inclusion: {
+                in: Metasploit::Cache::Payload::Handler::GeneralType::ALL
+            }
   validates :handler_type,
             presence: true,
             uniqueness: true
@@ -26,6 +35,12 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
   #
   # Instance Methods
   #
+
+  # @!method general_handler_type=(general_handler_type)
+  #   Sets {#general_handler_type}.
+  #
+  #   @param general_handler_type [String] the general handler type
+  #   @return [void]
 
   # @!method handler_type=(handler_type)
   #   Sets {#handler_type}.
