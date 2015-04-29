@@ -113,30 +113,9 @@ module Metasploit::Cache::Module::Namespace
     Object.module_eval(content, CONTENT_FILE, line_with_wrapping)
 
     # The namespace_module exists now, so no need to use constantize to do const_missing
-    namespace_module = current(names)
+    namespace_module = Metasploit::Cache::Constant.current(names)
 
     namespace_module
-  end
-
-  # Returns the module with `module_names` if it exists.
-  #
-  # @param [Array<String>] module_names a list of module names to resolve from Object downward.
-  # @return [Module] module that wraps the previously loaded content from {Metasploit::Cache::Module::Ancestor#content}.
-  # @return [nil] if any module name along the chain does not exist.
-  def self.current(module_names)
-    # dont' look at ancestor for constant for faster const_defined? calls.
-    inherit = false
-
-    # Don't want to trigger ActiveSupport's const_missing, so can't use constantize.
-    named_module = module_names.inject(Object) { |parent, module_name|
-      if parent.const_defined?(module_name, inherit)
-        parent.const_get(module_name)
-      else
-        break
-      end
-    }
-
-    named_module
   end
 
   # Returns an Array of names to make a fully qualified module name to wrap the Metasploit<n> class so that it
@@ -150,39 +129,6 @@ module Metasploit::Cache::Module::Namespace
   # @see namespace_module
   def self.names(module_ancestor)
     NAMES + ["RealPathSha1HexDigest#{module_ancestor.real_path_sha1_hex_digest}"]
-  end
-
-  # Restores the namespace `Module` to it's original name under it's original parent `Module` if there was a previous
-  # namespace `Module`.
-  #
-  # @param parent_module [Module] The `#parent` of `namespace_module` before it was removed from the constant tree.
-  # @param relative_name [String] The name of the constant under `parent_module` where `namespace_module` was attached.
-  # @param namespace_module [Module, nil] The previous namespace `Module` containing the old `Module` content.  If
-  #   `nil`, then the `relative_name` constant is removed from `parent_module`, but nothing is set as the new constant.
-  # @return [void]
-  def self.restore(parent_module, relative_name, namespace_module)
-    if parent_module
-      inherit = false
-
-      # If there is a current module with relative_name
-      if parent_module.const_defined?(relative_name, inherit)
-        # if the current value isn't the value to be restored.
-        if parent_module.const_get(relative_name, inherit) != namespace_module
-          # remove_const is private, so use send to bypass
-          parent_module.send(:remove_const, relative_name)
-
-          # if there was a previous module, not set it to the name
-          if namespace_module
-            parent_module.const_set(relative_name, namespace_module)
-          end
-        end
-      else
-        # if there was a previous module, but there isn't a current module, then restore the previous module
-        if namespace_module
-          parent_module.const_set(relative_name, namespace_module)
-        end
-      end
-    end
   end
 
   # Creates a new namespace `Module` for `module_ancestor`'s `Metasploit::Model::Module::Ancestor#contents` to be
@@ -204,14 +150,8 @@ module Metasploit::Cache::Module::Namespace
   def self.transaction(module_ancestor, &block)
     namespace_module_names = self.names(module_ancestor)
 
-    previous_namespace_module = current(namespace_module_names)
+    previous_namespace_module = Metasploit::Cache::Constant.remove(namespace_module_names)
     relative_name = namespace_module_names.last
-
-    if previous_namespace_module
-      parent_module = previous_namespace_module.parent
-      # remove_const is private, so use send to bypass
-      parent_module.send(:remove_const, relative_name)
-    end
 
     namespace_module = create(namespace_module_names)
 
@@ -229,13 +169,21 @@ module Metasploit::Cache::Module::Namespace
     begin
       commit = block.call(module_ancestor, namespace_module)
     rescue Exception
-      restore(parent_module, relative_name, previous_namespace_module)
+      Metasploit::Cache::Constant.swap_on_parent(
+          constant: previous_namespace_module,
+          parent: parent_module,
+          relative_name: relative_name
+      )
 
       # re-raise the original exception in the original context
       raise
     else
       unless commit
-        restore(parent_module, relative_name, previous_namespace_module)
+        Metasploit::Cache::Constant.swap_on_parent(
+            constant: previous_namespace_module,
+            parent: parent_module,
+            relative_name: relative_name
+        )
       end
 
       commit

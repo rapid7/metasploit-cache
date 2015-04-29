@@ -1,24 +1,24 @@
 # Logs if constants created by module loading are left over after suite has completed.
-module Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite
+module Metasploit::Cache::Spec::Unload::Suite
   #
   # CONSTANTS
   #
 
-  LOGS_PATHNAME = Pathname.new('log/metasploit/cache/module/ancestor/spec/unload/suite')
+  LOGS_PATHNAME = Pathname.new('log/metasploit/cache/spec/unload/suite')
 
   # Configures after(:suite) callback for RSpec to check for leaked constants.
   def self.configure!
     unless @configured
       RSpec.configure do |config|
         config.before(:suite) do
-          Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite.log_leaked_constants(
+          Metasploit::Cache::Spec::Unload::Suite.log_leaked_constants(
               :before,
               'Modules are being loaded outside callbacks before suite starts.'
           )
         end
 
         config.after(:suite) do
-          Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite.log_leaked_constants(
+          Metasploit::Cache::Spec::Unload::Suite.log_leaked_constants(
               :after,
               'Modules are being loaded inside callbacks or examples during suite run.'
           )
@@ -35,16 +35,16 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite
   # @return [void]
   def self.define_task
     Rake::Task.define_task(:spec) do
-      leaked_before = Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite.print_leaked_constants(:before)
-      leaked_after = Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite.print_leaked_constants(:after)
+      leaked_before = Metasploit::Cache::Spec::Unload::Suite.print_leaked_constants(:before)
+      leaked_after = Metasploit::Cache::Spec::Unload::Suite.print_leaked_constants(:after)
 
-      # leaks after suite can be be cleaned up by {Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure!},
+      # leaks after suite can be be cleaned up by {Metasploit::Cache::Spec::Unload::Each.configure!},
       # but leaks before suite require user intervention to find the leaks since it's a programming error in how the
       # specs are written where Modules are being loaded in the context scope.
       if leaked_after
         $stderr.puts
-        $stderr.puts "Add `Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure!` to " \
-                     "`spec/spec_helper.rb` **NOTE: `Metasploit::Cache::Module::Ancestor::Spec::Unload::Each` may " \
+        $stderr.puts "Add `Metasploit::Cache::Spec::Unload::Each.configure!` to " \
+                     "`spec/spec_helper.rb` **NOTE: `Metasploit::Cache::Spec::Unload::Each` may " \
                      "report false leaks if `after(:all)` is used to clean up constants instead of `after(:each)`**"
       end
 
@@ -60,20 +60,21 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite
   # @param message [String] additional message printed to stderr when there is at least one leaked constant.
   # @return [void]
   def self.log_leaked_constants(hook, message)
-    count = 0
+    count_by_parent_constant = {}
     hook_log_pathname = log_pathname(hook)
     hook_log_pathname.parent.mkpath
 
     hook_log_pathname.open('w') do |f|
-      count = Metasploit::Cache::Module::Ancestor::Spec::Unload.each do |child_name|
-        f.puts child_name
+      count_by_parent_constant = Metasploit::Cache::Spec::Unload.each do |parent_constant, child_name|
+        f.puts "#{parent_constant}::#{child_name}"
       end
     end
 
-    if count > 0
-      $stderr.puts "#{count} #{'constant'.pluralize(count)} leaked under " \
-                   "#{Metasploit::Cache::Module::Ancestor::Spec::Unload.parent_constant}. #{message} See " \
-                   "#{hook_log_pathname} for details."
+    if !count_by_parent_constant.empty?
+      count_by_parent_constant.each do |parent_constant, count|
+        $stderr.puts "#{count} #{'constant'.pluralize(count)} leaked under #{parent_constant}. #{message} " \
+                     "See #{hook_log_pathname} for details."
+      end
     else
       hook_log_pathname.delete
     end
@@ -98,8 +99,7 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite
 
     if hook_log_pathname.exist?
       leaks = true
-      $stderr.puts "Leaked constants detected under " \
-                   "#{Metasploit::Cache::Module::Ancestor::Spec::Unload.parent_constant} #{hook} suite:"
+      $stderr.puts "Leaked constants detected under #{hook} suite:"
 
       hook_log_pathname.open do |f|
         f.each_line do |line|

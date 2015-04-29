@@ -5,7 +5,19 @@ module Metasploit::Cache::Payload
 
   autoload :Ancestor
   autoload :AncestorCell
+  autoload :Direct
   autoload :Single
   autoload :Stage
   autoload :Stager
+
+  #
+  # Module Methods
+  #
+
+  # The prefix for ActiveRecord::Base subclass table names in this namespace.
+  #
+  # @return [String]
+  def self.table_name_prefix
+    "#{parent.table_name_prefix}payload_"
+  end
 end

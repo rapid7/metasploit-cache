@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Ranked do
+RSpec.describe Metasploit::Cache::Direct::Class::Ranking do
   context 'rank' do
     subject(:rank) {
       subclass.rank
@@ -9,7 +9,11 @@ RSpec.describe Metasploit::Cache::Ranked do
     #
 
     let(:subclass) {
-      Class.new(Metasploit::Cache::Ranked)
+      described_class = self.described_class
+
+      Class.new do
+        extend described_class
+      end
     }
 
     #

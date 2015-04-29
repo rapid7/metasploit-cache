@@ -115,4 +115,4 @@ RSpec.configure do |config|
   end
 end
 
-Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite.configure!
+Metasploit::Cache::Spec::Unload::Suite.configure!

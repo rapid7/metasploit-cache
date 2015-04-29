@@ -31,6 +31,7 @@ module Metasploit
     autoload :Base
     autoload :Batch
     autoload :Cacheable
+    autoload :Constant
     autoload :Derivation
     autoload :Direct
     autoload :EmailAddress
@@ -48,7 +49,6 @@ module Metasploit
     autoload :Platform
     autoload :Post
     autoload :ProxiedValidation
-    autoload :Ranked
     autoload :RealPathname
     autoload :Realm
     autoload :Reference

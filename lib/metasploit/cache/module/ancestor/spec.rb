@@ -3,7 +3,6 @@ module Metasploit::Cache::Module::Ancestor::Spec
   extend ActiveSupport::Autoload
 
   autoload :Template
-  autoload :Unload
 
   #
   # CONSTANTS

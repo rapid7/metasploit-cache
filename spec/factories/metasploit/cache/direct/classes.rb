@@ -22,7 +22,7 @@ FactoryGirl.define do
     transient do
       ancestor_contents? { true }
       ancestor_metasploit_class_relative_name { generate :metasploit_cache_module_ancestor_metasploit_module_relative_name }
-      ancestor_superclass { 'Metasploit::Cache::Ranked' }
+      ancestor_superclass { 'Metasploit::Cache::Direct::Class::Superclass' }
     end
 
     #

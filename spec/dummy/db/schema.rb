@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150409155014) do
+ActiveRecord::Schema.define(:version => 20150413141744) do
 
   create_table "mc_architectures", :force => true do |t|
     t.integer "bits"
@@ -193,6 +193,15 @@ ActiveRecord::Schema.define(:version => 20150409155014) do
   end
 
   add_index "mc_nop_instances", ["nop_class_id"], :name => "index_mc_nop_instances_on_nop_class_id", :unique => true
+
+  create_table "mc_payload_single_instances", :force => true do |t|
+    t.text    "description",             :null => false
+    t.string  "name",                    :null => false
+    t.boolean "privileged",              :null => false
+    t.integer "payload_single_class_id", :null => false
+  end
+
+  add_index "mc_payload_single_instances", ["payload_single_class_id"], :name => "index_mc_payload_single_instances_on_payload_single_class_id", :unique => true
 
   create_table "mc_platforms", :force => true do |t|
     t.text    "fully_qualified_name", :null => false

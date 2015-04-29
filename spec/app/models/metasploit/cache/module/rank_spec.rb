@@ -10,6 +10,7 @@ RSpec.describe Metasploit::Cache::Module::Rank do
     it { should have_many(:module_classes).class_name('Metasploit::Cache::Module::Class').dependent(:destroy) }
     it { is_expected.to have_many(:nop_classes).class_name('Metasploit::Cache::Nop::Class').dependent(:destroy) }
     it { is_expected.to have_many(:post_classes).class_name('Metasploit::Cache::Post::Class').dependent(:destroy) }
+    it { is_expected.to have_many(:single_payload_classes).class_name('Metasploit::Cache::Payload::Single::Class').dependent(:destroy) }
   end
 
   context 'CONSTANTS' do
