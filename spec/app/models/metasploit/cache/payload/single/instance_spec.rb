@@ -1,15 +1,21 @@
 RSpec.describe Metasploit::Cache::Payload::Single::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context 'associations' do
+    it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_single_instances) }
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
+      it { is_expected.to have_db_column(:handler_id).of_type(:integer).with_options(null: false) }
       it { is_expected.to have_db_column(:name).of_type(:string).with_options(null: false) }
       it { is_expected.to have_db_column(:payload_single_class_id).of_type(:integer).with_options(null: false) }
       it { is_expected.to have_db_column(:privileged).of_type(:boolean).with_options(null: false) }
     end
 
     context 'indices' do
+      it { is_expected.to have_db_index(:handler_id).unique(false) }
       it { is_expected.to have_db_index(:payload_single_class_id).unique(true) }
     end
   end
@@ -26,6 +32,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
 
   context 'validations' do
     it { is_expected.to validate_presence_of :description }
+    it { is_expected.to validate_presence_of :handler }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :payload_single_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
