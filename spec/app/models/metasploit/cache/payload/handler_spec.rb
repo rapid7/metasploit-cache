@@ -1,6 +1,7 @@
 RSpec.describe Metasploit::Cache::Payload::Handler do
   context 'associations' do
     it { is_expected.to have_many(:payload_single_instances).class_name('Metasploit::Cache::Payload::Single::Instance').dependent(:destroy).inverse_of(:handler) }
+    it { is_expected.to have_many(:payload_stager_instances).class_name('Metasploit::Cache::Payload::Stager::Instance').dependent(:destroy).inverse_of(:handler) }
   end
 
   context 'database' do

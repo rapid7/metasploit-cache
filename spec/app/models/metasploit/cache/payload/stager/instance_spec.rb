@@ -1,9 +1,14 @@
 RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context 'associations' do
+    it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_stager_instances) }
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
+      it { is_expected.to have_db_column(:handler_id).of_type(:integer).with_options(null: false) }
       it { is_expected.to have_db_column(:handler_type_alias).of_type(:string).with_options(null: true) }
       it { is_expected.to have_db_column(:name).of_type(:string).with_options(null: false) }
       it { is_expected.to have_db_column(:payload_stager_class_id).of_type(:integer).with_options(null: false) }
@@ -11,6 +16,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
     end
 
     context 'indices' do
+      it { is_expected.to have_db_index(:handler_id).unique(false) }
       it { is_expected.to have_db_index(:payload_stager_class_id).unique(true) }
     end
   end
@@ -27,6 +33,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
   
   context 'validations' do
     it { is_expected.to validate_presence_of :description }
+    it { is_expected.to validate_presence_of :handler }
     it { is_expected.not_to validate_presence_of :handler_type_alias }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :payload_stager_class }
