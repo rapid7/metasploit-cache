@@ -103,6 +103,8 @@ RSpec.describe Metasploit::Cache::Module::Architecture do
         include_context 'Metasploit::Cache::Batch.batch'
 
         context 'with same architecture_id' do
+          include Metasploit::Cache::Spec::Matcher
+
           subject(:new_module_architecture) do
             existing_module_instance.module_architectures.build.tap { |module_architecture|
               module_architecture.architecture = existing_architecture
@@ -118,7 +120,7 @@ RSpec.describe Metasploit::Cache::Module::Architecture do
           it 'should raise ActiveRecord::RecordNotUnique when saved' do
             expect {
               new_module_architecture.save
-            }.to raise_error(ActiveRecord::RecordNotUnique)
+            }.to raise_record_not_unique
           end
         end
 
