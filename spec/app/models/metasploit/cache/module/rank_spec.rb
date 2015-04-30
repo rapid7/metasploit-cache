@@ -5,8 +5,12 @@ RSpec.describe Metasploit::Cache::Module::Rank do
 
   context 'associations' do
     it { is_expected.to have_many(:auxiliary_classes).class_name('Metasploit::Cache::Auxiliary::Class').dependent(:destroy) }
+    it { is_expected.to have_many(:encoder_classes).class_name('Metasploit::Cache::Encoder::Class').dependent(:destroy) }
+    it { is_expected.to have_many(:exploit_classes).class_name('Metasploit::Cache::Exploit::Class').dependent(:destroy) }
     it { should have_many(:module_classes).class_name('Metasploit::Cache::Module::Class').dependent(:destroy) }
     it { is_expected.to have_many(:single_payload_classes).class_name('Metasploit::Cache::Payload::Single::Class').dependent(:destroy) }
+    it { is_expected.to have_many(:nop_classes).class_name('Metasploit::Cache::Nop::Class').dependent(:destroy) }
+    it { is_expected.to have_many(:post_classes).class_name('Metasploit::Cache::Post::Class').dependent(:destroy) }
   end
 
   context 'CONSTANTS' do

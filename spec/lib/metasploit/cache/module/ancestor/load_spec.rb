@@ -517,17 +517,14 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
           # @note Testing of `relative_path_prefix: auxiliary` has been moved to
           #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Auxiliary::Ancestor loading.
 
-          it_should_behave_like 'relative_path_prefix',
-                                association: :encoder_ancestors,
-                                relative_path_prefix: 'encoders'
+          # @note Testing of `relative_path_prefix: encoder` has been moved to
+          #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Encoder::Ancestor loading.
 
-          it_should_behave_like 'relative_path_prefix',
-                                association: :exploit_ancestors,
-                                relative_path_prefix: 'exploits'
+          # @note Testing of `relative_path_prefix: exploit` has been moved to
+          #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Exploit::Ancestor loading.
 
-          it_should_behave_like 'relative_path_prefix',
-                                association: :nop_ancestors,
-                                relative_path_prefix: 'nops'
+          # @note Testing of `relative_path_prefix: nop` has been moved to
+          #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Nop::Ancestor loading.
 
           it_should_behave_like 'relative_path_prefix',
                                 association: :stage_payload_ancestors,
@@ -537,9 +534,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
                                 association: :stager_payload_ancestors,
                                 relative_path_prefix: 'payloads/stagers'
 
-          it_should_behave_like 'relative_path_prefix',
-                                association: :post_ancestors,
-                                relative_path_prefix: 'post'
+          # @note Testing of `relative_path_prefix: post` has been moved to
+          #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Post::Ancestor loading.
         end
       end
     end
