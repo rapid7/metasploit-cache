@@ -101,6 +101,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
             }
 
             context 'with batched' do
+              include Metasploit::Cache::Spec::Matcher
               include_context 'Metasploit::Cache::Batch.batch'
 
               it 'does not add error on #name' do
@@ -109,10 +110,10 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
                 expect(new_actionable_action.errors[:name]).not_to include(error)
               end
 
-              it 'raises ActiveRecord::RecordNotUnque when saved' do
+              it 'raises ActiveRecord::RecordNotUnique when saved' do
                 expect {
                   new_actionable_action.save
-                }.to raise_error ActiveRecord::RecordNotUnique
+                }.to raise_record_not_unique
               end
             end
 
