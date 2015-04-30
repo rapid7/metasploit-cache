@@ -4,4 +4,5 @@ module Metasploit::Cache::Spec
 
   autoload :Matcher
   autoload :Template
+  autoload :Unload
 end

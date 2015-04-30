@@ -1,5 +1,5 @@
 RSpec.shared_examples_for 'Metasploit::Cache::Module::Ancestor factory loading' do
-  include_context 'Metasploit::Cache::Module::Ancestor::Spec::Unload.unload'
+  include_context 'Metasploit::Cache::Spec::Unload.unload'
 
   context 'Metasploit::Cache::Module::Ancestor::Load' do
     subject(:module_ancestor_load) {

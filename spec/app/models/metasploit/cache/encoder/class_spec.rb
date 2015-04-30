@@ -16,7 +16,7 @@ RSpec.describe Metasploit::Cache::Encoder::Class do
       it { is_expected.to be_valid }
 
       context 'loading' do
-        include_context 'Metasploit::Cache::Module::Ancestor::Spec::Unload.unload'
+        include_context 'Metasploit::Cache::Spec::Unload.unload'
 
         let(:logger) {
           ActiveSupport::TaggedLogging.new(

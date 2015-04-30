@@ -1,16 +1,15 @@
-RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
+RSpec.describe Metasploit::Cache::Payload::Single::Class, type: :model do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
-    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Auxiliary::Ancestor') }
-    it { is_expected.to have_one(:auxiliary_instance).class_name('Metasploit::Cache::Auxiliary::Instance').inverse_of(:auxiliary_class) }
+    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Payload::Single::Ancestor') }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do
-    context 'metasploit_cache_auxiliary_class' do
-      subject(:metasploit_cache_auxiliary_class) {
-        FactoryGirl.build(:metasploit_cache_auxiliary_class)
+    context 'metasploit_cache_payload_single_class' do
+      subject(:metasploit_cache_payload_single_class) {
+        FactoryGirl.build(:metasploit_cache_payload_single_class)
       }
 
       it { is_expected.to be_valid }
@@ -28,7 +27,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
           Metasploit::Cache::Module::Ancestor::Load.new(
               logger: logger,
               maximum_version: 4,
-              module_ancestor: metasploit_cache_auxiliary_class.ancestor
+              module_ancestor: metasploit_cache_payload_single_class.ancestor
           )
         }
 
@@ -37,8 +36,8 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
         }
 
         before(:each) do
-          # To prove Direct::Class::Load is set rank
-          metasploit_cache_auxiliary_class.rank = nil
+          # To prove Payload::Direct::Class::Load is setting rank
+          metasploit_cache_payload_single_class.rank = nil
         end
 
         context 'Metasploit::Cache::Module::Ancestor::Load' do
@@ -49,12 +48,13 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
           it { is_expected.to be_valid }
         end
 
-        context 'Metasploit::Cache::Direct::Class::Load' do
-          subject(:direct_class_load) {
-            Metasploit::Cache::Direct::Class::Load.new(
-                direct_class: metasploit_cache_auxiliary_class,
+        context 'Metasploit::Cache::Payload::Direct::Class::Load' do
+          subject(:payload_direct_class_load) {
+            Metasploit::Cache::Payload::Direct::Class::Load.new(
                 logger: logger,
-                metasploit_module: module_ancestor_load.metasploit_module
+                metasploit_module: module_ancestor_load.metasploit_module,
+                payload_direct_class: metasploit_cache_payload_single_class,
+                payload_superclass: Metasploit::Cache::Direct::Class::Superclass
             )
           }
 
@@ -66,7 +66,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
 
           specify {
             expect {
-              direct_class_load.valid?
+              payload_direct_class_load.valid?
             }.to change(described_class, :count).from(0).to(1)
           }
         end

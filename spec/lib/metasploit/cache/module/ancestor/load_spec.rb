@@ -1,7 +1,7 @@
 require 'file/find'
 
 RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
-  include_context 'Metasploit::Cache::Module::Ancestor::Spec::Unload.unload'
+  include_context 'Metasploit::Cache::Spec::Unload.unload'
 
   subject(:module_ancestor_load) do
     described_class.new(

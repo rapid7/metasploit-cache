@@ -1,15 +1,15 @@
 # @note This should only temporarily be used in `spec/spec_helper.rb` when
-#   {Metasploit::Cache::Module::Ancestor::Spec::Unload::Suite.configure!} detects a leak.  Permanently having
-#   {Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure!} can lead to false positives when modules are
-#   purposely loaded in a `before(:all)` and cleaned up in a `after(:all)`.
+#   {Metasploit::Cache::Spec::Unload::Suite.configure!} detects a leak.  Permanently having
+#   {Metasploit::Cache::Spec::Unload::Each.configure!} can lead to false positives when modules are purposely loaded in
+#   a `before(:all)` and cleaned up in a `after(:all)`.
 #
 # Fails example if it leaks module loading constants.
-module Metasploit::Cache::Module::Ancestor::Spec::Unload::Each
+module Metasploit::Cache::Spec::Unload::Each
   #
   # CONSTANTS
   #
 
-  LOG_PATHNAME = Pathname.new('log/metasploit/cache/module/ancestor/spec/unload/each.log')
+  LOG_PATHNAME = Pathname.new('log/metasploit/cache/spec/unload/each.log')
 
   #
   # Module Methods
@@ -23,27 +23,29 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Each
       RSpec.configure do |config|
         config.before(:each) do |example|
           # clean so that leaks from earlier example aren't attributed to this example
-          leaks_cleaned = Metasploit::Cache::Module::Ancestor::Spec::Unload.unload
+          leaks_cleaned = Metasploit::Cache::Spec::Unload.unload
 
           if leaks_cleaned
             $stderr.puts "Cleaned leaked constants before #{example.metadata[:full_description]}"
           end
 
-          Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.leaks_cleaned ||= leaks_cleaned
+          Metasploit::Cache::Spec::Unload::Each.leaks_cleaned ||= leaks_cleaned
         end
 
         config.after(:each) do |example|
-          child_names = Metasploit::Cache::Module::Ancestor::Spec::Unload.to_enum(:each).to_a
+          lines = []
 
-          if child_names.length > 0
-            lines = ['Leaked constants:']
+          Metasploit::Cache::Spec::Unload.each do |parent_constant, child_name|
+            lines << "  #{parent_constant}::#{child_name}"
+          end
 
-            child_names.sort.each do |child_name|
-              lines << "  #{child_name}"
-            end
+          if lines.length > 0
+            lines.sort!
+
+            lines.unshift 'Leaked constants:'
 
             lines << ''
-            lines << "Add `include_context 'Metasploit::Cache::Module::Ancestor::Spec::Unload.unload'` to clean up constants from #{example.metadata[:full_description]}"
+            lines << "Add `include_context 'Metasploit::Cache::Spec::Unload.unload'` to clean up constants from #{example.metadata[:full_description]}"
 
             message = lines.join("\n")
 
@@ -54,14 +56,14 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Each
         end
 
         config.after(:suite) do
-          if Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.leaks_cleaned?
+          if Metasploit::Cache::Spec::Unload::Each.leaks_cleaned?
             if LOG_PATHNAME.exist?
               LOG_PATHNAME.delete
             end
           else
             LOG_PATHNAME.open('w') { |f|
               f.puts(
-                  "No leaks were cleaned by `Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure!`. " \
+                  "No leaks were cleaned by `Metasploit::Cache::Spec::Unload::Each.configure!`. " \
                   "Remove it from `spec/spec_helper.rb` so it does not interfere with contexts that persist loaded " \
                   "modules for entire context and clean up modules in `after(:all)`"
               )
@@ -86,13 +88,13 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Each
   #
   # @return [void]
   def self.define_task
-    Rake::Task.define_task('metasploit:cache:module:ancestor:spec:unload:each:clean') do
+    Rake::Task.define_task('metasploit:cache:spec:unload:each:clean') do
       if LOG_PATHNAME.exist?
         LOG_PATHNAME.delete
       end
     end
 
-    Rake::Task.define_task(spec: 'metasploit:cache:module:ancestor:spec:unload:each:clean')
+    Rake::Task.define_task(spec: 'metasploit:cache:spec:unload:each:clean')
 
     Rake::Task.define_task(:spec) do
       if LOG_PATHNAME.exist?
@@ -111,7 +113,7 @@ module Metasploit::Cache::Module::Ancestor::Spec::Unload::Each
     attr_accessor :leaks_cleaned
   end
 
-  # Is {Metasploit::Cache::Module::Ancestor::Spec::Unload::Each.configure!} still necessary or should it be removed?
+  # Is {Metasploit::Cache::Spec::Unload::Each.configure!} still necessary or should it be removed?
   #
   # @return [true] if {configure!}'s `before(:each)` cleaned up leaked constants
   # @return [false] otherwise

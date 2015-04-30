@@ -19,6 +19,12 @@ class Metasploit::Cache::Payload::Single::Ancestor < Metasploit::Cache::Payload:
              class_name: 'Metasploit::Cache::Module::Path',
              inverse_of: :single_payload_ancestors
 
+  # Class defined by this single payload ancestor.
+  has_one :single_payload_class,
+          class_name: 'Metasploit::Cache::Payload::Single::Class',
+          foreign_key: :ancestor_id,
+          inverse_of: :ancestor
+
   #
   # Relative path restriction
   #
