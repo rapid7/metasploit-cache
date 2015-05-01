@@ -18,6 +18,12 @@ class Metasploit::Cache::Post::Ancestor < Metasploit::Cache::Module::Ancestor
              class_name: 'Metasploit::Cache::Module::Path',
              inverse_of: :post_ancestors
 
+  # Class defined by this post ancestor.
+  has_one :post_class,
+          class_name: 'Metasploit::Cache::Post::Class',
+          foreign_key: :ancestor_id,
+          inverse_of: :ancestor
+
   #
   # Relative path restrictions
   #

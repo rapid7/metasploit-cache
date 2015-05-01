@@ -45,7 +45,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
           }
         end
 
-        context 'with encoder', pending: 'Metasploit::Cache::Encoder::Classn not available on branch' do
+        context 'with encoder' do
           let(:direct_class_factory) {
             :metasploit_cache_encoder_class
           }
@@ -67,7 +67,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
           }
         end
 
-        context 'with exploit', pending: 'Metasploit::Cache::Exploit::Classn not available on branch' do
+        context 'with exploit' do
           let(:direct_class_factory) {
             :metasploit_cache_exploit_class
           }
@@ -89,7 +89,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
           }
         end
 
-        context 'with nop', pending: 'Metasploit::Cache::Nop::Class not available on branch' do
+        context 'with nop' do
           let(:direct_class_factory) {
             :metasploit_cache_nop_class
           }
@@ -111,7 +111,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
           }
         end
 
-        context 'with post', pending: 'Metasploit::Cache::Post::Class not available on branch' do
+        context 'with post' do
           let(:direct_class_factory) {
             :metasploit_cache_post_class
           }

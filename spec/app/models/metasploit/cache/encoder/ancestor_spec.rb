@@ -5,6 +5,7 @@ RSpec.describe Metasploit::Cache::Encoder::Ancestor do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
+    it { is_expected.to have_one(:encoder_class).class_name('Metasploit::Cache::Encoder::Class').with_foreign_key(:ancestor_id) }
     it { is_expected.to belong_to(:parent_path).class_name('Metasploit::Cache::Module::Path') }
   end
 
