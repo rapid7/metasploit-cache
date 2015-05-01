@@ -23,6 +23,7 @@ module Metasploit
   module Cache
     extend ActiveSupport::Autoload
 
+    autoload :Actionable
     autoload :Architecture
     autoload :Association
     autoload :Author

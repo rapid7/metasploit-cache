@@ -11,9 +11,10 @@ module Metasploit
       # The minor version number, scoped to the {MAJOR} version number.
       MINOR = 64
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-      PATCH = 9
-      # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'payload-stager-instance'
+      PATCH = 25
+      # Remove on master
+      PRERELEASE = "payload-stager-instance"
+
 
       #
       # Module Methods

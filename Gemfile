@@ -87,3 +87,11 @@ group :test do
   # defines time zones for activesupport.  Must be explicit since it is normally implicit with activerecord
   gem 'tzinfo'
 end
+
+group :postgresql do
+  gem 'pg'
+end
+
+group :sqlite3 do
+  gem 'sqlite3'
+end

@@ -101,6 +101,8 @@ RSpec.describe Metasploit::Cache::Module::Action do
 
         context 'with same #module_instance_id' do
           context 'with same #name' do
+            include Metasploit::Cache::Spec::Matcher
+
             let(:new_module_action) do
               existing_module_instance.actions.build(
                   name: existing_module_action.name
@@ -116,7 +118,7 @@ RSpec.describe Metasploit::Cache::Module::Action do
             it 'raises ActiveRecord::RecordNotUnique when saved' do
               expect {
                 new_module_action.save
-              }.to raise_error(ActiveRecord::RecordNotUnique)
+              }.to raise_record_not_unique
             end
           end
 
