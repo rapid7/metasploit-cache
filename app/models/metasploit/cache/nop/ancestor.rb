@@ -13,6 +13,12 @@ class Metasploit::Cache::Nop::Ancestor < Metasploit::Cache::Module::Ancestor
   # Associations
   #
 
+  # Class defined by this nop ancestor.
+  has_one :nop_class,
+          class_name: 'Metasploit::Cache::Nop::Class',
+          foreign_key: :ancestor_id,
+          inverse_of: :ancestor
+
   # Path under which this module's {Metasploit::Cache::Module::Ancestor#relative_path} exists.
   belongs_to :parent_path,
              class_name: 'Metasploit::Cache::Module::Path',

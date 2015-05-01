@@ -17,7 +17,7 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger
 
-  # The Metasploit Module's being cached.
+  # The Metasploit Module being cached.
   #
   # @return [Class]
   attr_accessor :metasploit_class
@@ -52,7 +52,7 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # Instance Methods
   #
 
-  # @note This ephemeratl cache should be validated with `valid?` prior to calling {#persist_direct_class} to ensure
+  # @note This ephemeral cache should be validated with `valid?` prior to calling {#persist_direct_class} to ensure
   #   that {#logger} is present in case of error.
   # @note Validation errors for `direct_class` will be logged as errors tagged with
   #   {Metasploit::Cache::Module::Ancestor#real_pathname}/.
