@@ -6,6 +6,7 @@ RSpec.describe Metasploit::Cache::Post::Ancestor do
 
   context 'associations' do
     it { is_expected.to belong_to(:parent_path).class_name('Metasploit::Cache::Module::Path') }
+    it { is_expected.to have_one(:post_class).class_name('Metasploit::Cache::Post::Class').with_foreign_key(:ancestor_id) }
   end
 
   context 'factories' do
