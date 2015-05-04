@@ -250,6 +250,15 @@ ActiveRecord::Schema.define(:version => 20150429155157) do
   add_index "mc_payload_single_instances", ["handler_id"], :name => "index_mc_payload_single_instances_on_handler_id"
   add_index "mc_payload_single_instances", ["payload_single_class_id"], :name => "index_mc_payload_single_instances_on_payload_single_class_id", :unique => true
 
+  create_table "mc_payload_stage_instances", :force => true do |t|
+    t.text    "description",            :null => false
+    t.string  "name",                   :null => false
+    t.boolean "privileged",             :null => false
+    t.integer "payload_stage_class_id", :null => false
+  end
+
+  add_index "mc_payload_stage_instances", ["payload_stage_class_id"], :name => "index_mc_payload_stage_instances_on_payload_stage_class_id", :unique => true
+
   create_table "mc_payload_stager_instances", :force => true do |t|
     t.text    "description",             :null => false
     t.string  "handler_type_alias"

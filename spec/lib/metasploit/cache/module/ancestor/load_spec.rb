@@ -526,9 +526,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
           # @note Testing of `relative_path_prefix: nop` has been moved to
           #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Nop::Ancestor loading.
 
-          it_should_behave_like 'relative_path_prefix',
-                                association: :stager_payload_ancestors,
-                                relative_path_prefix: 'payloads/stagers'
+          # @note Testing of `relative_path_prefix: 'payloads/stagers'` has been moved to
+          #   spec/lib/metasploit/cache/payload/direct/class/load_spec.rb to eliminate redundant
+          #   Payload::Stager::Ancestor loading.
 
           # @note Testing of `relative_path_prefix: post` has been moved to
           #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Post::Ancestor loading.
