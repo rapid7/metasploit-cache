@@ -11,7 +11,7 @@ module Metasploit
       # The minor version number, scoped to the {MAJOR} version number.
       MINOR = 64
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-      PATCH = 21
+      PATCH = 22
 
       #
       # Module Methods

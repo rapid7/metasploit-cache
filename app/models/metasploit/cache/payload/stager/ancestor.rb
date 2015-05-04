@@ -19,6 +19,12 @@ class Metasploit::Cache::Payload::Stager::Ancestor < Metasploit::Cache::Payload:
              class_name: 'Metasploit::Cache::Module::Path',
              inverse_of: :stager_payload_ancestors
 
+  # Class defined by this stager payload ancestor.
+  has_one :stager_payload_class,
+          class_name: 'Metasploit::Cache::Payload::Stager::Class',
+          foreign_key: :ancestor_id,
+          inverse_of: :ancestor
+
   #
   # Relative path restriction
   #
