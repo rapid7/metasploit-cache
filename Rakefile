@@ -129,9 +129,35 @@ end
 #
 
 task 'yard:doc' => :eager_load
+task 'yard:doc' => :patch_rails_erd70
 
 task eager_load: :environment do
   Rails.application.eager_load!
+end
+
+task patch_rails_erd70: :environment do
+  # Patch from https://github.com/voormedia/rails-erd/issues/70#issuecomment-63645855 to work around
+  # Metasploit::Cache::Exploit::Instance#default_exploit_target -> Metasploit::Cache::Exploit::Target#exploit_instance
+  # and
+  # Metasploit::Cache::Exploit::Instance#exploit_targets -> Metasploit::Cache:Exploit::Target#exploit_instance causing
+  # `in routesplines, cannot find NORMAL edge`
+
+  require 'rails_erd'
+  require 'rails_erd/domain/relationship'
+
+  module RailsERD
+    class Domain
+      class Relationship
+        class << self
+          private
+
+          def association_identity(association)
+            Set[association_owner(association), association_target(association)]
+          end
+        end
+      end
+    end
+  end
 end
 
 Metasploit::Cache::Spec::Unload.define_task
