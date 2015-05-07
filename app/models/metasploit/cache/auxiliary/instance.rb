@@ -58,19 +58,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   #     a server exploiting clients.
 
   #
-  #
   # Validations
-  #
-  #
-
-  #
-  # Method Validations
-  #
-
-  validate :actions_contains_default_action
-
-  #
-  # Attribute Validations
   #
 
   validates :actions,
@@ -79,6 +67,13 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
             }
   validates :auxiliary_class,
             presence: true
+  validates :default_action,
+            inclusion: {
+                allow_nil: true,
+                in: ->(auxiliary_instance){
+                  auxiliary_instance.actions
+                }
+            }
   validates :description,
             presence: true
   validates :name,
@@ -118,21 +113,6 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   #     server, so the Metasploit Module is a client exploiting a server.  Use `'passive'` when this Metasploit Module
   #     waits for remote clients to connect to it, so the Metasploit Module is a server exploiting clients.
   #   @return [void]
-
-
-  private
-
-  # Validates that {#default_action}, when it is set, is in {#actions}.
-  #
-  # @return [void]
-  def actions_contains_default_action
-    unless default_action.nil? || actions.include?(default_action)
-      errors.add(:actions, :does_not_contain_default_action)
-    end
-  end
-
-  # Switch back to public for load hooks
-  public
 
   Metasploit::Concern.run(self)
 end
