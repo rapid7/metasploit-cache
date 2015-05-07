@@ -99,9 +99,11 @@ ActiveRecord::Schema.define(:version => 20150507130708) do
   add_index "mc_exploit_instances", ["exploit_class_id"], :name => "index_mc_exploit_instances_on_exploit_class_id", :unique => true
 
   create_table "mc_exploit_targets", :force => true do |t|
+    t.integer "index",               :null => false
     t.integer "exploit_instance_id", :null => false
   end
 
+  add_index "mc_exploit_targets", ["exploit_instance_id", "index"], :name => "index_mc_exploit_targets_on_exploit_instance_id_and_index", :unique => true
   add_index "mc_exploit_targets", ["exploit_instance_id"], :name => "index_mc_exploit_targets_on_exploit_instance_id"
 
   create_table "mc_module_actions", :force => true do |t|
