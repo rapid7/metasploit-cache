@@ -4,6 +4,14 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Associations
   #
 
+  # The actions that are allowed for this post Metasploit Module.
+  #
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Actionable::Action>]
+  has_many :actions,
+           as: :actionable,
+           class_name: 'Metasploit::Cache::Actionable::Action',
+           inverse_of: :actionable
+
   # The class level metadata for this post Metasploit Module
   belongs_to :post_class,
              class_name: 'Metasploit::Cache::Post::Class',
