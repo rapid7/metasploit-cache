@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150429155157) do
+ActiveRecord::Schema.define(:version => 20150507130708) do
 
   create_table "mc_actionable_actions", :force => true do |t|
     t.string  "name",            :null => false
@@ -97,6 +97,12 @@ ActiveRecord::Schema.define(:version => 20150429155157) do
   end
 
   add_index "mc_exploit_instances", ["exploit_class_id"], :name => "index_mc_exploit_instances_on_exploit_class_id", :unique => true
+
+  create_table "mc_exploit_targets", :force => true do |t|
+    t.integer "exploit_instance_id", :null => false
+  end
+
+  add_index "mc_exploit_targets", ["exploit_instance_id"], :name => "index_mc_exploit_targets_on_exploit_instance_id"
 
   create_table "mc_module_actions", :force => true do |t|
     t.integer "module_instance_id", :null => false

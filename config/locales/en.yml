@@ -7,6 +7,10 @@ en:
             actions:
               does_not_contain_default_action: "does not contain default action"
               too_short: "has too few actions (minimum is %{count} action)"
+        metasploit/cache/exploit/instance:
+          attributes:
+            exploit_targets:
+              too_short: "has too few exploit targets (minimum is %{count} exploit target)"
   metasploit:
     model:
       ancestors:
