@@ -12,6 +12,15 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
            class_name: 'Metasploit::Cache::Actionable::Action',
            inverse_of: :actionable
 
+  # @note The default action must be manually added to {#actions}.
+  #
+  # The (optional) default action for this post Metasploit Module.
+  #
+  # @return [Metasploit::Cache::Actionable::Action]
+  belongs_to :default_action,
+             class_name: 'Metasploit::Cache::Actionable::Action',
+             inverse_of: :actionable
+
   # The class level metadata for this post Metasploit Module
   belongs_to :post_class,
              class_name: 'Metasploit::Cache::Post::Class',
@@ -52,6 +61,13 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :default_action,
+            inclusion: {
+                allow_nil: true,
+                in: ->(post_instance){
+                  post_instance.actions
+                }
+            }
   validates :description,
             presence: true
   validates :disclosed_on,
