@@ -1,5 +1,6 @@
-# License of one or more {#module_instances modules}.
+# Represents licenses like BSD, MIT, etc used to provide license information for {Metasploit::Cache::Module::Instance modules}
 class Metasploit::Cache::License < ActiveRecord::Base
+  extend ActiveSupport::Autoload
 
   #
   # Attributes
@@ -20,4 +21,24 @@ class Metasploit::Cache::License < ActiveRecord::Base
   #
   #   @return [String]
 
+
+  #
+  # Validations
+  #
+
+  validates :abbreviation,
+            uniqueness: true,
+            presence: true
+
+  validates :summary,
+            uniqueness: true,
+            presence: true
+
+  validates :url,
+            uniqueness: true,
+            presence: true
+
+
+  Metasploit::Concern.run(self)
 end
+

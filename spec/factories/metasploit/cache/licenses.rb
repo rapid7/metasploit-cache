@@ -1,0 +1,15 @@
+FactoryGirl.define do
+  factory :metasploit_cache_license, class: Metasploit::Cache::License do
+    abbreviation "BSD-2"
+    summary(
+      <<EOS
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+EOS
+    )
+    url "http://opensource.org/licenses/BSD-2-Clause"
+  end
+end
