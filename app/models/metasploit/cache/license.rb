@@ -7,7 +7,7 @@ class Metasploit::Cache::License < ActiveRecord::Base
   #
 
   # @!attribute abbreviation
-  #   Abbreviated license name
+  #   Short name of this license, e.g. "BSD-2"
   #
   #   @return [String]
 
@@ -37,6 +37,25 @@ class Metasploit::Cache::License < ActiveRecord::Base
   validates :url,
             uniqueness: true,
             presence: true
+
+
+  # @!method abbreviation=(abbreviation)
+  #   Sets {#abbreviation}.
+  #
+  #   @param abbreviation [String] short name of this license, e.g. "BSD-2"
+  #   @return [void]
+
+  # @!method summary=(summary)
+  #   Sets {#summary}.
+  #
+  #   @param summary [String] summary of the license text
+  #   @return [void]
+
+  # @!method url=(url)
+  #   Sets {#url}.
+  #
+  #   @param url [String] URL to the location of the full license text
+  #   @return [void]
 
 
   Metasploit::Concern.run(self)
