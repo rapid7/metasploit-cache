@@ -9,5 +9,12 @@ RSpec.describe Metasploit::Cache::Licensable::License do
 
   context "associations" do
     it { is_expected.to belong_to(:licensable)}
+    it { is_expected.to belong_to(:license)}
+  end
+
+  context "validations" do
+    it { is_expected.to validate_presence_of :license }
+    it { is_expected.to validate_presence_of :licensable_id }
+    it { is_expected.to validate_presence_of :licensable_type }
   end
 end
