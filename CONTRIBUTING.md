@@ -94,7 +94,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 
 ### Documentation Coverage
 - [ ] `rake yard`
-- [ ] VERIFY no warnings
+- [ ] VERIFY no `[warn]`ings. (Rails ERD "invalid model" Warnings are OK.)
 - [ ] VERIFY no undocumented objects
 
 ## Sqlite3
@@ -109,7 +109,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 
 ### Documentation coverage
 - [ ] `rake yard`
-- [ ] VERIFY no warnings
+- [ ] VERIFY no `[warn]`ings. (Rails ERD "invalid model" Warnings are OKrm Gemfile.lock.)
 - [ ] VERIFY no undocumented objects
 ```
 
