@@ -36,21 +36,5 @@ class Metasploit::Cache::Module::Target::Architecture < ActiveRecord::Base
   validates :module_target,
             presence: true
 
-  #
-  # Instance Methods
-  #
-
-  # @!method architecture=(architecture)
-  #   Sets {#architecture}.
-  #
-  #   @param architecture [Metasploit::Cache::Architecture] an architecture supported by {#module_target}.
-  #   @return [void]
-
-  # @!method module_target=(module_target)
-  #   Sets {#module_target}.
-  #
-  #   @param module_target [Metasploit::Cache::Module::Target] the module target that supports {#architecture}.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end

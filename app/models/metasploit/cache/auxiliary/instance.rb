@@ -136,34 +136,6 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # Instance Methods
   #
 
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this auxiliary Metasploit Module.
-  #   @return [void]
-
-  # @!method disclosed_on=(disclosed_on)
-  #   Sets {#disclosed_on}.
-  #
-  #   @param disclosed_on [Date, nil] The date when the bug this Metasploit Module exercises was disclosed publicly
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human-readable name of this auxiliary Metasploit Module.  This can be thought of as the
-  #     title or summary of the Metasploit Module.
-  #   @return [void]
-
-  # @!method stance=(stance)
-  #   Sets {#stance}.
-  #
-  #   @param stance ['aggressive', 'passive'] Use ``'aggressive'` when this Metasploit Module connects to a remote
-  #     server, so the Metasploit Module is a client exploiting a server.  Use `'passive'` when this Metasploit Module
-  #     waits for remote clients to connect to it, so the Metasploit Module is a server exploiting clients.
-  #   @return [void]
-
-
   private
 
   # Validates that {#default_action}, when it is set, is in {#actions}.

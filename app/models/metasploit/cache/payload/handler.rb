@@ -48,21 +48,5 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
             presence: true,
             uniqueness: true
 
-  #
-  # Instance Methods
-  #
-
-  # @!method general_handler_type=(general_handler_type)
-  #   Sets {#general_handler_type}.
-  #
-  #   @param general_handler_type [String] the general handler type
-  #   @return [void]
-
-  # @!method handler_type=(handler_type)
-  #   Sets {#handler_type}.
-  #
-  #   @param handler_type [String] the specific handler type
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end
