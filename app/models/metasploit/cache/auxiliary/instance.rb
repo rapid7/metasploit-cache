@@ -28,6 +28,18 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Actionable::Action',
              inverse_of: :actionable
 
+  # The {Metasploit::Cache::License} objects that are associated with this instance
+  #
+  # @return[ActiveRecord::Relation<Metasploit::Cache::Licensable::License>]
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+
+
   #
   # Attributes
   #
@@ -75,14 +87,23 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
 
   validates :actions,
             length: {
-                minimum: 1
+              minimum: 1
             }
+
   validates :auxiliary_class,
             presence: true
+
   validates :description,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
+
   validates :name,
             presence: true
+
   validates :stance,
             inclusion: {
                 in: Metasploit::Cache::Module::Stance::ALL

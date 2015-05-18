@@ -7,6 +7,7 @@ FactoryGirl.define do
           class: Metasploit::Cache::Auxiliary::Instance do
     transient do
       actions_count 1
+      licenses_count 1
     end
 
     description { generate :metasploit_cache_auxiliary_instance_description }
@@ -23,12 +24,22 @@ FactoryGirl.define do
     # Callbacks
     #
 
+    # Create associated objects w/ the counts established above in the
+    # transient attributes. This enables specs using these factories to
+    # specify a number of associated objects and therefore easily make valid/invalid
+    # instances.
     after(:build) { |auxiliary_instance, evaluator|
       auxiliary_instance.actions = build_list(
           :metasploit_cache_auxiliary_action,
           evaluator.actions_count,
           actionable: auxiliary_instance
       )
+      auxiliary_instance.licensable_licenses = build_list(
+          :metasploit_cache_auxiliary_instance_license,
+          evaluator.licenses_count,
+          licensable: auxiliary_instance
+      )
+      true
     }
   end
 

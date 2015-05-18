@@ -118,6 +118,10 @@ ActiveRecord::Schema.define(:version => 20150518163003) do
     t.datetime "updated_at",      :null => false
   end
 
+  add_index "mc_licensable_licenses", ["licensable_type", "licensable_id"], :name => "mc_licensable_polymorphic"
+  add_index "mc_licensable_licenses", ["license_id", "licensable_type", "licensable_id"], :name => "unique_mc_licensable_licenses", :unique => true
+  add_index "mc_licensable_licenses", ["license_id"], :name => "index_mc_licensable_licenses_on_license_id"
+
   create_table "mc_licenses", :force => true do |t|
     t.string "abbreviation", :null => false
     t.text   "summary",      :null => false

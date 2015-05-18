@@ -7,6 +7,8 @@ en:
             actions:
               does_not_contain_default_action: "does not contain default action"
               too_short: "has too few actions (minimum is %{count} action)"
+            licensable_licenses:
+              too_short: "has too few licenses - minimum is one"
         metasploit/cache/exploit/instance:
           attributes:
             default_exploit_target:

@@ -10,6 +10,12 @@ class CreateMetasploitCacheLicensableLicenses < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    change_table TABLE_NAME do |t|
+      t.index :license_id
+      t.index [:licensable_type, :licensable_id], name: 'mc_licensable_polymorphic'
+      t.index [:license_id, :licensable_type, :licensable_id], unique: true, name: 'unique_mc_licensable_licenses'
+    end
   end
 
   # Delete mc_licensable_licenses

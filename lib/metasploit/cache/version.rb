@@ -13,7 +13,7 @@ module Metasploit
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 27
       # Remove on master
-      PRERELEASE = 'license-model'
+      PRERELEASE = 'licensable-association'
 
       #
       # Module Methods

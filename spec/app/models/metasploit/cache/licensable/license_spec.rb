@@ -14,7 +14,13 @@ RSpec.describe Metasploit::Cache::Licensable::License do
 
   context "validations" do
     it { is_expected.to validate_presence_of :license }
-    it { is_expected.to validate_presence_of :licensable_id }
-    it { is_expected.to validate_presence_of :licensable_type }
+    # it { is_expected.to validate_uniqueness_of :licensable_id }
+    it { is_expected.to validate_presence_of :licensable }
+  end
+
+  context "factories" do
+    subject(:metasploit_cache_licensable_license){ FactoryGirl.build :metasploit_cache_auxiliary_instance_license }
+
+    it { is_expected.to be_valid }
   end
 end
