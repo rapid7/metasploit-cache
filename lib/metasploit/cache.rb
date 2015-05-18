@@ -42,6 +42,7 @@ module Metasploit
     autoload :File
     autoload :Invalid
     autoload :License
+    autoload :Licensable
     autoload :Login
     autoload :Module
     autoload :NilifyBlanks

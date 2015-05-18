@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150515163602) do
+ActiveRecord::Schema.define(:version => 20150518163003) do
 
   create_table "mc_actionable_actions", :force => true do |t|
     t.string  "name",            :null => false
@@ -109,6 +109,14 @@ ActiveRecord::Schema.define(:version => 20150515163602) do
   add_index "mc_exploit_targets", ["exploit_instance_id", "index"], :name => "index_mc_exploit_targets_on_exploit_instance_id_and_index", :unique => true
   add_index "mc_exploit_targets", ["exploit_instance_id", "name"], :name => "index_mc_exploit_targets_on_exploit_instance_id_and_name", :unique => true
   add_index "mc_exploit_targets", ["exploit_instance_id"], :name => "index_mc_exploit_targets_on_exploit_instance_id"
+
+  create_table "mc_licensable_licenses", :force => true do |t|
+    t.integer  "licensable_id",   :null => false
+    t.string   "licensable_type", :null => false
+    t.integer  "license_id",      :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "mc_licenses", :force => true do |t|
     t.string "abbreviation", :null => false
