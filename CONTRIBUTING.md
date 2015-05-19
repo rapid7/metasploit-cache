@@ -95,26 +95,24 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ### Documentation Coverage
 - [ ] `rake yard:stats`
 - [ ] VERIFY only `[warn]`ings are from scope parameters: 
-```
-[warn]: @param tag has unknown parameter name: module_instances 
-    in file `app/models/metasploit/cache/module/class.rb' near line 147
-[warn]: @param tag has unknown parameter name: module_instance 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 317
-[warn]: @param tag has unknown parameter name: architecture_abbreviations 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 336
-[warn]: @param tag has unknown parameter name: architectured 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 353
-[warn]: @param tag has unknown parameter name: platforms 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 367
-[warn]: @param tag has unknown parameter name: platform_fully_qualified_names 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 403
-[warn]: @param tag has unknown parameter name: module_target 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 420
-[warn]: @param tag has unknown parameter name: module_instance 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 434
-[warn]: @param tag has unknown parameter name: module_target 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 492
-```
+    [warn]: @param tag has unknown parameter name: module_instances 
+        in file `app/models/metasploit/cache/module/class.rb' near line 147
+    [warn]: @param tag has unknown parameter name: module_instance 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 317
+    [warn]: @param tag has unknown parameter name: architecture_abbreviations 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 336
+    [warn]: @param tag has unknown parameter name: architectured 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 353
+    [warn]: @param tag has unknown parameter name: platforms 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 367
+    [warn]: @param tag has unknown parameter name: platform_fully_qualified_names 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 403
+    [warn]: @param tag has unknown parameter name: module_target 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 420
+    [warn]: @param tag has unknown parameter name: module_instance 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 434
+    [warn]: @param tag has unknown parameter name: module_target 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 492
 - [ ] VERIFY no undocumented objects
 
 ## Sqlite3
@@ -130,26 +128,24 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ### Documentation coverage
 - [ ] `rake yard:stats`
 - [ ] VERIFY only `[warn]`ings are from scope parameters: 
-```
-[warn]: @param tag has unknown parameter name: module_instances 
-    in file `app/models/metasploit/cache/module/class.rb' near line 147
-[warn]: @param tag has unknown parameter name: module_instance 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 317
-[warn]: @param tag has unknown parameter name: architecture_abbreviations 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 336
-[warn]: @param tag has unknown parameter name: architectured 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 353
-[warn]: @param tag has unknown parameter name: platforms 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 367
-[warn]: @param tag has unknown parameter name: platform_fully_qualified_names 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 403
-[warn]: @param tag has unknown parameter name: module_target 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 420
-[warn]: @param tag has unknown parameter name: module_instance 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 434
-[warn]: @param tag has unknown parameter name: module_target 
-    in file `app/models/metasploit/cache/module/instance.rb' near line 492
-```
+    [warn]: @param tag has unknown parameter name: module_instances 
+        in file `app/models/metasploit/cache/module/class.rb' near line 147
+    [warn]: @param tag has unknown parameter name: module_instance 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 317
+    [warn]: @param tag has unknown parameter name: architecture_abbreviations 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 336
+    [warn]: @param tag has unknown parameter name: architectured 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 353
+    [warn]: @param tag has unknown parameter name: platforms 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 367
+    [warn]: @param tag has unknown parameter name: platform_fully_qualified_names 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 403
+    [warn]: @param tag has unknown parameter name: module_target 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 420
+    [warn]: @param tag has unknown parameter name: module_instance 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 434
+    [warn]: @param tag has unknown parameter name: module_target 
+        in file `app/models/metasploit/cache/module/instance.rb' near line 492
 - [ ] VERIFY no undocumented objects
 ```
 
