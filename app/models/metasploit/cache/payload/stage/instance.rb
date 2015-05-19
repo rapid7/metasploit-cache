@@ -1,14 +1,32 @@
 # Instance-level metadata for stage payload Metasploit Module
 class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   #
+  #
   # Associations
   #
+  #
+
+  # Joins {#architectures} to this stage payload Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
+
 
   # The class-level metadata for this stage payload Metasploit Module.
   belongs_to :payload_stage_class,
              class_name: 'Metasploit::Cache::Payload::Stage::Class',
              inverse_of: :payload_stage_instance
-  
+
+  #
+  # through: architecturable_architectures
+  #
+
+  # Architectures on which this payload can run.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
+
   #
   # Attributes
   #
