@@ -1,6 +1,12 @@
 RSpec.describe Metasploit::Cache::Nop::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context 'associations' do
+    it { is_expected.to have_many(:architectures).class_name('Metasploit::Cache::Architecture') }
+    it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
+    it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
@@ -21,10 +27,6 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
 
       it { is_expected.to be_valid }
     end
-  end
-
-  context 'associations' do
-    it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
   end
 
   context 'validations' do
