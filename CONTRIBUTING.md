@@ -48,7 +48,7 @@ Make your changes or however many commits you like, committing each with `git co
 ##### Testing
 1. `rake cucumber spec coverage`
 2. Verify there were no failures.
-3. Verify there was 100% coverage.
+3. Verify there was 99.72% coverage.
 
 ##### Documentation
 1. `rake yard`
@@ -63,7 +63,7 @@ Make your changes or however many commits you like, committing each with `git co
 ##### Testing
 1. `rake cucumber spec coverage`
 2. Verify there were no failures.
-3. Verify there was 100% coverage.
+3. Verify there was 99.69% coverage.
 
 ##### Documentation
 1. `rake yard`
@@ -90,11 +90,31 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ### Test coverage
 - [ ] `rake cucumber spec coverage`
 - [ ] VERIFY no failures
-- [ ] VERIFY 100% coverage
+- [ ] VERIFY 99.72% coverage
 
 ### Documentation Coverage
-- [ ] `rake yard`
-- [ ] VERIFY no warnings
+- [ ] `rake yard:stats`
+- [ ] VERIFY only `[warn]`ings are from scope parameters: 
+```
+[warn]: @param tag has unknown parameter name: module_instances 
+    in file `app/models/metasploit/cache/module/class.rb' near line 147
+[warn]: @param tag has unknown parameter name: module_instance 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 317
+[warn]: @param tag has unknown parameter name: architecture_abbreviations 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 336
+[warn]: @param tag has unknown parameter name: architectured 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 353
+[warn]: @param tag has unknown parameter name: platforms 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 367
+[warn]: @param tag has unknown parameter name: platform_fully_qualified_names 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 403
+[warn]: @param tag has unknown parameter name: module_target 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 420
+[warn]: @param tag has unknown parameter name: module_instance 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 434
+[warn]: @param tag has unknown parameter name: module_target 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 492
+```
 - [ ] VERIFY no undocumented objects
 
 ## Sqlite3
@@ -105,11 +125,31 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ### Test coverage
 - [ ] `rake cucumber spec coverage`
 - [ ] VERIFY no failures
-- [ ] VERIFY 100% coverage
+- [ ] VERIFY 99.69% coverage
 
 ### Documentation coverage
-- [ ] `rake yard`
-- [ ] VERIFY no warnings
+- [ ] `rake yard:stats`
+- [ ] VERIFY only `[warn]`ings are from scope parameters: 
+```
+[warn]: @param tag has unknown parameter name: module_instances 
+    in file `app/models/metasploit/cache/module/class.rb' near line 147
+[warn]: @param tag has unknown parameter name: module_instance 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 317
+[warn]: @param tag has unknown parameter name: architecture_abbreviations 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 336
+[warn]: @param tag has unknown parameter name: architectured 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 353
+[warn]: @param tag has unknown parameter name: platforms 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 367
+[warn]: @param tag has unknown parameter name: platform_fully_qualified_names 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 403
+[warn]: @param tag has unknown parameter name: module_target 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 420
+[warn]: @param tag has unknown parameter name: module_instance 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 434
+[warn]: @param tag has unknown parameter name: module_target 
+    in file `app/models/metasploit/cache/module/instance.rb' near line 492
+```
 - [ ] VERIFY no undocumented objects
 ```
 
