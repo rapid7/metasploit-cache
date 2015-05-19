@@ -1,6 +1,12 @@
 RSpec.describe Metasploit::Cache::Post::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context 'associations' do
+    it { is_expected.to have_many(:architectures).class_name('Metasploit::Cache::Architecture') }
+    it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
+    it { is_expected.to belong_to(:post_class).class_name('Metasploit::Cache::Post::Class').inverse_of(:post_instance) }
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
@@ -13,10 +19,6 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     context 'indices' do
       it { is_expected.to have_db_index(:post_class_id).unique(true) }
     end
-  end
-
-  context 'associations' do
-    it { is_expected.to belong_to(:post_class).class_name('Metasploit::Cache::Post::Class').inverse_of(:post_instance) }
   end
 
   context 'factories' do
