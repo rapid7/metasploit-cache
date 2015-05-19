@@ -8,11 +8,27 @@ FactoryGirl.define do
     description { generate :metasploit_cache_encoder_instance_description }
     name { generate :metasploit_cache_encoder_instance_name }
 
+    transient do
+      licenses_count 1
+    end
+
     #
     # Associations
     #
 
     association :encoder_class, factory: :metasploit_cache_encoder_class
+
+    #
+    # Callbacks
+    #
+
+    after(:build) do |encoder_instance, evaluator|
+      encoder_instance.licensable_licenses = build_list(
+        :metasploit_cache_auxiliary_instance_license,
+        evaluator.licenses_count,
+        licensable: encoder_instance
+      )
+    end
   end
 
   #

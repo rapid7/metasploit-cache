@@ -9,6 +9,10 @@ en:
               too_short: "has too few actions (minimum is %{count} action)"
             licensable_licenses:
               too_short: "has too few licenses - minimum is one"
+        metasploit/cache/encoder/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licenses - minimum is one"
         metasploit/cache/exploit/instance:
           attributes:
             default_exploit_target:

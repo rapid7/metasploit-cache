@@ -11,6 +11,17 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Encoder::Class',
              inverse_of: :encoder_instance
 
+  # The {Metasploit::Cache::License} objects that are associated with this instance
+  #
+  # @return[ActiveRecord::Relation<Metasploit::Cache::Licensable::License>]
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+
   #
   # Attributes
   #
@@ -32,8 +43,15 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
 
   validates :description,
             presence: true
+
   validates :encoder_class,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
+
   validates :name,
             presence: true
 

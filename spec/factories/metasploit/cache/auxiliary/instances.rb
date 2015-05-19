@@ -39,7 +39,6 @@ FactoryGirl.define do
           evaluator.licenses_count,
           licensable: auxiliary_instance
       )
-      true
     }
   end
 
