@@ -25,11 +25,20 @@ class CreateMcArchitecturableArchitecture < ActiveRecord::Migration
       # References
       #
 
+      t.references :architecturable,
+                   null: false,
+                   polymorphic: true
       t.references :architecture,
                    null: false
     end
 
     change_table TABLE_NAME do |t|
+      t.index [:architecturable_type, :architecturable_id],
+              name: 'mc_architecturable_architechurables',
+              unique: false
+      t.index [:architecturable_type, :architecturable_id, :architecture_id],
+              name: 'unique_mc_architecturable_architectures',
+              unique: true
       t.index :architecture_id,
               unique: false
     end
