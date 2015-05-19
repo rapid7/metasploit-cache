@@ -34,6 +34,10 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :nop_class }
 
+    it_should_behave_like 'validates at least one associated',
+                          :architecturable_architectures,
+                          factory: :metasploit_cache_nop_instance
+
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do
