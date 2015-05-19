@@ -35,6 +35,14 @@ FactoryGirl.define do
     association :architecturable, factory: :metasploit_cache_payload_single_instance
   end
 
+  factory :metasploit_cache_payload_stage_architecture,
+          class: Metasploit::Cache::Architecturable::Architecture,
+          traits: [
+              :metasploit_cache_architecturable_architecture
+          ] do
+    association :architecturable, factory: :metasploit_cache_payload_stage_instance
+  end
+
   #
   # Traits
   #
