@@ -17,6 +17,10 @@ en:
               inclusion: "is not included in exploit targets"
             exploit_targets:
               too_short: "has too few exploit targets (minimum is %{count} exploit target)"
+        metasploit/cache/exploit/target:
+          attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
   metasploit:
     model:
       ancestors:
