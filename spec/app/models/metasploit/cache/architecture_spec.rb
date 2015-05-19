@@ -137,6 +137,7 @@ RSpec.describe Metasploit::Cache::Architecture do
   end
 
   context 'associations' do
+    it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecture) }
     it { should have_many(:module_architectures).class_name('Metasploit::Cache::Module::Architecture').dependent(:destroy) }
     it { should have_many(:module_instances).class_name('Metasploit::Cache::Module::Instance').through(:module_architectures) }
     it { should have_many(:target_architectures).class_name('Metasploit::Cache::Module::Target::Architecture').dependent(:destroy) }
