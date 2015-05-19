@@ -25,6 +25,7 @@ module Metasploit
 
     autoload :Actionable
     autoload :Architecture
+    autoload :Architecturable
     autoload :Association
     autoload :Author
     autoload :Authority
