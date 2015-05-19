@@ -67,9 +67,9 @@ RSpec.describe Metasploit::Cache::Architecturable::Architecture do
       it { is_expected.to be_valid }
     end
 
-    context 'metasploit_cache_payload_post_architecture' do
-      subject(:metasploit_cache_payload_post_architecture) {
-        FactoryGirl.build(:metasploit_cache_payload_post_architecture)
+    context 'metasploit_cache_post_architecture' do
+      subject(:metasploit_cache_post_architecture) {
+        FactoryGirl.build(:metasploit_cache_post_architecture)
       }
 
       it { is_expected.to be_valid }
