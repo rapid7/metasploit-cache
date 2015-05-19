@@ -1,10 +1,31 @@
 FactoryGirl.define do
   factory :metasploit_cache_nop_instance,
           class: Metasploit::Cache::Nop::Instance do
+    transient do
+      architecturable_architecture_count { 1 }
+    end
+
     description { generate :metasploit_cache_nop_instance_description }
     name { generate :metasploit_cache_nop_instance_name }
 
+    #
+    # Associations
+    #
+
     association :nop_class, factory: :metasploit_cache_nop_class
+
+
+    #
+    # Callbacks
+    #
+
+    after(:build) do |nop_instance, evaluator|
+      nop_instance.architecturable_architectures = build_list(
+          :metasploit_cache_nop_architecture,
+          evaluator.architecturable_architecture_count,
+          architecturable: nop_instance
+      )
+    end
   end
 
   #

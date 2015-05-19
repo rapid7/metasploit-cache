@@ -50,6 +50,10 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
   validates :description,
             presence: true
   validates :name,
