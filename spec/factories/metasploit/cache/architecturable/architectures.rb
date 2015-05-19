@@ -19,6 +19,14 @@ FactoryGirl.define do
     association :architecturable, factory: :metasploit_cache_exploit_target
   end
 
+  factory :metasploit_cache_nop_architecture,
+          class: Metasploit::Cache::Architecturable::Architecture,
+          traits: [
+              :metasploit_cache_architecturable_architecture
+          ] do
+    association :architecturable, factory: :metasploit_cache_nop_instance
+  end
+
   #
   # Traits
   #

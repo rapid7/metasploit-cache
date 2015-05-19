@@ -1,13 +1,30 @@
 # Instance-level metadata for a nop Metasploit Module
 class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   #
+  #
   # Associations
   #
+  #
+
+  # Joins {#architectures} to this nop Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
 
   # The class level metadata for this nop Metasploit Module.
   belongs_to :nop_class,
              class_name: 'Metasploit::Cache::Nop::Class',
              inverse_of: :nop_instance
+
+  #
+  # through: :architecturable_architectures
+  #
+
+  # Architectures on which this Metasploit Module can generate NOPs.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
 
   #
   # Attributes
