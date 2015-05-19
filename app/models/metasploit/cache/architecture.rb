@@ -62,6 +62,13 @@ class Metasploit::Cache::Architecture < ActiveRecord::Base
   #
   #
 
+  # Join model between this {Metasploit::Cache::Architecture} and Metasploit Module instances or
+  # {Metasploit::Cache::Exploit::Target exploit Metasploit Module targets}
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecture
+
   # Join models between this {Metasploit::Cache::Architecture} and {Metasploit::Cache::Module::Instance}.
   has_many :module_architectures,
            class_name: 'Metasploit::Cache::Module::Architecture',
