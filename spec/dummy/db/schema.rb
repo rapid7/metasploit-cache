@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150429155157) do
+ActiveRecord::Schema.define(:version => 20150507130708) do
 
   create_table "mc_actionable_actions", :force => true do |t|
     t.string  "name",            :null => false
@@ -88,15 +88,27 @@ ActiveRecord::Schema.define(:version => 20150429155157) do
   add_index "mc_encoder_instances", ["encoder_class_id"], :name => "index_mc_encoder_instances_on_encoder_class_id", :unique => true
 
   create_table "mc_exploit_instances", :force => true do |t|
-    t.text    "description",      :null => false
-    t.date    "disclosed_on",     :null => false
-    t.string  "name",             :null => false
-    t.boolean "privileged",       :null => false
-    t.string  "stance",           :null => false
-    t.integer "exploit_class_id", :null => false
+    t.text    "description",               :null => false
+    t.date    "disclosed_on",              :null => false
+    t.string  "name",                      :null => false
+    t.boolean "privileged",                :null => false
+    t.string  "stance",                    :null => false
+    t.integer "default_exploit_target_id"
+    t.integer "exploit_class_id",          :null => false
   end
 
+  add_index "mc_exploit_instances", ["default_exploit_target_id"], :name => "index_mc_exploit_instances_on_default_exploit_target_id", :unique => true
   add_index "mc_exploit_instances", ["exploit_class_id"], :name => "index_mc_exploit_instances_on_exploit_class_id", :unique => true
+
+  create_table "mc_exploit_targets", :force => true do |t|
+    t.integer "index",               :null => false
+    t.string  "name",                :null => false
+    t.integer "exploit_instance_id", :null => false
+  end
+
+  add_index "mc_exploit_targets", ["exploit_instance_id", "index"], :name => "index_mc_exploit_targets_on_exploit_instance_id_and_index", :unique => true
+  add_index "mc_exploit_targets", ["exploit_instance_id", "name"], :name => "index_mc_exploit_targets_on_exploit_instance_id_and_name", :unique => true
+  add_index "mc_exploit_targets", ["exploit_instance_id"], :name => "index_mc_exploit_targets_on_exploit_instance_id"
 
   create_table "mc_module_actions", :force => true do |t|
     t.integer "module_instance_id", :null => false

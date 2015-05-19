@@ -40,7 +40,7 @@ Make your changes or however many commits you like, committing each with `git co
 
 ### Pre-Pull Request Steps
 
-#### Postgres
+#### Postgresql
 1. `rm Gemfile.lock`
 2. `bundle install --without sqlite3`
 3. `rake db:drop db:create db:migrate`
@@ -57,7 +57,7 @@ Make your changes or however many commits you like, committing each with `git co
 
 #### Sqlite3
 1. `rm Gemfile.lock`
-2. `bundle install --without postgres`
+2. `bundle install --without postgresql`
 3. `rake db:drop db:create db:migrate`
 
 ##### Testing
@@ -82,7 +82,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ```
 # Verification Steps
 
-## Postgres
+## Postgresql
 - [ ] `rm Gemfile.lock`
 - [ ] `bundle install --without sqlite3`
 - [ ] `rake db:drop db:create db:migrate`
@@ -99,7 +99,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 
 ## Sqlite3
 - [ ] `rm Gemfile.lock`
-- [ ] `bundle install --without postgres`
+- [ ] `bundle install --without postgresql`
 - [ ] `rake db:drop db:create db:migrate`
 
 ### Test coverage
