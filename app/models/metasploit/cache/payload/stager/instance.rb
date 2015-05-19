@@ -1,8 +1,16 @@
 # Instance-level metadata for stager payload Metasploit Module
 class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #
+  #
   # Associations
   #
+  #
+
+  # Joins {#architectures} to this stager payload Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
 
   # The connection handler
   belongs_to :handler,
@@ -13,6 +21,15 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   belongs_to :payload_stager_class,
              class_name: 'Metasploit::Cache::Payload::Stager::Class',
              inverse_of: :payload_stager_instance
+
+  #
+  # through: :architecturable_architectures
+  #
+
+  # Architectures on which this payload can run.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
 
   #
   # Attributes

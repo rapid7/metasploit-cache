@@ -12,7 +12,6 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :architecturable
 
-
   # The class-level metadata for this stage payload Metasploit Module.
   belongs_to :payload_stage_class,
              class_name: 'Metasploit::Cache::Payload::Stage::Class',
