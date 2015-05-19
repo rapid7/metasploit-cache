@@ -5,6 +5,10 @@ FactoryGirl.define do
 
   factory :metasploit_cache_encoder_instance,
           class: Metasploit::Cache::Encoder::Instance do
+    transient do
+      architecturable_architecture_count { 1 }
+    end
+
     description { generate :metasploit_cache_encoder_instance_description }
     name { generate :metasploit_cache_encoder_instance_name }
 
@@ -13,6 +17,18 @@ FactoryGirl.define do
     #
 
     association :encoder_class, factory: :metasploit_cache_encoder_class
+
+    #
+    # Callbacks
+    #
+
+    after(:build) { |encoder_instance, evaluator|
+      encoder_instance.architecturable_architectures = build_list(
+          :metasploit_cache_encoder_architecture,
+          evaluator.architecturable_architecture_count,
+          architecturable: encoder_instance
+      )
+    }
   end
 
   #

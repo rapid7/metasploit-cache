@@ -7,6 +7,10 @@ en:
             actions:
               does_not_contain_default_action: "does not contain default action"
               too_short: "has too few actions (minimum is %{count} action)"
+        metasploit/cache/encoder/instance:
+          attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
         metasploit/cache/exploit/instance:
           attributes:
             default_exploit_target:

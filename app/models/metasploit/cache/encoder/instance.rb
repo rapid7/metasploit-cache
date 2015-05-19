@@ -45,6 +45,10 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
   validates :description,
             presence: true
   validates :encoder_class,
