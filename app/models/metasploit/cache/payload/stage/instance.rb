@@ -56,6 +56,10 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
   validates :description,
             presence: true
   validates :name,

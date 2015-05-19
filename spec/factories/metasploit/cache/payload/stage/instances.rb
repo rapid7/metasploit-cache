@@ -1,11 +1,31 @@
 FactoryGirl.define do
   factory :metasploit_cache_payload_stage_instance,
           class: Metasploit::Cache::Payload::Stage::Instance do
+    transient do
+      architecturable_architecture_count { 1 }
+    end
+    
     description { generate :metasploit_cache_payload_stage_instance_description }
     name { generate :metasploit_cache_payload_stage_instance_name }
     privileged { generate :metasploit_cache_payload_stage_instance_privileged }
 
+    #
+    # Associations
+    #
+    
     association :payload_stage_class, factory: :metasploit_cache_payload_stage_class
+    
+    #
+    # Callbacks
+    #
+
+    after(:build) do |payload_stage_instance, evaluator|
+      payload_stage_instance.architecturable_architectures = build_list(
+          :metasploit_cache_payload_stage_architecture,
+          evaluator.architecturable_architecture_count,
+          architecturable: payload_stage_instance
+      )
+    end
   end
 
   #

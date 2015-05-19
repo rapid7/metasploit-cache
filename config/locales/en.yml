@@ -29,6 +29,10 @@ en:
           attributes:
             architecturable_architectures:
               too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
+        metasploit/cache/payload/stage/instance:
+          attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
   metasploit:
     model:
       ancestors:
