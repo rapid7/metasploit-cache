@@ -3,4 +3,15 @@ module Metasploit::Cache::Platformable
   extend ActiveSupport::Autoload
 
   autoload :Platform
+
+  #
+  # Module Methods
+  #
+
+  # The prefix for ActiveRecord::Base subclass table names in this namespace.
+  #
+  # @return [String]
+  def self.table_name_prefix
+    "#{parent.table_name_prefix}platformable_"
+  end
 end

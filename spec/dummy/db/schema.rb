@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150507130708) do
+ActiveRecord::Schema.define(:version => 20150520145231) do
 
   create_table "mc_actionable_actions", :force => true do |t|
     t.string  "name",            :null => false
@@ -20,6 +20,16 @@ ActiveRecord::Schema.define(:version => 20150507130708) do
   end
 
   add_index "mc_actionable_actions", ["actionable_type", "actionable_id", "name"], :name => "unique_mc_actionable_actions", :unique => true
+
+  create_table "mc_architecturable_architectures", :force => true do |t|
+    t.integer "architecturable_id",   :null => false
+    t.string  "architecturable_type", :null => false
+    t.integer "architecture_id",      :null => false
+  end
+
+  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id", "architecture_id"], :name => "unique_mc_architecturable_architectures", :unique => true
+  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id"], :name => "mc_architecturable_architechurables"
+  add_index "mc_architecturable_architectures", ["architecture_id"], :name => "index_mc_architecturable_architectures_on_architecture_id"
 
   create_table "mc_architectures", :force => true do |t|
     t.integer "bits"
@@ -282,6 +292,12 @@ ActiveRecord::Schema.define(:version => 20150507130708) do
 
   add_index "mc_payload_stager_instances", ["handler_id"], :name => "index_mc_payload_stager_instances_on_handler_id"
   add_index "mc_payload_stager_instances", ["payload_stager_class_id"], :name => "index_mc_payload_stager_instances_on_payload_stager_class_id", :unique => true
+
+  create_table "mc_platformable_platforms", :force => true do |t|
+    t.integer "platform_id", :null => false
+  end
+
+  add_index "mc_platformable_platforms", ["platform_id"], :name => "index_mc_platformable_platforms_on_platform_id"
 
   create_table "mc_platforms", :force => true do |t|
     t.text    "fully_qualified_name", :null => false
