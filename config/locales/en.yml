@@ -19,6 +19,8 @@ en:
               inclusion: "is not included in exploit targets"
             exploit_targets:
               too_short: "has too few exploit targets (minimum is %{count} exploit target)"
+            licensable_licenses:
+              too_short: "has too few licenses - minimum is one"
   metasploit:
     model:
       ancestors:

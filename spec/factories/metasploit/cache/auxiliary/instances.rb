@@ -35,7 +35,7 @@ FactoryGirl.define do
           actionable: auxiliary_instance
       )
       auxiliary_instance.licensable_licenses = build_list(
-          :metasploit_cache_auxiliary_instance_license,
+          :metasploit_cache_auxiliary_license,
           evaluator.licenses_count,
           licensable: auxiliary_instance
       )

@@ -24,7 +24,7 @@ FactoryGirl.define do
 
     after(:build) do |encoder_instance, evaluator|
       encoder_instance.licensable_licenses = build_list(
-        :metasploit_cache_auxiliary_instance_license,
+        :metasploit_cache_encoder_license,
         evaluator.licenses_count,
         licensable: encoder_instance
       )

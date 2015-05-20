@@ -19,7 +19,7 @@ RSpec.describe Metasploit::Cache::Licensable::License do
   end
 
   context "factories" do
-    subject(:metasploit_cache_licensable_license){ FactoryGirl.build :metasploit_cache_auxiliary_instance_license }
+    subject(:metasploit_cache_licensable_license){ FactoryGirl.build :metasploit_cache_auxiliary_license }
 
     it { is_expected.to be_valid }
   end
