@@ -4,6 +4,17 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Associations
   #
 
+  # The {Metasploit::Cache::License} objects that are associated with this instance
+  #
+  # @return[ActiveRecord::Relation<Metasploit::Cache::Licensable::License>]
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+
   # The class level metadata for this post Metasploit Module
   belongs_to :post_class,
              class_name: 'Metasploit::Cache::Post::Class',
@@ -46,14 +57,24 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
 
   validates :description,
             presence: true
+
   validates :disclosed_on,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
+
   validates :name,
             presence: true
+
   validates :post_class,
             presence: true
+
   validates :post_class_id,
             uniqueness: true
+
   validates :privileged,
             inclusion: {
                 in: [
