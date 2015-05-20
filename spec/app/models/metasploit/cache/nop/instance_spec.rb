@@ -74,8 +74,6 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
           expect(nop_instance.errors[:licensable_licenses]).to_not include(error)
         end
       end
-
-      
     end
     
   end
