@@ -33,6 +33,10 @@ en:
           attributes:
             platformable_platforms:
               too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
+        metasploit/cache/payload/stager/instance:
+          attributes:
+            platformable_platforms:
+              too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
   metasploit:
     model:
       ancestors:

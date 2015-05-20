@@ -1,7 +1,9 @@
 # Instance-level metadata for stager payload Metasploit Module
 class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #
+  #
   # Associations
+  #
   #
 
   # The connection handler
@@ -13,6 +15,21 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   belongs_to :payload_stager_class,
              class_name: 'Metasploit::Cache::Payload::Stager::Class',
              inverse_of: :payload_stager_instance
+
+  # Joins {#platforms} to this stager payload Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
+
+  #
+  # through: :platformable_platform
+  #
+
+  # Platforms this payload stager Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -60,7 +77,10 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
             presence: true
   validates :payload_stager_class_id,
             uniqueness: true
-
+  validates :platformable_platforms,
+            length: {
+                minimum: 1
+            }
   #
   # Instance Methods
   #
