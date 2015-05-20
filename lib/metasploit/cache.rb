@@ -48,6 +48,7 @@ module Metasploit
     autoload :NullProgressBar
     autoload :Payload
     autoload :Platform
+    autoload :Platformable
     autoload :Post
     autoload :ProxiedValidation
     autoload :RealPathname
