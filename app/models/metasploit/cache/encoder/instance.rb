@@ -1,7 +1,9 @@
 # Instance-level metadata for an encoder  Metasploit Module.
 class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   #
+  #
   # Associations
+  #
   #
 
   # The class-level metadata for this instance metadata.
@@ -10,6 +12,21 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   belongs_to :encoder_class,
              class_name: 'Metasploit::Cache::Encoder::Class',
              inverse_of: :encoder_instance
+
+  # Joins {#platforms} to this encoder Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
+
+  #
+  # through: :platformable_platform
+  #
+
+  # Platforms this encoder Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -36,6 +53,10 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
             presence: true
   validates :name,
             presence: true
+  validates :platformable_platforms,
+            length: {
+              minimum: 1
+            }
 
   #
   # Instance Methods

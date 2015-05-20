@@ -8,6 +8,11 @@ class Metasploit::Cache::Platformable::Platform < ActiveRecord::Base
   # Associations
   #
 
+  # The thing that supports {#platform}.
+  belongs_to :platformable,
+             inverse_of: :platformable_platforms,
+             polymorphic: true
+
   # The platform supported by the `#platformable`.
   belongs_to :platform,
              class_name: 'Metasploit::Cache::Platform',
@@ -17,8 +22,17 @@ class Metasploit::Cache::Platformable::Platform < ActiveRecord::Base
   # Validates
   #
 
+  validates :platformable,
+            presence: true
   validates :platform,
             presence: true
+  validates :platform_id,
+            uniqueness: {
+                scope: [
+                    :platformable_type,
+                    :platformable_id
+                ]
+            }
 
   Metasploit::Concern.run(self)
 end
