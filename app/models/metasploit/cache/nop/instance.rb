@@ -1,13 +1,30 @@
 # Instance-level metadata for a nop Metasploit Module
 class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   #
+  #
   # Associations
+  #
   #
 
   # The class level metadata for this nop Metasploit Module.
   belongs_to :nop_class,
              class_name: 'Metasploit::Cache::Nop::Class',
              inverse_of: :nop_instance
+
+  # Joins {#platforms} to this encoder Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
+
+  #
+  # through: :platformable_platform
+  #
+
+  # Platforms this encoder Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -41,6 +58,10 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
             presence: true
   validates :nop_class_id,
             uniqueness: true
+  validates :platformable_platforms,
+            length: {
+                minimum: 1
+            }
 
   #
   # Instance Methods

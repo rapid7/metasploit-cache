@@ -21,6 +21,10 @@ en:
           attributes:
             platformable_platforms:
               too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
+        metasploit/cache/nop/instance:
+          attributes:
+            platformable_platforms:
+              too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
   metasploit:
     model:
       ancestors:
