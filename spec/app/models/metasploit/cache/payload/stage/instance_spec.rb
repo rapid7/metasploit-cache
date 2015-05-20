@@ -1,6 +1,10 @@
 RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context 'associations' do
+    it { is_expected.to belong_to(:payload_stage_class).class_name('Metasploit::Cache::Payload::Stage::Class').inverse_of(:payload_stage_instance) }
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
