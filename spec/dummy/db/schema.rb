@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150507130708) do
+ActiveRecord::Schema.define(:version => 20150515163602) do
 
   create_table "mc_actionable_actions", :force => true do |t|
     t.string  "name",            :null => false
@@ -109,6 +109,16 @@ ActiveRecord::Schema.define(:version => 20150507130708) do
   add_index "mc_exploit_targets", ["exploit_instance_id", "index"], :name => "index_mc_exploit_targets_on_exploit_instance_id_and_index", :unique => true
   add_index "mc_exploit_targets", ["exploit_instance_id", "name"], :name => "index_mc_exploit_targets_on_exploit_instance_id_and_name", :unique => true
   add_index "mc_exploit_targets", ["exploit_instance_id"], :name => "index_mc_exploit_targets_on_exploit_instance_id"
+
+  create_table "mc_licenses", :force => true do |t|
+    t.string "abbreviation", :null => false
+    t.text   "summary",      :null => false
+    t.string "url",          :null => false
+  end
+
+  add_index "mc_licenses", ["abbreviation"], :name => "index_mc_licenses_on_abbreviation", :unique => true
+  add_index "mc_licenses", ["summary"], :name => "index_mc_licenses_on_summary", :unique => true
+  add_index "mc_licenses", ["url"], :name => "index_mc_licenses_on_url", :unique => true
 
   create_table "mc_module_actions", :force => true do |t|
     t.integer "module_instance_id", :null => false
