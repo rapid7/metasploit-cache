@@ -9,6 +9,17 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Nop::Class',
              inverse_of: :nop_instance
 
+  # The {Metasploit::Cache::License} objects that are associated with this instance
+  #
+  # @return[ActiveRecord::Relation<Metasploit::Cache::Licensable::License>]
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+
   #
   # Attributes
   #
@@ -35,10 +46,18 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
 
   validates :description,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
+
   validates :name,
             presence: true
+
   validates :nop_class,
             presence: true
+
   validates :nop_class_id,
             uniqueness: true
 

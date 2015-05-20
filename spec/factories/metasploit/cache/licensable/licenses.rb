@@ -19,6 +19,13 @@ FactoryGirl.define do
     association :licensable, factory: :metasploit_cache_exploit_instance
   end
 
+  factory :metasploit_cache_nop_license,
+          class: Metasploit::Cache::Licensable::License,
+          traits: [:metasploit_cache_licensable_license] do
+
+    association :licensable, factory: :metasploit_cache_nop_instance
+  end
+
   trait :metasploit_cache_licensable_license do
     association :license, factory: :metasploit_cache_license
   end
