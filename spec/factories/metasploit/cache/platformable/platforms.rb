@@ -27,6 +27,14 @@ FactoryGirl.define do
     association :platformable, factory: :metasploit_cache_nop_instance
   end
 
+  factory :metasploit_cache_payload_single_platform,
+          class: Metasploit::Cache::Platformable::Platform,
+          traits: [
+              :metasploit_cache_platformable_platform
+          ] do
+    association :platformable, factory: :metasploit_cache_payload_single_instance
+  end
+
   #
   # Traits
   #

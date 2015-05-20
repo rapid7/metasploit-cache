@@ -1,7 +1,9 @@
 # Instance-level metadata for single payload Metasploit Modules
 class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
+  #
   # Associations
+  #
   #
 
   # The connection handler
@@ -13,6 +15,21 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   belongs_to :payload_single_class,
              class_name: 'Metasploit::Cache::Payload::Single::Class',
              inverse_of: :payload_single_instance
+
+  # Joins {#platforms} to this single payload Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
+
+  #
+  # through: :platformable_platform
+  #
+
+  # Platforms this playload single Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -55,6 +72,10 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
             presence: true
   validates :payload_single_class_id,
             uniqueness: true
+  validates :platformable_platforms,
+            length: {
+                minimum: 1
+            }
   validates :privileged,
             inclusion: {
                 in: [
