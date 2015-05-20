@@ -3,6 +3,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
 
   context 'associations' do
     it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_stager_instances) }
+    it { is_expected.to belong_to(:payload_stager_class).class_name('Metasploit::Cache::Payload::Stager::Class').inverse_of(:payload_stager_instance) }
   end
 
   context 'database' do
