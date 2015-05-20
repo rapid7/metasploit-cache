@@ -21,16 +21,6 @@ ActiveRecord::Schema.define(:version => 20150520145231) do
 
   add_index "mc_actionable_actions", ["actionable_type", "actionable_id", "name"], :name => "unique_mc_actionable_actions", :unique => true
 
-  create_table "mc_architecturable_architectures", :force => true do |t|
-    t.integer "architecturable_id",   :null => false
-    t.string  "architecturable_type", :null => false
-    t.integer "architecture_id",      :null => false
-  end
-
-  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id", "architecture_id"], :name => "unique_mc_architecturable_architectures", :unique => true
-  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id"], :name => "mc_architecturable_architechurables"
-  add_index "mc_architecturable_architectures", ["architecture_id"], :name => "index_mc_architecturable_architectures_on_architecture_id"
-
   create_table "mc_architectures", :force => true do |t|
     t.integer "bits"
     t.string  "abbreviation", :null => false
