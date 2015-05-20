@@ -1,13 +1,30 @@
 # Instance-level metadata for a post Metasploit Module.
 class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   #
+  #
   # Associations
   #
+  #
+
+  # Joins {#platforms} to this post Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
 
   # The class level metadata for this post Metasploit Module
   belongs_to :post_class,
              class_name: 'Metasploit::Cache::Post::Class',
              inverse_of: :post_instance
+
+  #
+  # through: :platformable_platform
+  #
+
+  # Platforms this post Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -50,6 +67,10 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
             presence: true
   validates :name,
             presence: true
+  validates :platformable_platforms,
+            length: {
+                minimum: 1
+            }
   validates :post_class,
             presence: true
   validates :post_class_id,
