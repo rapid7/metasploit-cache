@@ -1,6 +1,12 @@
 RSpec.describe Metasploit::Cache::Nop::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context 'associations' do
+    it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
+    it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
+    it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
@@ -23,14 +29,14 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
     end
   end
 
-  context 'associations' do
-    it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
-  end
-
   context 'validations' do
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :nop_class }
+
+    it_should_behave_like 'validates at least one in association',
+                          :platformable_platforms,
+                          factory: :metasploit_cache_nop_instance
 
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
