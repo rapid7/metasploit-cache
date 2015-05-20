@@ -3,6 +3,8 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
 
   context 'associations' do
     it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_stager_instances) }
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
   end
 
   context 'database' do
@@ -49,6 +51,36 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
       }
 
       it { is_expected.to validate_uniqueness_of :payload_stager_class_id }
+    end
+
+    context "validate that there is at least one license per stager" do
+      let(:error){
+        I18n.translate!('activerecord.errors.models.metasploit/cache/payload/stager/instance.attributes.licensable_licenses.too_short')
+      }
+
+      context "without licensable licenses" do
+        subject(:stager_instance){
+          FactoryGirl.build(:metasploit_cache_payload_stager_instance, licenses_count: 0)
+        }
+
+        it "adds error on #licensable_licenses" do
+          stager_instance.valid?
+
+          expect(stager_instance.errors[:licensable_licenses]).to include(error)
+        end
+      end
+
+      context "with licensable licenses" do
+        subject(:stager_instance){
+          FactoryGirl.build(:metasploit_cache_payload_stager_instance, licenses_count: 1)
+        }
+
+        it "does not add error on #licensable_licenses" do
+          stager_instance.valid?
+
+          expect(stager_instance.errors[:licensable_licenses]).to_not include(error)
+        end
+      end
     end
   end
 end

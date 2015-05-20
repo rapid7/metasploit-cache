@@ -53,7 +53,6 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   validates :description,
             presence: true
 
-
   validates :licensable_licenses,
             length: {
               minimum: 1

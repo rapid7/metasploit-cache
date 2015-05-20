@@ -14,10 +14,10 @@ FactoryGirl.define do
     #
     association :payload_stage_class, factory: :metasploit_cache_payload_stage_class
 
+
     #
     # Callbacks
     #
-
     after(:build) do |stage_instance, evaluator|
       stage_instance.licensable_licenses = build_list(
         :metasploit_cache_payload_stage_license,
