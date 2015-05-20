@@ -19,6 +19,15 @@ class Metasploit::Cache::Platformable::Platform < ActiveRecord::Base
              inverse_of: :platformable_platforms
 
   #
+  # Attributes
+  #
+
+  # @!attribute platform_id
+  #   The foreign key for {#platform}.
+  #
+  #   @return [Integer]
+
+  #
   # Validates
   #
 
@@ -33,6 +42,16 @@ class Metasploit::Cache::Platformable::Platform < ActiveRecord::Base
                     :platformable_id
                 ]
             }
+
+  #
+  # Instance Methods
+  #
+
+  # @!method platform_id=(platform_id)
+  #   Sets {#platform_id} and invalidates the cached {#platform} so it is reloaded on next access.
+  #
+  #   @param platform_id [Integer] The foreign key used to load {#platform}.
+  #   @return [void]
 
   Metasploit::Concern.run(self)
 end
