@@ -4,4 +4,5 @@
 # {Metasploit::Cache::Payload::Stager::Instance stager payload}, or {Metasploit::Cache::Post::Instance post}) Metasploit
 # Modules or {Metasploit::Cache::Exploit::Target exploit Metasploit Module targets}.
 class Metasploit::Cache::Platformable::Platform
+  Metasploit::Concern.run(self)
 end
