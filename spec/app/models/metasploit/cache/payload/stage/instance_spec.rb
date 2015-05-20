@@ -3,6 +3,8 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
 
   context 'associations' do
     it { is_expected.to belong_to(:payload_stage_class).class_name('Metasploit::Cache::Payload::Stage::Class').inverse_of(:payload_stage_instance) }
+    it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
+    it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
   end
 
   context 'database' do
@@ -12,6 +14,10 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
       it { is_expected.to have_db_column(:payload_stage_class_id).of_type(:integer).with_options(null: false) }
       it { is_expected.to have_db_column(:privileged).of_type(:boolean).with_options(null: false) }
     end
+
+    it_should_behave_like 'validates at least one in association',
+                          :platformable_platforms,
+                          factory: :metasploit_cache_payload_stage_instance
 
     context 'indices' do
       it { is_expected.to have_db_index(:payload_stage_class_id).unique(true) }
