@@ -4,6 +4,8 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
   context 'associations' do
     it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_stager_instances) }
     it { is_expected.to belong_to(:payload_stager_class).class_name('Metasploit::Cache::Payload::Stager::Class').inverse_of(:payload_stager_instance) }
+    it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
+    it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
   end
 
   context 'database' do
@@ -39,6 +41,10 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :payload_stager_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
+
+    it_should_behave_like 'validates at least one in association',
+                          :platformable_platforms,
+                          factory: :metasploit_cache_payload_stager_instance
 
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
