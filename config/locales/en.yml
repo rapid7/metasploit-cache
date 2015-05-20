@@ -29,6 +29,10 @@ en:
           attributes:
             licensable_licenses:
               too_short: "has too few licenses - minimum is one"
+        metasploit/cache/payload/stage/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licenses - minimum is one"
 
   metasploit:
     model:

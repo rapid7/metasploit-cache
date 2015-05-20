@@ -51,32 +51,32 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
       it { is_expected.to validate_uniqueness_of :payload_single_class_id }
     end
 
-    context "validate that there is at least one license per nop" do
+    context "validate that there is at least one license per single" do
       let(:error){
         I18n.translate!('activerecord.errors.models.metasploit/cache/payload/single/instance.attributes.licensable_licenses.too_short')
       }
 
       context "without licensable licenses" do
-        subject(:nop_instance){
+        subject(:single_instance){
           FactoryGirl.build(:metasploit_cache_payload_single_instance, licenses_count: 0)
         }
 
         it "adds error on #licensable_licenses" do
-          nop_instance.valid?
+          single_instance.valid?
 
-          expect(nop_instance.errors[:licensable_licenses]).to include(error)
+          expect(single_instance.errors[:licensable_licenses]).to include(error)
         end
       end
 
       context "with licensable licenses" do
-        subject(:nop_instance){
+        subject(:single_instance){
           FactoryGirl.build(:metasploit_cache_payload_single_instance, licenses_count: 1)
         }
 
         it "does not add error on #licensable_licenses" do
-          nop_instance.valid?
+          single_instance.valid?
 
-          expect(nop_instance.errors[:licensable_licenses]).to_not include(error)
+          expect(single_instance.errors[:licensable_licenses]).to_not include(error)
         end
       end
     end
