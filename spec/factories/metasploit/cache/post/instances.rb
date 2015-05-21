@@ -10,6 +10,10 @@ FactoryGirl.define do
     name { generate :metasploit_cache_post_instance_name }
     privileged { generate :metasploit_cache_post_instance_privileged }
 
+    #
+    # Associations
+    #
+
     association :post_class, factory: :metasploit_cache_post_class
 
     #

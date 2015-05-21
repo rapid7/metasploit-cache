@@ -9,7 +9,15 @@ FactoryGirl.define do
     description { generate :metasploit_cache_nop_instance_description }
     name { generate :metasploit_cache_nop_instance_name }
 
+    #
+    # Associations
+    #
+
     association :nop_class, factory: :metasploit_cache_nop_class
+
+    #
+    # Callbacks
+    #
 
     after(:build) { |nop_instance, evaluator|
       nop_instance.licensable_licenses = build_list(
