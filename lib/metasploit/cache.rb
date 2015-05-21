@@ -33,6 +33,7 @@ module Metasploit
     autoload :Batch
     autoload :Cacheable
     autoload :Constant
+    autoload :Contribution
     autoload :Derivation
     autoload :Direct
     autoload :EmailAddress
