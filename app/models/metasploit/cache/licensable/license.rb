@@ -33,7 +33,7 @@ class Metasploit::Cache::Licensable::License < ActiveRecord::Base
   #
   # @return [Metasploit::Cache::License]
   belongs_to :license,
-             class_name: "Metasploit::Cache::License"
+             class_name: 'Metasploit::Cache::License'
 
   #
   # Validations
