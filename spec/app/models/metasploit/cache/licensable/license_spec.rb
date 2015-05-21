@@ -9,7 +9,7 @@ RSpec.describe Metasploit::Cache::Licensable::License do
 
   context "associations" do
     it { is_expected.to belong_to(:licensable) }
-    it { is_expected.to belong_to(:license) }
+    it { is_expected.to belong_to(:license).class_name('Metasploit::Cache::License').inverse_of(:licensable_licenses) }
   end
 
   context "validations" do

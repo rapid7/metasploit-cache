@@ -1,4 +1,8 @@
 RSpec.describe Metasploit::Cache::License do
+  context 'associations' do
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:license) }
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:abbreviation).of_type(:string).with_options(null: false, unique: true) }
