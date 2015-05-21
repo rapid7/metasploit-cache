@@ -51,8 +51,8 @@ Make your changes or however many commits you like, committing each with `git co
 3. Verify there was 99.73% coverage.
 
 ##### Documentation
-1. `rake yard`
-2. Verify there were no warnings.
+1. `rake yard:stats`
+2. Verify no `[warn]`ings. (Rails ERD "invalid model" Warnings are OKrm Gemfile.lock.)
 2. Verify there were no undocumented objects.
 
 #### Sqlite3
@@ -66,8 +66,8 @@ Make your changes or however many commits you like, committing each with `git co
 3. Verify there was 99.69% coverage.
 
 ##### Documentation
-1. `rake yard`
-2. Verify there were no warnings.
+1. `rake yard:stats`
+2. Verify no `[warn]`ings. (Rails ERD "invalid model" Warnings are OKrm Gemfile.lock.)
 2. Verify there were no undocumented objects.
 
 ### Push
@@ -93,8 +93,8 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 - [ ] VERIFY 99.73% coverage
 
 ### Documentation Coverage
-- [ ] `rake yard`
-- [ ] VERIFY no `[warn]`ings. (Rails ERD "invalid model" Warnings are OK.)
+- [ ] `rake yard:stats`
+- [ ] VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
 - [ ] VERIFY no undocumented objects
 
 ## Sqlite3
@@ -108,8 +108,8 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 - [ ] VERIFY 99.69% coverage
 
 ### Documentation coverage
-- [ ] `rake yard`
-- [ ] VERIFY no `[warn]`ings. (Rails ERD "invalid model" Warnings are OKrm Gemfile.lock.)
+- [ ] `rake yard:stats`
+- [ ] VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
 - [ ] VERIFY no undocumented objects
 ```
 
