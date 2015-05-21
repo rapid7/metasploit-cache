@@ -48,11 +48,11 @@ Make your changes or however many commits you like, committing each with `git co
 ##### Testing
 1. `rake cucumber spec coverage`
 2. Verify there were no failures.
-3. Verify there was 100% coverage.
+3. Verify there was 99.72% coverage.
 
 ##### Documentation
-1. `rake yard`
-2. Verify there were no warnings.
+1. `rake yard:stats`
+2. Verify only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support. 
 2. Verify there were no undocumented objects.
 
 #### Sqlite3
@@ -66,8 +66,8 @@ Make your changes or however many commits you like, committing each with `git co
 3. Verify there was 100% coverage.
 
 ##### Documentation
-1. `rake yard`
-2. Verify there were no warnings.
+1. `rake yard:stats`
+2. Verify only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
 2. Verify there were no undocumented objects.
 
 ### Push
@@ -90,11 +90,11 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ### Test coverage
 - [ ] `rake cucumber spec coverage`
 - [ ] VERIFY no failures
-- [ ] VERIFY 100% coverage
+- [ ] VERIFY 99.72% coverage
 
 ### Documentation Coverage
-- [ ] `rake yard`
-- [ ] VERIFY no warnings
+- [ ] `rake yard:stats`
+- [ ] VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
 - [ ] VERIFY no undocumented objects
 
 ## Sqlite3
@@ -105,11 +105,11 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ### Test coverage
 - [ ] `rake cucumber spec coverage`
 - [ ] VERIFY no failures
-- [ ] VERIFY 100% coverage
+- [ ] VERIFY 99.68% coverage
 
 ### Documentation coverage
-- [ ] `rake yard`
-- [ ] VERIFY no warnings
+- [ ] `rake yard:stats`
+- [ ] VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
 - [ ] VERIFY no undocumented objects
 ```
 
