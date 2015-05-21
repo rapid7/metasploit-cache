@@ -1,7 +1,9 @@
 # Instance-level metadata for stager payload Metasploit Module
 class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #
+  #
   # Associations
+  #
   #
 
   # The connection handler
@@ -9,18 +11,21 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Payload::Handler',
              inverse_of: :payload_stager_instances
 
+  # Joins {#licenses} to this auxiliary Metasploit Module.
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
   # The class-level metadata for this stager payload Metasploit Module.
   belongs_to :payload_stager_class,
              class_name: 'Metasploit::Cache::Payload::Stager::Class',
              inverse_of: :payload_stager_instance
 
-  # The {Metasploit::Cache::License} objects that are associated with this instance
   #
-  # @return[ActiveRecord::Relation<Metasploit::Cache::Licensable::License>]
-  has_many :licensable_licenses,
-           as: :licensable,
-           class_name: 'Metasploit::Cache::Licensable::License'
+  # through: :licensable_licenses
+  #
 
+  # The {Metasploit::Cache::License} for the code in this auxiliary Metasploit Module.
   has_many :licenses,
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses

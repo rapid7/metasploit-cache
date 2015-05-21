@@ -1,25 +1,30 @@
 # Instance-level metadata for stage payload Metasploit Module
 class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   #
+  #
   # Associations
   #
-
-  # The {Metasploit::Cache::License} objects that are associated with this instance
   #
-  # @return[ActiveRecord::Relation<Metasploit::Cache::Licensable::License>]
+
+  # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License'
-
-  has_many :licenses,
-           class_name: 'Metasploit::Cache::License',
-           through: :licensable_licenses
 
   # The class-level metadata for this stage payload Metasploit Module.
   belongs_to :payload_stage_class,
              class_name: 'Metasploit::Cache::Payload::Stage::Class',
              inverse_of: :payload_stage_instance
-  
+
+  #
+  # through: :licensable_licenses
+  #
+
+  # The {Metasploit::Cache::License} for the code in this auxiliary Metasploit Module.
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+
   #
   # Attributes
   #

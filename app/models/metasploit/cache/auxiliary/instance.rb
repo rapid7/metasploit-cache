@@ -1,7 +1,9 @@
 # Instance-level metadata for an auxiliary Metasploit Module.
 class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   #
+  #
   # Associations
+  #
   #
 
   # The actions that are allowed for the auxiliary Metasploit Module.
@@ -28,17 +30,19 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Actionable::Action',
              inverse_of: :actionable
 
-  # The {Metasploit::Cache::License} objects that are associated with this instance
-  #
-  # @return[ActiveRecord::Relation<Metasploit::Cache::Licensable::License>]
+  # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License'
 
+  #
+  # through: :licensable_licenses
+  #
+
+  # The {Metasploit::Cache::License} for the code in this auxiliary Metasploit Module.
   has_many :licenses,
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses
-
 
   #
   # Attributes
