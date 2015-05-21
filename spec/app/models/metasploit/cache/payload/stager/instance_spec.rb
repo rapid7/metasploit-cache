@@ -55,7 +55,10 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
 
     context "validate that there is at least one license per stager" do
       let(:error){
-        I18n.translate!('activerecord.errors.models.metasploit/cache/payload/stager/instance.attributes.licensable_licenses.too_short')
+        I18n.translate!(
+            'activerecord.errors.models.metasploit/cache/payload/stager/instance.attributes.licensable_licenses.too_short',
+            count: 1
+        )
       }
 
       context "without licensable licenses" do

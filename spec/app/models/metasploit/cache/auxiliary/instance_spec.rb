@@ -79,7 +79,10 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
 
     context "validates that there is at least one license for the module" do
       let(:error){
-        I18n.translate!('activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.licensable_licenses.too_short')
+        I18n.translate!(
+            'activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.licensable_licenses.too_short',
+            count: 1
+        )
       }
 
       context "without licenses" do

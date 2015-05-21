@@ -48,7 +48,10 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
 
     context "validate that there is at least one license per nop" do
       let(:error){
-        I18n.translate!('activerecord.errors.models.metasploit/cache/nop/instance.attributes.licensable_licenses.too_short')
+        I18n.translate!(
+            'activerecord.errors.models.metasploit/cache/nop/instance.attributes.licensable_licenses.too_short',
+            count: 1
+        )
       }
 
       context "without licensable licenses" do
