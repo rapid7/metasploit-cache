@@ -7,12 +7,41 @@ en:
             actions:
               does_not_contain_default_action: "does not contain default action"
               too_short: "has too few actions (minimum is %{count} action)"
+            licensable_licenses:
+              too_short: "has too few licenses (minimum is %{count} license)"
+        metasploit/cache/encoder/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licenses (minimum is %{count} license)"
         metasploit/cache/exploit/instance:
           attributes:
             default_exploit_target:
               inclusion: "is not included in exploit targets"
             exploit_targets:
               too_short: "has too few exploit targets (minimum is %{count} exploit target)"
+            licensable_licenses:
+              too_short: "has too few licenses (minimum is %{count} license)"
+        metasploit/cache/nop/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licenses (minimum is %{count} license)"
+        metasploit/cache/payload/single/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licenses (minimum is %{count} license)"
+        metasploit/cache/payload/stage/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licenses (minimum is %{count} license)"
+        metasploit/cache/payload/stager/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licenses (minimum is %{count} license)"
+        metasploit/cache/post/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licenses (minimum is %{count} license)"
+
   metasploit:
     model:
       ancestors:

@@ -41,6 +41,7 @@ module Metasploit
     autoload :Exploit
     autoload :File
     autoload :Invalid
+    autoload :Licensable
     autoload :License
     autoload :Login
     autoload :Module

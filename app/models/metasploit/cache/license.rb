@@ -1,6 +1,16 @@
 # Represents licenses like BSD, MIT, etc used to provide license information for Metasploit modules
 class Metasploit::Cache::License < ActiveRecord::Base
   #
+  # Associations
+  #
+
+  # Join model between this license and anything that uses this license.
+  has_many :licensable_licenses,
+           class_name: 'Metasploit::Cache::Licensable::License',
+           dependent: :destroy,
+           inverse_of: :license
+
+  #
   # Attributes
   #
 
