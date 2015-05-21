@@ -14,9 +14,15 @@ class CreateMcLicenses < ActiveRecord::Migration
   # @return [void]
   def up
     create_table TABLE_NAME do |t|
-      t.string :abbreviation, null: false, unique: true
-      t.text :summary, null: false, unique: true
-      t.string :url, null: false, unique: true
+      t.string :abbreviation, null: false
+      t.text :summary, null: false
+      t.string :url, null: false
+    end
+
+    change_table TABLE_NAME do |t|
+      t.index :abbreviation, unique: true
+      t.index :summary, unique: true
+      t.index :url, unique: true
     end
   end
 

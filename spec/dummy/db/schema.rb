@@ -128,6 +128,10 @@ ActiveRecord::Schema.define(:version => 20150518163003) do
     t.string "url",          :null => false
   end
 
+  add_index "mc_licenses", ["abbreviation"], :name => "index_mc_licenses_on_abbreviation", :unique => true
+  add_index "mc_licenses", ["summary"], :name => "index_mc_licenses_on_summary", :unique => true
+  add_index "mc_licenses", ["url"], :name => "index_mc_licenses_on_url", :unique => true
+
   create_table "mc_module_actions", :force => true do |t|
     t.integer "module_instance_id", :null => false
     t.text    "name",               :null => false

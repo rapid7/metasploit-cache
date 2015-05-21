@@ -5,6 +5,12 @@ RSpec.describe Metasploit::Cache::License do
       it { is_expected.to have_db_column(:summary).of_type(:text).with_options(null: false, unique: true) }
       it { is_expected.to have_db_column(:url).of_type(:string).with_options(null: false, unique: true) }
     end
+
+    context "indices" do
+      it {is_expected.to have_db_index(:abbreviation).unique(true)}
+      it {is_expected.to have_db_index(:summary).unique(true)}
+      it {is_expected.to have_db_index(:url).unique(true)}
+    end
   end
 
   context 'factories' do

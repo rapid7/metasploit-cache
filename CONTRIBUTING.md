@@ -48,7 +48,7 @@ Make your changes or however many commits you like, committing each with `git co
 ##### Testing
 1. `rake cucumber spec coverage`
 2. Verify there were no failures.
-3. Verify there was 100% coverage.
+3. Verify there was 99.72% coverage.
 
 ##### Documentation
 1. `rake yard`
@@ -63,7 +63,7 @@ Make your changes or however many commits you like, committing each with `git co
 ##### Testing
 1. `rake cucumber spec coverage`
 2. Verify there were no failures.
-3. Verify there was 100% coverage.
+3. Verify there was 99.69% coverage.
 
 ##### Documentation
 1. `rake yard`
@@ -90,11 +90,11 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ### Test coverage
 - [ ] `rake cucumber spec coverage`
 - [ ] VERIFY no failures
-- [ ] VERIFY 100% coverage
+- [ ] VERIFY 99.72% coverage
 
 ### Documentation Coverage
 - [ ] `rake yard`
-- [ ] VERIFY no warnings
+- [ ] VERIFY no `[warn]`ings. (Rails ERD "invalid model" Warnings are OK.)
 - [ ] VERIFY no undocumented objects
 
 ## Sqlite3
@@ -105,11 +105,11 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ### Test coverage
 - [ ] `rake cucumber spec coverage`
 - [ ] VERIFY no failures
-- [ ] VERIFY 100% coverage
+- [ ] VERIFY 99.69% coverage
 
 ### Documentation coverage
 - [ ] `rake yard`
-- [ ] VERIFY no warnings
+- [ ] VERIFY no `[warn]`ings. (Rails ERD "invalid model" Warnings are OKrm Gemfile.lock.)
 - [ ] VERIFY no undocumented objects
 ```
 
