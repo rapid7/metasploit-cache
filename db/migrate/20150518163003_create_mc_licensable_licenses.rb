@@ -1,4 +1,4 @@
-class CreateMetasploitCacheLicensableLicenses < ActiveRecord::Migration
+class CreateMcLicensableLicenses < ActiveRecord::Migration
   TABLE_NAME = "mc_licensable_licenses"
 
   # Create mc_licensable_licenses
