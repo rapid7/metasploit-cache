@@ -52,5 +52,28 @@ class Metasploit::Cache::Licensable::License < ActiveRecord::Base
   validates :licensable,
             presence: true
 
+  #
+  # Instance Methods
+  #
+
+  # @!method license_id=(license_id)
+  #   Sets {#license_id} and invalidates cached {#license}, so it will be reloaded on next access.
+  #
+  #   @param license_id [Integer] Primary key of {Metasploit::Cache::License} to load into {#license}.
+  #   @return [void]
+
+  # @!method licensable_id=(licensable_id)
+  #   Sets {#licensable_id} and invalidates cached {#licensable}, so it will be reloaded on next access.
+  #
+  #   @param licensable_id [Integer] Primary key of model named in {#licensable_type}.
+  #   @return [void]
+
+  # @!method licensable_type=(licensable_type)
+  #   Sets {#licensable_type} and invalidates cached {#licensable}, so it will be reloaded on next access.
+  #
+  #   @param licensable_type [String] Name of a model that is licensed.
+  #   @return [void]
+
+
   Metasploit::Concern.run(self)
 end
