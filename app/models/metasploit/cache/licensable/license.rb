@@ -41,14 +41,13 @@ class Metasploit::Cache::Licensable::License < ActiveRecord::Base
 
   validates :license,
             presence: true
-
-  # validates :licenseable_id,
-  #           uniqueness: true,
-  #           scope: [
-  #             :license_id,
-  #             :licensable_type,
-  #           ]
-
+  validates :license_id,
+            uniqueness: {
+                scope: [
+                    :licensable_type,
+                    :licensable_id
+                ]
+            }
   validates :licensable,
             presence: true
 
