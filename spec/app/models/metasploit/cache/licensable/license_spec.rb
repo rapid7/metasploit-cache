@@ -8,8 +8,8 @@ RSpec.describe Metasploit::Cache::Licensable::License do
   end
 
   context "associations" do
-    it { is_expected.to belong_to(:licensable)}
-    it { is_expected.to belong_to(:license)}
+    it { is_expected.to belong_to(:licensable) }
+    it { is_expected.to belong_to(:license) }
   end
 
   context "validations" do
