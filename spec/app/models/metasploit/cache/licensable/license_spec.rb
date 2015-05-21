@@ -5,6 +5,12 @@ RSpec.describe Metasploit::Cache::Licensable::License do
       it { is_expected.to have_db_column(:licensable_id).of_type(:integer).with_options(null:false) }
       it { is_expected.to have_db_column(:licensable_type).of_type(:string).with_options(null:false) }
     end
+
+    context 'indices' do
+      it { is_expected.to have_db_index(:license_id).unique(false) }
+      it { is_expected.to have_db_index([:licensable_type, :licensable_id]).unique(false) }
+      it { is_expected.to have_db_index([:licensable_type, :licensable_id, :license_id]).unique(true) }
+    end
   end
 
   context "associations" do
