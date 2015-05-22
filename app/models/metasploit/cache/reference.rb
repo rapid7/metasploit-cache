@@ -13,10 +13,15 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
   #
 
   # The {Metasploit::Cache::Authority authority} that assigned {#designation}.
-  belongs_to :authority, class_name: 'Metasploit::Cache::Authority', inverse_of: :references
+  belongs_to :authority,
+             class_name: 'Metasploit::Cache::Authority',
+             inverse_of: :references
 
   # Joins this {Metasploit::Cache::Reference} to {#module_instances}.
-  has_many :module_references, class_name: 'Metasploit::Cache::Module::Reference', dependent: :destroy, inverse_of: :reference
+  has_many :module_references,
+           class_name: 'Metasploit::Cache::Referencable::Reference',
+           dependent: :destroy,
+           inverse_of: :references
 
   #
   # through: :module_references

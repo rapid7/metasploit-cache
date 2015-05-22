@@ -55,6 +55,7 @@ module Metasploit
     autoload :RealPathname
     autoload :Realm
     autoload :Reference
+    autoload :Referencable
     autoload :ResurrectingAttribute
     autoload :Search
     autoload :Spec

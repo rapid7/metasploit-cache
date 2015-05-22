@@ -44,6 +44,19 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses
 
+  has_many :referencable_references,
+           as: :referencable,
+           class_name: 'Metasploit::Cache::Referencable::Reference'
+
+  #
+  # through: :referencable_references
+  #
+
+  # The {Metasploit::Cache::Reference} for the content in this auxiliary Metasploit Module.
+  has_many :references,
+           class_name: 'Metasploit::Cache::Reference',
+           through: :referencable_references
+
   #
   # Attributes
   #
