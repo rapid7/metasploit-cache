@@ -11,6 +11,9 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License'
 
+  #
+  # through: :licensable_licenses
+  #
   has_many :licenses,
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses
@@ -19,6 +22,19 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   belongs_to :post_class,
              class_name: 'Metasploit::Cache::Post::Class',
              inverse_of: :post_instance
+
+  has_many :referencable_references,
+           as: :referencable,
+           class_name: 'Metasploit::Cache::Referencable::Reference'
+
+  #
+  # through: :referencable_references
+  #
+
+  # The {Metasploit::Cache::Reference} for the content in this auxiliary Metasploit Module.
+  has_many :references,
+           class_name: 'Metasploit::Cache::Reference',
+           through: :referencable_references
 
   #
   # Attributes
