@@ -21,11 +21,25 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Actionable::Action',
              inverse_of: :actionable
 
+  # Joins {#licenses} to this post Metasploit Module.
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
   # The class level metadata for this post Metasploit Module
   belongs_to :post_class,
              class_name: 'Metasploit::Cache::Post::Class',
              inverse_of: :post_instance
 
+  #
+  # through: :licensable_licenses
+  #
+  
+  # The licenses covering the code for this post Metasploit Module
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+  
   #
   # Attributes
   #
@@ -68,16 +82,27 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
                   post_instance.actions
                 }
             }
+  
   validates :description,
             presence: true
+
   validates :disclosed_on,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
+
   validates :name,
             presence: true
+
   validates :post_class,
             presence: true
+
   validates :post_class_id,
             uniqueness: true
+
   validates :privileged,
             inclusion: {
                 in: [

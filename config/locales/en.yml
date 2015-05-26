@@ -8,16 +8,43 @@ en:
               too_short: "has too few actions (minimum is %{count} action)"
             default_action:
               inclusion: "is not included in actions"
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+        metasploit/cache/encoder/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/exploit/instance:
           attributes:
             default_exploit_target:
               inclusion: "is not included in exploit targets"
             exploit_targets:
               too_short: "has too few exploit targets (minimum is %{count} exploit target)"
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+        metasploit/cache/nop/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+        metasploit/cache/payload/single/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+        metasploit/cache/payload/stage/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+        metasploit/cache/payload/stager/instance:
+          attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/post/instance:
           attributes:
             default_action:
               inclusion: "is not included in actions"
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+
   metasploit:
     model:
       ancestors:
