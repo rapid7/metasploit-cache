@@ -9,7 +9,7 @@ class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
   # @!attribute reference_id
   #   Primary key of the associated {Metasploit::Cache::Reference}
   #
-  #   @return [Fixnum]
+  #   @return [Integer]
 
   # @!attribute referencable_type
   #   Model name with an associated reference
@@ -19,7 +19,7 @@ class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
   # @!attribute referencable_id
   #   Primary key of the associated object whose type is named by {#referencable_type}
   #
-  #   @return [Fixnum]
+  #   @return [Integer]
 
   #
   # Associations
