@@ -1,8 +1,8 @@
-# Namespace to hold license join model
-module Metasploit::Cache::Licensable
+# Name space to hold references join model
+module Metasploit::Cache::Referencable
   extend ActiveSupport::Autoload
 
-  autoload :License
+  autoload :Reference
 
   #
   # Module Methods
@@ -12,6 +12,6 @@ module Metasploit::Cache::Licensable
   #
   # @return [String]
   def self.table_name_prefix
-    "#{parent.table_name_prefix}licensable_"
+    "#{parent.table_name_prefix}referencable_"
   end
 end

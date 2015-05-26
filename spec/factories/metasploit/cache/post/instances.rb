@@ -23,7 +23,7 @@ FactoryGirl.define do
 
     after(:build) do |post_instance, evaluator|
       post_instance.licensable_licenses = build_list(
-        :metasploit_cache_payload_post_license,
+        :metasploit_cache_post_license,
         evaluator.licensable_license_count,
         licensable: post_instance
       )

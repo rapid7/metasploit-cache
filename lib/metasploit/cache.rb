@@ -55,6 +55,7 @@ module Metasploit
     autoload :ProxiedValidation
     autoload :RealPathname
     autoload :Realm
+    autoload :Referencable
     autoload :Reference
     autoload :ResurrectingAttribute
     autoload :Search

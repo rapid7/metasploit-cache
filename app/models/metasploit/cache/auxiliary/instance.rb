@@ -12,6 +12,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   has_many :actions,
            as: :actionable,
            class_name: 'Metasploit::Cache::Actionable::Action',
+           dependent: :destroy,
            inverse_of: :actionable
 
   # The class-level metadata for this instance metadata.
@@ -33,7 +34,16 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
-           class_name: 'Metasploit::Cache::Licensable::License'
+           class_name: 'Metasploit::Cache::Licensable::License',
+           dependent: :destroy,
+           inverse_of: :licensable
+
+  # Joins {#references} to this auxiliary Metasploit Module
+  has_many :referencable_references,
+           as: :referencable,
+           class_name: 'Metasploit::Cache::Referencable::Reference',
+           dependent: :destroy,
+           inverse_of: :referencable
 
   #
   # through: :licensable_licenses
@@ -43,6 +53,15 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   has_many :licenses,
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses
+
+  #
+  # through: :referencable_references
+  #
+
+  # The {Metasploit::Cache::Reference} for the content in this auxiliary Metasploit Module.
+  has_many :references,
+           class_name: 'Metasploit::Cache::Reference',
+           through: :referencable_references
 
   #
   # Attributes
