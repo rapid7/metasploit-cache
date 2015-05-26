@@ -6,11 +6,6 @@ class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
   # Attributes
   #
 
-  # @!attribute reference_id
-  #   Primary key of the associated {Metasploit::Cache::Reference}
-  #
-  #   @return [Integer]
-
   # @!attribute referencable_type
   #   Model name with an associated reference
   #
@@ -18,6 +13,11 @@ class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
 
   # @!attribute referencable_id
   #   Primary key of the associated object whose type is named by {#referencable_type}
+  #
+  #   @return [Integer]
+
+  # @!attribute reference_id
+  #   Primary key of the associated {Metasploit::Cache::Reference}
   #
   #   @return [Integer]
 
@@ -54,12 +54,6 @@ class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
   # Instance Methods
   #
 
-  # @!method reference_id=(reference_id)
-  #   Sets {#reference_id} and invalidates cached {#reference}, so it will be reloaded on next access.
-  #
-  #   @param reference_id [Integer] Primary key of {Metasploit::Cache::Reference} to load into {#reference}.
-  #   @return [void]
-
   # @!method referencable_id=(referencable_id)
   #   Sets {#referencable_id} and invalidates cached {#referencable}, so it will be reloaded on next access.
   #
@@ -70,6 +64,12 @@ class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
   #   Sets {#referencable_type} and invalidates cached {#referencable}, so it will be reloaded on next access.
   #
   #   @param referencable_type [String] Name of a model that is referenced.
+  #   @return [void]
+
+  # @!method reference_id=(reference_id)
+  #   Sets {#reference_id} and invalidates cached {#reference}, so it will be reloaded on next access.
+  #
+  #   @param reference_id [Integer] Primary key of {Metasploit::Cache::Reference} to load into {#reference}.
   #   @return [void]
 
   Metasploit::Concern.run(self)
