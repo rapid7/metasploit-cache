@@ -5,6 +5,8 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
     it { is_expected.to have_many(:architectures).class_name('Metasploit::Cache::Architecture') }
     it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
     it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_stager_instances) }
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
     it { is_expected.to belong_to(:payload_stager_class).class_name('Metasploit::Cache::Payload::Stager::Class').inverse_of(:payload_stager_instance) }
   end
 
@@ -44,6 +46,10 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
 
     it_should_behave_like 'validates at least one associated',
                           :architecturable_architectures,
+                          factory: :metasploit_cache_payload_stage_instance
+
+    it_should_behave_like 'validates at least one associated',
+                          :licensable_licenses,
                           factory: :metasploit_cache_payload_stage_instance
 
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`

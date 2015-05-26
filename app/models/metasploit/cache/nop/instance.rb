@@ -12,6 +12,11 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :architecturable
 
+  # Joins {#licenses} to this auxiliary Metasploit Module.
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
   # The class level metadata for this nop Metasploit Module.
   belongs_to :nop_class,
              class_name: 'Metasploit::Cache::Nop::Class',
@@ -25,6 +30,15 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   has_many :architectures,
            class_name: 'Metasploit::Cache::Architecture',
            through: :architecturable_architectures
+
+  #
+  # through: :licensable_licenses
+  #
+
+  # The {Metasploit::Cache::License} for the code in this auxiliary Metasploit Module.
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
 
   #
   # Attributes
@@ -54,12 +68,21 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
             length: {
                 minimum: 1
             }
+  
   validates :description,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
+
   validates :name,
             presence: true
+
   validates :nop_class,
             presence: true
+
   validates :nop_class_id,
             uniqueness: true
 

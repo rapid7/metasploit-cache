@@ -4,6 +4,8 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
   context 'associations' do
     it { is_expected.to have_many(:architectures).class_name('Metasploit::Cache::Architecture') }
     it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
     it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
   end
 
@@ -29,6 +31,10 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
     end
   end
 
+  context 'associations' do
+    it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
+  end
+
   context 'validations' do
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :name }
@@ -38,6 +44,10 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
                           :architecturable_architectures,
                           factory: :metasploit_cache_nop_instance
 
+    it_should_behave_like 'validates at least one associated',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_nop_instance
+    
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do

@@ -4,6 +4,8 @@ RSpec.describe Metasploit::Cache::Post::Instance do
   context 'associations' do
     it { is_expected.to have_many(:architectures).class_name('Metasploit::Cache::Architecture') }
     it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
     it { is_expected.to belong_to(:post_class).class_name('Metasploit::Cache::Post::Class').inverse_of(:post_instance) }
   end
 
@@ -38,6 +40,10 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     it { is_expected.to validate_presence_of :post_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
+    it_should_behave_like 'validates at least one associated',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_post_instance
+    
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do

@@ -5,6 +5,8 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
     it { is_expected.to belong_to(:auxiliary_class).class_name('Metasploit::Cache::Auxiliary::Class').inverse_of(:auxiliary_instance) }
     it { is_expected.to have_many(:actions).class_name('Metasploit::Cache::Actionable::Action').inverse_of(:actionable) }
     it { is_expected.to belong_to(:default_action).class_name('Metasploit::Cache::Actionable::Action').inverse_of(:actionable) }
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
   end
 
   context 'database' do
@@ -39,6 +41,10 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                           :actions,
                           factory: :metasploit_cache_auxiliary_instance
 
+    it_should_behave_like 'validates at least one associated',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_auxiliary_instance
+    
     context 'actions_contains_default_action' do
       let(:error) {
         I18n.translate!(
