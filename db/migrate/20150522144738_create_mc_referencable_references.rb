@@ -1,4 +1,4 @@
-class AddReferencableReferences < ActiveRecord::Migration
+class CreateMcReferencableReferences < ActiveRecord::Migration
   TABLE_NAME = "mc_referencable_references"
 
   # Create mc_referencable_references and indices
