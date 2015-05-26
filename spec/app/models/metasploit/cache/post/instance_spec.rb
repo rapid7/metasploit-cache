@@ -2,6 +2,8 @@ RSpec.describe Metasploit::Cache::Post::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
     it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
     it { is_expected.to belong_to(:post_class).class_name('Metasploit::Cache::Post::Class').inverse_of(:post_instance) }
@@ -37,6 +39,10 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :post_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
+
+    it_should_behave_like 'validates at least one in association',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_post_instance
 
     it_should_behave_like 'validates at least one in association',
                           :platformable_platforms,

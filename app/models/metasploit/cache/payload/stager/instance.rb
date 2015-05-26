@@ -11,6 +11,11 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Payload::Handler',
              inverse_of: :payload_stager_instances
 
+  # Joins {#licenses} to this auxiliary Metasploit Module.
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
   # The class-level metadata for this stager payload Metasploit Module.
   belongs_to :payload_stager_class,
              class_name: 'Metasploit::Cache::Payload::Stager::Class',
@@ -30,6 +35,15 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   has_many :platforms,
            class_name: 'Metasploit::Cache::Platform',
            through: :platformable_platforms
+
+  #
+  # through: :licensable_licenses
+  #
+
+  # The {Metasploit::Cache::License} for the code in this auxiliary Metasploit Module.
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
 
   #
   # Attributes
@@ -69,12 +83,20 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
 
   validates :description,
             presence: true
+
   validates :handler,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
   validates :name,
             presence: true
+
   validates :payload_stager_class,
             presence: true
+
   validates :payload_stager_class_id,
             uniqueness: true
   validates :platformable_platforms,

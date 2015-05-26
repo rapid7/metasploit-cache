@@ -2,7 +2,8 @@ FactoryGirl.define do
   factory :metasploit_cache_payload_stager_instance,
           class: Metasploit::Cache::Payload::Stager::Instance do
     transient do
-      platformable_platform_count { 1 }
+      licensable_license_count 1
+      platformable_platform_count 1
     end
 
     description { generate :metasploit_cache_payload_stager_instance_description }
@@ -21,11 +22,16 @@ FactoryGirl.define do
     # Callbacks
     #
 
-    after(:build) do |payload_stage_instance, evaluator|
-      payload_stage_instance.platformable_platforms = build_list(
+    after(:build) do |payload_stager_instance, evaluator|
+      payload_stager_instance.licensable_licenses = build_list(
+        :metasploit_cache_payload_stager_license,
+        evaluator.licensable_license_count,
+        licensable: payload_stager_instance
+      )
+      payload_stager_instance.platformable_platforms = build_list(
           :metasploit_cache_payload_stage_platform,
           evaluator.platformable_platform_count,
-          platformable: payload_stage_instance
+          platformable: payload_stager_instance
       )
     end
   end

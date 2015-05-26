@@ -7,8 +7,12 @@ en:
             actions:
               does_not_contain_default_action: "does not contain default action"
               too_short: "has too few actions (minimum is %{count} action)"
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/encoder/instance:
           attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
             platformable_platforms:
               too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
         metasploit/cache/exploit/instance:
@@ -17,30 +21,43 @@ en:
               inclusion: "is not included in exploit targets"
             exploit_targets:
               too_short: "has too few exploit targets (minimum is %{count} exploit target)"
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/exploit/target:
           attributes:
             platformable_platforms:
               too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/nop/instance:
           attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
             platformable_platforms:
-              too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/payload/single/instance:
           attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
             platformable_platforms:
-              too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/payload/stage/instance:
           attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
             platformable_platforms:
-              too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/payload/stager/instance:
           attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
             platformable_platforms:
-              too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/post/instance:
           attributes:
+            licensable_licenses:
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
             platformable_platforms:
-              too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
+
   metasploit:
     model:
       ancestors:

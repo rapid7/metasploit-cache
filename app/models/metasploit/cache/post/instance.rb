@@ -6,6 +6,11 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   #
   #
 
+  # Joins {#licenses} to this post Metasploit Module.
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
   # Joins {#platforms} to this post Metasploit Module.
   has_many :platformable_platforms,
            class_name: 'Metasploit::Cache::Platformable::Platform',
@@ -18,7 +23,17 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
              inverse_of: :post_instance
 
   #
-  # through: :platformable_platform
+  # through: :licensable_licenses
+  #
+
+  # Licenses covering code in this post Metasploit Module.
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+
+
+  #
+  # through: :platformable_platforms
   #
 
   # Platforms this post Metasploit Module works on.
@@ -63,18 +78,28 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
 
   validates :description,
             presence: true
+
   validates :disclosed_on,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
+
   validates :name,
             presence: true
   validates :platformable_platforms,
             length: {
                 minimum: 1
             }
+
   validates :post_class,
             presence: true
+
   validates :post_class_id,
             uniqueness: true
+
   validates :privileged,
             inclusion: {
                 in: [

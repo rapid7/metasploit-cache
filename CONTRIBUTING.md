@@ -108,8 +108,8 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 - [ ] VERIFY 99.69% coverage
 
 ### Documentation coverage
-- [ ] `rake yard`
-- [ ] VERIFY no warnings
+- [ ] `rake yard:stats`
+- [ ] VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
 - [ ] VERIFY no undocumented objects
 ```
 

@@ -22,6 +22,11 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
     context 'indices' do
       it { is_expected.to have_db_index(:payload_stage_class_id).unique(true) }
     end
+
+    context "associations" do
+      it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
+      it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
+    end
   end
 
   context 'factories' do
@@ -39,6 +44,10 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :payload_stage_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
+
+    it_should_behave_like 'validates at least one in association',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_payload_stage_instance
 
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.

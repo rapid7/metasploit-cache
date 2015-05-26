@@ -11,6 +11,11 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Payload::Handler',
              inverse_of: :payload_single_instances
 
+  # Joins {#licenses} to this auxiliary Metasploit Module.
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License'
+
   # The class-level metadata for this single payload Metasploit Module.
   belongs_to :payload_single_class,
              class_name: 'Metasploit::Cache::Payload::Single::Class',
@@ -21,6 +26,15 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platformable
+
+  #
+  # through: :licensable_licenses
+  #
+
+  # The {Metasploit::Cache::License} for the code in this auxiliary Metasploit Module.
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
 
   #
   # through: :platformable_platform
@@ -64,18 +78,29 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
 
   validates :description,
             presence: true
+
   validates :handler,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
+
   validates :name,
             presence: true
+
   validates :payload_single_class,
             presence: true
+
   validates :payload_single_class_id,
             uniqueness: true
+  
   validates :platformable_platforms,
             length: {
                 minimum: 1
             }
+
   validates :privileged,
             inclusion: {
                 in: [
