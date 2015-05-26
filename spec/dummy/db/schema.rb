@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150507130708) do
+ActiveRecord::Schema.define(:version => 20150522144738) do
 
   create_table "mc_actionable_actions", :force => true do |t|
     t.string  "name",            :null => false
@@ -109,6 +109,28 @@ ActiveRecord::Schema.define(:version => 20150507130708) do
   add_index "mc_exploit_targets", ["exploit_instance_id", "index"], :name => "index_mc_exploit_targets_on_exploit_instance_id_and_index", :unique => true
   add_index "mc_exploit_targets", ["exploit_instance_id", "name"], :name => "index_mc_exploit_targets_on_exploit_instance_id_and_name", :unique => true
   add_index "mc_exploit_targets", ["exploit_instance_id"], :name => "index_mc_exploit_targets_on_exploit_instance_id"
+
+  create_table "mc_licensable_licenses", :force => true do |t|
+    t.integer  "licensable_id",   :null => false
+    t.string   "licensable_type", :null => false
+    t.integer  "license_id",      :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "mc_licensable_licenses", ["licensable_type", "licensable_id", "license_id"], :name => "unique_mc_licensable_licenses", :unique => true
+  add_index "mc_licensable_licenses", ["licensable_type", "licensable_id"], :name => "mc_licensable_polymorphic"
+  add_index "mc_licensable_licenses", ["license_id"], :name => "index_mc_licensable_licenses_on_license_id"
+
+  create_table "mc_licenses", :force => true do |t|
+    t.string "abbreviation", :null => false
+    t.text   "summary",      :null => false
+    t.string "url",          :null => false
+  end
+
+  add_index "mc_licenses", ["abbreviation"], :name => "index_mc_licenses_on_abbreviation", :unique => true
+  add_index "mc_licenses", ["summary"], :name => "index_mc_licenses_on_summary", :unique => true
+  add_index "mc_licenses", ["url"], :name => "index_mc_licenses_on_url", :unique => true
 
   create_table "mc_module_actions", :force => true do |t|
     t.integer "module_instance_id", :null => false
@@ -303,6 +325,18 @@ ActiveRecord::Schema.define(:version => 20150507130708) do
   end
 
   add_index "mc_post_instances", ["post_class_id"], :name => "index_mc_post_instances_on_post_class_id", :unique => true
+
+  create_table "mc_referencable_references", :force => true do |t|
+    t.integer  "referencable_id",   :null => false
+    t.string   "referencable_type", :null => false
+    t.integer  "reference_id",      :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "mc_referencable_references", ["referencable_type", "referencable_id", "reference_id"], :name => "unique_mc_referencable_references", :unique => true
+  add_index "mc_referencable_references", ["referencable_type", "referencable_id"], :name => "mc_referencable_polymorphic"
+  add_index "mc_referencable_references", ["reference_id"], :name => "index_mc_referencable_references_on_reference_id"
 
   create_table "mc_references", :force => true do |t|
     t.string  "designation"

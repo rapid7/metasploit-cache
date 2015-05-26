@@ -3,8 +3,12 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to(:auxiliary_class).class_name('Metasploit::Cache::Auxiliary::Class').inverse_of(:auxiliary_instance) }
-    it { is_expected.to have_many(:actions).class_name('Metasploit::Cache::Actionable::Action').inverse_of(:actionable) }
+    it { is_expected.to have_many(:actions).class_name('Metasploit::Cache::Actionable::Action').dependent(:destroy).inverse_of(:actionable) }
     it { is_expected.to belong_to(:default_action).class_name('Metasploit::Cache::Actionable::Action').inverse_of(:actionable) }
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:licensable) }
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License').through(:licensable_licenses) }
+    it { is_expected.to have_many(:referencable_references).class_name('Metasploit::Cache::Referencable::Reference').dependent(:destroy).inverse_of(:referencable) }
+    it { is_expected.to have_many(:references).class_name('Metasploit::Cache::Reference').through(:referencable_references) }
   end
 
   context 'database' do
@@ -67,10 +71,39 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
           )
         }
 
-        it 'does not adds error on #actions' do
+        it 'does not add error on #actions' do
           auxiliary_instance.valid?
 
           expect(auxiliary_instance.errors[:actions]).not_to include(error)
+        end
+      end
+    end
+
+    context "validates that there is at least one license for the module" do
+      let(:error){
+        I18n.translate!(
+            'activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.licensable_licenses.too_short',
+            count: 1
+        )
+      }
+
+      context "without licenses" do
+        subject(:auxiliary_instance){ FactoryGirl.build(:metasploit_cache_auxiliary_instance, licenses_count:0) }
+
+        it 'adds error on #licenses' do
+          auxiliary_instance.valid?
+
+          expect(auxiliary_instance.errors[:licensable_licenses]).to include(error)
+        end
+      end
+
+      context "with licenses" do
+        subject(:auxiliary_instance){ FactoryGirl.build(:metasploit_cache_auxiliary_instance, licenses_count: 1) }
+
+        it 'does not add error on #licenses' do
+          auxiliary_instance.valid?
+
+          expect(auxiliary_instance.errors[:licensable_licenses]).to_not include(error)
         end
       end
     end

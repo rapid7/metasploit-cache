@@ -1,7 +1,9 @@
 # Instance-level metadata for an auxiliary Metasploit Module.
 class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   #
+  #
   # Associations
+  #
   #
 
   # The actions that are allowed for the auxiliary Metasploit Module.
@@ -10,6 +12,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   has_many :actions,
            as: :actionable,
            class_name: 'Metasploit::Cache::Actionable::Action',
+           dependent: :destroy,
            inverse_of: :actionable
 
   # The class-level metadata for this instance metadata.
@@ -27,6 +30,38 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   belongs_to :default_action,
              class_name: 'Metasploit::Cache::Actionable::Action',
              inverse_of: :actionable
+
+  # Joins {#licenses} to this auxiliary Metasploit Module.
+  has_many :licensable_licenses,
+           as: :licensable,
+           class_name: 'Metasploit::Cache::Licensable::License',
+           dependent: :destroy,
+           inverse_of: :licensable
+
+  # Joins {#references} to this auxiliary Metasploit Module
+  has_many :referencable_references,
+           as: :referencable,
+           class_name: 'Metasploit::Cache::Referencable::Reference',
+           dependent: :destroy,
+           inverse_of: :referencable
+
+  #
+  # through: :licensable_licenses
+  #
+
+  # The {Metasploit::Cache::License} for the code in this auxiliary Metasploit Module.
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+
+  #
+  # through: :referencable_references
+  #
+
+  # The {Metasploit::Cache::Reference} for the content in this auxiliary Metasploit Module.
+  has_many :references,
+           class_name: 'Metasploit::Cache::Reference',
+           through: :referencable_references
 
   #
   # Attributes
@@ -75,14 +110,23 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
 
   validates :actions,
             length: {
-                minimum: 1
+              minimum: 1
             }
+
   validates :auxiliary_class,
             presence: true
+
   validates :description,
             presence: true
+
+  validates :licensable_licenses,
+            length: {
+              minimum: 1
+            }
+
   validates :name,
             presence: true
+
   validates :stance,
             inclusion: {
                 in: Metasploit::Cache::Module::Stance::ALL
