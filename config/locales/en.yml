@@ -22,6 +22,8 @@ en:
               too_short: "has too few exploit targets (minimum is %{count} exploit target)"
             licensable_licenses:
               too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+            referencable_references:
+              too_short: "has too few referencable references (minimum is %{count} referencable references)"
         metasploit/cache/nop/instance:
           attributes:
             licensable_licenses:
