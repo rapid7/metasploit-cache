@@ -6,8 +6,8 @@ class CreateMcReferencableReferences < ActiveRecord::Migration
   # @return [void]
   def up
     create_table TABLE_NAME do |t|
-      t.references :referencable, polymorphic: true, index: true, null: false
-      t.references :reference, null: false, index:true
+      t.references :referencable, polymorphic: true, null: false
+      t.references :reference, null: false
 
       t.timestamps
     end
