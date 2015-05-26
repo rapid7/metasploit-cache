@@ -15,7 +15,7 @@ RSpec.describe Metasploit::Cache::Referencable::Reference do
 
   context "associations" do
     it { is_expected.to belong_to(:referencable) }
-    it { is_expected.to belong_to(:reference).class_name('Metasploit::Cache::Reference').inverse_of(:module_references) }
+    it { is_expected.to belong_to(:reference).class_name('Metasploit::Cache::Reference').inverse_of(:referencable_references) }
   end
 
   context "validations" do

@@ -19,8 +19,16 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
 
   # Joins this {Metasploit::Cache::Reference} to {#module_instances}.
   has_many :module_references,
+           class_name: 'Metasploit::Cache::Module::Reference',
+           dependent: :destroy,
+           foreign_key: :reference_id,
+           inverse_of: :references
+
+  # Joins this {Metasploit::Cache::Reference} to {#auxiliary_instances}, {#exploit_instances}, and {#post_instances}.
+  has_many :referencable_references,
            class_name: 'Metasploit::Cache::Referencable::Reference',
            dependent: :destroy,
+           foreign_key: :reference_id,
            inverse_of: :references
 
   #
@@ -30,6 +38,29 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
   # {Metasploit::Cache::Module::Instance Modules} that exploit this reference or describe a proof-of-concept (PoC) code
   # that the module is based on.
   has_many :module_instances, class_name: 'Metasploit::Cache::Module::Instance', through: :module_references
+
+  #
+  # through: :referencable_references
+  #
+
+  # Auxiliary instances that use this reference.
+  has_many :auxiliary_instances,
+           source: :referencable,
+           source_type: 'Metasploit::Cache::Auxiliary::Instance',
+           through: :referencable_references
+
+  # Exploit Metasploit Modules that use this reference.
+  has_many :exploit_instances,
+           source: :referencable,
+           source_type: 'Metasploit::Cache::Exploit::Instance',
+           through: :referencable_references
+
+  # Post Metasploit Modules that use this reference.
+  has_many :post_instances,
+           source: :referencable,
+           source_type: 'Metasploit::Cache::Post::Instance',
+           through: :referencable_references
+
 
   #
   # Attributes
