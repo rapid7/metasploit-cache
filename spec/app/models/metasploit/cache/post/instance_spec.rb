@@ -1,6 +1,14 @@
 RSpec.describe Metasploit::Cache::Post::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context 'associations' do
+    it { is_expected.to belong_to(:post_class).class_name('Metasploit::Cache::Post::Class').inverse_of(:post_instance) }
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:licensable) }
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License').through(:licensable_licenses) }
+    it { is_expected.to have_many(:referencable_references).class_name('Metasploit::Cache::Referencable::Reference').dependent(:destroy).inverse_of(:referencable) }
+    it { is_expected.to have_many(:references).class_name('Metasploit::Cache::Reference').through(:referencable_references) }
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
@@ -13,12 +21,6 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     context 'indices' do
       it { is_expected.to have_db_index(:post_class_id).unique(true) }
     end
-  end
-
-  context 'associations' do
-    it { is_expected.to belong_to(:post_class).class_name('Metasploit::Cache::Post::Class').inverse_of(:post_instance) }
-    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
-    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
   end
 
   context 'factories' do
