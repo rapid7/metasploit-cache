@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150518163003) do
+ActiveRecord::Schema.define(:version => 20150526204451) do
 
   create_table "mc_actionable_actions", :force => true do |t|
     t.string  "name",            :null => false
@@ -60,6 +60,12 @@ ActiveRecord::Schema.define(:version => 20150518163003) do
   end
 
   add_index "mc_auxiliary_instances", ["auxiliary_class_id"], :name => "index_mc_auxiliary_instances_on_auxiliary_class_id", :unique => true
+
+  create_table "mc_contributions", :force => true do |t|
+    t.integer "author_id", :null => false
+  end
+
+  add_index "mc_contributions", ["author_id"], :name => "index_mc_contributions_on_author_id"
 
   create_table "mc_direct_classes", :force => true do |t|
     t.integer "ancestor_id", :null => false
@@ -305,6 +311,16 @@ ActiveRecord::Schema.define(:version => 20150518163003) do
   add_index "mc_payload_stager_instances", ["handler_id"], :name => "index_mc_payload_stager_instances_on_handler_id"
   add_index "mc_payload_stager_instances", ["payload_stager_class_id"], :name => "index_mc_payload_stager_instances_on_payload_stager_class_id", :unique => true
 
+  create_table "mc_platformable_platforms", :force => true do |t|
+    t.integer "platformable_id",   :null => false
+    t.string  "platformable_type", :null => false
+    t.integer "platform_id",       :null => false
+  end
+
+  add_index "mc_platformable_platforms", ["platform_id"], :name => "index_mc_platformable_platforms_on_platform_id"
+  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id", "platform_id"], :name => "unique_mc_platformable_platforms", :unique => true
+  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id"], :name => "mc_platformable_platformables"
+
   create_table "mc_platforms", :force => true do |t|
     t.text    "fully_qualified_name", :null => false
     t.text    "relative_name",        :null => false
@@ -325,6 +341,18 @@ ActiveRecord::Schema.define(:version => 20150518163003) do
   end
 
   add_index "mc_post_instances", ["post_class_id"], :name => "index_mc_post_instances_on_post_class_id", :unique => true
+
+  create_table "mc_referencable_references", :force => true do |t|
+    t.integer  "referencable_id",   :null => false
+    t.string   "referencable_type", :null => false
+    t.integer  "reference_id",      :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "mc_referencable_references", ["referencable_type", "referencable_id", "reference_id"], :name => "unique_mc_referencable_references", :unique => true
+  add_index "mc_referencable_references", ["referencable_type", "referencable_id"], :name => "mc_referencable_polymorphic"
+  add_index "mc_referencable_references", ["reference_id"], :name => "index_mc_referencable_references_on_reference_id"
 
   create_table "mc_references", :force => true do |t|
     t.string  "designation"

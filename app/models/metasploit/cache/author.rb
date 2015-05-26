@@ -10,6 +10,12 @@ class Metasploit::Cache::Author < ActiveRecord::Base
   # Associations
   #
 
+  # Joins to this author.
+  has_many :contributions,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :author
+
   # Joins this to {#email_addresses} and {#module_instances}.
   has_many :module_authors, class_name: 'Metasploit::Cache::Module::Author', dependent: :destroy, inverse_of: :author
 
