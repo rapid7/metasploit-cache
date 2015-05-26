@@ -30,8 +30,6 @@ class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
              polymorphic: true
 
   # The reference associated with the referencable
-  #
-  # @return [Metasploit::Cache::Reference]
   belongs_to :reference,
              class_name: 'Metasploit::Cache::Reference',
              inverse_of: :module_references
