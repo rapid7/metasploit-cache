@@ -7,7 +7,7 @@ FactoryGirl.define do
           class: Metasploit::Cache::Auxiliary::Instance do
     transient do
       action_count 1
-      licenses_count 1
+      licensable_license_count 1
     end
 
     description { generate :metasploit_cache_auxiliary_instance_description }
@@ -36,7 +36,7 @@ FactoryGirl.define do
       )
       auxiliary_instance.licensable_licenses = build_list(
           :metasploit_cache_auxiliary_license,
-          evaluator.licenses_count,
+          evaluator.licensable_license_count,
           licensable: auxiliary_instance
       )
     }

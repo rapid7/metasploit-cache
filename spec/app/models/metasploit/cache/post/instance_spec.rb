@@ -39,6 +39,10 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     it { is_expected.to validate_presence_of :post_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
+    it_should_behave_like 'validates at least one in association',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_post_instance
+
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do
@@ -49,39 +53,6 @@ RSpec.describe Metasploit::Cache::Post::Instance do
       }
 
       it { is_expected.to validate_uniqueness_of :post_class_id }
-    end
-
-    context "validate that there is at least one license per post" do
-      let(:error){
-        I18n.translate!(
-            'activerecord.errors.models.metasploit/cache/post/instance.attributes.licensable_licenses.too_short',
-            count: 1
-        )
-      }
-
-      context "without licensable licenses" do
-        subject(:post_instance){
-          FactoryGirl.build(:metasploit_cache_post_instance, licenses_count: 0)
-        }
-
-        it "adds error on #licensable_licenses" do
-          post_instance.valid?
-
-          expect(post_instance.errors[:licensable_licenses]).to include(error)
-        end
-      end
-
-      context "with licensable licenses" do
-        subject(:post_instance){
-          FactoryGirl.build(:metasploit_cache_post_instance, licenses_count: 1)
-        }
-
-        it "does not add error on #licensable_licenses" do
-          post_instance.valid?
-
-          expect(post_instance.errors[:licensable_licenses]).to_not include(error)
-        end
-      end
     end
   end
 end

@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :metasploit_cache_payload_stager_instance,
           class: Metasploit::Cache::Payload::Stager::Instance do
     transient do
-      licenses_count 1
+      licensable_license_count 1
     end
 
     description { generate :metasploit_cache_payload_stager_instance_description }
@@ -24,7 +24,7 @@ FactoryGirl.define do
     after(:build) do |stager_instance, evaluator|
       stager_instance.licensable_licenses = build_list(
         :metasploit_cache_payload_stager_license,
-        evaluator.licenses_count,
+        evaluator.licensable_license_count,
         licensable: stager_instance
       )
     end

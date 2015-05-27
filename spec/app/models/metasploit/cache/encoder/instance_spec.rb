@@ -34,38 +34,8 @@ RSpec.describe Metasploit::Cache::Encoder::Instance do
     it { is_expected.to validate_presence_of :encoder_class }
     it { is_expected.to validate_presence_of :name }
 
-    context "validate that there is at least one license per encoder" do
-      let(:error){
-        I18n.translate!(
-            'activerecord.errors.models.metasploit/cache/encoder/instance.attributes.licensable_licenses.too_short',
-            count: 1
-        )
-      }
-
-      context "without licensable licenses" do
-        subject(:encoder_instance){
-          FactoryGirl.build(:metasploit_cache_encoder_instance, licenses_count: 0)
-        }
-
-        it "adds error on #licensable_licenses" do
-          encoder_instance.valid?
-
-          expect(encoder_instance.errors[:licensable_licenses]).to include(error)
-        end
-      end
-
-      context "with licensable licenses" do
-        subject(:encoder_instance){
-          FactoryGirl.build(:metasploit_cache_encoder_instance, licenses_count: 1)
-        }
-
-        it "does not add error on #licensable_licenses" do
-          encoder_instance.valid?
-
-          expect(encoder_instance.errors[:licensable_licenses]).to_not include(error)
-        end
-      end
-
-    end
+    it_should_behave_like 'validates at least one in association',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_encoder_instance
   end
 end

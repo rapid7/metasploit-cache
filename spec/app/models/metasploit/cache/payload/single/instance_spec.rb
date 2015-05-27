@@ -40,6 +40,10 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
     it { is_expected.to validate_presence_of :payload_single_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
+    it_should_behave_like 'validates at least one in association',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_payload_single_instance
+
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do
@@ -50,39 +54,6 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
       }
 
       it { is_expected.to validate_uniqueness_of :payload_single_class_id }
-    end
-
-    context "validate that there is at least one license per single" do
-      let(:error){
-        I18n.translate!(
-            'activerecord.errors.models.metasploit/cache/payload/single/instance.attributes.licensable_licenses.too_short',
-            count: 1
-        )
-      }
-
-      context "without licensable licenses" do
-        subject(:single_instance){
-          FactoryGirl.build(:metasploit_cache_payload_single_instance, licenses_count: 0)
-        }
-
-        it "adds error on #licensable_licenses" do
-          single_instance.valid?
-
-          expect(single_instance.errors[:licensable_licenses]).to include(error)
-        end
-      end
-
-      context "with licensable licenses" do
-        subject(:single_instance){
-          FactoryGirl.build(:metasploit_cache_payload_single_instance, licenses_count: 1)
-        }
-
-        it "does not add error on #licensable_licenses" do
-          single_instance.valid?
-
-          expect(single_instance.errors[:licensable_licenses]).to_not include(error)
-        end
-      end
     end
   end
 end

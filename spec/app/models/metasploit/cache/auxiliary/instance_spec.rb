@@ -42,34 +42,9 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                           :actions,
                           factory: :metasploit_cache_auxiliary_instance
 
-    context "validates that there is at least one license for the module" do
-      let(:error){
-        I18n.translate!(
-            'activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.licensable_licenses.too_short',
-            count: 1
-        )
-      }
-
-      context "without licenses" do
-        subject(:auxiliary_instance){ FactoryGirl.build(:metasploit_cache_auxiliary_instance, licenses_count:0) }
-
-        it 'adds error on #licenses' do
-          auxiliary_instance.valid?
-
-          expect(auxiliary_instance.errors[:licensable_licenses]).to include(error)
-        end
-      end
-
-      context "with licenses" do
-        subject(:auxiliary_instance){ FactoryGirl.build(:metasploit_cache_auxiliary_instance, licenses_count: 1) }
-
-        it 'does not add error on #licenses' do
-          auxiliary_instance.valid?
-
-          expect(auxiliary_instance.errors[:licensable_licenses]).to_not include(error)
-        end
-      end
-    end
+    it_should_behave_like 'validates at least one in association',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_auxiliary_instance
 
     context 'actions_contains_default_action' do
       let(:error) {
