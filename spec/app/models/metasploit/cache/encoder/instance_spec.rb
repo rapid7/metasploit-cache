@@ -2,6 +2,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
+    it { is_expected.to have_many(:contributions).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contribution) }
     it { is_expected.to belong_to(:encoder_class).class_name('Metasploit::Cache::Encoder::Class').inverse_of(:encoder_instance) }
     it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
