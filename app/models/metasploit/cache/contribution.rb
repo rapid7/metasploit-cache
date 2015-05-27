@@ -9,5 +9,10 @@ class Metasploit::Cache::Contribution < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Author',
              inverse_of: :contributions
 
+  # Email address {#author} used when writing this contribution.
+  belongs_to :email_address,
+             class_name: 'Metasploit::Cache::EmailAddress',
+             inverse_of: :contributions
+
   Metasploit::Concern.run(self)
 end

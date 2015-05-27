@@ -62,10 +62,12 @@ ActiveRecord::Schema.define(:version => 20150526204451) do
   add_index "mc_auxiliary_instances", ["auxiliary_class_id"], :name => "index_mc_auxiliary_instances_on_auxiliary_class_id", :unique => true
 
   create_table "mc_contributions", :force => true do |t|
-    t.integer "author_id", :null => false
+    t.integer "author_id",        :null => false
+    t.integer "email_address_id", :null => false
   end
 
   add_index "mc_contributions", ["author_id"], :name => "index_mc_contributions_on_author_id"
+  add_index "mc_contributions", ["email_address_id"], :name => "index_mc_contributions_on_email_address_id"
 
   create_table "mc_direct_classes", :force => true do |t|
     t.integer "ancestor_id", :null => false

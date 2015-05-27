@@ -27,10 +27,14 @@ class CreateMcContributions < ActiveRecord::Migration
 
       t.references :author,
                    null: false
+      t.references :email_address,
+                   null: false
     end
 
     change_table TABLE_NAME do |t|
       t.index :author_id,
+              unique: false
+      t.index :email_address_id,
               unique: false
     end
   end
