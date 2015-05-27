@@ -1,6 +1,13 @@
 RSpec.describe Metasploit::Cache::Nop::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context 'associations' do
+    it { is_expected.to have_many(:contributions).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contribution) }
+    it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
@@ -21,12 +28,6 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
 
       it { is_expected.to be_valid }
     end
-  end
-
-  context 'associations' do
-    it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
-    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
-    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
   end
 
   context 'validations' do
