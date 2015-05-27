@@ -41,6 +41,10 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
     it_should_behave_like 'validates at least one in association',
+                          :contributions,
+                          factory: :metasploit_cache_payload_single_instance
+
+    it_should_behave_like 'validates at least one in association',
                           :licensable_licenses,
                           factory: :metasploit_cache_payload_single_instance
 

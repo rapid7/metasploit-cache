@@ -40,6 +40,10 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
     it_should_behave_like 'validates at least one in association',
+                          :contributions,
+                          factory: :metasploit_cache_post_instance
+
+    it_should_behave_like 'validates at least one in association',
                           :licensable_licenses,
                           factory: :metasploit_cache_post_instance
 

@@ -36,6 +36,10 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
     it { is_expected.to validate_presence_of :nop_class }
 
     it_should_behave_like 'validates at least one in association',
+                          :contributions,
+                          factory: :metasploit_cache_nop_instance
+
+    it_should_behave_like 'validates at least one in association',
                           :licensable_licenses,
                           factory: :metasploit_cache_nop_instance
 
