@@ -339,6 +339,18 @@ ActiveRecord::Schema.define(:version => 20150526204451) do
 
   add_index "mc_post_instances", ["post_class_id"], :name => "index_mc_post_instances_on_post_class_id", :unique => true
 
+  create_table "mc_referencable_references", :force => true do |t|
+    t.integer  "referencable_id",   :null => false
+    t.string   "referencable_type", :null => false
+    t.integer  "reference_id",      :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "mc_referencable_references", ["referencable_type", "referencable_id", "reference_id"], :name => "unique_mc_referencable_references", :unique => true
+  add_index "mc_referencable_references", ["referencable_type", "referencable_id"], :name => "mc_referencable_polymorphic"
+  add_index "mc_referencable_references", ["reference_id"], :name => "index_mc_referencable_references_on_reference_id"
+
   create_table "mc_references", :force => true do |t|
     t.string  "designation"
     t.text    "url"
