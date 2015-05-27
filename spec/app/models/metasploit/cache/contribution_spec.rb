@@ -17,4 +17,9 @@ RSpec.describe Metasploit::Cache::Contribution do
       it { is_expected.to have_db_index(:email_address_id).unique(false) }
     end
   end
+
+  context 'validations' do
+    it { is_expected.to validate_presence_of :author }
+    it { is_expected.to validate_presence_of :email_address }
+  end
 end
