@@ -2,7 +2,7 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context "associations" do
-    it { is_expected.to have_many(:contributions).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contribution) }
+    it { is_expected.to have_many(:contributions).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contributable) }
     it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
   end

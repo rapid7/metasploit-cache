@@ -6,6 +6,13 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
   #
 
+  # Code contributions to this single payload Metasploit Module
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
   # The connection handler
   belongs_to :handler,
              class_name: 'Metasploit::Cache::Payload::Handler',
@@ -60,6 +67,11 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
   # Validations
   #
+
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
 
   validates :description,
             presence: true

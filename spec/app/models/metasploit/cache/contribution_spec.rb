@@ -163,8 +163,140 @@ RSpec.describe Metasploit::Cache::Contribution do
         FactoryGirl.create(:metasploit_cache_auxiliary_contribution, :metasploit_cache_contribution_email_address)
       }
 
-      it { is_expected.to validate_uniqueness_of(:author).scoped_to(:contributable) }
-      it { is_expected.to validate_uniqueness_of(:email_address).scoped_to(:contributable).allow_blank }
+      it { is_expected.to validate_uniqueness_of(:author_id).scoped_to([:contributable_type, :contributable_id]) }
+    end
+
+    context 'validates uniqueness of email_address_id scoped to (contributable_type, contributable_id) allowing nil' do
+      subject(:email_address_id_errors) {
+        second_contribution.errors[:email_address_id]
+      }
+
+      #
+      # lets
+      #
+
+      let(:error) {
+        I18n.translate!('activerecord.errors.messages.taken')
+      }
+
+      #
+      # let!s
+      #
+
+      let!(:first_contribution) {
+        FactoryGirl.create(:metasploit_cache_auxiliary_contribution, :metasploit_cache_contribution_email_address)
+      }
+
+      context 'with same #email_address' do
+        context 'with same #contributable_type' do
+          context 'with same #contributable_id' do
+            #
+            # lets
+            #
+
+            let(:second_contribution) {
+              FactoryGirl.build(
+                  :metasploit_cache_auxiliary_contribution,
+                  contributable: first_contribution.contributable,
+                  email_address: first_contribution.email_address
+              )
+            }
+
+            #
+            # Callbacks
+            #
+
+            before(:each) do
+              second_contribution.valid?
+            end
+
+            it { is_expected.to include(error) }
+          end
+
+          context 'with different #contributable_id' do
+            #
+            # lets
+            #
+
+            let(:second_contribution) {
+              FactoryGirl.build(
+                  :metasploit_cache_auxiliary_contribution,
+                  email_address: first_contribution.email_address
+              )
+            }
+
+            #
+            # Callbacks
+            #
+
+            before(:each) do
+              second_contribution.valid?
+            end
+
+            it { is_expected.not_to include(error) }
+          end
+        end
+
+        context 'with different #contributable_type' do
+          context 'with same #contributable_id' do
+            #
+            # lets
+            #
+
+            let(:second_contribution) {
+              FactoryGirl.build(
+                  :metasploit_cache_encoder_contribution,
+                  contributable_id: first_contribution.contributable_id,
+                  email_address: first_contribution.email_address
+              )
+            }
+
+            #
+            # Callbacks
+            #
+
+            before(:each) do
+              second_contribution.valid?
+            end
+
+            it { is_expected.not_to include(error) }
+          end
+
+          context 'with different #contributable_id' do
+            #
+            # lets
+            #
+
+            let(:second_contribution) {
+              FactoryGirl.build(
+                  :metasploit_cache_encoder_contribution,
+                  email_address: first_contribution.email_address
+              )
+            }
+
+            #
+            # Callbacks
+            #
+
+            before(:each) do
+              second_contribution.valid?
+            end
+
+            it { is_expected.not_to include(error) }
+          end
+        end
+      end
+
+      context 'without #email_address' do
+        let(:second_contribution) {
+          FactoryGirl.build(
+              :metasploit_cache_encoder_contribution,
+              email_address: nil
+          )
+        }
+
+        it { is_expected.not_to include(error) }
+      end
     end
   end
 end

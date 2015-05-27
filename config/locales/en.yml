@@ -7,14 +7,20 @@ en:
             actions:
               does_not_contain_default_action: "does not contain default action"
               too_short: "has too few actions (minimum is %{count} action)"
+            contributions:
+              too_short: "has too few contributions (minimum is %{count} contribution)"
             licensable_licenses:
               too_short: "has too few licenses (minimum is %{count} license)"
         metasploit/cache/encoder/instance:
           attributes:
+            contributions:
+              too_short: "has too few contributions (minimum is %{count} contribution)"
             licensable_licenses:
               too_short: "has too few licenses (minimum is %{count} license)"
         metasploit/cache/exploit/instance:
           attributes:
+            contributions:
+              too_short: "has too few contributions (minimum is %{count} contribution)"
             default_exploit_target:
               inclusion: "is not included in exploit targets"
             exploit_targets:
@@ -23,22 +29,32 @@ en:
               too_short: "has too few licenses (minimum is %{count} license)"
         metasploit/cache/nop/instance:
           attributes:
+            contributions:
+              too_short: "has too few contributions (minimum is %{count} contribution)"
             licensable_licenses:
               too_short: "has too few licenses (minimum is %{count} license)"
         metasploit/cache/payload/single/instance:
           attributes:
+            contributions:
+              too_short: "has too few contributions (minimum is %{count} contribution)"
             licensable_licenses:
               too_short: "has too few licenses (minimum is %{count} license)"
         metasploit/cache/payload/stage/instance:
           attributes:
+            contributions:
+              too_short: "has too few contributions (minimum is %{count} contribution)"
             licensable_licenses:
               too_short: "has too few licenses (minimum is %{count} license)"
         metasploit/cache/payload/stager/instance:
           attributes:
+            contributions:
+              too_short: "has too few contributions (minimum is %{count} contribution)"
             licensable_licenses:
               too_short: "has too few licenses (minimum is %{count} license)"
         metasploit/cache/post/instance:
           attributes:
+            contributions:
+              too_short: "has too few contributions (minimum is %{count} contribution)"
             licensable_licenses:
               too_short: "has too few licenses (minimum is %{count} license)"
 

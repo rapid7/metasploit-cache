@@ -9,6 +9,7 @@ FactoryGirl.define do
     name { generate :metasploit_cache_encoder_instance_name }
 
     transient do
+      contribution_count 1
       licensable_license_count 1
     end
 
@@ -23,6 +24,11 @@ FactoryGirl.define do
     #
 
     after(:build) do |encoder_instance, evaluator|
+      encoder_instance.contributions = build_list(
+        :metasploit_cache_encoder_contribution,
+        evaluator.contribution_count,
+        contributable: encoder_instance
+      )
       encoder_instance.licensable_licenses = build_list(
         :metasploit_cache_encoder_license,
         evaluator.licensable_license_count,

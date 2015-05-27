@@ -27,13 +27,25 @@ class CreateMcContributions < ActiveRecord::Migration
 
       t.references :author,
                    null: false
+      t.references :contributable,
+                   null: false,
+                   polymorphic: true
       t.references :email_address,
-                   null: false
+                   null: true
     end
 
     change_table TABLE_NAME do |t|
       t.index :author_id,
               unique: false
+      t.index [:contributable_type, :contributable_id],
+              name: 'mc_contribution_contributables',
+              unique: false
+      t.index [:contributable_type, :contributable_id, :author_id],
+              name: 'unique_mc_contribution_authors',
+              unique: true
+      t.index [:contributable_type, :contributable_id, :email_address_id],
+              name: 'unique_mc_contribution_email_addresses',
+              unique: true
       t.index :email_address_id,
               unique: false
     end

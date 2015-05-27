@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :metasploit_cache_nop_instance,
           class: Metasploit::Cache::Nop::Instance do
     transient do
+      contribution_count 1
       licensable_license_count 1
     end
 
@@ -19,13 +20,19 @@ FactoryGirl.define do
     # Callbacks
     #
 
-    after(:build) { |nop_instance, evaluator|
-      nop_instance.licensable_licenses = build_list(
-        :metasploit_cache_nop_license,
-        evaluator.licensable_license_count,
-        licensable: nop_instance
+    after(:build) do |nop_instance, evaluator|
+      nop_instance.contributions = build_list(
+          :metasploit_cache_nop_contribution,
+          evaluator.contribution_count,
+          contributable: nop_instance
       )
-    }
+
+      nop_instance.licensable_licenses = build_list(
+          :metasploit_cache_nop_license,
+          evaluator.licensable_license_count,
+          licensable: nop_instance
+      )
+    end
 
   end
 

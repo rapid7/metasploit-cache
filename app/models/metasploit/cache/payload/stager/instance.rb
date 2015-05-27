@@ -6,12 +6,19 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #
   #
 
+  # Code contributions for stager payload Metasploit Module
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
   # The connection handler
   belongs_to :handler,
              class_name: 'Metasploit::Cache::Payload::Handler',
              inverse_of: :payload_stager_instances
 
-  # Joins {#licenses} to this auxiliary Metasploit Module.
+  # Joins {#licenses} to this stager payload Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License'
@@ -65,6 +72,11 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #
   # Validations
   #
+
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
 
   validates :description,
             presence: true

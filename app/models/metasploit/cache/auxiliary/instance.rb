@@ -21,6 +21,13 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Auxiliary::Class',
              inverse_of: :auxiliary_instance
 
+  # Code contributions to this auxiliary Metasploit Module
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
   # @note The default action must be manually added to {#actions}.
   #
   # The (optional) default action for the auxiliary Metasploit Module.
@@ -96,6 +103,11 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
 
   validates :auxiliary_class,
             presence: true
+
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
 
   validates :description,
             presence: true

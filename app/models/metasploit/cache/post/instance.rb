@@ -4,6 +4,13 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Associations
   #
 
+  # Code contributions to this post Metasploit Module.
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
   # The {Metasploit::Cache::License} objects that are associated with this instance
   #
   # @return[ActiveRecord::Relation<Metasploit::Cache::Licensable::License>]
@@ -54,6 +61,11 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   #
   # Validations
   #
+
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
 
   validates :description,
             presence: true

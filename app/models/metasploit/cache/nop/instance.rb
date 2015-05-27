@@ -6,6 +6,13 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   #
   #
 
+  # Code contributions to this nop Metasploit Module.
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
   # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
@@ -48,6 +55,11 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   #
   # Validations
   #
+
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
 
   validates :description,
             presence: true

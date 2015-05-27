@@ -45,10 +45,10 @@ FactoryGirl.define do
     association :licensable, factory: :metasploit_cache_payload_stager_instance
   end
 
-  factory :metasploit_cache_payload_post_license,
+  factory :metasploit_cache_post_license,
           class: Metasploit::Cache::Licensable::License,
           traits: [:metasploit_cache_licensable_license] do
-    association :licensable, factory: :metasploit_cache_payload_post_instance
+    association :licensable, factory: :metasploit_cache_post_instance
   end
 
   #

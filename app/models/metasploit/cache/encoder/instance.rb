@@ -6,6 +6,13 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   #
   #
 
+  # Code contributions to this Metasploit Module.
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
   # The class-level metadata for this instance metadata.
   #
   # @return [Metasploit::Cache::Encoder::Class]
@@ -45,6 +52,11 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   #
   # Validations
   #
+
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
 
   validates :description,
             presence: true

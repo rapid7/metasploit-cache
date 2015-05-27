@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :metasploit_cache_payload_stage_instance,
           class: Metasploit::Cache::Payload::Stage::Instance do
     transient do
+      contribution_count 1
       licensable_license_count 1
     end
 
@@ -19,11 +20,17 @@ FactoryGirl.define do
     # Callbacks
     #
 
-    after(:build) do |stage_instance, evaluator|
-      stage_instance.licensable_licenses = build_list(
+    after(:build) do |payload_stage_instance, evaluator|
+      payload_stage_instance.contributions = build_list(
+          :metasploit_cache_payload_stage_contribution,
+          evaluator.contribution_count,
+          contributable: payload_stage_instance
+      )
+
+      payload_stage_instance.licensable_licenses = build_list(
         :metasploit_cache_payload_stage_license,
         evaluator.licensable_license_count,
-        licensable: stage_instance
+        licensable: payload_stage_instance
       )
     end
   end

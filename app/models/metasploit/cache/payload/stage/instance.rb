@@ -6,7 +6,14 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   #
   #
 
-  # Joins {#licenses} to this auxiliary Metasploit Module.
+  # Code contributions ot this stage payload Metasploit Module
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
+  # Joins {#licenses} to this stage payoad Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License'
@@ -54,6 +61,11 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   #
   # Validations
   #
+
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
 
   validates :description,
             presence: true
