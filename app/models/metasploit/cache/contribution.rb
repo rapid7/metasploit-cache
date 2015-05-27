@@ -14,5 +14,15 @@ class Metasploit::Cache::Contribution < ActiveRecord::Base
              class_name: 'Metasploit::Cache::EmailAddress',
              inverse_of: :contributions
 
+  #
+  # Validations
+  #
+
+  validates :author,
+            presence: true
+
+  validates :email_address,
+            presence: true
+
   Metasploit::Concern.run(self)
 end
