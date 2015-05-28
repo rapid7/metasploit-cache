@@ -33,6 +33,127 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class do
     it { is_expected.to validate_presence_of :payload_stage_instance }
     it { is_expected.to validate_presence_of :payload_stager_instance }
 
+    context 'validates compatible architectures' do
+      subject(:base_errors) {
+        payload_staged_class.errors[:base]
+      }
+
+      let(:error) {
+        I18n.translate!('activerecord.errors.models.metasploit/cache/payload/staged/class.incompatible_architectures')
+      }
+
+      let(:payload_staged_class) {
+        FactoryGirl.build(
+            :metasploit_cache_payload_staged_class,
+            payload_stage_instance: payload_stage_instance,
+            payload_stager_instance: payload_stager_instance
+        )
+      }
+
+      let(:payload_stage_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_payload_stage_instance,
+            architecturable_architecture_count: 0
+        ).tap { |payload_stage_instance|
+          payload_stage_instance.architecturable_architectures << Metasploit::Cache::Architecturable::Architecture.new(
+              architecturable: payload_stage_instance,
+              architecture: first_stage_architecture
+          )
+
+          payload_stage_instance.architecturable_architectures << Metasploit::Cache::Architecturable::Architecture.new(
+              architecturable: payload_stage_instance,
+              architecture: second_stage_architecture
+          )
+        }
+      }
+
+      let(:payload_stager_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_payload_stager_instance,
+            architecturable_architecture_count: 0
+        ).tap { |payload_stager_instance|
+          payload_stager_instance.architecturable_architectures << Metasploit::Cache::Architecturable::Architecture.new(
+              architecturable: payload_stager_instance,
+              architecture: first_stager_architecture
+          )
+          payload_stager_instance.architecturable_architectures << Metasploit::Cache::Architecturable::Architecture.new(
+              architecturable: payload_stager_instance,
+              architecture: second_stager_architecture
+          )
+        }
+      }
+
+      context 'with intersecting architectures' do
+        #
+        # lets
+        #
+
+        let(:first_stage_architecture) {
+          Metasploit::Cache::Architecture.where(abbreviation: 'armbe').first
+        }
+
+        let(:first_stager_architecture) {
+          first_stage_architecture
+        }
+
+        let(:second_stage_architecture) {
+          Metasploit::Cache::Architecture.where(abbreviation: 'armle').first
+        }
+
+        let(:second_stager_architecture) {
+          Metasploit::Cache::Architecture.where(abbreviation: 'cbea').first
+        }
+
+        #
+        # Callbacks
+        #
+
+        before(:each) do
+          payload_stage_instance.save!
+          payload_stager_instance.save!
+
+          payload_staged_class.valid?
+        end
+
+        it { is_expected.not_to include error }
+      end
+
+      context 'without intersecting architectures' do
+        #
+        # lets
+        #
+
+        let(:first_stage_architecture) {
+          Metasploit::Cache::Architecture.where(abbreviation: 'armbe').first
+        }
+
+        let(:first_stager_architecture) {
+          Metasploit::Cache::Architecture.where(abbreviation: 'cbea').first
+        }
+
+        let(:second_stage_architecture) {
+          Metasploit::Cache::Architecture.where(abbreviation: 'armle').first
+        }
+
+        let(:second_stager_architecture) {
+          Metasploit::Cache::Architecture.where(abbreviation: 'cbea64').first
+        }
+
+        #
+        # Callbacks
+        #
+
+        before(:each) do
+          payload_stage_instance.save!
+          payload_stager_instance.save!
+
+          payload_staged_class.valid?
+        end
+
+        it { is_expected.to include error }
+      end
+    end
+
     context 'existing record' do
       let!(:existing_payload_staged_class) {
         FactoryGirl.create(:metasploit_cache_payload_staged_class)
