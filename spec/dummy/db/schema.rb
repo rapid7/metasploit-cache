@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150522144738) do
+ActiveRecord::Schema.define(:version => 20150528140442) do
 
   create_table "mc_actionable_actions", :force => true do |t|
     t.string  "name",            :null => false
@@ -292,6 +292,12 @@ ActiveRecord::Schema.define(:version => 20150522144738) do
   end
 
   add_index "mc_payload_stage_instances", ["payload_stage_class_id"], :name => "index_mc_payload_stage_instances_on_payload_stage_class_id", :unique => true
+
+  create_table "mc_payload_staged_classes", :force => true do |t|
+    t.integer "payload_stage_instance_id", :null => false
+  end
+
+  add_index "mc_payload_staged_classes", ["payload_stage_instance_id"], :name => "index_mc_payload_staged_classes_on_payload_stage_instance_id"
 
   create_table "mc_payload_stager_instances", :force => true do |t|
     t.text    "description",             :null => false

@@ -3,5 +3,20 @@
 #
 # The stager and stage payload must be compatible.  A stager and stage are compatible if they share some subset of
 # architectures and platforms.
-class Metasploit::Cache::Payload::Staged::Class
+class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
+  #
+  # Associations
+  #
+
+  # Stage payload Metasploit Module downloaded by stager.
+  belongs_to :payload_stage_instance,
+             class_name: 'Metasploit::Cache::Payload::Stage::Instance',
+             inverse_of: :payload_staged_classes
+
+  #
+  # Validations
+  #
+
+  validates :payload_stage_instance,
+            presence: true
 end

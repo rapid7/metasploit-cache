@@ -6,7 +6,7 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   #
   #
 
-  # Joins {#licenses} to this auxiliary Metasploit Module.
+  # Joins {#licenses} to this stage payload Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License'
@@ -15,6 +15,13 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   belongs_to :payload_stage_class,
              class_name: 'Metasploit::Cache::Payload::Stage::Class',
              inverse_of: :payload_stage_instance
+
+  # Staged payload Metasploit Module formed by combining this stage payload Metasploit Module with a compatible stager
+  # payload Metasploit Module.
+  has_many :payload_staged_classes,
+           class_name: 'Metasploit::Cache::Payload::Staged::Class',
+           dependent: :destroy,
+           inverse_of: :payload_stage_instance
 
   #
   # through: :licensable_licenses
