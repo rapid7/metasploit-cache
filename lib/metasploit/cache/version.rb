@@ -12,6 +12,8 @@ module Metasploit
       MINOR = 64
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 31
+      # Remove on master
+      PRERELEASE = 'extra-writer-docs'
 
       #
       # Module Methods
