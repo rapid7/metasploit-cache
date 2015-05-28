@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Payload::Staged::Class do
+  it_should_behave_like 'Metasploit::Concern.run'
+
   context 'association' do
     it { is_expected.to belong_to(:payload_stage_instance).class_name('Metasploit::Cache::Payload::Stage::Instance').inverse_of(:payload_staged_classes) }
     it { is_expected.to belong_to(:payload_stager_instance).class_name('Metasploit::Cache::Payload::Stager::Instance').inverse_of(:payload_staged_classes) }
