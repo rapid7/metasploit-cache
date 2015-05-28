@@ -6,6 +6,12 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   #
   #
 
+  # Joins {#architectures} to this encoder Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
+
   # The class-level metadata for this instance metadata.
   #
   # @return [Metasploit::Cache::Encoder::Class]
@@ -28,6 +34,15 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
            through: :licensable_licenses
 
   #
+  # through: :architecturable_architectures
+  #
+
+  # Architectures this encoder Metasploit Modules works on.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
+
+  #
   # Attributes
   #
 
@@ -46,6 +61,10 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
   validates :description,
             presence: true
 

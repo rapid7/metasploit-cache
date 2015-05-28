@@ -6,6 +6,12 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   #
   #
 
+  # Joins {#architectures} to this stage payload Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
+
   # Joins {#licenses} to this stage payload Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
@@ -22,6 +28,15 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
            class_name: 'Metasploit::Cache::Payload::Staged::Class',
            dependent: :destroy,
            inverse_of: :payload_stage_instance
+
+  #
+  # through: architecturable_architectures
+  #
+
+  # Architectures on which this payload can run.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
 
   #
   # through: :licensable_licenses
@@ -62,6 +77,11 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
+  
   validates :description,
             presence: true
 

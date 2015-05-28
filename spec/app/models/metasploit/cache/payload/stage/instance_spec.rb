@@ -1,7 +1,9 @@
 RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
-  context "associations" do
+  context 'associations' do
+    it { is_expected.to have_many(:architectures).class_name('Metasploit::Cache::Architecture') }
+    it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
     it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
     it { is_expected.to have_many(:payload_staged_classes).class_name('Metasploit::Cache::Payload::Staged::Class').dependent(:destroy).inverse_of(:payload_stage_instance) }
@@ -36,6 +38,10 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
     it { is_expected.to validate_presence_of :payload_stage_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
+    it_should_behave_like 'validates at least one associated',
+                          :architecturable_architectures,
+                          factory: :metasploit_cache_payload_stage_instance
+
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do
@@ -58,7 +64,7 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
 
       context "without licensable licenses" do
         subject(:stage_instance){
-          FactoryGirl.build(:metasploit_cache_payload_stage_instance, licenses_count: 0)
+          FactoryGirl.build(:metasploit_cache_payload_stage_instance, licensable_license_count: 0)
         }
 
         it "adds error on #licensable_licenses" do
@@ -70,7 +76,7 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
 
       context "with licensable licenses" do
         subject(:stage_instance){
-          FactoryGirl.build(:metasploit_cache_payload_stage_instance, licenses_count: 1)
+          FactoryGirl.build(:metasploit_cache_payload_stage_instance, licensable_license_count: 1)
         }
 
         it "does not add error on #licensable_licenses" do

@@ -39,75 +39,14 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of(:auxiliary_class) }
 
-    # validate_lenght_of from shoulda-matchers assumes attribute is String and doesn't work on associations
-    context 'validates length of actions is at least 1' do
-      let(:error) {
-        I18n.translate!(
-          'activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.actions.too_short',
-           count: 1
-        )
-      }
+    it_should_behave_like 'validates at least one associated',
+                          :actions,
+                          factory: :metasploit_cache_auxiliary_instance
 
-      context 'without actions' do
-        subject(:auxiliary_instance) {
-          FactoryGirl.build(
-              :metasploit_cache_auxiliary_instance,
-              actions_count: 0
-          )
-        }
-
-        it 'adds error on #actions' do
-          auxiliary_instance.valid?
-
-          expect(auxiliary_instance.errors[:actions]).to include(error)
-        end
-      end
-
-      context 'with actions' do
-        subject(:auxiliary_instance) {
-          FactoryGirl.build(
-              :metasploit_cache_auxiliary_instance,
-              actions_count: 1
-          )
-        }
-
-        it 'does not add error on #actions' do
-          auxiliary_instance.valid?
-
-          expect(auxiliary_instance.errors[:actions]).not_to include(error)
-        end
-      end
-    end
-
-    context "validates that there is at least one license for the module" do
-      let(:error){
-        I18n.translate!(
-            'activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.licensable_licenses.too_short',
-            count: 1
-        )
-      }
-
-      context "without licenses" do
-        subject(:auxiliary_instance){ FactoryGirl.build(:metasploit_cache_auxiliary_instance, licenses_count:0) }
-
-        it 'adds error on #licenses' do
-          auxiliary_instance.valid?
-
-          expect(auxiliary_instance.errors[:licensable_licenses]).to include(error)
-        end
-      end
-
-      context "with licenses" do
-        subject(:auxiliary_instance){ FactoryGirl.build(:metasploit_cache_auxiliary_instance, licenses_count: 1) }
-
-        it 'does not add error on #licenses' do
-          auxiliary_instance.valid?
-
-          expect(auxiliary_instance.errors[:licensable_licenses]).to_not include(error)
-        end
-      end
-    end
-
+    it_should_behave_like 'validates at least one associated',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_auxiliary_instance
+    
     context 'actions_contains_default_action' do
       let(:error) {
         I18n.translate!(
@@ -121,7 +60,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
             subject(:auxiliary_instance) {
               FactoryGirl.build(
                              :metasploit_cache_auxiliary_instance,
-                             actions_count: 1
+                             action_count: 1
               ).tap { |auxiliary_instance|
                 auxiliary_instance.default_action = auxiliary_instance.actions.first
               }
@@ -150,7 +89,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
             subject(:auxiliary_instance) {
               FactoryGirl.build(
                              :metasploit_cache_auxiliary_instance,
-                             actions_count: 1
+                             action_count: 1
               ).tap { |auxiliary_instance|
                 auxiliary_instance.default_action = FactoryGirl.build(
                     :metasploit_cache_auxiliary_action,
@@ -183,7 +122,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
           subject(:auxiliary_instance) {
             FactoryGirl.build(
                 :metasploit_cache_auxiliary_instance,
-                actions_count: 1
+                action_count: 1
             ).tap { |auxiliary_instance|
               auxiliary_instance.default_action = nil
             }
@@ -210,7 +149,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
           subject(:auxiliary_instance) {
             FactoryGirl.build(
                 :metasploit_cache_auxiliary_instance,
-                actions_count: 0
+                action_count: 0
             ).tap { |auxiliary_instance|
               auxiliary_instance.default_action = FactoryGirl.build(
                   :metasploit_cache_auxiliary_action,
@@ -238,7 +177,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
           subject(:auxiliary_instance) {
             FactoryGirl.build(
                 :metasploit_cache_auxiliary_instance,
-                actions_count: 0
+                action_count: 0
             ).tap { |auxiliary_instance|
               auxiliary_instance.default_action = nil
             }

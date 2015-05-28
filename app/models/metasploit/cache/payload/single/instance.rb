@@ -6,6 +6,12 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
   #
 
+  # Joins {#architectures} to this single payload Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
+
   # The connection handler
   belongs_to :handler,
              class_name: 'Metasploit::Cache::Payload::Handler',
@@ -20,6 +26,15 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   belongs_to :payload_single_class,
              class_name: 'Metasploit::Cache::Payload::Single::Class',
              inverse_of: :payload_single_instance
+
+  #
+  # through: architecturable_architectures
+  #
+
+  # Architectures on which this payload can run.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
 
   #
   # through: :licensable_licenses
@@ -61,6 +76,10 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
   validates :description,
             presence: true
 

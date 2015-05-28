@@ -52,7 +52,7 @@ Make your changes or however many commits you like, committing each with `git co
 
 ##### Documentation
 1. `rake yard:stats`
-2. Verify no `[warn]`ings. (Rails ERD "invalid model" Warnings are OKrm Gemfile.lock.)
+2. VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
 2. Verify there were no undocumented objects.
 
 #### Sqlite3
@@ -67,7 +67,7 @@ Make your changes or however many commits you like, committing each with `git co
 
 ##### Documentation
 1. `rake yard:stats`
-2. Verify no `[warn]`ings. (Rails ERD "invalid model" Warnings are OKrm Gemfile.lock.)
+2. VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
 2. Verify there were no undocumented objects.
 
 ### Push

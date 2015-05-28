@@ -8,11 +8,13 @@ en:
               does_not_contain_default_action: "does not contain default action"
               too_short: "has too few actions (minimum is %{count} action)"
             licensable_licenses:
-              too_short: "has too few licenses (minimum is %{count} license)"
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/encoder/instance:
           attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
-              too_short: "has too few licenses (minimum is %{count} license)"
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/exploit/instance:
           attributes:
             default_exploit_target:
@@ -20,30 +22,41 @@ en:
             exploit_targets:
               too_short: "has too few exploit targets (minimum is %{count} exploit target)"
             licensable_licenses:
-              too_short: "has too few licenses (minimum is %{count} license)"
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
             referencable_references:
               too_short: "has too few referencable references (minimum is %{count} referencable references)"
+        metasploit/cache/exploit/target:
+          attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
         metasploit/cache/nop/instance:
           attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
-              too_short: "has too few licenses (minimum is %{count} license)"
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/payload/single/instance:
           attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
-              too_short: "has too few licenses (minimum is %{count} license)"
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/payload/stage/instance:
           attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
-              too_short: "has too few licenses (minimum is %{count} license)"
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/payload/stager/instance:
           attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
-              too_short: "has too few licenses (minimum is %{count} license)"
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/post/instance:
           attributes:
             licensable_licenses:
-              too_short: "has too few licenses (minimum is %{count} license)"
-
+              too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
   metasploit:
     model:
       ancestors:

@@ -1,8 +1,16 @@
 # Instance-level metadata for a post Metasploit Module.
 class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   #
+  #
   # Associations
   #
+  #
+
+  # Joins {#architectures} to this post Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
 
   # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
@@ -40,6 +48,15 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   has_many :references,
            class_name: 'Metasploit::Cache::Reference',
            through: :referencable_references
+
+  #
+  # through: :architecturable_architectures
+  #
+
+  # Architectures on which this Metasploit Module can run.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
 
   #
   # Attributes
