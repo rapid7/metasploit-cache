@@ -129,41 +129,5 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
                 ]
             }
 
-  #
-  # Instance Methods
-  #
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this post Metasploit Module.
-  #   @return [void]
-
-  # @!method disclosed_on=(disclosed_on)
-  #   Sets {#disclosed_on}.
-  #
-  #   @param disclosed_on [Date] The date the exploit exercised by this post Metasploit Module was disclosed to the
-  #     public.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   name [String] The human-readable name of this post Metasploit Module.  This can be thought of as the
-  #     title or summary of the Metasploit Module.
-  #   @return [void]
-
-  # @!method post_class_id=(post_class_id)
-  #   Sets {#post_class_id} and causes cached of {#post_class} to be invalided and reloaded on next access.
-  #
-  #   @param post_class_id [Integer]
-  #   @return [void]
-
-  # @!method privileged=(privileged)
-  #   Sets {#privileged}.
-  #
-  #   @param priviliged [Boolean] `true` if privileged access is required; `false` if privileged access is not required.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end

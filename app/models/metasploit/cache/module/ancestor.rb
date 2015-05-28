@@ -419,27 +419,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     derived
   end
 
-  # @!method real_path_modified_at=(real_path_modified_at)
-  #   Sets {#real_path_modified_at}.
-  #
-  #   @param real_path_modified_at [String] The modification time of the module {#real_pathname file on-disk}.
-  #   @return [void]
-
-  # @!method real_path_sha1_hex_digest=(real_path_sha1_hex_digest)
-  #   Sets {#real_path_sha1_hex_digest}.
-  #
-  #   @param real_path_sha1_hex_digest [String] The SHA1 hexadecimal digest of contents of the file at {#real_pathname}.
-  #   @return [void]
-
-  # @!method relationships=(relationships)
-  #   Sets {#relationships}.
-  #
-  #   @param relationships [Enumerable<Metasploit::Cache::Model::Relationship>] Relates this
-  #     {Metasploit::Cache::Module::Ancestor} to the
-  #     {Metasploit::Cache::Module::Class Metasploit::Cache::Module::Classes} that
-  #     {Metasploit::Cache::Module::Relationship#descendant descend} from the {Metasploit::Cache::Module::Ancestor}.
-  #   @return [void]
-
   # File names on {#relative_pathname}.
   #
   # @return [Enumerator<String>]
@@ -454,13 +433,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     end
   end
 
-  # @!method relative_path=(relative_path)
-  #   Sets the relative path under `#parent_path` {Metasploit::Cache::Module::Path#real_path} where te module file
-  #   exists on-disk.
-  #
-  #   @param relative_path [String] a relative path
-  #   @return [void]
-
   # {#relative_path} as a `Pathname`.
   #
   # @return [Pathname] unless {#relative_path} is `nil`.
@@ -470,12 +442,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
       Pathname.new(relative_path)
     end
   end
-
-  # @!method reference_name=(reference_name)
-  #   Sets {#reference_name}.
-  #
-  #   @param reference_name [String] The name of the module under its {#module_type type}.
-  #   @return [void]
 
   # The path relative to the {#module_type_directory} under the {Metasploit::Cache::Module::Path
   # parent_path.real_path}, including the file {EXTENSION extension}.

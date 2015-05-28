@@ -36,15 +36,5 @@ class Metasploit::Cache::Actionable::Action < ActiveRecord::Base
                 unless: :batched?
             }
 
-  #
-  # Instance Methods
-  #
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] the name of this action.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end

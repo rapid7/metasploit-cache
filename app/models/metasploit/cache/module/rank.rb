@@ -137,21 +137,5 @@ class Metasploit::Cache::Module::Rank < ActiveRecord::Base
             },
             uniqueness: true
 
-  #
-  # Instance Methods
-  #
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] the name of the rank.
-  #   @return [void]
-
-  # @!method number=(number)
-  #   Sets {#number}.
-  #
-  #   @param number [Integer] the numerical value of teh rank.  Higher numbers are better.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end

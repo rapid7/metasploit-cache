@@ -31,6 +31,10 @@ group :content do
   gem 'metasploit_data_models', '0.23.0'
 end
 
+group :development do
+  gem 'metasploit-yard', github: 'rapid7/metasploit-yard', ref: '3ca321c47cba178d298f347d6006995b28c76226'
+end
+
 # used by dummy application
 group :development, :test do
   # Templates for Metasploit Modules

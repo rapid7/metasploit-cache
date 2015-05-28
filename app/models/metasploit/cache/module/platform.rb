@@ -39,17 +39,5 @@ class Metasploit::Cache::Module::Platform < ActiveRecord::Base
   # Instance Methods
   #
 
-  # @!method module_instance=(module_instance)
-  #   Sets {#module_instance}.
-  #
-  #   @param module_instance [Metasploit::Cache::Module::Instance] Module that supports {#platform}.
-  #   @return [void]
-
-  # @!method platform=(platform)
-  #   Sets {#platform}.
-  #
-  #   @param platform [Metasploit::Cache::Platform] platform supported by {#module_instance}.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end
