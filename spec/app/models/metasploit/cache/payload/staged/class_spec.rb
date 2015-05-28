@@ -36,7 +36,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class do
         FactoryGirl.create(:metasploit_cache_payload_staged_class)
       }
 
-      it { is_expected.to validate_uniqueness_of(:payload_stage_instance).scoped_to(:payload_stager_instance) }
+      it { is_expected.to validate_uniqueness_of(:payload_stage_instance_id).scoped_to(:payload_stager_instance_id) }
     end
   end
 end

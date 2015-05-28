@@ -8,9 +8,16 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   # Associations
   #
 
-  # Stage payload Metasploit Module downloaded by stager.
+  # Stage payload Metasploit Module downloaded by {#payload_stager_instance}.
   belongs_to :payload_stage_instance,
              class_name: 'Metasploit::Cache::Payload::Stage::Instance',
+             inverse_of: :payload_staged_classes
+
+  # Stager payload Metasploit Module that exploit Metasploit Module runs on target system and which then downloads
+  # {#payload_stage_instance stage payload Metasploit Module} to complete this staged payload Metasploit Module on the
+  # target system.
+  belongs_to :payload_stager_instance,
+             class_name: 'Metasploit::Cache::Payload::Stager::Instance',
              inverse_of: :payload_staged_classes
 
   #
@@ -18,5 +25,13 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   #
 
   validates :payload_stage_instance,
+            presence: true
+
+  validates :payload_stage_instance_id,
+            uniqueness: {
+                scope: :payload_stager_instance_id
+            }
+
+  validates :payload_stager_instance,
             presence: true
 end

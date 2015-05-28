@@ -294,10 +294,13 @@ ActiveRecord::Schema.define(:version => 20150528140442) do
   add_index "mc_payload_stage_instances", ["payload_stage_class_id"], :name => "index_mc_payload_stage_instances_on_payload_stage_class_id", :unique => true
 
   create_table "mc_payload_staged_classes", :force => true do |t|
-    t.integer "payload_stage_instance_id", :null => false
+    t.integer "payload_stage_instance_id",  :null => false
+    t.integer "payload_stager_instance_id", :null => false
   end
 
   add_index "mc_payload_staged_classes", ["payload_stage_instance_id"], :name => "index_mc_payload_staged_classes_on_payload_stage_instance_id"
+  add_index "mc_payload_staged_classes", ["payload_stager_instance_id", "payload_stage_instance_id"], :name => "unique_mc_payload_staged_classes", :unique => true
+  add_index "mc_payload_staged_classes", ["payload_stager_instance_id"], :name => "index_mc_payload_staged_classes_on_payload_stager_instance_id"
 
   create_table "mc_payload_stager_instances", :force => true do |t|
     t.text    "description",             :null => false

@@ -16,6 +16,13 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License'
 
+  # Staged payload Metasploit Module formed by combining this stager payload Metasploit Module with a compatible stage
+  # payload Metasploit Module.
+  has_many :payload_staged_classes,
+           class_name: 'Metasploit::Cache::Payload::Staged::Class',
+           dependent: :destroy,
+           inverse_of: :payload_stager_instance
+
   # The class-level metadata for this stager payload Metasploit Module.
   belongs_to :payload_stager_class,
              class_name: 'Metasploit::Cache::Payload::Stager::Class',
