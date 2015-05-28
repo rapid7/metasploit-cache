@@ -1,4 +1,4 @@
-# Namespace to hold license join model
+# Polymorphic namespace for `ActiveRecord::Base` subclasses that support architectures.
 module Metasploit::Cache::Licensable
   extend ActiveSupport::Autoload
 

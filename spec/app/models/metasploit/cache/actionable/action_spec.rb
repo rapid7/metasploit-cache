@@ -36,7 +36,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
       end
     end
 
-    context 'metasploit_cache_post_action', pending: 'Metasploit::Cache::Post::Instance and metasploit_cache_post_instance factory' do
+    context 'metasploit_cache_post_action' do
       subject(:metasploit_cache_post_action) {
         FactoryGirl.build(:metasploit_cache_post_action)
       }
@@ -182,9 +182,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
         end
       end
 
-      # TODO remove :nocov: when pending is removed
-      # :nocov:
-      context 'with different #actionable_type', pending: 'More than one actionable_type defined' do
+      context 'with different #actionable_type' do
         context 'with same #actionable_id' do
           let!(:new_actionable) {
             FactoryGirl.create(
@@ -235,7 +233,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           context 'with same #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
-                  :metasploit_cache_actionable_action,
+                  :metasploit_cache_post_action,
                   actionable: new_actionable,
                   name: existing_name
               )
@@ -251,7 +249,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           context 'with different #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
-                  :metasploit_cache_actionable_action,
+                  :metasploit_cache_post_action,
                   actionable: new_actionable
               )
             }
@@ -264,7 +262,6 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           end
         end
       end
-      # :nocov:
     end
   end
 end
