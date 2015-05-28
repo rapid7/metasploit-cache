@@ -1,6 +1,12 @@
 RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  context "associations" do
+    it { is_expected.to have_many(:payload_staged_classes).class_name('Metasploit::Cache::Payload::Staged::Class').dependent(:destroy).inverse_of(:payload_stage_instance) }
+    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
+  end
+
   context 'database' do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
@@ -11,11 +17,6 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
 
     context 'indices' do
       it { is_expected.to have_db_index(:payload_stage_class_id).unique(true) }
-    end
-
-    context "associations" do
-      it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
-      it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
     end
   end
 
