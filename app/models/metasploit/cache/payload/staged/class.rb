@@ -34,4 +34,6 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
 
   validates :payload_stager_instance,
             presence: true
+
+  Metasploit::Concern.run(self)
 end
