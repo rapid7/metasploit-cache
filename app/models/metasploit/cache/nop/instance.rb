@@ -22,6 +22,12 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Nop::Class',
              inverse_of: :nop_instance
 
+  # Joins {#platforms} to this encoder Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
+
   #
   # through: :architecturable_architectures
   #
@@ -39,6 +45,15 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   has_many :licenses,
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses
+
+  #
+  # through: :platformable_platform
+  #
+
+  # Platforms this encoder Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -85,6 +100,11 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
 
   validates :nop_class_id,
             uniqueness: true
+  
+  validates :platformable_platforms,
+            length: {
+                minimum: 1
+            }
 
   #
   # Instance Methods

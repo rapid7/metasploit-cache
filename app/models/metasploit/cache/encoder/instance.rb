@@ -24,6 +24,21 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License'
 
+  # Joins {#platforms} to this encoder Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
+
+  #
+  # through: :architecturable_architectures
+  #
+
+  # Architectures this encoder Metasploit Modules works on.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
+
   #
   # through: :licensable_licenses
   #
@@ -34,13 +49,13 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
            through: :licensable_licenses
 
   #
-  # through: :architecturable_architectures
+  # through: :platformable_platform
   #
 
-  # Architectures this encoder Metasploit Modules works on.
-  has_many :architectures,
-           class_name: 'Metasploit::Cache::Architecture',
-           through: :architecturable_architectures
+  # Platforms this encoder Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -78,6 +93,11 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
 
   validates :name,
             presence: true
+  
+  validates :platformable_platforms,
+            length: {
+              minimum: 1
+            }
 
   #
   # Instance Methods

@@ -52,7 +52,7 @@ Make your changes or however many commits you like, committing each with `git co
 
 ##### Documentation
 1. `rake yard:stats`
-2. VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
+2. Verify only `[warn]`ings are `@param` on scopes due to yard-activerecord bug.
 2. Verify there were no undocumented objects.
 
 #### Sqlite3
@@ -67,7 +67,7 @@ Make your changes or however many commits you like, committing each with `git co
 
 ##### Documentation
 1. `rake yard:stats`
-2. VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
+2. Verify only `[warn]`ings are `@param` on scopes due to yard-activerecord bug.
 2. Verify there were no undocumented objects.
 
 ### Push
@@ -94,7 +94,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 
 ### Documentation Coverage
 - [ ] `rake yard:stats`
-- [ ] VERIFY only `[warn]`ings are for `@param` tags for scopes that `yard-activerecord` doesn't support.
+- [ ] VERIFY only `[warn]`ings are `@param` on scopes due to yard-activerecord bug.
 - [ ] VERIFY no undocumented objects
 
 ## Sqlite3
@@ -104,7 +104,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 
 ### Test coverage
 - [ ] `rake cucumber spec coverage`
-- [ ] VERIFY no failures
+- [ ] Verify only `[warn]`ings are `@param` on scopes due to yard-activerecord bug.
 - [ ] VERIFY 99.69% coverage
 
 ### Documentation coverage

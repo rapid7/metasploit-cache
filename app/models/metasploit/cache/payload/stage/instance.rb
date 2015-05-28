@@ -29,6 +29,12 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :payload_stage_instance
 
+  # Joins {#platforms} to this stage payload Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
+
   #
   # through: architecturable_architectures
   #
@@ -46,6 +52,15 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   has_many :licenses,
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses
+
+  #
+  # through: :platformable_platform
+  #
+
+  # Platforms this payload stage Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -98,6 +113,11 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
 
   validates :payload_stage_class_id,
             uniqueness: true
+
+  validates :platformable_platforms,
+            length: {
+                minimum: 1
+            }
 
   #
   # Instance Methods

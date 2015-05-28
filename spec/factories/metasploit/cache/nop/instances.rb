@@ -4,6 +4,7 @@ FactoryGirl.define do
     transient do
       architecturable_architecture_count 1
       licensable_license_count 1
+      platformable_platform_count 1
     end
 
     description { generate :metasploit_cache_nop_instance_description }
@@ -15,7 +16,6 @@ FactoryGirl.define do
 
     association :nop_class, factory: :metasploit_cache_nop_class
 
-
     #
     # Callbacks
     #
@@ -26,10 +26,17 @@ FactoryGirl.define do
           evaluator.architecturable_architecture_count,
           architecturable: nop_instance
       )
+      
       nop_instance.licensable_licenses = build_list(
         :metasploit_cache_nop_license,
         evaluator.licensable_license_count,
         licensable: nop_instance
+      )
+      
+      nop_instance.platformable_platforms = build_list(
+          :metasploit_cache_nop_platform,
+          evaluator.platformable_platform_count,
+          platformable: nop_instance
       )
     end
   end

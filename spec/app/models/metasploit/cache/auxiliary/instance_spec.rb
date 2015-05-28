@@ -39,11 +39,11 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of(:auxiliary_class) }
 
-    it_should_behave_like 'validates at least one associated',
+    it_should_behave_like 'validates at least one in association',
                           :actions,
                           factory: :metasploit_cache_auxiliary_instance
 
-    it_should_behave_like 'validates at least one associated',
+    it_should_behave_like 'validates at least one in association',
                           :licensable_licenses,
                           factory: :metasploit_cache_auxiliary_instance
     

@@ -6,6 +6,8 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
     it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:licensable) }
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License').through(:licensable_licenses) }
+    it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
+    it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
     it { is_expected.to belong_to(:post_class).class_name('Metasploit::Cache::Post::Class').inverse_of(:post_instance) }
     it { is_expected.to have_many(:referencable_references).class_name('Metasploit::Cache::Referencable::Reference').dependent(:destroy).inverse_of(:referencable) }
     it { is_expected.to have_many(:references).class_name('Metasploit::Cache::Reference').through(:referencable_references) }
@@ -42,10 +44,14 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     it { is_expected.to validate_presence_of :post_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
-    it_should_behave_like 'validates at least one associated',
+    it_should_behave_like 'validates at least one in association',
                           :licensable_licenses,
                           factory: :metasploit_cache_post_instance
-    
+
+    it_should_behave_like 'validates at least one in association',
+                          :platformable_platforms,
+                          factory: :metasploit_cache_post_instance
+
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do

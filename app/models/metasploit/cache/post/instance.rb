@@ -12,12 +12,18 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :architecturable
 
-  # Joins {#licenses} to this auxiliary Metasploit Module.
+  # Joins {#licenses} to this post Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License',
            dependent: :destroy,
            inverse_of: :licensable
+
+  # Joins {#platforms} to this post Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
 
   # The class level metadata for this post Metasploit Module
   belongs_to :post_class,
@@ -57,6 +63,24 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   has_many :architectures,
            class_name: 'Metasploit::Cache::Architecture',
            through: :architecturable_architectures
+
+  #
+  # through: :licensable_licenses
+  #
+
+  # Licenses covering code in this post Metasploit Module.
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+
+  #
+  # through: :platformable_platforms
+  #
+
+  # Platforms this post Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -106,6 +130,11 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
 
   validates :name,
             presence: true
+  
+  validates :platformable_platforms,
+            length: {
+                minimum: 1
+            }
 
   validates :post_class,
             presence: true

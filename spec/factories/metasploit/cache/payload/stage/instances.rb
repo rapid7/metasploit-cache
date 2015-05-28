@@ -4,6 +4,7 @@ FactoryGirl.define do
     transient do
       architecturable_architecture_count 1
       licensable_license_count 1
+      platformable_platform_count 1
     end
 
     description { generate :metasploit_cache_payload_stage_instance_description }
@@ -26,10 +27,17 @@ FactoryGirl.define do
           evaluator.architecturable_architecture_count,
           architecturable: payload_stage_instance
       )
+      
       payload_stage_instance.licensable_licenses = build_list(
         :metasploit_cache_payload_stage_license,
         evaluator.licensable_license_count,
         licensable: payload_stage_instance
+      )
+      
+      payload_stage_instance.platformable_platforms = build_list(
+          :metasploit_cache_payload_stage_platform,
+          evaluator.platformable_platform_count,
+          platformable: payload_stage_instance
       )
     end
   end

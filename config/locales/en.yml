@@ -15,6 +15,8 @@ en:
               too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
               too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+            platformable_platforms:
+              too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
         metasploit/cache/exploit/instance:
           attributes:
             default_exploit_target:
@@ -29,34 +31,47 @@ en:
           attributes:
             architecturable_architectures:
               too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
+            platformable_platforms:
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/nop/instance:
           attributes:
             architecturable_architectures:
               too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
               too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+            platformable_platforms:
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/payload/single/instance:
           attributes:
             architecturable_architectures:
               too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
               too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+            platformable_platforms:
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/payload/stage/instance:
           attributes:
             architecturable_architectures:
               too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
               too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+            platformable_platforms:
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/payload/stager/instance:
           attributes:
             architecturable_architectures:
               too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             licensable_licenses:
               too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+            platformable_platforms:
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/post/instance:
           attributes:
             licensable_licenses:
               too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
+            platformable_platforms:
+              too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
+
   metasploit:
     model:
       ancestors:

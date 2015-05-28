@@ -324,6 +324,16 @@ ActiveRecord::Schema.define(:version => 20150528140442) do
   add_index "mc_payload_stager_instances", ["handler_id"], :name => "index_mc_payload_stager_instances_on_handler_id"
   add_index "mc_payload_stager_instances", ["payload_stager_class_id"], :name => "index_mc_payload_stager_instances_on_payload_stager_class_id", :unique => true
 
+  create_table "mc_platformable_platforms", :force => true do |t|
+    t.integer "platformable_id",   :null => false
+    t.string  "platformable_type", :null => false
+    t.integer "platform_id",       :null => false
+  end
+
+  add_index "mc_platformable_platforms", ["platform_id"], :name => "index_mc_platformable_platforms_on_platform_id"
+  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id", "platform_id"], :name => "unique_mc_platformable_platforms", :unique => true
+  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id"], :name => "mc_platformable_platformables"
+
   create_table "mc_platforms", :force => true do |t|
     t.text    "fully_qualified_name", :null => false
     t.text    "relative_name",        :null => false

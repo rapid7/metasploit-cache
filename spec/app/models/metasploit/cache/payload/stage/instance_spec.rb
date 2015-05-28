@@ -7,6 +7,8 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
     it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
     it { is_expected.to have_many(:payload_staged_classes).class_name('Metasploit::Cache::Payload::Staged::Class').dependent(:destroy).inverse_of(:payload_stage_instance) }
+    it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
+    it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
   end
 
   context 'database' do
@@ -37,9 +39,17 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :payload_stage_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
-
-    it_should_behave_like 'validates at least one associated',
+    
+    it_should_behave_like 'validates at least one in association',
                           :architecturable_architectures,
+                          factory: :metasploit_cache_payload_stage_instance
+
+    it_should_behave_like 'validates at least one in association',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_payload_stage_instance
+
+    it_should_behave_like 'validates at least one in association',
+                          :platformable_platforms,
                           factory: :metasploit_cache_payload_stage_instance
 
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
@@ -52,39 +62,6 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
       }
 
       it { is_expected.to validate_uniqueness_of :payload_stage_class_id }
-    end
-
-    context "validate that there is at least one license per stage" do
-      let(:error){
-        I18n.translate!(
-            'activerecord.errors.models.metasploit/cache/payload/stage/instance.attributes.licensable_licenses.too_short',
-            count: 1
-        )
-      }
-
-      context "without licensable licenses" do
-        subject(:stage_instance){
-          FactoryGirl.build(:metasploit_cache_payload_stage_instance, licensable_license_count: 0)
-        }
-
-        it "adds error on #licensable_licenses" do
-          stage_instance.valid?
-
-          expect(stage_instance.errors[:licensable_licenses]).to include(error)
-        end
-      end
-
-      context "with licensable licenses" do
-        subject(:stage_instance){
-          FactoryGirl.build(:metasploit_cache_payload_stage_instance, licensable_license_count: 1)
-        }
-
-        it "does not add error on #licensable_licenses" do
-          stage_instance.valid?
-
-          expect(stage_instance.errors[:licensable_licenses]).to_not include(error)
-        end
-      end
     end
   end
 end
