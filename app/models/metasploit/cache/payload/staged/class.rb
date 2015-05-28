@@ -21,6 +21,20 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
              inverse_of: :payload_staged_classes
 
   #
+  # Attributes
+  #
+
+  # @!attribute payload_stage_instance_id
+  #   Foreign key for {#payload_stage_instance}.
+  #
+  #   @return [Integer]
+
+  # @!attribute payload_stager_instance_id
+  #   Foreign key for {#payload_stager_instance}.
+  #
+  #   @return [Integer]
+
+  #
   # Validations
   #
 
@@ -35,5 +49,23 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   validates :payload_stager_instance,
             presence: true
 
+  #
+  # Instance Methods
+  #
+  
+  # @!method payload_stage_instance_id=(payload_stage_instance_id)
+  #   Sets {#payload_stage_instance_id} and invalidates cached {#payload_stage_instance} so it is reloaded on next
+  #   access.
+  #
+  #   @param payload_stage_instance_id [Integer]
+  #   @return [void]
+  
+  # @!method payload_stager_instance_id=(payload_stager_instance_id)
+  #   Sets {#payload_stager_instance_id} and invalidates cached {#payload_stager_instance} so it is reloaded on next
+  #   access.
+  #
+  #   @param payload_stager_instance_id [Integer]
+  #   @return [void] 
+  
   Metasploit::Concern.run(self)
 end
