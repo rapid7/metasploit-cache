@@ -9,6 +9,7 @@ module Metasploit::Cache::Payload
   autoload :Handler
   autoload :Single
   autoload :Stage
+  autoload :Staged
   autoload :Stager
 
   #
