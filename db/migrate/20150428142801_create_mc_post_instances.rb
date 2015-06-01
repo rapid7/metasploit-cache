@@ -34,11 +34,15 @@ class CreateMcPostInstances < ActiveRecord::Migration
       # References
       #
 
+      t.references :default_action,
+                   null: true
       t.references :post_class,
                    null: false
     end
 
     change_table TABLE_NAME do |t|
+      t.index :default_action_id,
+              unique: true
       t.index :post_class_id,
               unique: true
     end

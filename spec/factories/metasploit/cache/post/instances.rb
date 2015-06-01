@@ -27,6 +27,7 @@ FactoryGirl.define do
         evaluator.licensable_license_count,
         licensable: post_instance
       )
+
       post_instance.platformable_platforms = build_list(
           :metasploit_cache_post_platform,
           evaluator.platformable_platform_count,

@@ -6,6 +6,12 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #
   #
 
+  # Joins {#architectures} to this stager payload Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
+
   # The connection handler
   belongs_to :handler,
              class_name: 'Metasploit::Cache::Payload::Handler',
@@ -26,6 +32,15 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platformable
+
+  #
+  # through: :architecturable_architectures
+  #
+
+  # Architectures on which this payload can run.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
 
   #
   # through: :platformable_platform
@@ -81,6 +96,10 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
   validates :description,
             presence: true
 
@@ -99,46 +118,10 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
 
   validates :payload_stager_class_id,
             uniqueness: true
+  
   validates :platformable_platforms,
             length: {
                 minimum: 1
             }
-  #
-  # Instance Methods
-  #
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this stager payload Metasploit Module.
-  #   @return [void]
-
-  # @!attribute handler_type_alias=(handler_type_alias)
-  #   Sets {#handler_type_alias}.
-  #
-  #   @param handler_type_alias [String, nil] Alternate name for the handler_type to prevent naming collisions in staged
-  #     payload Metasploit Modules that use this stager payload Metasploit Module.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human-readable name of this stager payload Metasploit Module.  This can be thought of as
-  #     the title or summary of the Metasploit Module.
-  #   @return [void]
-
-  # @!method payload_stager_class_id=(payload_stager_class_id)
-  #   Sets {#payload_stager_class_id} and causes cache of {#payload_stager_class} to be invalidated and reloaded on next
-  #   access.
-  #
-  #   @param payload_stager_class_id [Integer]
-  #   @return [void]
-
-  # @!method privileged=(privileged)
-  #   Sets {#privileged}.
-  #
-  #   @param priviliged [Boolean] `true` if privileged access is required; `false` if privileged access is not required.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end

@@ -37,23 +37,5 @@ class Metasploit::Cache::Module::Reference < ActiveRecord::Base
                 unless: :batched?
             }
 
-  #
-  # Instance Methods
-  #
-
-  # @!method module_instance=(module_instance)
-  #   Sets {#module_instance}.
-  #
-  #   @param module_instance [Metasploit::Cache::Module::Instance] {Metasploit::Cache::Module::Instance Module} with
-  #     {#reference}.
-  #   @return [void]
-
-  # @!method reference=(reference)
-  #   Sets {#reference}.
-  #
-  #   @param reference [Metasploit::Cache::Reference] {Metasploit::Cache::Reference reference} to exploit or
-  #     proof-of-concept (PoC) code for module_instance.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end

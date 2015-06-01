@@ -6,6 +6,12 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   #
   #
 
+  # Joins {#architectures} to this stage payload Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
+
   # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
@@ -21,6 +27,15 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platformable
+
+  #
+  # through: architecturable_architectures
+  #
+
+  # Architectures on which this payload can run.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
 
   #
   # through: :licensable_licenses
@@ -70,6 +85,10 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
   validates :description,
             presence: true
 
@@ -91,36 +110,6 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
             length: {
                 minimum: 1
             }
-
-  #
-  # Instance Methods
-  #
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this stage payload Metasploit Module.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human-readable name of this stage payload Metasploit Module.  This can be thought of as
-  #     the title or summary of the Metasploit Module.
-  #   @return [void]
-
-  # @!method payload_stage_class_id=(payload_stage_class_id)
-  #   Sets {#payload_stage_class_id} and causes cache of {#payload_stage_class} to be invalidated and reloaded on next
-  #   access.
-  #
-  #   @param payload_stage_class_id [Integer]
-  #   @return [void]
-
-  # @!method privileged=(privileged)
-  #   Sets {#privileged}.
-  #
-  #   @param priviliged [Boolean] `true` if privileged access is required; `false` if privileged access is not required.
-  #   @return [void]
 
   Metasploit::Concern.run(self)
 end

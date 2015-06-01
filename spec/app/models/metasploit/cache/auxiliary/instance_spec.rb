@@ -38,170 +38,76 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
 
   context 'validations' do
     it { is_expected.to validate_presence_of(:auxiliary_class) }
-
-    it_should_behave_like 'validates at least one in association',
-                          :actions,
-                          factory: :metasploit_cache_auxiliary_instance
-
-    it_should_behave_like 'validates at least one in association',
-                          :licensable_licenses,
-                          factory: :metasploit_cache_auxiliary_instance
-
-    context 'actions_contains_default_action' do
-      let(:error) {
-        I18n.translate!(
-            'activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.actions.does_not_contain_default_action'
-        )
-      }
-
-      context 'with actions' do
-        context 'with default_action' do
-          context 'actions contains default_action' do
-            subject(:auxiliary_instance) {
-              FactoryGirl.build(
-                             :metasploit_cache_auxiliary_instance,
-                             action_count: 1
-              ).tap { |auxiliary_instance|
-                auxiliary_instance.default_action = auxiliary_instance.actions.first
-              }
-            }
-
-            it 'has actions' do
-              expect(auxiliary_instance.actions.size).to be > 0
-            end
-
-            it 'has default_action' do
-              expect(auxiliary_instance.default_action).not_to be_nil
-            end
-
-            it 'has default_action in actions' do
-              expect(auxiliary_instance.actions).to include auxiliary_instance.default_action
-            end
-
-            it 'does not add error on default_action' do
-              auxiliary_instance.valid?
-
-              expect(auxiliary_instance.errors[:actions]).not_to include(error)
-            end
-          end
-
-          context 'actions does not contain default_action' do
-            subject(:auxiliary_instance) {
-              FactoryGirl.build(
-                             :metasploit_cache_auxiliary_instance,
-                             action_count: 1
-              ).tap { |auxiliary_instance|
-                auxiliary_instance.default_action = FactoryGirl.build(
-                    :metasploit_cache_auxiliary_action,
-                    actionable: auxiliary_instance
-                )
-              }
-            }
-
-            it 'has actions' do
-              expect(auxiliary_instance.actions.size).to be > 0
-            end
-
-            it 'has default_action' do
-              expect(auxiliary_instance.default_action).not_to be_nil
-            end
-
-            it 'does not have default_action in actions' do
-              expect(auxiliary_instance.actions).not_to include auxiliary_instance.default_action
-            end
-
-            it 'adds error on default_action' do
-              auxiliary_instance.valid?
-
-              expect(auxiliary_instance.errors[:actions]).to include(error)
-            end
-          end
-        end
-
-        context 'without default_action' do
-          subject(:auxiliary_instance) {
-            FactoryGirl.build(
-                :metasploit_cache_auxiliary_instance,
-                action_count: 1
-            ).tap { |auxiliary_instance|
-              auxiliary_instance.default_action = nil
-            }
-          }
-
-          it 'has actions' do
-            expect(auxiliary_instance.actions.size).to be > 0
-          end
-
-          it 'has no default_action' do
-            expect(auxiliary_instance.default_action).to be_nil
-          end
-
-          it 'does not add error on :actions' do
-            auxiliary_instance.valid?
-
-            expect(auxiliary_instance.errors[:actions]).not_to include(error)
-          end
-        end
-      end
-
-      context 'without actions' do
-        context 'with default_action' do
-          subject(:auxiliary_instance) {
-            FactoryGirl.build(
-                :metasploit_cache_auxiliary_instance,
-                action_count: 0
-            ).tap { |auxiliary_instance|
-              auxiliary_instance.default_action = FactoryGirl.build(
-                  :metasploit_cache_auxiliary_action,
-                  actionable: auxiliary_instance
-              )
-            }
-          }
-
-          it 'has no actions' do
-            expect(auxiliary_instance.actions.size).to eq(0)
-          end
-
-          it 'has default_action' do
-            expect(auxiliary_instance.default_action).not_to be_nil
-          end
-
-          it 'adds error on :actions' do
-            auxiliary_instance.valid?
-
-            expect(auxiliary_instance.errors[:actions]).to include(error)
-          end
-        end
-
-        context 'without default_action' do
-          subject(:auxiliary_instance) {
-            FactoryGirl.build(
-                :metasploit_cache_auxiliary_instance,
-                action_count: 0
-            ).tap { |auxiliary_instance|
-              auxiliary_instance.default_action = nil
-            }
-          }
-
-          it 'has no actions' do
-            expect(auxiliary_instance.actions.size).to eq(0)
-          end
-
-          it 'has no default_action' do
-            expect(auxiliary_instance.default_action).to be_nil
-          end
-
-          it 'does not add error on :actions' do
-            auxiliary_instance.valid?
-
-            expect(auxiliary_instance.errors[:actions]).not_to include(error)
-          end
-        end
-      end
-    end
-
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_inclusion_of(:stance).in_array(Metasploit::Cache::Module::Stance::ALL) }
+
+    it_should_behave_like 'validates at least one associated',
+                          :actions,
+                          factory: :metasploit_cache_auxiliary_instance
+
+    it_should_behave_like 'validates at least one associated',
+                          :licensable_licenses,
+                          factory: :metasploit_cache_auxiliary_instance
+
+    context 'validates inclusion of #default_action in #actions' do
+      subject(:default_action_errors) {
+        auxiliary_instance.errors[:default_action]
+      }
+
+      let(:error) {
+        I18n.translate!('activerecord.errors.models.metasploit/cache/auxiliary/instance.attributes.default_action.inclusion')
+      }
+
+      let(:auxiliary_instance) {
+        described_class.new
+      }
+
+      context 'without #default_action' do
+        before(:each) do
+          auxiliary_instance.default_action = nil
+        end
+
+        it { is_expected.not_to include(error) }
+      end
+
+      context 'with #default_action' do
+        #
+        # lets
+        #
+
+        let(:default_action) {
+          Metasploit::Cache::Actionable::Action.new
+        }
+
+        #
+        # Callbacks
+        #
+
+        before(:each) do
+          auxiliary_instance.default_action = default_action
+        end
+
+        context 'in #actions' do
+          before(:each) do
+            auxiliary_instance.actions = [
+                default_action
+            ]
+            auxiliary_instance.valid?
+          end
+
+          it { is_expected.not_to include(error) }
+        end
+
+        context 'not in #actions' do
+          before(:each) do
+            auxiliary_instance.actions = []
+            auxiliary_instance.valid?
+          end
+
+          it { is_expected.to include(error) }
+        end
+      end
+    end
   end
 end

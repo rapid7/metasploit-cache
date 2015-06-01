@@ -6,6 +6,12 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   #
   #
 
+  # Joins {#architectures} to this encoder Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
+
   # The class-level metadata for this instance metadata.
   #
   # @return [Metasploit::Cache::Encoder::Class]
@@ -32,6 +38,15 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   has_many :licenses,
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses
+
+  #
+  # through: :architecturable_architectures
+  #
+
+  # Architectures this encoder Metasploit Modules works on.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
 
   #
   # through: :platformable_platform
@@ -61,6 +76,11 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
+  
   validates :description,
             presence: true
 
@@ -74,28 +94,11 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
 
   validates :name,
             presence: true
-  
+ 
   validates :platformable_platforms,
             length: {
               minimum: 1
             }
-
-  #
-  # Instance Methods
-  #
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this encoder Metasploit Module.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human-readable name of this encoder Metasploit Module.  This can be thought of as the
-  #     title or summary of the Metasploit Module.
-  #   @return [void]
-
+  
   Metasploit::Concern.run(self)
 end

@@ -267,13 +267,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
     derived
   end
 
-  # @!method module_instance=(module_instance)
-  #   Sets {#module_instance}.
-  #
-  #   @param module_instance [Metasploit::Cache::Module::Instance, nil]
-  #     Instance-derived metadata to go along with the class-derived metadata from this model.
-  #   @return [void]
-
   # Returns whether this represents a Class<Msf::Payload>.
   #
   # @return [true] if {#module_type} == 'payload'
@@ -285,17 +278,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
       false
     end
   end
-
-  # @!method relationships=(relationships)
-  #   Sets {#relationships}.
-  #
-  #   @param relationships [Enumerable<Metasploit::Cache::Module::Relationship>, nil] Join model between
-  #     {Metasploit::Cache::Module::Class} and {Metasploit::Cache::Module::Ancestor} that represents that the Class or
-  #     Module in {Metasploit::Cache::Module::Ancestor#real_path} is an ancestor of the Class represented by this
-  #     {Metasploit::Cache::Module::Class}.
-  #   @return [void]
-
-  # Comment break before private so above comment will be parsed correctly by YARD
 
   private
 
@@ -364,46 +346,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
 
     derived
   end
-
-  # @!method full_name=(full_name)
-  #   Sets {#full_name}.
-  #
-  #   @param full_name [String] The full name (type + reference) for the Class<Msf::Module>.  This is merely a
-  #     denormalized cache of `"#{{#module_type}}/#{{#reference_name}}"` as full_name is used in numerous queries and
-  #     reports.
-  #   @return [void]
-
-  # @!method module_type=(module_type)
-  #   Sets {#module_type}.
-  #
-  #   @param module_type [String] A denormalized cache of the
-  #     {Metasploit::Cache::Module::Class#module_type ancestors' module_types}, which must all be the same.  This cache
-  #     exists so that queries for modules of a given type don't need include the {#ancestors}.
-  #   @return [void]
-
-
-  # @!method payload_type=(payload_type)
-  #   Sets {#payload_type}.
-  #
-  #   @param payload_type ['single', 'staged', nil] the payload type when {#payload?} `true`; otherwise `nil`.
-  #   @return [void]
-
-  # @!method rank=(rank)
-  #   Sets {#rank}.
-  #
-  #   @param rank [Metasploit::Cache::Module::Rank] The reliability of the module and likelyhood that the module won't
-  #     knock over the service or host being exploited.  Bigger values is better.
-  #   @return [void]
-
-  # @!method reference_name=(reference_name)
-  #   Sets {#reference_name}.
-  #
-  #   @param reference_name [String] The reference name for the Class<Msf::Module>. For non-payloads, this will just be
-  #     {Metasploit::Cache::Module::Ancestor#reference_name} for the only element in {#ancestors}.  For payloads
-  #     composed of a stage and stager, the reference name will be derived from the
-  #     {Metasploit::Cache::Module::Ancestor#reference_name} of each element {#ancestors} or an alias defined in those
-  #     Modules.
-  #   @return [void]
 
   # switch back to public for load hooks
   public

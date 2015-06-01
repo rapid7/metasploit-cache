@@ -48,21 +48,5 @@ class Metasploit::Cache::Module::Action < ActiveRecord::Base
                 unless: :batched?
             }
 
-  #
-  # Instance Methods
-  #
-
-  # @!method module_instance=(module_instance)
-  #   Sets {#module_instance}.
-  #
-  #   @param module_instance [Module::Cache::Module::Instance] Module that has this action.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] Name of this action.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end

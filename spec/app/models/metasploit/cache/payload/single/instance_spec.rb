@@ -2,6 +2,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
+    it { is_expected.to have_many(:architectures).class_name('Metasploit::Cache::Architecture') }
+    it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
     it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_single_instances) }
     it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
@@ -41,6 +43,10 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :payload_single_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
+
+    it_should_behave_like 'validates at least one in association',
+                          :architecturable_architectures,
+                          factory: :metasploit_cache_payload_single_instance
 
     it_should_behave_like 'validates at least one in association',
                           :licensable_licenses,
