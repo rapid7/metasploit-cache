@@ -87,35 +87,5 @@ class Metasploit::Cache::Module::Target < ActiveRecord::Base
   search_attribute :name,
                    type: :string
 
-  #
-  # Instance Methods
-  #
-
-  # @!method module_instance=(module_instance)
-  #   Sets {#module_instance}.
-  #
-  #   @param module_instance [Metasploit::Cache::Module::Instance] module where this target was declared.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] name of this target.
-  #   @return [void]
-
-  # @!method target_architectures=(target_architectures)
-  #   Sets {#target_architectures}.
-  #
-  #   @param target_architectures [Array<Metasploit::Cache::Module::Target::Architecture>] joins this target ot its
-  #     {#architectures}.
-  #   @return [void]
-
-  # @!method target_platforms=(target_platforms)
-  #   Sets {#target_platforms}.
-  #
-  #   @param target_platforms [Array<Metasploit::Cache::Module::Target::Platform>] joins this target to its
-  #     {#platforms}.
-  #   @return [void]
-
   Metasploit::Concern.run(self)
 end

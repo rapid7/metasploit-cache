@@ -6,6 +6,7 @@ RSpec.describe Metasploit::Cache::Platform do
   context 'associations' do
     it { should have_many(:module_instances).class_name('Metasploit::Cache::Module::Instance').through(:module_platforms) }
     it { should have_many(:module_platforms).class_name('Metasploit::Cache::Module::Platform').dependent(:destroy) }
+    it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').dependent(:destroy).inverse_of(:platform) }
     it { should have_many(:target_platforms).class_name('Metasploit::Cache::Module::Target::Platform').dependent(:destroy) }
   end
 

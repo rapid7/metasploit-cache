@@ -35,11 +35,13 @@ FactoryGirl.define do
           evaluator.action_count,
           actionable: auxiliary_instance
       )
+      
       auxiliary_instance.contributions = build_list(
           :metasploit_cache_auxiliary_contribution,
           evaluator.contribution_count,
           contributable: auxiliary_instance
       )
+      
       auxiliary_instance.licensable_licenses = build_list(
           :metasploit_cache_auxiliary_license,
           evaluator.licensable_license_count,

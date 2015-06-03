@@ -1,10 +1,15 @@
 RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
   it_should_behave_like 'Metasploit::Concern.run'
 
-  context "associations" do
+  context 'associations' do
+    it { is_expected.to have_many(:architectures).class_name('Metasploit::Cache::Architecture') }
+    it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
     it { is_expected.to have_many(:contributions).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contributable) }
     it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
+    it { is_expected.to belong_to(:payload_stage_class).class_name('Metasploit::Cache::Payload::Stage::Class').inverse_of(:payload_stage_instance) }
+    it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
+    it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
   end
 
   context 'database' do
@@ -42,6 +47,10 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
 
     it_should_behave_like 'validates at least one in association',
                           :licensable_licenses,
+                          factory: :metasploit_cache_payload_stage_instance
+ 
+    it_should_behave_like 'validates at least one in association',
+                          :platformable_platforms,
                           factory: :metasploit_cache_payload_stage_instance
 
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`

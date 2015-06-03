@@ -26,6 +26,16 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   # Joins this {Metasploit::Cache::Platform} to {Metasploit::Cache::Module::Instance modules} that support the platform.
   has_many :module_platforms, class_name: 'Metasploit::Cache::Module::Platform', dependent: :destroy, inverse_of: :platform
 
+  # Joins this {Metasploit::cache::Platform} to Metasploit::Cache::Encoder::Instance encoder},
+  # {Metasploit::Cache::Nop::Instance nop}, {Metasploit::Cache::Payload::Single::Instance single payload},
+  # {Metasploit::Cache::Payload::Stage::Instance stage payload},
+  # {Metasploit::Cache::Payload::Stager::Instance stager payload}, or {Metasploit::Cache::Post::Instance post}) Metasploit
+  # Modules or {Metasploit::Cache::Exploit::Target exploit Metasploit Module targets}.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platform
+
   # Joins this to {Metasploit::Cache::Module::Target targets} that support this platform.
   has_many :target_platforms, class_name: 'Metasploit::Cache::Module::Target::Platform', dependent: :destroy, inverse_of: :platform
 
@@ -143,40 +153,6 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
       end
     end
   end
-
-  # @!method fully_qualified_name=(fully_qualified_name)
-  #   Sets {#fully_qualified_name}.
-  #
-  #   @param full_qualified_name [String] The fully qualified name of this platform, as would be used in the platform
-  #     list in a metasploit-framework module.
-  #   @return [void]
-
-  # @!method module_platforms=(module_platforms)
-  #   Sets {#module_platforms}.
-  #
-  #   @param module_platforms [Enumerable<Metasploit::Cache::Module::Platform>, nil] Joins this
-  #     {Metasploit::Cache::Platform} to {Metasploit::Cache::Module::Instance modules} that support the platform.
-  #   @return [void]
-
-  # @!method parent=(parent)
-  #   Sets {#parent}.
-  #
-  #   @param parent [Metasploit::Cache::Platform, nil]  The parent platform of this platform; `nil` if this is a
-  #     top-level platform.
-  #   @return [void]
-
-  # @!method relative_name=(relative_name)
-  #   Sets {#relative_name}.
-  #
-  #   @param relative_name [String] name of this platform relative to the {#fully_qualified_name} of {#parent}.
-  #   @return [void]
-
-  # @!method target_platforms=(target_platforms)
-  #   Sets {#target_platforms}.
-  #
-  #   @param target_platforms [Enumerable<Metasploit::Cache::Target::Platform>, nil] Joins this to
-  #     {Metasploit::Cache::Module::Target targets} that support this platform.
-  #   @return [void]
 
   Metasploit::Concern.run(self)
 end

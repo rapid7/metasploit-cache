@@ -720,13 +720,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Instance Methods
   #
 
-  # @!method actions=(actions)
-  #   Sets {#actions}.
-  #
-  #   @param actions [Array<Metasploit::Cache::Module::Action>] Auxiliary actions to perform when this running this
-  #     module.
-  #   @return [void]
-
   # Whether the given `attribute` is allowed to have elements.
   #
   # @param attribute [Symbol] name of attribute to check if {#module_type} allows it to have one or more
@@ -743,31 +736,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
       false
     end
   end
-
-  # @!method default_action=(default_action)
-  #   Sets {#default_action}.
-  #
-  #   @param default_action [Metasploit::Cache::Module::Action] The default action in {#actions}.
-  #   @return [void]
-
-  # @!method default_target=(default_target)
-  #   Sets {#default_target}.
-  #
-  #   @param default_target [Metasploit::Cache::Module::Target] the default target in {#targets}.
-  #   @return [void]
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] A long, paragraph description of what the module does.
-  #   @return [void]
-
-  # @!method disclosed_on=(disclosed_on)
-  #   Sets {#disclosed_on}.
-  #
-  #   @param disclosed_on [Date, nil] the date the vulnerability exploited by this module was disclosed to the
-  #     public.
-  #   @return [void]
 
   # The dynamic length valdiations, such as `:is` and `:minimum` for the given attribute for the current
   # {#module_type}.
@@ -786,45 +754,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
     end
   end
 
-  # @!method license=(license)
-  #   Sets {#license}.
-  #
-  #   @param license [String] The name of the software license for the module's code.
-  #   @return [void]
-
-  # @!method module_architectures=(module_architectures)
-  #   Sets {#module_architectures}.
-  #
-  #   @param module_architectures [Array<Metasploit::Cache::Module::Architecture>] Joins this with {#architectures}.
-  #   @return [void]
-
-  # @!method module_authors=(module_authors)
-  #   Sets {#module_authors}.
-  #
-  #   @param module_authors [Array<Metasploit::Cache::Module::Author>] Joins this with {#authors} and {#email_addresses}
-  #     to model the name and email address used for an author entry in the module metadata.
-  #   @return [void]
-
-  # @!method module_class=(module_class)
-  #   Sets {#module_class}.
-  #
-  #   @param module_class [Metasploit::Cache::Module::Class] Class-derived metadata to go along with the
-  #     instance-derived metadata in this model.
-  #   @return [void]
-
-  # @!method module_platforms=(module_platforms)
-  #   Sets {#module_platforms}.
-  #
-  #   @param module_platforms [Enumerable<Metasploit::Cache::Module::Platform>] joins this with {#platforms}.
-  #   @return [void]
-
-  # @!method module_references=(module_references)
-  #   Sets {#module_references}.
-  #
-  #   @param module_references [Enumerable<Metasploit::Cache::Module::Reference>, nil] Joins {#references} to this
-  #     {Metasploit::Cache::Module::Instance}.
-  #   @return [void]
-
   # @!method module_type
   #   The {Metasploit::Cache::Module::Class#module_type} of the {#module_class}.
   #
@@ -833,27 +762,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
            allow_nil: true,
            to: :module_class
 
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human readable name of the module.  It is unrelated to
-  #     {Metasploit::Cache::Module::Class#full_name} or {Metasploit::Cache::Module::Class#reference_name} and is better
-  #     thought of as a short summary of the {#description}.
-  #   @return [void]
-
-  # @!method privileged=(privileged)
-  #   Sets {#priviledged}.
-  #
-  #   @param priviledged [Boolean] Whether this module requires privileged access to run.
-  #   @return [void]
-
-  # @!method stance=(stance)
-  #   Sets {#stance}.
-  #
-  #   @param stance ['active', 'passive', nil] Whether the module is active or passive; `nil` if the {#module_type} is
-  #     not {#stanced?}.
-  #   @return [void]
-
   # Whether {#module_type} requires {#stance} to be set or to be `nil`.
   #
   # @return (see Metasploit::Cache::Module::Instance::ClassMethods#stanced?)
@@ -861,15 +769,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   def stanced?
     self.class.stanced?(module_type)
   end
-
-  # @!method targets=(targets)
-  #   Sets {#targets}.
-  #
-  #   @param targets [Array<Metasploit::Cache::Module::Target>] Targets with different configurations that can be
-  #     exploited by this module.
-  #   @return [void]
-
-  # Comment break to make {#targets=} docs work above `private`
 
   private
 

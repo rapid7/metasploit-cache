@@ -6,6 +6,12 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   #
   #
 
+  # Joins {#architectures} to this encoder Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
+
   # Code contributions to this Metasploit Module.
   has_many :contributions,
            as: :contributable,
@@ -25,6 +31,21 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
            as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License'
 
+  # Joins {#platforms} to this encoder Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
+
+  #
+  # through: :architecturable_architectures
+  #
+
+  # Architectures this encoder Metasploit Modules works on.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
+
   #
   # through: :licensable_licenses
   #
@@ -33,6 +54,15 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   has_many :licenses,
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses
+
+  #
+  # through: :platformable_platform
+  #
+
+  # Platforms this encoder Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -53,6 +83,11 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
+  
   validates :contributions,
             length: {
                 minimum: 1
@@ -71,23 +106,11 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
 
   validates :name,
             presence: true
-
-  #
-  # Instance Methods
-  #
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this encoder Metasploit Module.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human-readable name of this encoder Metasploit Module.  This can be thought of as the
-  #     title or summary of the Metasploit Module.
-  #   @return [void]
-
+ 
+  validates :platformable_platforms,
+            length: {
+              minimum: 1
+            }
+  
   Metasploit::Concern.run(self)
 end

@@ -25,6 +25,7 @@ module Metasploit
 
     autoload :Actionable
     autoload :Architecture
+    autoload :Architecturable
     autoload :Association
     autoload :Author
     autoload :Authority
@@ -51,6 +52,7 @@ module Metasploit
     autoload :NullProgressBar
     autoload :Payload
     autoload :Platform
+    autoload :Platformable
     autoload :Post
     autoload :ProxiedValidation
     autoload :RealPathname

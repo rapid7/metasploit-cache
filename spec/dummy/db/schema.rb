@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(:version => 20150526204451) do
 
   add_index "mc_actionable_actions", ["actionable_type", "actionable_id", "name"], :name => "unique_mc_actionable_actions", :unique => true
 
+  create_table "mc_architecturable_architectures", :force => true do |t|
+    t.integer "architecturable_id",   :null => false
+    t.string  "architecturable_type", :null => false
+    t.integer "architecture_id",      :null => false
+  end
+
+  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id", "architecture_id"], :name => "unique_mc_architecturable_architectures", :unique => true
+  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id"], :name => "mc_architecturable_architechurables"
+  add_index "mc_architecturable_architectures", ["architecture_id"], :name => "index_mc_architecturable_architectures_on_architecture_id"
+
   create_table "mc_architectures", :force => true do |t|
     t.integer "bits"
     t.string  "abbreviation", :null => false
@@ -318,6 +328,16 @@ ActiveRecord::Schema.define(:version => 20150526204451) do
   add_index "mc_payload_stager_instances", ["handler_id"], :name => "index_mc_payload_stager_instances_on_handler_id"
   add_index "mc_payload_stager_instances", ["payload_stager_class_id"], :name => "index_mc_payload_stager_instances_on_payload_stager_class_id", :unique => true
 
+  create_table "mc_platformable_platforms", :force => true do |t|
+    t.integer "platformable_id",   :null => false
+    t.string  "platformable_type", :null => false
+    t.integer "platform_id",       :null => false
+  end
+
+  add_index "mc_platformable_platforms", ["platform_id"], :name => "index_mc_platformable_platforms_on_platform_id"
+  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id", "platform_id"], :name => "unique_mc_platformable_platforms", :unique => true
+  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id"], :name => "mc_platformable_platformables"
+
   create_table "mc_platforms", :force => true do |t|
     t.text    "fully_qualified_name", :null => false
     t.text    "relative_name",        :null => false
@@ -330,13 +350,15 @@ ActiveRecord::Schema.define(:version => 20150526204451) do
   add_index "mc_platforms", ["parent_id", "relative_name"], :name => "index_mc_platforms_on_parent_id_and_relative_name", :unique => true
 
   create_table "mc_post_instances", :force => true do |t|
-    t.text    "description",   :null => false
-    t.date    "disclosed_on",  :null => false
-    t.string  "name",          :null => false
-    t.boolean "privileged",    :null => false
-    t.integer "post_class_id", :null => false
+    t.text    "description",       :null => false
+    t.date    "disclosed_on",      :null => false
+    t.string  "name",              :null => false
+    t.boolean "privileged",        :null => false
+    t.integer "default_action_id"
+    t.integer "post_class_id",     :null => false
   end
 
+  add_index "mc_post_instances", ["default_action_id"], :name => "index_mc_post_instances_on_default_action_id", :unique => true
   add_index "mc_post_instances", ["post_class_id"], :name => "index_mc_post_instances_on_post_class_id", :unique => true
 
   create_table "mc_referencable_references", :force => true do |t|

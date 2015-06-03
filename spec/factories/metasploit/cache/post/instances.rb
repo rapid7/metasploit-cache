@@ -4,6 +4,7 @@ FactoryGirl.define do
     transient do
       contribution_count 1
       licensable_license_count 1
+      platformable_platform_count 1
     end
 
     description { generate :metasploit_cache_post_instance_description }
@@ -32,6 +33,12 @@ FactoryGirl.define do
         :metasploit_cache_post_license,
         evaluator.licensable_license_count,
         licensable: post_instance
+      )
+
+      post_instance.platformable_platforms = build_list(
+          :metasploit_cache_post_platform,
+          evaluator.platformable_platform_count,
+          platformable: post_instance
       )
     end
   end

@@ -6,6 +6,12 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
   #
 
+  # Joins {#architectures} to this single payload Metasploit Module.
+  has_many :architecturable_architectures,
+           class_name: 'Metasploit::Cache::Architecturable::Architecture',
+           dependent: :destroy,
+           inverse_of: :architecturable
+
   # Code contributions to this single payload Metasploit Module
   has_many :contributions,
            as: :contributable,
@@ -28,6 +34,21 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Payload::Single::Class',
              inverse_of: :payload_single_instance
 
+  # Joins {#platforms} to this single payload Metasploit Module.
+  has_many :platformable_platforms,
+           class_name: 'Metasploit::Cache::Platformable::Platform',
+           dependent: :destroy,
+           inverse_of: :platformable
+
+  #
+  # through: architecturable_architectures
+  #
+
+  # Architectures on which this payload can run.
+  has_many :architectures,
+           class_name: 'Metasploit::Cache::Architecture',
+           through: :architecturable_architectures
+
   #
   # through: :licensable_licenses
   #
@@ -36,6 +57,15 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   has_many :licenses,
            class_name: 'Metasploit::Cache::License',
            through: :licensable_licenses
+
+  #
+  # through: :platformable_platform
+  #
+
+  # Platforms this playload single Metasploit Module works on.
+  has_many :platforms,
+           class_name: 'Metasploit::Cache::Platform',
+           through: :platformable_platforms
 
   #
   # Attributes
@@ -68,11 +98,16 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
+ 
   validates :contributions,
             length: {
                 minimum: 1
             }
-
+ 
   validates :description,
             presence: true
 
@@ -92,6 +127,11 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
 
   validates :payload_single_class_id,
             uniqueness: true
+  
+  validates :platformable_platforms,
+            length: {
+                minimum: 1
+            }
 
   validates :privileged,
             inclusion: {
@@ -100,36 +140,6 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
                     true
                 ]
             }
-
-  #
-  # Instance Methods
-  #
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this single payload Metasploit Module.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human-readable name of this single payload Metasploit Module.  This can be thought of as
-  #     the title or summary of the Metasploit Module.
-  #   @return [void]
-
-  # @!method payload_single_class_id=(payload_single_class_id)
-  #   Sets {#payload_single_class_id} and causes cache of {#payload_single_class} to be invalidated and reloaded on next
-  #   access.
-  #
-  #   @param payload_single_class_id [Integer]
-  #   @return [void]
-
-  # @!method privileged=(privileged)
-  #   Sets {#privileged}.
-  #
-  #   @param priviliged [Boolean] `true` if privileged access is required; `false` if privileged access is not required.
-  #   @return [void]
 
   Metasploit::Concern.run(self)
 end
