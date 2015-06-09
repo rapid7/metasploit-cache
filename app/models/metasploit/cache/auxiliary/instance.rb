@@ -22,6 +22,13 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Auxiliary::Class',
              inverse_of: :auxiliary_instance
 
+  # Code contributions to this auxiliary Metasploit Module
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
   # @note The default action must be manually added to {#actions}.
   #
   # The (optional) default action for the auxiliary Metasploit Module.
@@ -93,28 +100,29 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   #     a server exploiting clients.
 
   #
-  #
   # Validations
-  #
-  #
-
-  #
-  # Method Validations
-  #
-
-  validate :actions_contains_default_action
-
-  #
-  # Attribute Validations
   #
 
   validates :actions,
             length: {
-              minimum: 1
+                minimum: 1
             }
 
   validates :auxiliary_class,
             presence: true
+  
+  validates :default_action,
+            inclusion: {
+                allow_nil: true,
+                in: ->(auxiliary_instance){
+                  auxiliary_instance.actions
+                }
+            }
+
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
 
   validates :description,
             presence: true
@@ -135,34 +143,6 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   #
   # Instance Methods
   #
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this auxiliary Metasploit Module.
-  #   @return [void]
-
-  # @!method disclosed_on=(disclosed_on)
-  #   Sets {#disclosed_on}.
-  #
-  #   @param disclosed_on [Date, nil] The date when the bug this Metasploit Module exercises was disclosed publicly
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human-readable name of this auxiliary Metasploit Module.  This can be thought of as the
-  #     title or summary of the Metasploit Module.
-  #   @return [void]
-
-  # @!method stance=(stance)
-  #   Sets {#stance}.
-  #
-  #   @param stance ['aggressive', 'passive'] Use ``'aggressive'` when this Metasploit Module connects to a remote
-  #     server, so the Metasploit Module is a client exploiting a server.  Use `'passive'` when this Metasploit Module
-  #     waits for remote clients to connect to it, so the Metasploit Module is a server exploiting clients.
-  #   @return [void]
-
 
   private
 

@@ -71,6 +71,19 @@ ActiveRecord::Schema.define(:version => 20150528140442) do
 
   add_index "mc_auxiliary_instances", ["auxiliary_class_id"], :name => "index_mc_auxiliary_instances_on_auxiliary_class_id", :unique => true
 
+  create_table "mc_contributions", :force => true do |t|
+    t.integer "author_id",          :null => false
+    t.integer "contributable_id",   :null => false
+    t.string  "contributable_type", :null => false
+    t.integer "email_address_id"
+  end
+
+  add_index "mc_contributions", ["author_id"], :name => "index_mc_contributions_on_author_id"
+  add_index "mc_contributions", ["contributable_type", "contributable_id", "author_id"], :name => "unique_mc_contribution_authors", :unique => true
+  add_index "mc_contributions", ["contributable_type", "contributable_id", "email_address_id"], :name => "unique_mc_contribution_email_addresses", :unique => true
+  add_index "mc_contributions", ["contributable_type", "contributable_id"], :name => "mc_contribution_contributables"
+  add_index "mc_contributions", ["email_address_id"], :name => "index_mc_contributions_on_email_address_id"
+
   create_table "mc_direct_classes", :force => true do |t|
     t.integer "ancestor_id", :null => false
     t.integer "rank_id",     :null => false
@@ -346,13 +359,15 @@ ActiveRecord::Schema.define(:version => 20150528140442) do
   add_index "mc_platforms", ["parent_id", "relative_name"], :name => "index_mc_platforms_on_parent_id_and_relative_name", :unique => true
 
   create_table "mc_post_instances", :force => true do |t|
-    t.text    "description",   :null => false
-    t.date    "disclosed_on",  :null => false
-    t.string  "name",          :null => false
-    t.boolean "privileged",    :null => false
-    t.integer "post_class_id", :null => false
+    t.text    "description",       :null => false
+    t.date    "disclosed_on",      :null => false
+    t.string  "name",              :null => false
+    t.boolean "privileged",        :null => false
+    t.integer "default_action_id"
+    t.integer "post_class_id",     :null => false
   end
 
+  add_index "mc_post_instances", ["default_action_id"], :name => "index_mc_post_instances_on_default_action_id", :unique => true
   add_index "mc_post_instances", ["post_class_id"], :name => "index_mc_post_instances_on_post_class_id", :unique => true
 
   create_table "mc_referencable_references", :force => true do |t|

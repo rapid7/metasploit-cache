@@ -9,15 +9,32 @@ class Metasploit::Cache::EmailAddress < ActiveRecord::Base
   # Associations
   #
 
+  # Credits where authors used this email address for their contributions.
+  has_many :contributions,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :email_address
+
   # Credits where {#authors} used this email address for {#module_instances modules}.
   has_many :module_authors, class_name: 'Metasploit::Cache::Module::Author', dependent: :destroy, inverse_of: :email_address
+
+  #
+  # through: :contributions
+  #
+
+  # Authors that used this email address.
+  has_many :authors,
+           class_name: 'Metasploit::Cache::Author',
+           through: :contributions
 
   #
   # through: :module_authors
   #
 
   # Authors that used this email address.
-  has_many :authors, class_name: 'Metasploit::Cache::Author', through: :module_authors
+  has_many :module_author_authors,
+           class_name: 'Metasploit::Cache::Author',
+           through: :module_authors
 
   # Modules where this email address was used.
   has_many :module_instances, class_name: 'Metasploit::Cache::Module::Instance', through: :module_authors
@@ -122,31 +139,6 @@ class Metasploit::Cache::EmailAddress < ActiveRecord::Base
 
     local
   end
-
-  # @!method domain=(domain)
-  #   Sets {#domain}.
-  #
-  #   @param domain [String] The domain part of the email address after the `'@'`.
-  #   @return [void]
-
-  # @!method full=(full)
-  #   Sets {#full}.
-  #
-  #   @param full [String] <{#local}>@<{#domain}>
-  #   @return [void]
-
-  # @!method local=(local)
-  #   Sets {#local}.
-  #
-  #   @param local [String] The local part of the email address before the `'@'`.
-  #   @return [void]
-
-  # @!method module_authors=(module_authors)
-  #   Sets {#module_authors}.
-  #
-  #   @param module_authors [Array<Metasploit::Cache::Module::Authors>] Credits where {#authors} used this email address
-  #     for {#module_instances modules}.
-  #   @return [void]
 
   Metasploit::Concern.run(self)
 end

@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :metasploit_cache_post_instance,
           class: Metasploit::Cache::Post::Instance do
     transient do
+      contribution_count 1
       licensable_license_count 1
       platformable_platform_count 1
     end
@@ -22,6 +23,12 @@ FactoryGirl.define do
     #
 
     after(:build) do |post_instance, evaluator|
+      post_instance.contributions = build_list(
+        :metasploit_cache_post_contribution,
+        evaluator.contribution_count,
+        contributable: post_instance
+      )
+
       post_instance.licensable_licenses = build_list(
         :metasploit_cache_post_license,
         evaluator.licensable_license_count,

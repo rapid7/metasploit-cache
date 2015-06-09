@@ -174,16 +174,6 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
     directory
   end
 
-  # @!method gem=(gem)
-  #   Sets {#gem}.
-  #
-  #   @param gem [String] The name of the gem that is adding this module path to metasploit-framework.  For paths
-  #     normally added by metasploit-framework itself, this would be `'metasploit-framework'`, while for Metasploit Pro
-  #     this would be `'metasploit-pro'`.  The name used for `gem` does not have to be a gem on rubygems, it just
-  #     functions as a namespace for {#name} so that projects using metasploit-framework do not need to worry about
-  #     collisions on {#name} which could disrupt the cache behavior.
-  #   @return [void]
-
   # @note This path should be validated before calling {#name_collision} so that {#gem} and {#name} is normalized.
   #
   # Returns path with the same {#gem} and {#name}.
@@ -201,14 +191,6 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
 
     collision
   end
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The name of the module path scoped to {#gem}.  {#gem} and {#name} uniquely identify this
-  #     path, so that if {#real_path} changes, the entire cache does not need to be invalidated because the change in
-  #     {#real_path} will still be tied to the same ({#gem}, {#name}) tuple.
-  #   @return [void]
 
   # Returns whether is a named path.
   #
@@ -248,14 +230,6 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
 
     was_named
   end
-
-  # @!method real_path=(real_path)
-  #   Sets {#real_path}.
-  #
-  #   @param real_path [String] The real (absolute) path to module path.
-  #   @return [void]
-
-  # Comment break to make {#real_path=} docs work above `private`
 
   private
 

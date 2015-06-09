@@ -12,6 +12,13 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :architecturable
 
+  # Code contributions to this single payload Metasploit Module
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
   # The connection handler
   belongs_to :handler,
              class_name: 'Metasploit::Cache::Payload::Handler',
@@ -95,6 +102,12 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
             length: {
                 minimum: 1
             }
+ 
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
+ 
   validates :description,
             presence: true
 
@@ -127,36 +140,6 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
                     true
                 ]
             }
-
-  #
-  # Instance Methods
-  #
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this single payload Metasploit Module.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human-readable name of this single payload Metasploit Module.  This can be thought of as
-  #     the title or summary of the Metasploit Module.
-  #   @return [void]
-
-  # @!method payload_single_class_id=(payload_single_class_id)
-  #   Sets {#payload_single_class_id} and causes cache of {#payload_single_class} to be invalidated and reloaded on next
-  #   access.
-  #
-  #   @param payload_single_class_id [Integer]
-  #   @return [void]
-
-  # @!method privileged=(privileged)
-  #   Sets {#privileged}.
-  #
-  #   @param priviliged [Boolean] `true` if privileged access is required; `false` if privileged access is not required.
-  #   @return [void]
 
   Metasploit::Concern.run(self)
 end

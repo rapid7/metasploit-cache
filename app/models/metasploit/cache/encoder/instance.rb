@@ -12,6 +12,13 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :architecturable
 
+  # Code contributions to this Metasploit Module.
+  has_many :contributions,
+           as: :contributable,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :contributable
+
   # The class-level metadata for this instance metadata.
   #
   # @return [Metasploit::Cache::Encoder::Class]
@@ -80,6 +87,12 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
             length: {
                 minimum: 1
             }
+  
+  validates :contributions,
+            length: {
+                minimum: 1
+            }
+
   validates :description,
             presence: true
 
@@ -93,28 +106,11 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
 
   validates :name,
             presence: true
-  
+ 
   validates :platformable_platforms,
             length: {
               minimum: 1
             }
-
-  #
-  # Instance Methods
-  #
-
-  # @!method description=(description)
-  #   Sets {#description}.
-  #
-  #   @param description [String] The long-form human-readable description of this encoder Metasploit Module.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Sets {#name}.
-  #
-  #   @param name [String] The human-readable name of this encoder Metasploit Module.  This can be thought of as the
-  #     title or summary of the Metasploit Module.
-  #   @return [void]
-
+  
   Metasploit::Concern.run(self)
 end

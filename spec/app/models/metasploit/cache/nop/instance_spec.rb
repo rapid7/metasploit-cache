@@ -4,6 +4,7 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
   context 'associations' do
     it { is_expected.to have_many(:architectures).class_name('Metasploit::Cache::Architecture') }
     it { is_expected.to have_many(:architecturable_architectures).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
+    it { is_expected.to have_many(:contributions).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contributable) }
     it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License')}
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
     it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
@@ -37,6 +38,10 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :nop_class }
+
+    it_should_behave_like 'validates at least one in association',
+                          :contributions,
+                          factory: :metasploit_cache_nop_instance
 
     it_should_behave_like 'validates at least one in association',
                           :licensable_licenses,

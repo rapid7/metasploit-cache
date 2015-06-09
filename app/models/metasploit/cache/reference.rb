@@ -125,12 +125,6 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
   # Instance Methods
   #
 
-  # @!method authority=(authority)
-  #   Sets {#authority}.
-  #
-  #   @param authority [Metasploit::Cache::Authority, nil]  The {Metasploit::Cache::Authority authority} that assigned
-  #     {#designation}.  `nil` if only a {#url} reference and not from an {Metasploit::Cache::Authority authority}.
-
   # Returns whether {#authority} is not `nil`.
   #
   # @return [true] unless {#authority} is `nil`.
@@ -151,27 +145,6 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
 
     derived
   end
-
-  # @!method designation=(designation)
-  #   Sets {#designation}.
-  #
-  #   @param designation [String, nil] a designation (usually a string of numbers and dashes) assigned by {#authority};
-  #     `nil` if a {#url} only reference.
-  #   @return [void]
-
-  # @!method module_references=(module_references)
-  #   Sets {#module_references}.
-  #
-  #   @param module_references [Enumerable<Metasploit::Cache::Module::Reference>, nil] Joins this
-  #     {Metasploit::Cache::Reference} to {#module_instances}.
-  #   @return [void]
-
-  # @!method url=(url)
-  #   Sets {#url}.
-  #
-  #   @param url [String, nil] URL to web page with information about referenced exploit. Should only be `nil` if
-  #     {#authority} {Metasploit::Cache::Authority#obsolete} is `true`.
-  #   @return [void]
 
   Metasploit::Concern.run(self)
 end

@@ -10,15 +10,32 @@ class Metasploit::Cache::Author < ActiveRecord::Base
   # Associations
   #
 
+  # Joins to this author.
+  has_many :contributions,
+           class_name: 'Metasploit::Cache::Contribution',
+           dependent: :destroy,
+           inverse_of: :author
+
   # Joins this to {#email_addresses} and {#module_instances}.
   has_many :module_authors, class_name: 'Metasploit::Cache::Module::Author', dependent: :destroy, inverse_of: :author
+
+  #
+  # through: :contributions
+  #
+
+  # Email addresses used by this author across all {#contributions}.
+  has_many :email_addresses,
+           class_name: 'Metasploit::Cache::EmailAddress',
+           through: :contributions
 
   #
   # through: :module_authors
   #
 
   # Email addresses used by this author across all {#module_instances}.
-  has_many :email_addresses, class_name: 'Metasploit::Cache::EmailAddress', through: :module_authors
+  has_many :module_author_email_addresses,
+           class_name: 'Metasploit::Cache::EmailAddress',
+           through: :module_authors
 
   # Modules written by this author.
   has_many :module_instances, class_name: 'Metasploit::Cache::Module::Instance', through: :module_authors
@@ -53,23 +70,6 @@ class Metasploit::Cache::Author < ActiveRecord::Base
             uniqueness: {
                 unless: :batched?
             }
-
-  #
-  # Instance Methods
-  #
-
-  # @!method module_authors=(module_authors)
-  #   Sets {#module_authors}.
-  #
-  #   @param module_authors [Enumerable<Metasploit::Cache::Module::Author>] Joins this to {#email_addresses} and
-  #     {#module_instances}.
-  #   @return [void]
-
-  # @!method name=(name)
-  #   Set the {#name}.
-  #
-  #   @param name [String] Full name (First + Last name) or handle of author.
-  #   @return [void]
 
   Metasploit::Concern.run(self)
 end

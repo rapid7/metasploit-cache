@@ -9,7 +9,7 @@ FactoryGirl.define do
     association :actionable, factory: :metasploit_cache_auxiliary_instance
   end
 
-  factory :metasploit_cache_post_post,
+  factory :metasploit_cache_post_action,
           class: Metasploit::Cache::Actionable::Action,
           traits: [:metasploit_cache_actionable_action] do
     association :actionable, factory: :metasploit_cache_post_instance

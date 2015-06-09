@@ -7,6 +7,7 @@ FactoryGirl.define do
           class: Metasploit::Cache::Encoder::Instance do
     transient do
       architecturable_architecture_count 1
+      contribution_count 1
       licensable_license_count 1
       platformable_platform_count 1
     end
@@ -30,13 +31,19 @@ FactoryGirl.define do
           evaluator.architecturable_architecture_count,
           architecturable: encoder_instance
       )
-
+      
+      encoder_instance.contributions = build_list(
+        :metasploit_cache_encoder_contribution,
+        evaluator.contribution_count,
+        contributable: encoder_instance
+      )
+      
       encoder_instance.licensable_licenses = build_list(
         :metasploit_cache_encoder_license,
         evaluator.licensable_license_count,
         licensable: encoder_instance
       )
-
+      
       encoder_instance.platformable_platforms = build_list(
           :metasploit_cache_encoder_platform,
           evaluator.platformable_platform_count,

@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :metasploit_cache_payload_single_instance,
           class: Metasploit::Cache::Payload::Single::Instance do
     transient do
+      contribution_count 1
       architecturable_architecture_count 1
       licensable_license_count 1
       platformable_platform_count 1
@@ -27,6 +28,12 @@ FactoryGirl.define do
           :metasploit_cache_payload_single_architecture,
           evaluator.architecturable_architecture_count,
           architecturable: payload_single_instance
+      )
+      
+      payload_single_instance.contributions = build_list(
+        :metasploit_cache_payload_single_contribution,
+        evaluator.contribution_count,
+        contributable: payload_single_instance
       )
       
       payload_single_instance.licensable_licenses = build_list(
