@@ -35,7 +35,19 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   #   @return [Integer]
 
   #
+  #
   # Validations
+  #
+  #
+
+  #
+  # Method Validations
+  #
+
+  validate :compatible_architectures
+
+  #
+  # Attribute Validations
   #
 
   validates :payload_stage_instance,
@@ -66,6 +78,39 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   #
   #   @param payload_stager_instance_id [Integer]
   #   @return [void] 
-  
+
+  private
+
+  # The intersection of {#paylaod_stage_instance} {Metasploit::Cache::Payload::Stage::Instance#architectures} and
+  # {#payload_stager_instance} {Metasploit::Cache::Payload::Stager::Instance#architectures}.
+  #
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Architecture>]
+  # @return [nil] unless {#payload_stage_instance} and {#payload_stager_instance} are present
+  def architectures
+    # TODO replace with ActiveRecord::QueryMethods.none
+    if payload_stage_instance && payload_stager_instance
+      intersection = payload_stage_instance.architectures.intersect(payload_stager_instance.architectures)
+      architecture_table = Metasploit::Cache::Architecture.arel_table
+
+      Metasploit::Cache::Architecture.from(
+          architecture_table.create_table_alias(intersection, architecture_table.name)
+      )
+    end
+  end
+
+  # Validates that {#payload_stage_instance} and {#payload_stager_instance} have at least one
+  # {Metasploit::Cache::Architecture} in common.
+  #
+  # @return [void]
+  def compatible_architectures
+    scope = architectures
+
+    unless scope.nil?
+      unless scope.exists?
+        errors.add(:base, :incompatible_architectures)
+      end
+    end
+  end
+
   Metasploit::Concern.run(self)
 end

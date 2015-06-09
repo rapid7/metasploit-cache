@@ -1,7 +1,40 @@
 FactoryGirl.define do
   factory :metasploit_cache_payload_staged_class,
           class: Metasploit::Cache::Payload::Staged::Class do
-    association :payload_stage_instance, factory: :metasploit_cache_payload_stage_instance
-    association :payload_stager_instance, factory: :metasploit_cache_payload_stager_instance
+    transient do
+      compatible_architecture_count 1
+
+      compatible_architectures {
+        Array.new(compatible_architecture_count) {
+          generate :metasploit_cache_architecture
+        }
+      }
+    end
+
+    payload_stage_instance {
+      build(:metasploit_cache_payload_stage_instance, architecturable_architecture_count: 0).tap { |block_payload_stage_instance|
+        block_payload_stage_instance.architecturable_architectures = compatible_architectures.map { |compatible_architecture|
+          Metasploit::Cache::Architecturable::Architecture.new(
+              architecturable: block_payload_stage_instance,
+              architecture: compatible_architecture
+          )
+        }
+
+        block_payload_stage_instance.save!
+      }
+    }
+
+    payload_stager_instance {
+      build(:metasploit_cache_payload_stager_instance, architecturable_architecture_count: 0).tap { |block_payload_stager_instance|
+        block_payload_stager_instance.architecturable_architectures = compatible_architectures.map { |compatible_architecture|
+          Metasploit::Cache::Architecturable::Architecture.new(
+              architecturable: block_payload_stager_instance,
+              architecture: compatible_architecture
+          )
+        }
+
+        block_payload_stager_instance.save!
+      }
+    }
   end
 end
