@@ -8,6 +8,7 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
 
   # Joins {#architectures} to this stager payload Metasploit Module.
   has_many :architecturable_architectures,
+           as: :architecturable,
            class_name: 'Metasploit::Cache::Architecturable::Architecture',
            dependent: :destroy,
            inverse_of: :architecturable
