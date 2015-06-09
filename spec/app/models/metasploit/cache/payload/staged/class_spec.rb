@@ -154,6 +154,144 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class do
       end
     end
 
+    context 'validates compatible platforms' do
+      subject(:base_errors) {
+        payload_staged_class.errors[:base]
+      }
+
+      let(:error) {
+        I18n.translate!('activerecord.errors.models.metasploit/cache/payload/staged/class.incompatible_platforms')
+      }
+
+      let(:payload_staged_class) {
+        FactoryGirl.build(
+            :metasploit_cache_payload_staged_class,
+            payload_stage_instance: payload_stage_instance,
+            payload_stager_instance: payload_stager_instance
+        )
+      }
+
+      let(:payload_stage_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_payload_stage_instance,
+            platformable_platform_count: 0
+        ).tap { |payload_stage_instance|
+          payload_stage_instance.platformable_platforms << Metasploit::Cache::Platformable::Platform.new(
+              platformable: payload_stage_instance,
+              platform: stage_platform
+          )
+        }
+      }
+
+      let(:payload_stager_instance) {
+        FactoryGirl.build(
+            :metasploit_cache_payload_stager_instance,
+            platformable_platform_count: 0
+        ).tap { |payload_stager_instance|
+          payload_stager_instance.platformable_platforms << Metasploit::Cache::Platformable::Platform.new(
+              platformable: payload_stager_instance,
+              platform: stager_platform
+          )
+        }
+      }
+
+      context 'with same platform' do
+        #
+        # lets
+        #
+
+        let(:stage_platform) {
+          Metasploit::Cache::Platform.where(fully_qualified_name: 'AIX').first
+        }
+
+        let(:stager_platform) {
+          stage_platform
+        }
+
+        #
+        # Callbacks
+        #
+
+        before(:each) do
+          payload_stage_instance.save!
+          payload_stager_instance.save!
+
+          payload_staged_class.valid?
+        end
+
+        it { is_expected.not_to include error }
+      end
+
+      context 'with stage platform a child of stager platform' do
+        let(:stage_platform) {
+          Metasploit::Cache::Platform.where(fully_qualified_name: 'Windows 95').first
+        }
+
+        let(:stager_platform) {
+          Metasploit::Cache::Platform.where(fully_qualified_name: 'Windows').first
+        }
+
+        #
+        # Callbacks
+        #
+
+        before(:each) do
+          payload_stage_instance.save!
+          payload_stager_instance.save!
+
+          payload_staged_class.valid?
+        end
+
+        it { is_expected.not_to include error }
+      end
+
+      context 'with stager platform a child of stage platform' do
+        let(:stage_platform) {
+          Metasploit::Cache::Platform.where(fully_qualified_name: 'Windows').first
+        }
+
+        let(:stager_platform) {
+          Metasploit::Cache::Platform.where(fully_qualified_name: 'Windows 95').first
+        }
+
+        #
+        # Callbacks
+        #
+
+        before(:each) do
+          payload_stage_instance.save!
+          payload_stager_instance.save!
+
+          payload_staged_class.valid?
+        end
+
+        it { is_expected.not_to include error }
+      end
+
+      context 'without intersecting platforms' do
+        let(:stage_platform) {
+          Metasploit::Cache::Platform.where(fully_qualified_name: 'Windows 95').first
+        }
+
+        let(:stager_platform) {
+          Metasploit::Cache::Platform.where(fully_qualified_name: 'Windows 98').first
+        }
+
+        #
+        # Callbacks
+        #
+
+        before(:each) do
+          payload_stage_instance.save!
+          payload_stager_instance.save!
+
+          payload_staged_class.valid?
+        end
+
+        it { is_expected.to include error }
+      end
+    end
+
     context 'existing record' do
       let!(:existing_payload_staged_class) {
         FactoryGirl.create(:metasploit_cache_payload_staged_class)
