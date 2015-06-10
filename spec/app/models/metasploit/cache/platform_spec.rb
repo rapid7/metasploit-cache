@@ -5,7 +5,7 @@ RSpec.describe Metasploit::Cache::Platform do
 
   context 'associations' do
     it { is_expected.to have_many(:encoder_instances).class_name('Metasploit::Cache::Encoder::Instance').source(:platformable).through(:platformable_platforms) }
-    it { is_expected.to have_many(:exploit_target).class_name('Metasploit::Cache::Exploit::Target').source(:platformable).through(:platformable_platforms) }
+    it { is_expected.to have_many(:exploit_targets).class_name('Metasploit::Cache::Exploit::Target').source(:platformable).through(:platformable_platforms) }
     it { should have_many(:module_instances).class_name('Metasploit::Cache::Module::Instance').through(:module_platforms) }
     it { should have_many(:module_platforms).class_name('Metasploit::Cache::Module::Platform').dependent(:destroy) }
     it { is_expected.to have_many(:nop_instances).class_name('Metasploit::Cache::Nop::Instance').source(:platformable).through(:platformable_platforms) }
