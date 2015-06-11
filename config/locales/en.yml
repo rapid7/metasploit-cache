@@ -74,6 +74,7 @@ en:
               too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
         metasploit/cache/payload/staged/class:
           incompatible_architectures:  "has incompatible architectures between its stage and stager"
+          incompatible_platforms: "has incompatible platforms between its stage and stager"
         metasploit/cache/payload/stager/instance:
           attributes:
             architecturable_architectures:
