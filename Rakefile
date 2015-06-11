@@ -44,7 +44,7 @@ task :coverage do
   # coverage differs by adapter because different adapters have different handling in Metasploit::Cache::Batched::Root
   # and its specs.
   minimum_coverage_by_adapter = {
-      'postgresql' => 99.72,
+      'postgresql' => 99.73,
       'sqlite3' => 99.68
   }
 
