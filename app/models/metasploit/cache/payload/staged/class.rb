@@ -81,7 +81,7 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
 
   private
 
-  # The intersection of {#paylaod_stage_instance} {Metasploit::Cache::Payload::Stage::Instance#architectures} and
+  # The intersection of {#payload_stage_instance} {Metasploit::Cache::Payload::Stage::Instance#architectures} and
   # {#payload_stager_instance} {Metasploit::Cache::Payload::Stager::Instance#architectures}.
   #
   # @return [ActiveRecord::Relation<Metasploit::Cache::Architecture>]
