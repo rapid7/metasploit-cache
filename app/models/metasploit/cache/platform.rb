@@ -55,36 +55,37 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   has_many :encoder_instances,
            class_name: 'Metasploit::Cache::Encoder::Instance',
            source: :platformable,
+           source_type: 'Metasploit::Cache::Encoder::Instance',
            through: :platformable_platforms
 
   # Exploit Metasploit Module targets that can target this platform.
   has_many :exploit_targets,
-           class_name: 'Metasploit::Cache::Exploit::Target',
            source: :platformable,
+           source_type: 'Metasploit::Cache::Exploit::Target',
            through: :platformable_platforms
 
   # Nop Metasploit Modules that can produce nops for this platform.
   has_many :nop_instances,
-           class_name: 'Metasploit::Cache::Nop::Instance',
            source: :platformable,
+           source_type: 'Metasploit::Cache::Nop::Instance',
            through: :platformable_platforms
 
   # Single payload Metasploit Modules that can run on this platform.
   has_many :payload_single_instances,
-           class_name: 'Metasploit::Cache::Payload::Single::Instance',
            source: :platformable,
+           source_type: 'Metasploit::Cache::Payload::Single::Instance',
            through: :platformable_platforms
 
   # Stage payload Metasploit Modules that can run on this platform.
   has_many :payload_stage_instances,
-           class_name: 'Metasploit::Cache::Payload::Stage::Instance',
            source: :platformable,
+           source_type: 'Metasploit::Cache::Payload::Stage::Instance',
            through: :platformable_platforms
 
   # Stager payload Metasploit Modules that can run on this platform.
   has_many :payload_stager_instances,
-           class_name: 'Metasploit::Cache::Payload::Stager::Instance',
            source: :platformable,
+           source_type: 'Metasploit::Cache::Payload::Stager::Instance',
            through: :platformable_platforms
 
   #
