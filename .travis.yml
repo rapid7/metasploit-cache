@@ -1,3 +1,7 @@
+addons:
+  apt:
+    packages:
+    - sqlite3
 before_script:
 - sqlite3 -version
 - cp spec/dummy/config/database.yml.travis spec/dummy/config/database.yml
