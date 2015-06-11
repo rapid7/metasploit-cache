@@ -1,4 +1,5 @@
 before_script:
+- sqlite3 -version
 - cp spec/dummy/config/database.yml.travis spec/dummy/config/database.yml
 - bundle exec rake db:setup
 bundler_args: --without $BUNDLER_INSTALL_WITHOUT
