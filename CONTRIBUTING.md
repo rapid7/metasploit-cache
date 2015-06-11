@@ -63,7 +63,7 @@ Make your changes or however many commits you like, committing each with `git co
 ##### Testing
 1. `rake cucumber spec coverage`
 2. Verify there were no failures.
-3. Verify there was 99.68% coverage.
+3. Verify there was 99.69% coverage.
 
 ##### Documentation
 1. `rake yard:stats`
@@ -105,7 +105,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 ### Test coverage
 - [ ] `rake cucumber spec coverage`
 - [ ] Verify only `[warn]`ings are `@param` on scopes due to yard-activerecord bug.
-- [ ] VERIFY 99.68% coverage
+- [ ] VERIFY 99.69% coverage
 
 ### Documentation coverage
 - [ ] `rake yard:stats`
