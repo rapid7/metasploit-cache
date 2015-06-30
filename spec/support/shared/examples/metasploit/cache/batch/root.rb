@@ -91,7 +91,10 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
 
           context 'without SQLite3::ConstraintException defined' do
             before(:each) do
-              expect(base_instance).to receive(:recoverable_save).and_raise(ActiveRecord::StatementInvalid)
+              expect(base_instance).to receive(:recoverable_save).and_raise(
+                                           ActiveRecord::StatementInvalid,
+                                           "Statement invalid from rspec"
+                                       )
             end
 
             it 'reraises ActiveRecord::StatementInvalid' do
@@ -158,7 +161,10 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
 
           context 'without SQLite3::ConstraintException defined' do
             before(:each) do
-              expect(base_instance).to receive(:recoverable_save).and_raise(ActiveRecord::StatementInvalid)
+              expect(base_instance).to receive(:recoverable_save).and_raise(
+                                           ActiveRecord::StatementInvalid,
+                                           'StatementInvalid from rspec'
+                                       )
             end
 
             it 'reraises ActiveRecord::StatementInvalid' do
