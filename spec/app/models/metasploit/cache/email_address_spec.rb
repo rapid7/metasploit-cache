@@ -71,7 +71,7 @@ RSpec.describe Metasploit::Cache::EmailAddress do
     #
 
     let(:error) do
-      I18n.translate!('metasploit.model.errors.messages.taken')
+      I18n.translate!('errors.messages.taken')
     end
 
     let(:existing_domain) do

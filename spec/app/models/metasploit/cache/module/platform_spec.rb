@@ -105,6 +105,10 @@ RSpec.describe Metasploit::Cache::Module::Platform do
           }
         end
 
+        let(:error) {
+          I18n.translate!('errors.messages.taken')
+        }
+
         context 'with batched' do
           include Metasploit::Cache::Spec::Matcher
           include_context 'Metasploit::Cache::Batch.batch'
@@ -112,7 +116,7 @@ RSpec.describe Metasploit::Cache::Module::Platform do
           it 'should not add error on #platform_id' do
             new_module_platform.valid?
 
-            expect(new_module_platform.errors[:platform_id]).not_to include('has already been taken')
+            expect(new_module_platform.errors[:platform_id]).not_to include(error)
           end
 
           it 'should raise ActiveRecord::RecordNotUnique when saved' do
@@ -126,7 +130,7 @@ RSpec.describe Metasploit::Cache::Module::Platform do
           it 'should record error on platform_id' do
             new_module_platform.valid?
 
-            expect(new_module_platform.errors[:platform_id]).to include('has already been taken')
+            expect(new_module_platform.errors[:platform_id]).to include(error)
           end
         end
       end

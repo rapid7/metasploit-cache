@@ -79,7 +79,7 @@ RSpec.describe Metasploit::Cache::Module::Target::Platform do
       #
 
       let(:error) do
-        I18n.translate!('metasploit.model.errors.messages.taken')
+        I18n.translate!('errors.messages.taken')
       end
 
       let(:module_target) do
@@ -138,7 +138,7 @@ RSpec.describe Metasploit::Cache::Module::Target::Platform do
         it 'should include error' do
           new_module_target_platform.valid?
 
-          expect(new_module_target_platform.errors[:platform_id]).to include('has already been taken')
+          expect(new_module_target_platform.errors[:platform_id]).to include(error)
         end
       end
     end

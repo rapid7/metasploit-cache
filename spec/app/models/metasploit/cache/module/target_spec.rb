@@ -62,7 +62,7 @@ RSpec.describe Metasploit::Cache::Module::Target do
       context 'with same #module_instance_id' do
         context 'with same #name' do
           let(:error) do
-            I18n.translate!('metasploit.model.errors.messages.taken')
+            I18n.translate!('errors.messages.taken')
           end
 
           let(:new_architecture) do

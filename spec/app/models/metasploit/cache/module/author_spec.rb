@@ -52,7 +52,7 @@ RSpec.describe Metasploit::Cache::Module::Author do
 
     context 'validates uniqueness of #author_id scoped to #module_instance_id' do
       let(:error) do
-        I18n.translate!('metasploit.model.errors.messages.taken')
+        I18n.translate!('errors.messages.taken')
       end
 
       let(:existing_author) do

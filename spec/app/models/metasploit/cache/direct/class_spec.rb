@@ -37,7 +37,7 @@ RSpec.describe Metasploit::Cache::Direct::Class do
       #
 
       let(:error) {
-        I18n.translate!('activerecord.errors.messages.taken')
+        I18n.translate!('errors.messages.taken')
       }
 
       let(:existing_ancestor) {

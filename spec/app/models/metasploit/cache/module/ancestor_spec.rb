@@ -312,7 +312,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     }
 
     let(:taken_error) do
-      I18n.translate!('metasploit.model.errors.messages.taken')
+      I18n.translate!('errors.messages.taken')
     end
 
     context 'validates inclusion of #module_type in array Metasploit::Cache::Module::Type::ALL' do

@@ -179,7 +179,7 @@ RSpec.describe Metasploit::Cache::Authority do
     #
 
     let(:error) do
-      I18n.translate!('metasploit.model.errors.messages.taken')
+      I18n.translate!('errors.messages.taken')
     end
 
     #

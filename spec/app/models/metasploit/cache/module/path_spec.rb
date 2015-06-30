@@ -392,9 +392,13 @@ RSpec.describe Metasploit::Cache::Module::Path do
         end
 
         context 'with default validation context' do
+          let(:error) {
+            I18n.translate!('errors.messages.taken')
+          }
+
           it 'validates uniqueness of name scoped to gem' do
             expect(duplicate).not_to be_valid
-            expect(duplicate.errors[:name]).to include('has already been taken')
+            expect(duplicate.errors[:name]).to include(error)
           end
         end
 
@@ -428,9 +432,13 @@ RSpec.describe Metasploit::Cache::Module::Path do
       }
 
       context 'with default validation context' do
+        let(:error) {
+          I18n.translate!('errors.messages.taken')
+        }
+
         it 'should validate uniqueness of real path' do
           expect(duplicate).not_to be_valid
-          expect(duplicate.errors[:real_path]).to include('has already been taken')
+          expect(duplicate.errors[:real_path]).to include(taken)
         end
       end
 
