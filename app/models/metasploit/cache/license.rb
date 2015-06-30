@@ -6,6 +6,7 @@ class Metasploit::Cache::License < ActiveRecord::Base
 
   # Join model between this license and anything that uses this license.
   has_many :licensable_licenses,
+           as: :licensable,
            class_name: 'Metasploit::Cache::Licensable::License',
            dependent: :destroy,
            inverse_of: :license

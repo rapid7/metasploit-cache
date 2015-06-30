@@ -32,6 +32,7 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   # {Metasploit::Cache::Payload::Stager::Instance stager payload}, or {Metasploit::Cache::Post::Instance post}) Metasploit
   # Modules or {Metasploit::Cache::Exploit::Target exploit Metasploit Module targets}.
   has_many :platformable_platforms,
+           as: :platformable,
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platform

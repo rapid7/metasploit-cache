@@ -8,6 +8,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
 
   # Joins {#architectures} to this single payload Metasploit Module.
   has_many :architecturable_architectures,
+           as: :architecturable,
            class_name: 'Metasploit::Cache::Architecturable::Architecture',
            dependent: :destroy,
            inverse_of: :architecturable
@@ -36,6 +37,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
 
   # Joins {#platforms} to this single payload Metasploit Module.
   has_many :platformable_platforms,
+           as: :platformable,
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platformable
