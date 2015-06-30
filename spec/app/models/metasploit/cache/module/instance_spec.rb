@@ -42,12 +42,7 @@ RSpec.describe Metasploit::Cache::Module::Instance do
           module_platforms_length: 0
       ).tap { |module_instance|
         module_instance.module_platforms.build(
-            {
-                platform: other_platform
-            },
-            {
-                without_protection: true
-            }
+            platform: other_platform
         )
         module_instance.save!
       }
@@ -1224,21 +1219,11 @@ RSpec.describe Metasploit::Cache::Module::Instance do
             target_platforms_length: 0
         ).tap { |module_target|
           module_target.target_platforms.build(
-              {
-                  platform: platform
-              },
-              {
-                  without_protection: true
-              }
+              platform: platform
           )
 
           module_target.module_instance.module_platforms.build(
-              {
-                  platform: platform
-              },
-              {
-                  without_protection: true
-              }
+              platform: platform
           )
 
           module_target.save!
@@ -1282,39 +1267,19 @@ RSpec.describe Metasploit::Cache::Module::Instance do
             target_platforms_length: 0
         ).tap { |module_target|
           module_target.target_architectures.build(
-              {
-                  architecture: architecture
-              },
-              {
-                  without_protection: true
-              }
+              architecture: architecture
           )
 
           module_target.module_instance.module_architectures.build(
-              {
-                  architecture: architecture
-              },
-              {
-                  without_protection: true
-              }
+              architecture: architecture
           )
 
           module_target.target_platforms.build(
-              {
-                  platform: platform
-              },
-              {
-                  without_protection: true
-              }
+              platform: platform
           )
 
           module_target.module_instance.module_platforms.build(
-              {
                   platform: platform
-              },
-              {
-                  without_protection: true
-              }
           )
         }
       end
