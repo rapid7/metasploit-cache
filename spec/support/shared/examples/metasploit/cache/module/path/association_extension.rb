@@ -91,20 +91,6 @@ RSpec.shared_examples_for 'Metasploit::Cache::Module::Path::AssociationExtension
           each_changed
         end
 
-        it 'should use Set to calculate new relative_paths' do
-          set = Set.new(module_ancestor_relative_paths)
-
-          expect(Set).to receive(:new) { |actual_relative_paths|
-                           expect(actual_relative_paths).to match_array(module_ancestor_relative_paths)
-                         }.and_return(set)
-
-          existing_module_ancestor_relative_paths.each do |relative_path|
-            expect(set).to receive(:delete).with(relative_path).and_call_original
-          end
-
-          each_changed
-        end
-
         context ':assume_changed option' do
           context 'with true' do
             let(:options) do
