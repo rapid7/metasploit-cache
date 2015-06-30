@@ -438,7 +438,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
 
         it 'should validate uniqueness of real path' do
           expect(duplicate).not_to be_valid
-          expect(duplicate.errors[:real_path]).to include(taken)
+          expect(duplicate.errors[:real_path]).to include(error)
         end
       end
 
