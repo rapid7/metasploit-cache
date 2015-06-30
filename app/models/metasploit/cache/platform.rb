@@ -76,12 +76,6 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   derives :fully_qualified_name, validate: true
 
   #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :relative_name
-
-  #
   # Search
   #
 

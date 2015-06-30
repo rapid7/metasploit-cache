@@ -24,12 +24,6 @@ class Metasploit::Cache::Module::Action < ActiveRecord::Base
   #   @return [String]
 
   #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :name
-
-  #
   # Search Attributes
   #
 

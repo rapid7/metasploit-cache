@@ -23,13 +23,6 @@ class Metasploit::Cache::Module::Architecture < ActiveRecord::Base
   #   @return [Integer]
 
   #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :architecture
-  attr_accessible :module_instance
-
-  #
   # Validations
   #
 

@@ -67,15 +67,6 @@ class Metasploit::Cache::Authority < ActiveRecord::Base
   #   @return [String, nil]
 
   #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :abbreviation
-  attr_accessible :obsolete
-  attr_accessible :summary
-  attr_accessible :url
-
-  #
   # Search Attributes
   #
 

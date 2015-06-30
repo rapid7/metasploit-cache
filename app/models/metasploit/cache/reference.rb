@@ -83,13 +83,6 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
   derives :url, validate: false
 
   #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :designation
-  attr_accessible :url
-
-  #
   # Search Attributes
   #
 

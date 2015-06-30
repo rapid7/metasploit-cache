@@ -101,15 +101,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   derives :real_path_sha1_hex_digest, :validate => false
 
   #
-  # Mass Assignment Security
-  #
-
-  # relative_path is accessible since it is set when building cache.
-  attr_accessible :relative_path
-  # real_path_modified_at is NOT accessible since it's derived
-  # real_path_sha1_hex_digest is NOT accessible since it's derived
-
-  #
   # Validations
   #
 

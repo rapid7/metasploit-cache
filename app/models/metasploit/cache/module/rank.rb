@@ -99,13 +99,6 @@ class Metasploit::Cache::Module::Rank < ActiveRecord::Base
   #   @return [Integer]
 
   #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :name
-  attr_accessible :number
-
-  #
   # Search Attributes
   #
 
