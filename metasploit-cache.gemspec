@@ -20,18 +20,18 @@ Gem::Specification.new do |spec|
   spec.require_paths = %w{app/cells app/models app/validators lib}
 
   spec.add_development_dependency "bundler", "~> 1.7"
-  spec.add_development_dependency 'metasploit-version', '= 0.1.3.pre.changelog.pre.template'
+  spec.add_development_dependency 'metasploit-version', '~> 0.1.3'
   spec.add_development_dependency 'metasploit-yard', '~> 1.0'
   spec.add_development_dependency "rake", "~> 10.0"
   # 0.8.7.4 cannot parse required keyword arguments from Ruby 2.1
   spec.add_development_dependency 'yard', '> 0.8.7.4'
   spec.add_development_dependency 'yard-activerecord', '~> 0.0.14'
-  spec.add_development_dependency 'yard-metasploit-erd', '= 0.0.4.pre.required.pre.keyword.pre.arguments'
+  spec.add_development_dependency 'yard-metasploit-erd', '~> 1.0'
 
-  spec.add_runtime_dependency 'activerecord', '>= 3.2.13', '< 4.0.0'
+  spec.add_runtime_dependency 'activerecord', '>= 4.0.9', '< 4.1.0'
   spec.add_runtime_dependency 'awesome_nested_set'
   spec.add_runtime_dependency 'file-find'
   # Allow patching of Metasploit::Cache models.
-  spec.add_runtime_dependency 'metasploit-concern', '~> 0.3.0'
-  spec.add_runtime_dependency 'metasploit-model', '= 0.29.2.pre.validates.pre.nilness.pre.of'
+  spec.add_runtime_dependency 'metasploit-concern', '~> 1.0'
+  spec.add_runtime_dependency 'metasploit-model', '~> 1.0'
 end
