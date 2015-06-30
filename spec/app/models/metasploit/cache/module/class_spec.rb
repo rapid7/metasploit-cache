@@ -296,9 +296,9 @@ RSpec.describe Metasploit::Cache::Module::Class do
       end
     end
 
-    context 'ranked' do
-      subject(:ranked) {
-        described_class.ranked.to_a
+    context 'order_by_rank' do
+      subject(:order_by_rank) {
+        described_class.order_by_rank.to_a
       }
 
       #
@@ -345,7 +345,7 @@ RSpec.describe Metasploit::Cache::Module::Class do
       }
 
       it 'returns Metasploit::Cache::Module::Classes sorted by Metasploit::Cache::Module::Rank.number descending' do
-        expect(ranked).to eq([excellent, great, good, normal, average, low, manaual])
+        expect(order_by_rank).to eq([excellent, great, good, normal, average, low, manaual])
       end
     end
 

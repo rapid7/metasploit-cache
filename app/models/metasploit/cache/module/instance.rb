@@ -324,7 +324,7 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
               Metasploit::Cache::Module::Instance.arel_table['*']
           ).select(
               Metasploit::Cache::Module::Rank.arel_table[:number]
-          ).uniq.ranked
+          ).uniq.order_by_rank
         }
 
   # @!method self.intersecting_architecture_abbreviations
@@ -441,16 +441,16 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
               Metasploit::Cache::Module::Instance.arel_table['*']
           ).select(
               Metasploit::Cache::Module::Rank.arel_table[:number]
-          ).uniq.ranked
+          ).uniq.order_by_rank
         }
 
-  # @!method self.ranked
+  # @!method self.order_by_rank
   #   Orders {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} by their {#module_class} {Metasploit::Cache::Module::Class#rank}
   #   {Metasploit::Cache::Module::Rank#number} in descending order so better, more reliable modules are first.
   #
   #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
-  #   @see Metasploit::Cache::Module::Class.ranked
-  scope :ranked,
+  #   @see Metasploit::Cache::Module::Class.order_by_rank
+  scope :order_by_rank,
         ->{
           joins(
               module_class: :rank
@@ -499,7 +499,7 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
               module_target
           ).intersecting_platforms_with(
               module_target
-          ).ranked
+          ).order_by_rank
         }
 
   #

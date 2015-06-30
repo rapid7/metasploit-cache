@@ -122,13 +122,13 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
           )
         }
 
-  # @!method self.ranked
+  # @!method self.order_by_rank
   #   Orders {Metasploit::Cache::Module::Class Metasploit::Cache::Module::Classes} by their {#rank}
   #   {Metasploit::Cache::Module::Rank#number} in descending order, so better, more reliable modules are first.
   #
   #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Class>]
-  #   @see Metasploit::Cache::Module::Instance.ranked
-  scope :ranked,
+  #   @see Metasploit::Cache::Module::Instance.order_by_rank
+  scope :order_by_rank,
         ->{
           joins(
               :rank
