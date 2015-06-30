@@ -203,11 +203,6 @@ RSpec.describe Metasploit::Cache::Reference do
     end
   end
 
-  context 'mass assignment security' do
-    it { should allow_mass_assignment_of(:designation) }
-    it { should allow_mass_assignment_of(:url) }
-  end
-
   context 'search' do
     let(:base_class) {
       Metasploit::Cache::Reference

@@ -198,12 +198,6 @@ RSpec.describe Metasploit::Cache::Module::Path do
     end
   end
 
-  context 'mass assignment security' do
-    it { should allow_mass_assignment_of(:gem) }
-    it { should allow_mass_assignment_of(:name) }
-    it { should allow_mass_assignment_of(:real_path) }
-  end
-
   context 'validations' do
     context 'directory' do
       let(:error) do

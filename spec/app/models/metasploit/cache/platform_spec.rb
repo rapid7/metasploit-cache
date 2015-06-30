@@ -56,10 +56,6 @@ RSpec.describe Metasploit::Cache::Platform do
     it_should_behave_like 'derives', :fully_qualified_name, :validates => true
   end
 
-  context 'mass assignment security' do
-    it { should allow_mass_assignment_of(:relative_name) }
-  end
-
   context 'search' do
     let(:base_class) {
       Metasploit::Cache::Platform

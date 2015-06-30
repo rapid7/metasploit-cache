@@ -148,11 +148,6 @@ RSpec.describe Metasploit::Cache::Module::Rank do
     end
   end
 
-  context 'mass assignment security' do
-    it { should allow_mass_assignment_of(:name) }
-    it { should allow_mass_assignment_of(:number) }
-  end
-
   context 'search' do
     let(:base_class) {
       Metasploit::Cache::Module::Rank

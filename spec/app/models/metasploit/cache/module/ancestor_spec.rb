@@ -199,26 +199,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
   end
 
-  context 'mass assignment security' do
-    it 'should not allow mass assignment of full_name since it must match derived_full_name' do
-      expect(module_ancestor).not_to allow_mass_assignment_of(:full_name)
-    end
-
-    it 'should not allow mass assignment of payload_type since it must match derived_payload_type' do
-      expect(module_ancestor).not_to allow_mass_assignment_of(:payload_type)
-    end
-
-    it 'should not allow mass assignment of real_path_modified_at since it is derived' do
-      expect(module_ancestor).not_to allow_mass_assignment_of(:real_path_modified_at)
-    end
-
-    it 'should not allow mass assignment of real_path_sha1_hex_digest since it is derived' do
-      expect(module_ancestor).not_to allow_mass_assignment_of(:real_path_sha1_hex_digest)
-    end
-
-    it { should_not allow_mass_assignment_of(:parent_path_id) }
-  end
-
   context 'traits' do
     context ':metasploit_cache_module_ancestor_contents' do
       context 'with content?' do
