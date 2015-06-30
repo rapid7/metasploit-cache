@@ -12,6 +12,7 @@ class Metasploit::Cache::Author < ActiveRecord::Base
 
   # Joins to this author.
   has_many :contributions,
+           as: :author,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :author

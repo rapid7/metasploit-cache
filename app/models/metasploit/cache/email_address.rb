@@ -11,6 +11,7 @@ class Metasploit::Cache::EmailAddress < ActiveRecord::Base
 
   # Credits where authors used this email address for their contributions.
   has_many :contributions,
+           as: :email_address,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :email_address
