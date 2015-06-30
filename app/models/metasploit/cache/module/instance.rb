@@ -353,7 +353,8 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   scope :intersecting_architectures_with,
         ->(architectured){
           intersecting_architecture_abbreviations(
-              architectured.architectures.select(:abbreviation).build_arel
+              # TODO check if `to_sql can be removed in Rails 4.1+`
+              architectured.architectures.select(:abbreviation).to_sql
           )
         }
 

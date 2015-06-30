@@ -1058,9 +1058,9 @@ RSpec.describe Metasploit::Cache::Module::Instance do
           intersecting_architectures_with
         end
 
-        it 'calls intersecting_architecture_abbreviations with Arel::SelectManager' do
+        it 'calls intersecting_architecture_abbreviations with String' do
           expect(described_class).to receive(:intersecting_architecture_abbreviations).with(
-                                         an_instance_of(Arel::SelectManager)
+                                         an_instance_of(String)
                                      )
 
           intersecting_architectures_with
@@ -1126,9 +1126,9 @@ RSpec.describe Metasploit::Cache::Module::Instance do
           intersecting_architectures_with
         end
 
-        it 'calls intersecting_architecture_abbreviations with Arel::SelectManager to perform a subselect' do
+        it 'calls intersecting_architecture_abbreviations with String to perform a subselect' do
           expect(described_class).to receive(:intersecting_architecture_abbreviations).with(
-                                         an_instance_of(Arel::SelectManager)
+                                         an_instance_of(String)
                                      ).and_call_original
 
           intersecting_architectures_with
