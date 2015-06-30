@@ -1190,7 +1190,9 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       it_should_behave_like 'intersecting platforms'
 
       it 'calls intersecting_platforms with ActiveRecord::Relation<Metasploit::Cache::Platform>' do
-        expect(described_class).to receive(:intersecting_platforms).with(an_instance_of(ActiveRecord::Relation))
+        expect(described_class).to receive(:intersecting_platforms) do |scope|
+          expect(scope).to be_a ActiveRecord::Relation
+        end
 
         intersecting_platform_fully_qualified_names
       end
