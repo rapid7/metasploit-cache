@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+set -o verbose
+
+# Based on https://github.com/rapid7/metasploit-build/blob/e6849993372d5e47eb54b62c9a245c27700c34d0/dependencies/linux/build_sqlite.sh
+
+BUILD_DIR=${PWD}/build
+SRC_DIR=${PWD}/src
+VERSION=3081002
+PREFIX=${PWD}/output
+
+rm -rf ${SRC_DIR}
+mkdir -p ${SRC_DIR}
+
+pushd ${SRC_DIR}
+
+wget https://www.sqlite.org/2015/sqlite-autoconf-${VERSION}.tar.gz
+
+rm -rf ${BUILD_DIR}
+mkdir -p ${BUILD_DIR}
+tar -xzf sqlite-autoconf-${VERSION}.tar.gz -C ${BUILD_DIR}
+
+popd
+
+pushd ${BUILD_DIR}/sqlite-autoconf-${VERSION}
+
+./configure --prefix=${PREFIX}
+
+make
+make install

@@ -11,7 +11,7 @@ module Metasploit
       # The minor version number, scoped to the {MAJOR} version number.
       MINOR = 65
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-      PATCH = 1
+      PATCH = 2
       # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version.
       PRERELEASE = "rails-4-0"
 

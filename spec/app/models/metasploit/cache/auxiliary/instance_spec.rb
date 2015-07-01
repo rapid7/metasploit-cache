@@ -54,7 +54,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
     it_should_behave_like 'validates at least one in association',
                           :licensable_licenses,
                           factory: :metasploit_cache_auxiliary_instance
-    
+
     context 'validates inclusion of #default_action in #actions' do
       subject(:default_action_errors) {
         auxiliary_instance.errors[:default_action]

@@ -91,6 +91,15 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
            through: :referencable_references
 
   #
+  # through: :licensable_licenses
+  #
+
+  # Licenses covering code in this post Metasploit Module.
+  has_many :licenses,
+           class_name: 'Metasploit::Cache::License',
+           through: :licensable_licenses
+
+  #
   # through: :platformable_platforms
   #
 
