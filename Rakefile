@@ -45,7 +45,7 @@ task :coverage do
   # and its specs.
   minimum_coverage_by_adapter = {
       'postgresql' => 99.69,
-      'sqlite3' => 99.69
+      'sqlite3' => 99.65
   }
 
   SimpleCov.configure do
