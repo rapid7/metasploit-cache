@@ -183,7 +183,7 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   def derived_fully_qualified_name
     if relative_name.present?
       if parent
-        "#{parent.fully_qualified_name} #{relative_name}"
+        "#{parent.fully_qualified_name} #{relative_name}".encode('UTF-8')
       else
         relative_name
       end
