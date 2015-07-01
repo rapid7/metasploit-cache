@@ -167,10 +167,12 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   #
   # @return [void]
   def compatible_platforms
-    arel = platforms_arel
+    arel_and_bind_values = platforms_arel_and_bind_values
 
-    unless arel.nil?
-      if Metasploit::Cache::Platform.find_by_sql(arel.take(1)).empty?
+    unless arel_and_bind_values.nil?
+      arel, bind_values = arel_and_bind_values
+
+      if Metasploit::Cache::Platform.find_by_sql(arel.take(1), bind_values).empty?
         errors.add(:base, :incompatible_platforms)
       end
     end
@@ -183,25 +185,35 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   # The nested set intersection of {#payload_stage_instance} {Metasploit::Cache::Payload::Stage::Instance#platforms} and
   # {#payload_stager_instance} {Metasploit::Cache::Payload::Stager::Instance#platforms}.
   #
-  # @return [Arel::SelectManager] An AREL select that will return the platforms supported by this staged payload
-  #   Metasploit Module.
+  # @return [Array(Arel::SelectManager, Array<Array(ActiveRecord::ConnectionAdapters::Column, Object)>)] An AREL select
+  #   that will return the platforms supported by this staged payload Metasploit Module along with the bind values for
+  #   any `Arel::Nodes::BindParam`s in the `Arel::SelectManager`.
   # @return [nil] unless {#payload_stage_instance} and {#payload_stager_instance} are present
-  def platforms_arel
+  def platforms_arel_and_bind_values
     # TODO replace with ActiveRecord::QueryMethods.none
     if payload_stage_instance && payload_stager_instance
       payload_stage_platforms_table = Arel::Table.new(:payload_stage_platforms)
       payload_stager_platforms_table = Arel::Table.new(:payload_stager_platforms)
 
+      payload_stage_platforms_relation = payload_stage_instance.platforms
+      payload_stager_platforms_relation = payload_stager_instance.platforms
+
+      bind_values = payload_stage_platforms_relation.bind_values + payload_stager_platforms_relation.bind_values
+
       payload_stage_platforms_cte = Arel::Nodes::As.new(
           payload_stage_platforms_table,
-          # @see https://github.com/rails/arel/issues/309
-          Arel.sql("(#{payload_stage_instance.platforms.to_sql})")
+          payload_stage_platforms_relation.arel
       )
+
+      start = self.class.renumber_bind_params(payload_stage_platforms_cte.right.ast, bind_values)
+
       payload_stager_platforms_cte = Arel::Nodes::As.new(
           payload_stager_platforms_table,
-          # @see https://github.com/rails/arel/issues/309
-          Arel.sql("(#{payload_stager_instance.platforms.to_sql})")
+          payload_stager_platforms_relation.arel
       )
+
+      self.class.renumber_bind_params(payload_stager_platforms_cte.right.ast, bind_values, start)
+
       union = subset_query(payload_stage_platforms_table, payload_stager_platforms_table).union(
           subset_query(payload_stager_platforms_table, payload_stage_platforms_table)
       )
@@ -214,12 +226,14 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
           platforms_table.name
       )
 
-      platforms_table.from(union_alias).project(
+      arel = platforms_table.from(union_alias).project(
           platforms_table[Arel.star]
       ).with(
           payload_stage_platforms_cte,
           payload_stager_platforms_cte
       )
+
+      [arel, bind_values]
     end
   end
 
