@@ -104,7 +104,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 
 ### Test coverage
 - [ ] `rake cucumber spec coverage`
-- [ ] Verify only `[warn]`ings are `@param` on scopes due to yard-activerecord bug.
+- [ ] VERIFY no failures
 - [ ] VERIFY 99.69% coverage
 
 ### Documentation coverage
