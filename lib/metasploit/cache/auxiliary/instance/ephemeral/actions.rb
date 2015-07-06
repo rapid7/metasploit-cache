@@ -16,11 +16,11 @@ module Metasploit::Cache::Auxiliary::Instance::Ephemeral::Actions
   # Builds new {Metasploit::Cache::Auxiliary::Instance#actions} on `destination`.
   #
   # @param destination [Metasploit::Cache::Auxiliary::Instance]
-  # @param source (see #source_attribute_set)
+  # @param destination_attribute_set [Set<String>] Set of {Metasploit::Cache::Module::Action#name}s of `destination`'s
+  #   {Metasploit::Cache::Auxiliary::Instance#actions}.
+  # @param source_attribute_set [Set<String>] Set of auxiliary Metasploit Module instance's action name.
   # @return [Metasploit::Cache;:Auxiliary::Instance] `destination`
-  def self.build_added(destination:, source:)
-    destination_attribute_set = self.destination_attribute_set(destination)
-    source_attribute_set = self.source_attribute_set(source)
+  def self.build_added(destination:, destination_attribute_set:, source_attribute_set:)
     added_attributes_set = self.added_attributes_set(
         destination_attribute_set: destination_attribute_set,
         source_attribute_set: source_attribute_set
@@ -49,11 +49,11 @@ module Metasploit::Cache::Auxiliary::Instance::Ephemeral::Actions
   # `source`.
   #
   # @param destination [Metasploit::Cache::Auxiliary::Instance]
-  # @param source (see #source_attribute_set)
+  # @param destination_attribute_set [Set<String>] Set of {Metasploit::Cache::Module::Action#name}s of `destination`'s
+  #   {Metasploit::Cache::Auxiliary::Instance#actions}.
+  # @param source_attribute_set [Set<String>] Set of auxiliary Metasploit Module instance's action name.
   # @return [Metasploit::Cache;:Auxiliary::Instance] `destination`
-  def self.destroy_removed(destination:, source:)
-    destination_attribute_set = self.destination_attribute_set(destination)
-    source_attribute_set = self.source_attribute_set(source)
+  def self.destroy_removed(destination:, destination_attribute_set:, source_attribute_set:)
     removed_attributes_set = self.removed_attributes_set(
         destination_attribute_set: destination_attribute_set,
         source_attribute_set: source_attribute_set
@@ -107,9 +107,23 @@ module Metasploit::Cache::Auxiliary::Instance::Ephemeral::Actions
   # @return [Metasploit::Cache::Auxiliary::Instance] `destination`
   def self.synchronize(destination:, source:)
     transaction(destination: destination) {
-      [:destroy_removed, :build_added, :update_default_action].reduce(destination) { |block_destination, transform|
-        send(transform, destination: block_destination, source: source)
-      }
+      cached_destination_attribute_set = destination_attribute_set(destination)
+      cached_source_attribute_set = source_attribute_set(source)
+
+      reduced = destroy_removed(
+          destination: destination,
+          destination_attribute_set: cached_destination_attribute_set,
+          source_attribute_set: cached_source_attribute_set
+      )
+      expanded = build_added(
+          destination: reduced,
+          destination_attribute_set: cached_destination_attribute_set,
+          source_attribute_set: cached_source_attribute_set
+      )
+      update_default_action(
+          destination: expanded,
+          source: source
+      )
     }
   end
 
