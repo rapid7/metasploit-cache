@@ -73,6 +73,13 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
     let(:auxiliary_metasploit_module_instance) {
       double('auxiliary Metasploit Module instance').tap { |instance|
         allow(instance).to receive(:class).and_return(metasploit_class)
+
+        action = double("auxiliary Metasploit Module instance action")
+        default_action_name = FactoryGirl.generate :metasploit_cache_module_action_name
+
+        allow(action).to receive(:name).and_return(default_action_name)
+        allow(instance).to receive(:default_action).and_return(default_action_name)
+        allow(instance).to receive(:actions).and_return([action])
       }
     }
 
