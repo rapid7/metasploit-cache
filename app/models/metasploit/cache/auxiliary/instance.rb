@@ -1,5 +1,11 @@
 # Instance-level metadata for an auxiliary Metasploit Module.
 class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
+  include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+
   #
   #
   # Associations
