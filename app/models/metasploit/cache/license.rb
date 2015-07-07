@@ -1,5 +1,9 @@
 # Represents licenses like BSD, MIT, etc used to provide license information for Metasploit modules
 class Metasploit::Cache::License < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
+  autoload :Ephemeral
+
   #
   # Associations
   #
