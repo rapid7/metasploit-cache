@@ -67,8 +67,12 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
         destination: to,
         source: auxiliary_metasploit_module_instance
     )
-    to = Metasploit::Cache::Contributable::Ephemeral::Contributions.synchronize(
+    license_synchronized = Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses.synchronize(
         destination: action_synchronized,
+        source: auxiliary_metasploit_module_instance
+    )
+    to = Metasploit::Cache::Contributable::Ephemeral::Contributions.synchronize(
+        destination: license_synchronized,
         source: auxiliary_metasploit_module_instance
     )
 
