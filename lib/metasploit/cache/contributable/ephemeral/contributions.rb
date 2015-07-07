@@ -35,7 +35,7 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # @param destination_attribute_set [Set<Hash{Symbol => String}>] Set of {Metasploit::Cache::Contribution} attributes
   #   of `destination`.
   # @param source_attribute_set [Set<Hash{}>]
-  def self.build_added(destination:, destination_attributes_set:, source:, source_attributes_set:)
+  def self.build_added(destination:, destination_attributes_set:, source_attributes_set:)
     cached_added_attributes_set = Metasploit::Cache::Ephemeral::AttributeSet.added(
         destination: destination_attributes_set,
         source: source_attributes_set
@@ -109,7 +109,7 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # @param source
   # @param source_attributes_set [Set<Hash{Symbol => String}>] Set of attributes from `source` `#authors`.
   # @return [#contributions] `destination`
-  def self.destroy_removed(destination:, destination_attributes_set:, source:, source_attributes_set:)
+  def self.destroy_removed(destination:, destination_attributes_set:, source_attributes_set:)
     cached_removed_attributes_set = Metasploit::Cache::Ephemeral::AttributeSet.removed(
         destination: destination_attributes_set,
         source: source_attributes_set
@@ -181,13 +181,11 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
       reduced = destroy_removed(
           destination: destination,
           destination_attributes_set: cached_destination_attributes_set,
-          source: source,
           source_attributes_set: cached_source_attributes_set
       )
       build_added(
           destination: reduced,
           destination_attributes_set: cached_destination_attributes_set,
-          source: source,
           source_attributes_set: cached_source_attributes_set
       )
     }
