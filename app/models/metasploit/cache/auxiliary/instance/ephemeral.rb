@@ -61,8 +61,12 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   def persist(to: auxiliary_instance)
     to.stance = auxiliary_metasploit_module_instance.stance
 
-    to = Metasploit::Cache::Auxiliary::Instance::Ephemeral::Actions.synchronize(
+    action_synchronized = Metasploit::Cache::Auxiliary::Instance::Ephemeral::Actions.synchronize(
         destination: to,
+        source: auxiliary_metasploit_module_instance
+    )
+    to = Metasploit::Cache::Contributable::Ephemeral::Contributions.synchronize(
+        destination: action_synchronized,
         source: auxiliary_metasploit_module_instance
     )
 

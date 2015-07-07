@@ -74,14 +74,25 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
       double('auxiliary Metasploit Module instance').tap { |instance|
         allow(instance).to receive(:class).and_return(metasploit_class)
 
-        action = double("auxiliary Metasploit Module instance action")
+        author = double('Metasploit Module instance author')
+        author_name = FactoryGirl.generate :metasploit_cache_author_name
+        email_address_domain = FactoryGirl.generate :metasploit_cache_email_address_domain
+        email_address_local = FactoryGirl.generate :metasploit_cache_email_address_local
+        email_address_full = "#{email_address_local}@#{email_address_domain}"
+
+        allow(author).to receive(:name).and_return(author_name)
+        allow(author).to receive(:email).and_return(email_address_full)
+
+        action = double('auxiliary Metasploit Module instance action')
         default_action_name = FactoryGirl.generate :metasploit_cache_module_action_name
         stance = FactoryGirl.generate :metasploit_cache_module_stance
+
 
         allow(action).to receive(:name).and_return(default_action_name)
 
         allow(instance).to receive(:default_action).and_return(default_action_name)
         allow(instance).to receive(:actions).and_return([action])
+        allow(instance).to receive(:authors).and_return([author])
         allow(instance).to receive(:stance).and_return(stance)
       }
     }
