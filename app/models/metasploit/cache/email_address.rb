@@ -1,9 +1,13 @@
 # Email address for used by an {Metasploit::Cache::Author} for {Metasploit::Cache::Module::Author credit} on a given {Metasploit::Cache::Module::Instance module}.
 class Metasploit::Cache::EmailAddress < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
   include Metasploit::Cache::Batch::Descendant
   include Metasploit::Cache::Derivation
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
+
+  autoload :Ephemeral
 
   #
   # Associations
