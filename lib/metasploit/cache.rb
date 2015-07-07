@@ -41,6 +41,7 @@ module Metasploit
     autoload :Direct
     autoload :EmailAddress
     autoload :Encoder
+    autoload :Ephemeral
     autoload :Error
     autoload :Exploit
     autoload :File
