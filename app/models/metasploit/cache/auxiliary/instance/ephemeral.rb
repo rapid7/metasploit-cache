@@ -59,7 +59,9 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   #   Giving `to` saves a database lookup if {#auxiliary_instance} is not loaded.
   # @return [Metasploit::Cache::Auxiliary::Instance] `#persisted?` will be `false` if saving fails.
   def persist(to: auxiliary_instance)
-    to.stance = auxiliary_metasploit_module_instance.stance
+    [:description, :name, :stance].each do |attribute|
+      to.send("#{attribute}=", auxiliary_metasploit_module_instance.send(attribute))
+    end
 
     action_synchronized = Metasploit::Cache::Auxiliary::Instance::Ephemeral::Actions.synchronize(
         destination: to,
