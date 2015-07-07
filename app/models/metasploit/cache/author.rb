@@ -2,9 +2,13 @@
 # the author's email may have changed over the history of metasploit-framework or they are submitting from a work and
 # personal email for different code.
 class Metasploit::Cache::Author < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
   include Metasploit::Cache::Batch::Descendant
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
+
+  autoload :Ephemeral
 
   #
   # Associations
