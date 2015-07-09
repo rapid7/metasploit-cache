@@ -63,30 +63,30 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
       to.send("#{attribute}=", auxiliary_metasploit_module_instance.send(attribute))
     end
 
-    action_synchronized = Metasploit::Cache::Auxiliary::Instance::Ephemeral::Actions.synchronize(
-        destination: to,
-        source: auxiliary_metasploit_module_instance
-    )
-    license_synchronized = Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses.synchronize(
-        destination: action_synchronized,
-        source: auxiliary_metasploit_module_instance
-    )
-    to = Metasploit::Cache::Contributable::Ephemeral::Contributions.synchronize(
-        destination: license_synchronized,
-        source: auxiliary_metasploit_module_instance
-    )
+    synchronizers = [
+        Metasploit::Cache::Auxiliary::Instance::Ephemeral::Actions,
+        Metasploit::Cache::Contributable::Ephemeral::Contributions,
+        Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
+    ]
+
+    synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
+      synchronizer.synchronize(
+                      destination: block_destination,
+                      source: auxiliary_metasploit_module_instance
+      )
+    }
 
     saved = ActiveRecord::Base.connection_pool.with_connection {
-      to.batched_save
+      synchronized.batched_save
     }
 
     unless saved
-      log_error(to) {
-        "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
+      log_error(synchronized) {
+        "Could not be persisted to #{synchronized.class}: #{synchronized.errors.full_messages.to_sentence}"
       }
     end
 
-    to
+    synchronized
   end
 
   private
