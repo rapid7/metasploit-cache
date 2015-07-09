@@ -44,12 +44,14 @@ class Metasploit::Cache::License < ActiveRecord::Base
             presence: true
 
   validates :summary,
-            uniqueness: true,
-            presence: true
+            uniqueness: {
+                allow_nil: true
+            }
 
   validates :url,
-            uniqueness: true,
-            presence: true
+            uniqueness: {
+                allow_nil: true
+            }
 
 
   # @!method abbreviation=(abbreviation)

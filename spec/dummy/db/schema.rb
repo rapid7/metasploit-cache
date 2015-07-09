@@ -13,16 +13,13 @@
 
 ActiveRecord::Schema.define(version: 20150528140442) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "mc_actionable_actions", force: true do |t|
     t.string  "name",            null: false
     t.integer "actionable_id",   null: false
     t.string  "actionable_type", null: false
   end
 
-  add_index "mc_actionable_actions", ["actionable_type", "actionable_id", "name"], name: "unique_mc_actionable_actions", unique: true, using: :btree
+  add_index "mc_actionable_actions", ["actionable_type", "actionable_id", "name"], name: "unique_mc_actionable_actions", unique: true
 
   create_table "mc_architecturable_architectures", force: true do |t|
     t.integer "architecturable_id",   null: false
@@ -30,9 +27,9 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "architecture_id",      null: false
   end
 
-  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id", "architecture_id"], name: "unique_mc_architecturable_architectures", unique: true, using: :btree
-  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id"], name: "mc_architecturable_architechurables", using: :btree
-  add_index "mc_architecturable_architectures", ["architecture_id"], name: "index_mc_architecturable_architectures_on_architecture_id", using: :btree
+  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id", "architecture_id"], name: "unique_mc_architecturable_architectures", unique: true
+  add_index "mc_architecturable_architectures", ["architecturable_type", "architecturable_id"], name: "mc_architecturable_architechurables"
+  add_index "mc_architecturable_architectures", ["architecture_id"], name: "index_mc_architecturable_architectures_on_architecture_id"
 
   create_table "mc_architectures", force: true do |t|
     t.integer "bits"
@@ -42,9 +39,9 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.string  "summary",      null: false
   end
 
-  add_index "mc_architectures", ["abbreviation"], name: "index_mc_architectures_on_abbreviation", unique: true, using: :btree
-  add_index "mc_architectures", ["family", "bits", "endianness"], name: "index_mc_architectures_on_family_and_bits_and_endianness", unique: true, using: :btree
-  add_index "mc_architectures", ["summary"], name: "index_mc_architectures_on_summary", unique: true, using: :btree
+  add_index "mc_architectures", ["abbreviation"], name: "index_mc_architectures_on_abbreviation", unique: true
+  add_index "mc_architectures", ["family", "bits", "endianness"], name: "index_mc_architectures_on_family_and_bits_and_endianness", unique: true
+  add_index "mc_architectures", ["summary"], name: "index_mc_architectures_on_summary", unique: true
 
   create_table "mc_authorities", force: true do |t|
     t.string  "abbreviation",                 null: false
@@ -53,15 +50,15 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.text    "url"
   end
 
-  add_index "mc_authorities", ["abbreviation"], name: "index_mc_authorities_on_abbreviation", unique: true, using: :btree
-  add_index "mc_authorities", ["summary"], name: "index_mc_authorities_on_summary", unique: true, using: :btree
-  add_index "mc_authorities", ["url"], name: "index_mc_authorities_on_url", unique: true, using: :btree
+  add_index "mc_authorities", ["abbreviation"], name: "index_mc_authorities_on_abbreviation", unique: true
+  add_index "mc_authorities", ["summary"], name: "index_mc_authorities_on_summary", unique: true
+  add_index "mc_authorities", ["url"], name: "index_mc_authorities_on_url", unique: true
 
   create_table "mc_authors", force: true do |t|
     t.string "name", null: false
   end
 
-  add_index "mc_authors", ["name"], name: "index_mc_authors_on_name", unique: true, using: :btree
+  add_index "mc_authors", ["name"], name: "index_mc_authors_on_name", unique: true
 
   create_table "mc_auxiliary_instances", force: true do |t|
     t.text    "description",        null: false
@@ -72,7 +69,7 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "default_action_id"
   end
 
-  add_index "mc_auxiliary_instances", ["auxiliary_class_id"], name: "index_mc_auxiliary_instances_on_auxiliary_class_id", unique: true, using: :btree
+  add_index "mc_auxiliary_instances", ["auxiliary_class_id"], name: "index_mc_auxiliary_instances_on_auxiliary_class_id", unique: true
 
   create_table "mc_contributions", force: true do |t|
     t.integer "author_id",          null: false
@@ -81,18 +78,18 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "email_address_id"
   end
 
-  add_index "mc_contributions", ["author_id"], name: "index_mc_contributions_on_author_id", using: :btree
-  add_index "mc_contributions", ["contributable_type", "contributable_id", "author_id"], name: "unique_mc_contribution_authors", unique: true, using: :btree
-  add_index "mc_contributions", ["contributable_type", "contributable_id", "email_address_id"], name: "unique_mc_contribution_email_addresses", unique: true, using: :btree
-  add_index "mc_contributions", ["contributable_type", "contributable_id"], name: "mc_contribution_contributables", using: :btree
-  add_index "mc_contributions", ["email_address_id"], name: "index_mc_contributions_on_email_address_id", using: :btree
+  add_index "mc_contributions", ["author_id"], name: "index_mc_contributions_on_author_id"
+  add_index "mc_contributions", ["contributable_type", "contributable_id", "author_id"], name: "unique_mc_contribution_authors", unique: true
+  add_index "mc_contributions", ["contributable_type", "contributable_id", "email_address_id"], name: "unique_mc_contribution_email_addresses", unique: true
+  add_index "mc_contributions", ["contributable_type", "contributable_id"], name: "mc_contribution_contributables"
+  add_index "mc_contributions", ["email_address_id"], name: "index_mc_contributions_on_email_address_id"
 
   create_table "mc_direct_classes", force: true do |t|
     t.integer "ancestor_id", null: false
     t.integer "rank_id",     null: false
   end
 
-  add_index "mc_direct_classes", ["ancestor_id"], name: "unique_mc_direct_classes", unique: true, using: :btree
+  add_index "mc_direct_classes", ["ancestor_id"], name: "unique_mc_direct_classes", unique: true
 
   create_table "mc_email_addresses", force: true do |t|
     t.string "domain", null: false
@@ -100,10 +97,10 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.string "local",  null: false
   end
 
-  add_index "mc_email_addresses", ["domain", "local"], name: "index_mc_email_addresses_on_domain_and_local", unique: true, using: :btree
-  add_index "mc_email_addresses", ["domain"], name: "index_mc_email_addresses_on_domain", using: :btree
-  add_index "mc_email_addresses", ["full"], name: "index_mc_email_addresses_on_full", unique: true, using: :btree
-  add_index "mc_email_addresses", ["local"], name: "index_mc_email_addresses_on_local", using: :btree
+  add_index "mc_email_addresses", ["domain", "local"], name: "index_mc_email_addresses_on_domain_and_local", unique: true
+  add_index "mc_email_addresses", ["domain"], name: "index_mc_email_addresses_on_domain"
+  add_index "mc_email_addresses", ["full"], name: "index_mc_email_addresses_on_full", unique: true
+  add_index "mc_email_addresses", ["local"], name: "index_mc_email_addresses_on_local"
 
   create_table "mc_encoder_instances", force: true do |t|
     t.text    "description",      null: false
@@ -111,7 +108,7 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "encoder_class_id", null: false
   end
 
-  add_index "mc_encoder_instances", ["encoder_class_id"], name: "index_mc_encoder_instances_on_encoder_class_id", unique: true, using: :btree
+  add_index "mc_encoder_instances", ["encoder_class_id"], name: "index_mc_encoder_instances_on_encoder_class_id", unique: true
 
   create_table "mc_exploit_instances", force: true do |t|
     t.text    "description",               null: false
@@ -123,8 +120,8 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "exploit_class_id",          null: false
   end
 
-  add_index "mc_exploit_instances", ["default_exploit_target_id"], name: "index_mc_exploit_instances_on_default_exploit_target_id", unique: true, using: :btree
-  add_index "mc_exploit_instances", ["exploit_class_id"], name: "index_mc_exploit_instances_on_exploit_class_id", unique: true, using: :btree
+  add_index "mc_exploit_instances", ["default_exploit_target_id"], name: "index_mc_exploit_instances_on_default_exploit_target_id", unique: true
+  add_index "mc_exploit_instances", ["exploit_class_id"], name: "index_mc_exploit_instances_on_exploit_class_id", unique: true
 
   create_table "mc_exploit_targets", force: true do |t|
     t.integer "index",               null: false
@@ -132,9 +129,9 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "exploit_instance_id", null: false
   end
 
-  add_index "mc_exploit_targets", ["exploit_instance_id", "index"], name: "index_mc_exploit_targets_on_exploit_instance_id_and_index", unique: true, using: :btree
-  add_index "mc_exploit_targets", ["exploit_instance_id", "name"], name: "index_mc_exploit_targets_on_exploit_instance_id_and_name", unique: true, using: :btree
-  add_index "mc_exploit_targets", ["exploit_instance_id"], name: "index_mc_exploit_targets_on_exploit_instance_id", using: :btree
+  add_index "mc_exploit_targets", ["exploit_instance_id", "index"], name: "index_mc_exploit_targets_on_exploit_instance_id_and_index", unique: true
+  add_index "mc_exploit_targets", ["exploit_instance_id", "name"], name: "index_mc_exploit_targets_on_exploit_instance_id_and_name", unique: true
+  add_index "mc_exploit_targets", ["exploit_instance_id"], name: "index_mc_exploit_targets_on_exploit_instance_id"
 
   create_table "mc_licensable_licenses", force: true do |t|
     t.integer  "licensable_id",   null: false
@@ -144,26 +141,26 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.datetime "updated_at"
   end
 
-  add_index "mc_licensable_licenses", ["licensable_type", "licensable_id", "license_id"], name: "unique_mc_licensable_licenses", unique: true, using: :btree
-  add_index "mc_licensable_licenses", ["licensable_type", "licensable_id"], name: "mc_licensable_polymorphic", using: :btree
-  add_index "mc_licensable_licenses", ["license_id"], name: "index_mc_licensable_licenses_on_license_id", using: :btree
+  add_index "mc_licensable_licenses", ["licensable_type", "licensable_id", "license_id"], name: "unique_mc_licensable_licenses", unique: true
+  add_index "mc_licensable_licenses", ["licensable_type", "licensable_id"], name: "mc_licensable_polymorphic"
+  add_index "mc_licensable_licenses", ["license_id"], name: "index_mc_licensable_licenses_on_license_id"
 
   create_table "mc_licenses", force: true do |t|
     t.string "abbreviation", null: false
-    t.text   "summary",      null: false
-    t.string "url",          null: false
+    t.text   "summary"
+    t.string "url"
   end
 
-  add_index "mc_licenses", ["abbreviation"], name: "index_mc_licenses_on_abbreviation", unique: true, using: :btree
-  add_index "mc_licenses", ["summary"], name: "index_mc_licenses_on_summary", unique: true, using: :btree
-  add_index "mc_licenses", ["url"], name: "index_mc_licenses_on_url", unique: true, using: :btree
+  add_index "mc_licenses", ["abbreviation"], name: "index_mc_licenses_on_abbreviation", unique: true
+  add_index "mc_licenses", ["summary"], name: "index_mc_licenses_on_summary", unique: true
+  add_index "mc_licenses", ["url"], name: "index_mc_licenses_on_url", unique: true
 
   create_table "mc_module_actions", force: true do |t|
     t.integer "module_instance_id", null: false
     t.text    "name",               null: false
   end
 
-  add_index "mc_module_actions", ["module_instance_id", "name"], name: "index_mc_module_actions_on_module_instance_id_and_name", unique: true, using: :btree
+  add_index "mc_module_actions", ["module_instance_id", "name"], name: "index_mc_module_actions_on_module_instance_id_and_name", unique: true
 
   create_table "mc_module_ancestors", force: true do |t|
     t.string   "type"
@@ -173,16 +170,16 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer  "parent_path_id",                       null: false
   end
 
-  add_index "mc_module_ancestors", ["parent_path_id"], name: "index_mc_module_ancestors_on_parent_path_id", using: :btree
-  add_index "mc_module_ancestors", ["real_path_sha1_hex_digest"], name: "index_mc_module_ancestors_on_real_path_sha1_hex_digest", unique: true, using: :btree
-  add_index "mc_module_ancestors", ["relative_path"], name: "index_mc_module_ancestors_on_relative_path", unique: true, using: :btree
+  add_index "mc_module_ancestors", ["parent_path_id"], name: "index_mc_module_ancestors_on_parent_path_id"
+  add_index "mc_module_ancestors", ["real_path_sha1_hex_digest"], name: "index_mc_module_ancestors_on_real_path_sha1_hex_digest", unique: true
+  add_index "mc_module_ancestors", ["relative_path"], name: "index_mc_module_ancestors_on_relative_path", unique: true
 
   create_table "mc_module_architectures", force: true do |t|
     t.integer "architecture_id",    null: false
     t.integer "module_instance_id", null: false
   end
 
-  add_index "mc_module_architectures", ["module_instance_id", "architecture_id"], name: "unique_mc_module_architectures", unique: true, using: :btree
+  add_index "mc_module_architectures", ["module_instance_id", "architecture_id"], name: "unique_mc_module_architectures", unique: true
 
   create_table "mc_module_authors", force: true do |t|
     t.integer "author_id",          null: false
@@ -190,10 +187,10 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "module_instance_id", null: false
   end
 
-  add_index "mc_module_authors", ["author_id"], name: "index_mc_module_authors_on_author_id", using: :btree
-  add_index "mc_module_authors", ["email_address_id"], name: "index_mc_module_authors_on_email_address_id", using: :btree
-  add_index "mc_module_authors", ["module_instance_id", "author_id"], name: "index_mc_module_authors_on_module_instance_id_and_author_id", unique: true, using: :btree
-  add_index "mc_module_authors", ["module_instance_id"], name: "index_mc_module_authors_on_module_instance_id", using: :btree
+  add_index "mc_module_authors", ["author_id"], name: "index_mc_module_authors_on_author_id"
+  add_index "mc_module_authors", ["email_address_id"], name: "index_mc_module_authors_on_email_address_id"
+  add_index "mc_module_authors", ["module_instance_id", "author_id"], name: "index_mc_module_authors_on_module_instance_id_and_author_id", unique: true
+  add_index "mc_module_authors", ["module_instance_id"], name: "index_mc_module_authors_on_module_instance_id"
 
   create_table "mc_module_classes", force: true do |t|
     t.text    "full_name",      null: false
@@ -203,9 +200,9 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "rank_id",        null: false
   end
 
-  add_index "mc_module_classes", ["full_name"], name: "index_mc_module_classes_on_full_name", unique: true, using: :btree
-  add_index "mc_module_classes", ["module_type", "reference_name"], name: "index_mc_module_classes_on_module_type_and_reference_name", unique: true, using: :btree
-  add_index "mc_module_classes", ["rank_id"], name: "index_mc_module_classes_on_rank_id", using: :btree
+  add_index "mc_module_classes", ["full_name"], name: "index_mc_module_classes_on_full_name", unique: true
+  add_index "mc_module_classes", ["module_type", "reference_name"], name: "index_mc_module_classes_on_module_type_and_reference_name", unique: true
+  add_index "mc_module_classes", ["rank_id"], name: "index_mc_module_classes_on_rank_id"
 
   create_table "mc_module_instances", force: true do |t|
     t.text    "description",       null: false
@@ -219,9 +216,9 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "module_class_id",   null: false
   end
 
-  add_index "mc_module_instances", ["default_action_id"], name: "index_mc_module_instances_on_default_action_id", unique: true, using: :btree
-  add_index "mc_module_instances", ["default_target_id"], name: "index_mc_module_instances_on_default_target_id", unique: true, using: :btree
-  add_index "mc_module_instances", ["module_class_id"], name: "index_mc_module_instances_on_module_class_id", unique: true, using: :btree
+  add_index "mc_module_instances", ["default_action_id"], name: "index_mc_module_instances_on_default_action_id", unique: true
+  add_index "mc_module_instances", ["default_target_id"], name: "index_mc_module_instances_on_default_target_id", unique: true
+  add_index "mc_module_instances", ["module_class_id"], name: "index_mc_module_instances_on_module_class_id", unique: true
 
   create_table "mc_module_paths", force: true do |t|
     t.string "gem"
@@ -229,51 +226,51 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.text   "real_path", null: false
   end
 
-  add_index "mc_module_paths", ["gem", "name"], name: "index_mc_module_paths_on_gem_and_name", unique: true, using: :btree
-  add_index "mc_module_paths", ["real_path"], name: "index_mc_module_paths_on_real_path", unique: true, using: :btree
+  add_index "mc_module_paths", ["gem", "name"], name: "index_mc_module_paths_on_gem_and_name", unique: true
+  add_index "mc_module_paths", ["real_path"], name: "index_mc_module_paths_on_real_path", unique: true
 
   create_table "mc_module_platforms", force: true do |t|
     t.integer "module_instance_id", null: false
     t.integer "platform_id",        null: false
   end
 
-  add_index "mc_module_platforms", ["module_instance_id", "platform_id"], name: "unique_mc_module_platforms", unique: true, using: :btree
+  add_index "mc_module_platforms", ["module_instance_id", "platform_id"], name: "unique_mc_module_platforms", unique: true
 
   create_table "mc_module_ranks", force: true do |t|
     t.string  "name",   null: false
     t.integer "number", null: false
   end
 
-  add_index "mc_module_ranks", ["name"], name: "index_mc_module_ranks_on_name", unique: true, using: :btree
-  add_index "mc_module_ranks", ["number"], name: "index_mc_module_ranks_on_number", unique: true, using: :btree
+  add_index "mc_module_ranks", ["name"], name: "index_mc_module_ranks_on_name", unique: true
+  add_index "mc_module_ranks", ["number"], name: "index_mc_module_ranks_on_number", unique: true
 
   create_table "mc_module_references", force: true do |t|
     t.integer "module_instance_id", null: false
     t.integer "reference_id",       null: false
   end
 
-  add_index "mc_module_references", ["module_instance_id", "reference_id"], name: "unique_mc_module_references", unique: true, using: :btree
+  add_index "mc_module_references", ["module_instance_id", "reference_id"], name: "unique_mc_module_references", unique: true
 
   create_table "mc_module_relationships", force: true do |t|
     t.integer "ancestor_id",   null: false
     t.integer "descendant_id", null: false
   end
 
-  add_index "mc_module_relationships", ["descendant_id", "ancestor_id"], name: "index_mc_module_relationships_on_descendant_id_and_ancestor_id", unique: true, using: :btree
+  add_index "mc_module_relationships", ["descendant_id", "ancestor_id"], name: "index_mc_module_relationships_on_descendant_id_and_ancestor_id", unique: true
 
   create_table "mc_module_target_architectures", force: true do |t|
     t.integer "architecture_id",  null: false
     t.integer "module_target_id", null: false
   end
 
-  add_index "mc_module_target_architectures", ["module_target_id", "architecture_id"], name: "unique_mc_module_target_architectures", unique: true, using: :btree
+  add_index "mc_module_target_architectures", ["module_target_id", "architecture_id"], name: "unique_mc_module_target_architectures", unique: true
 
   create_table "mc_module_target_platforms", force: true do |t|
     t.integer "module_target_id", null: false
     t.integer "platform_id",      null: false
   end
 
-  add_index "mc_module_target_platforms", ["module_target_id", "platform_id"], name: "unique_mc_module_target_platforms", unique: true, using: :btree
+  add_index "mc_module_target_platforms", ["module_target_id", "platform_id"], name: "unique_mc_module_target_platforms", unique: true
 
   create_table "mc_module_targets", force: true do |t|
     t.integer "index",              null: false
@@ -281,8 +278,8 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "module_instance_id", null: false
   end
 
-  add_index "mc_module_targets", ["module_instance_id", "index"], name: "index_mc_module_targets_on_module_instance_id_and_index", unique: true, using: :btree
-  add_index "mc_module_targets", ["module_instance_id", "name"], name: "index_mc_module_targets_on_module_instance_id_and_name", unique: true, using: :btree
+  add_index "mc_module_targets", ["module_instance_id", "index"], name: "index_mc_module_targets_on_module_instance_id_and_index", unique: true
+  add_index "mc_module_targets", ["module_instance_id", "name"], name: "index_mc_module_targets_on_module_instance_id_and_name", unique: true
 
   create_table "mc_nop_instances", force: true do |t|
     t.text    "description",  null: false
@@ -290,14 +287,14 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "nop_class_id", null: false
   end
 
-  add_index "mc_nop_instances", ["nop_class_id"], name: "index_mc_nop_instances_on_nop_class_id", unique: true, using: :btree
+  add_index "mc_nop_instances", ["nop_class_id"], name: "index_mc_nop_instances_on_nop_class_id", unique: true
 
   create_table "mc_payload_handlers", force: true do |t|
     t.string "general_handler_type", null: false
     t.string "handler_type",         null: false
   end
 
-  add_index "mc_payload_handlers", ["handler_type"], name: "index_mc_payload_handlers_on_handler_type", unique: true, using: :btree
+  add_index "mc_payload_handlers", ["handler_type"], name: "index_mc_payload_handlers_on_handler_type", unique: true
 
   create_table "mc_payload_single_instances", force: true do |t|
     t.text    "description",             null: false
@@ -307,8 +304,8 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "payload_single_class_id", null: false
   end
 
-  add_index "mc_payload_single_instances", ["handler_id"], name: "index_mc_payload_single_instances_on_handler_id", using: :btree
-  add_index "mc_payload_single_instances", ["payload_single_class_id"], name: "index_mc_payload_single_instances_on_payload_single_class_id", unique: true, using: :btree
+  add_index "mc_payload_single_instances", ["handler_id"], name: "index_mc_payload_single_instances_on_handler_id"
+  add_index "mc_payload_single_instances", ["payload_single_class_id"], name: "index_mc_payload_single_instances_on_payload_single_class_id", unique: true
 
   create_table "mc_payload_stage_instances", force: true do |t|
     t.text    "description",            null: false
@@ -317,16 +314,16 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "payload_stage_class_id", null: false
   end
 
-  add_index "mc_payload_stage_instances", ["payload_stage_class_id"], name: "index_mc_payload_stage_instances_on_payload_stage_class_id", unique: true, using: :btree
+  add_index "mc_payload_stage_instances", ["payload_stage_class_id"], name: "index_mc_payload_stage_instances_on_payload_stage_class_id", unique: true
 
   create_table "mc_payload_staged_classes", force: true do |t|
     t.integer "payload_stage_instance_id",  null: false
     t.integer "payload_stager_instance_id", null: false
   end
 
-  add_index "mc_payload_staged_classes", ["payload_stage_instance_id"], name: "index_mc_payload_staged_classes_on_payload_stage_instance_id", using: :btree
-  add_index "mc_payload_staged_classes", ["payload_stager_instance_id", "payload_stage_instance_id"], name: "unique_mc_payload_staged_classes", unique: true, using: :btree
-  add_index "mc_payload_staged_classes", ["payload_stager_instance_id"], name: "index_mc_payload_staged_classes_on_payload_stager_instance_id", using: :btree
+  add_index "mc_payload_staged_classes", ["payload_stage_instance_id"], name: "index_mc_payload_staged_classes_on_payload_stage_instance_id"
+  add_index "mc_payload_staged_classes", ["payload_stager_instance_id", "payload_stage_instance_id"], name: "unique_mc_payload_staged_classes", unique: true
+  add_index "mc_payload_staged_classes", ["payload_stager_instance_id"], name: "index_mc_payload_staged_classes_on_payload_stager_instance_id"
 
   create_table "mc_payload_stager_instances", force: true do |t|
     t.text    "description",             null: false
@@ -337,8 +334,8 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "payload_stager_class_id", null: false
   end
 
-  add_index "mc_payload_stager_instances", ["handler_id"], name: "index_mc_payload_stager_instances_on_handler_id", using: :btree
-  add_index "mc_payload_stager_instances", ["payload_stager_class_id"], name: "index_mc_payload_stager_instances_on_payload_stager_class_id", unique: true, using: :btree
+  add_index "mc_payload_stager_instances", ["handler_id"], name: "index_mc_payload_stager_instances_on_handler_id"
+  add_index "mc_payload_stager_instances", ["payload_stager_class_id"], name: "index_mc_payload_stager_instances_on_payload_stager_class_id", unique: true
 
   create_table "mc_platformable_platforms", force: true do |t|
     t.integer "platformable_id",   null: false
@@ -346,9 +343,9 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "platform_id",       null: false
   end
 
-  add_index "mc_platformable_platforms", ["platform_id"], name: "index_mc_platformable_platforms_on_platform_id", using: :btree
-  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id", "platform_id"], name: "unique_mc_platformable_platforms", unique: true, using: :btree
-  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id"], name: "mc_platformable_platformables", using: :btree
+  add_index "mc_platformable_platforms", ["platform_id"], name: "index_mc_platformable_platforms_on_platform_id"
+  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id", "platform_id"], name: "unique_mc_platformable_platforms", unique: true
+  add_index "mc_platformable_platforms", ["platformable_type", "platformable_id"], name: "mc_platformable_platformables"
 
   create_table "mc_platforms", force: true do |t|
     t.text    "fully_qualified_name", null: false
@@ -358,8 +355,8 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "left",                 null: false
   end
 
-  add_index "mc_platforms", ["fully_qualified_name"], name: "index_mc_platforms_on_fully_qualified_name", unique: true, using: :btree
-  add_index "mc_platforms", ["parent_id", "relative_name"], name: "index_mc_platforms_on_parent_id_and_relative_name", unique: true, using: :btree
+  add_index "mc_platforms", ["fully_qualified_name"], name: "index_mc_platforms_on_fully_qualified_name", unique: true
+  add_index "mc_platforms", ["parent_id", "relative_name"], name: "index_mc_platforms_on_parent_id_and_relative_name", unique: true
 
   create_table "mc_post_instances", force: true do |t|
     t.text    "description",       null: false
@@ -370,8 +367,8 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "post_class_id",     null: false
   end
 
-  add_index "mc_post_instances", ["default_action_id"], name: "index_mc_post_instances_on_default_action_id", unique: true, using: :btree
-  add_index "mc_post_instances", ["post_class_id"], name: "index_mc_post_instances_on_post_class_id", unique: true, using: :btree
+  add_index "mc_post_instances", ["default_action_id"], name: "index_mc_post_instances_on_default_action_id", unique: true
+  add_index "mc_post_instances", ["post_class_id"], name: "index_mc_post_instances_on_post_class_id", unique: true
 
   create_table "mc_referencable_references", force: true do |t|
     t.integer  "referencable_id",   null: false
@@ -381,9 +378,9 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.datetime "updated_at"
   end
 
-  add_index "mc_referencable_references", ["referencable_type", "referencable_id", "reference_id"], name: "unique_mc_referencable_references", unique: true, using: :btree
-  add_index "mc_referencable_references", ["referencable_type", "referencable_id"], name: "mc_referencable_polymorphic", using: :btree
-  add_index "mc_referencable_references", ["reference_id"], name: "index_mc_referencable_references_on_reference_id", using: :btree
+  add_index "mc_referencable_references", ["referencable_type", "referencable_id", "reference_id"], name: "unique_mc_referencable_references", unique: true
+  add_index "mc_referencable_references", ["referencable_type", "referencable_id"], name: "mc_referencable_polymorphic"
+  add_index "mc_referencable_references", ["reference_id"], name: "index_mc_referencable_references_on_reference_id"
 
   create_table "mc_references", force: true do |t|
     t.string  "designation"
@@ -391,7 +388,7 @@ ActiveRecord::Schema.define(version: 20150528140442) do
     t.integer "authority_id"
   end
 
-  add_index "mc_references", ["authority_id", "designation"], name: "index_mc_references_on_authority_id_and_designation", unique: true, using: :btree
-  add_index "mc_references", ["url"], name: "index_mc_references_on_url", unique: true, using: :btree
+  add_index "mc_references", ["authority_id", "designation"], name: "index_mc_references_on_authority_id_and_designation", unique: true
+  add_index "mc_references", ["url"], name: "index_mc_references_on_url", unique: true
 
 end
