@@ -4,8 +4,6 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   extend ActiveSupport::Autoload
   extend Metasploit::Cache::ResurrectingAttribute
 
-  autoload :Actions
-
   #
   # Attributes
   #
@@ -64,7 +62,7 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
     end
 
     synchronizers = [
-        Metasploit::Cache::Auxiliary::Instance::Ephemeral::Actions,
+        Metasploit::Cache::Actionable::Ephemeral::Actions,
         Metasploit::Cache::Contributable::Ephemeral::Contributions,
         Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
     ]

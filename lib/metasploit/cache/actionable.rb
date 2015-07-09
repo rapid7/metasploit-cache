@@ -3,6 +3,7 @@ module Metasploit::Cache::Actionable
   extend ActiveSupport::Autoload
 
   autoload :Action
+  autoload :Ephemeral
 
   #
   # Module Methods
