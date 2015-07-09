@@ -138,7 +138,15 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
         set_conditions.or(attributes_conditions)
       }
 
-      destination.contributions.includes(:author, :email_address).where(removed_set_conditions).destroy_all
+      destination.contributions.joins(
+          :author
+      ).references(
+          :email_address
+      ).where(
+          removed_set_conditions
+      ).readonly(
+          false
+      ).destroy_all
     end
 
     destination

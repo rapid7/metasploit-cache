@@ -58,14 +58,14 @@ module Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
     )
 
     unless destination.new_record? || cached_removed_attribute_set.empty?
-      destination.licensable_licenses.includes(
+      destination.licensable_licenses.joins(
           :license
       ).where(
           Metasploit::Cache::License.arel_table[:abbreviation].eq(
               # AREL cannot visit Set
               cached_removed_attribute_set.to_a
           )
-      ).destroy_all
+      ).readonly(false).destroy_all
     end
 
     destination
