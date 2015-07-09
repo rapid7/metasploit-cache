@@ -32,9 +32,9 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # Builds new {Metasploit::Cache::Contribution} as `#contributions` on `destination`.
   #
   # @param destination [#contributions]
-  # @param destination_attribute_set [Set<Hash{Symbol => String}>] Set of {Metasploit::Cache::Contribution} attributes
+  # @param destination_attributes_set [Set<Hash{Symbol => Hash{Symbol => String}}>] Set of {Metasploit::Cache::Contribution} attributes
   #   of `destination`.
-  # @param source_attribute_set [Set<Hash{}>]
+  # @param source_attributes_set [Set<Hash{Symbol => Hash{Symbol => String}}>]
   def self.build_added(destination:, destination_attributes_set:, source_attributes_set:)
     cached_added_attributes_set = Metasploit::Cache::Ephemeral::AttributeSet.added(
         destination: destination_attributes_set,
@@ -75,7 +75,7 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # The set of {Metasploit::Cache::Contribution} attributes currently persisted as `#contributions` on `destination`.
   #
   # @param destination [#contributions]
-  # @return [Set<Hash{Symbol => String}>]
+  # @return [Set<Hash{Symbol => Hash{Symbol => String}}>]
   def self.destination_attributes_set(destination)
     if destination.new_record?
       Set.new
@@ -104,10 +104,10 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # `destination` that are persisted, but don't exist in `source`.
   #
   # @param destination [#contributions]
-  # @param destination_attributes_set [Set<Hash{Symbol => String}>] Set of attributes from `#contributions` on
-  #   `destination`.
-  # @param source
-  # @param source_attributes_set [Set<Hash{Symbol => String}>] Set of attributes from `source` `#authors`.
+  # @param destination_attributes_set [Set<Hash{Symbol => Hash{Symbol => String}}>] Set of attributes from
+  #   `#contributions` on `destination`.
+  # @param source_attributes_set [Set<Hash{Symbol => Hash{Symbol => String}}>] Set of attributes from `source`
+  #   `#authors`.
   # @return [#contributions] `destination`
   def self.destroy_removed(destination:, destination_attributes_set:, source_attributes_set:)
     cached_removed_attributes_set = Metasploit::Cache::Ephemeral::AttributeSet.removed(
@@ -147,7 +147,7 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # The set of attributes from the `source` Metasploit Module instance.
   #
   # @param source [#authors] Metasploit Module instance
-  # @return [Set<Hash{Symbol => String}>] Set of author.names and email_address.full.
+  # @return [Set<Hash{Symbol => Hash{Symbol => String}}>] Set of author.names and email_address.full.
   def self.source_attributes_set(source)
     source.authors.each_with_object(Set.new) do |author, set|
       attributes = {
