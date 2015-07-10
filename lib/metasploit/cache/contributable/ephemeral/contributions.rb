@@ -138,15 +138,20 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
         set_conditions.or(attributes_conditions)
       }
 
-      destination.contributions.joins(
+      # includes + references triggers LEFT JOIN
+      relation = destination.contributions.joins(
           :author
+      ).includes(
+           :email_address
       ).references(
           :email_address
       ).where(
           removed_set_conditions
       ).readonly(
           false
-      ).destroy_all
+      )
+
+      relation.destroy_all
     end
 
     destination
@@ -186,16 +191,14 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
       cached_destination_attributes_set = destination_attributes_set(destination)
       cached_source_attributes_set = source_attributes_set(source)
 
-      reduced = destroy_removed(
-          destination: destination,
-          destination_attributes_set: cached_destination_attributes_set,
-          source_attributes_set: cached_source_attributes_set
-      )
-      build_added(
-          destination: reduced,
-          destination_attributes_set: cached_destination_attributes_set,
-          source_attributes_set: cached_source_attributes_set
-      )
+      [:destroy_removed, :build_added].reduce(destination) { |block_destination, method|
+        public_send(
+            method,
+            destination: block_destination,
+            destination_attributes_set: cached_destination_attributes_set,
+            source_attributes_set: cached_source_attributes_set
+        )
+      }
     }
   end
 end
