@@ -85,7 +85,7 @@ module Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
   # @param source [#license] a Metasploit Module instance
   # @return [#licenses] `destination`
   def self.synchronize(destination:, source:)
-    transaction(destination: destination) {
+    Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
       cached_destination_attribute_set = destination_attribute_set(destination)
       cached_source_attribute_set = source_attribute_set(source)
 
@@ -100,17 +100,5 @@ module Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
           source_attribute_set: cached_source_attribute_set
       )
     }
-  end
-
-  # Runs transaction on destination using temporary from the connection pool that is returned at end of `block`.
-  #
-  # @param destination [ActiveRecord::Base]
-  # @yield Block run in database transaction
-  # @yieldreturn [Object] value to return
-  # @return [Object] value returned from `block`.
-  def self.transaction(destination:, &block)
-    destination.class.connection_pool.with_connection do
-      destination.transaction(&block)
-    end
   end
 end

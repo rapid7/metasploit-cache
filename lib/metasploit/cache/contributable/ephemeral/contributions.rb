@@ -182,7 +182,7 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # @param source [#authors] a Metasploit Module instance
   # @return [#contributions] `destination`
   def self.synchronize(destination:, source:)
-    transaction(destination: destination) {
+    Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
       cached_destination_attributes_set = destination_attributes_set(destination)
       cached_source_attributes_set = source_attributes_set(source)
 
@@ -197,17 +197,5 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
           source_attributes_set: cached_source_attributes_set
       )
     }
-  end
-
-  # Runs transaction on destination using temporary from the connection pool that is returned at end of `block`.
-  #
-  # @param destination [Metasploit::Cache::Auxiliary::Instance]
-  # @yield Block run in database transaction
-  # @yieldreturn [Object] value to return
-  # @return [Object] value returned from `block`.
-  def self.transaction(destination:, &block)
-    destination.class.connection_pool.with_connection do
-      destination.transaction(&block)
-    end
   end
 end
