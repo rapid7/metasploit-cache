@@ -124,11 +124,15 @@ module Metasploit::Cache::Actionable::Ephemeral::Actions
   # @param source (see #source_attribute_set)
   # @return [#default_action] `destination`
   def self.update_default_action(destination:, source:)
-    source_default_action_name = self.source_default_action_name(source)
+    cached_source_default_action_name = source_default_action_name(source)
 
-    if source_default_action_name
+    if cached_source_default_action_name
+      # reset to `nil` because if source_default_action_name may be invalid and name an undeclared action not in
+      # destination.actions.
+      destination.default_action = nil
+
       destination.actions.each do |action|
-        if action.name == source_default_action_name
+        if action.name == cached_source_default_action_name
           destination.default_action = action
 
           break
