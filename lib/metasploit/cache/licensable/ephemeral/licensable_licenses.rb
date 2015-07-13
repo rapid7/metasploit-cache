@@ -61,7 +61,7 @@ module Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
       destination.licensable_licenses.joins(
           :license
       ).where(
-          Metasploit::Cache::License.arel_table[:abbreviation].eq(
+          Metasploit::Cache::License.arel_table[:abbreviation].in(
               # AREL cannot visit Set
               cached_removed_attribute_set.to_a
           )
