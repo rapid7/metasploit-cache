@@ -939,16 +939,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
         }
       }
 
-      it "matches Metasploit::Cache::Module::Instance with Metasploit::Cache::Module::Class#module_type 'encoder'", pending: 'Stopped working after Rails 4.0 upgrade.' do
-        expect(encoders_compatible_with).not_to be_empty
-
-        expect(
-            encoders_compatible_with.all? { |module_instance|
-              module_instance.module_class.module_type == 'encoder'
-            }
-        ).to eq(true)
-      end
-
       it 'matches encoders with same architectures', pending: 'Stopped working after Rails 4.0 upgrade.' do
         expect(encoders_compatible_with).to include(fully_matched_encoder_instance)
       end
@@ -1446,16 +1436,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
           module_instance.save!
         }
       }
-
-      it "matches Metasploit::Cache::Module::Instance with Metasploit::Cache::Module::Class#module_type 'nop'", pending: 'Stopped working after Rails 4.0 upgrade.' do
-        expect(nops_compatible_with).not_to be_empty
-
-        expect(
-            nops_compatible_with.all? { |module_instance|
-              module_instance.module_class.module_type == 'nop'
-            }
-        ).to eq(true)
-      end
 
       it 'matches nops with same architectures', pending: 'Stopped working after Rails 4.0 upgrade.' do
         expect(nops_compatible_with).to include(fully_matched_nop_instance)
