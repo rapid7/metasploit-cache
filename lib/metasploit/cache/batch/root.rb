@@ -42,6 +42,9 @@ module Metasploit::Cache::Batch::Root
       Metasploit::Cache::Batch.batch {
         recoverable_save
       }
+    # Different rescue blocks will be used for different adapters, but having < 100% coverage was causing new code to be
+    # left uncovered, so mark as nocov so coverage remains 100%.
+    # :nocov:
     rescue ActiveRecord::RecordNotUnique
       recoverable_save
     rescue ActiveRecord::StatementInvalid => active_record_statement_invalid
@@ -57,6 +60,7 @@ module Metasploit::Cache::Batch::Root
         raise
       end
     end
+    # :nocov:
   end
 
   # `save` wrapped in a new transaction/savepoint so that exception raised by save can be rescued and the transaction

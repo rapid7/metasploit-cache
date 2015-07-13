@@ -18,6 +18,9 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
 
     adapter = ActiveRecord::Base.connection_config[:adapter]
 
+    # Different when will be used for different adapters, but having < 100% coverage was causing new code to be
+    # left uncovered, so mark as nocov so coverage remains 100%.
+    # :nocov:
     case adapter
     when 'postgresql'
       context 'with PostgreSQL' do
@@ -176,11 +179,9 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
         end
       end
     else
-      # Would only be covered if build was misconfigured
-      # :nocov:
       raise ArgumentError, 'Unknown adapter'
-      # :nocov:
     end
+    # :nocov:
   end
 
   context '#recoverable_save' do
@@ -209,6 +210,9 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
         def raise_adapter_error
           adapter = ActiveRecord::Base.connection_config[:adapter]
 
+          # Different when will be used for different adapters, but having < 100% coverage was causing new code to be
+          # left uncovered, so mark as nocov so coverage remains 100%.
+          # :nocov:
           case adapter
           when 'postgresql'
             fail ActiveRecord::RecordNotUnique.new("not unique", original_exception)
@@ -221,11 +225,9 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
               raise ActiveRecord::StatementInvalid, "Wraps SQLite3::ConstraintException"
             end
           else
-            # Would only be covered if build was misconfigured
-            # :nocov:
             fail ArgumentError, "Expected error for #{adapter.inspect} adapter unknown"
-            # :nocov:
           end
+          # :nocov:
         end
 
         #
