@@ -112,26 +112,6 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
     # lets
     #
 
-    let(:added_attributes_set) do
-      Set.new(
-          [
-              {
-                  author: {
-                      name: author_name
-                  }
-              }
-          ]
-      )
-    end
-
-    let(:author_name) do
-      FactoryGirl.generate :metasploit_cache_author_name
-    end
-
-    let(:built_module_author) do
-      module_instance.module_authors.first
-    end
-
     let(:destination) {
       Metasploit::Cache::Auxiliary::Instance.new
     }
