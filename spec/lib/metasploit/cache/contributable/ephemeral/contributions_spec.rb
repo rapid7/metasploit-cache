@@ -464,6 +464,18 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
             end
           end
         end
+
+        context 'with multiple matches' do
+          subject(:source_attributes_set) {
+            Set.new
+          }
+
+          it 'removes all matching contributions' do
+            expect {
+              destroy_removed
+            }.to change(destination.contributions, :count).by(-2)
+          end
+        end
       end
     end
   end
