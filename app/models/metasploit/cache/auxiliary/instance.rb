@@ -146,21 +146,6 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
                 in: Metasploit::Cache::Module::Stance::ALL
             }
 
-  #
-  # Instance Methods
-  #
-
-  private
-
-  # Validates that {#default_action}, when it is set, is in {#actions}.
-  #
-  # @return [void]
-  def actions_contains_default_action
-    unless default_action.nil? || actions.include?(default_action)
-      errors.add(:actions, :does_not_contain_default_action)
-    end
-  end
-
   # Switch back to public for load hooks
   public
 
