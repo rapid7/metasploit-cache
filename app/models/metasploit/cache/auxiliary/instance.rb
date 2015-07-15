@@ -6,6 +6,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
 
   autoload :AuxiliaryClass
   autoload :Ephemeral
+  autoload :Load
 
   #
   #
