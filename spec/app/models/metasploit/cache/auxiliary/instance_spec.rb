@@ -141,10 +141,6 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
     it { is_expected.to validate_inclusion_of(:stance).in_array(Metasploit::Cache::Module::Stance::ALL) }
 
     it_should_behave_like 'validates at least one in association',
-                          :actions,
-                          factory: :metasploit_cache_auxiliary_instance
-
-    it_should_behave_like 'validates at least one in association',
                           :contributions,
                           factory: :metasploit_cache_auxiliary_instance
 

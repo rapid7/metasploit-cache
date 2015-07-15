@@ -112,11 +112,6 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # Validations
   #
 
-  validates :actions,
-            length: {
-                minimum: 1
-            }
-
   validates :auxiliary_class,
             presence: true
   
