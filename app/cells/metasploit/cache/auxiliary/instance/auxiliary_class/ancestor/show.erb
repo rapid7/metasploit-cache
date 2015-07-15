@@ -59,7 +59,11 @@ class <%= metasploit_class_relative_name %> < <%= superclass %>
     '<%= name %>'
   end
 
-  def stance
-    '<%= stance %>'
+  def passive?
+<%- if stance == Metasploit::Cache::Module::Stance::PASSIVE -%>
+    true
+<%- else -%>
+    false
+<%- end -%>
   end
 end

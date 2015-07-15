@@ -160,10 +160,14 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Load, type: :model do
             name
           }
 
-          stance = context_auxiliary_instance.stance
+          if context_auxiliary_instance.stance == Metasploit::Cache::Module::Stance::PASSIVE
+            passive = true
+          else
+            passive = false
+          end
 
-          klass.send(:define_method, :stance) {
-            stance
+          klass.send(:define_method, :passive?) {
+            passive
           }
         }
       }
@@ -419,7 +423,6 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Load, type: :model do
               attr_reader :description
               attr_reader :license
               attr_reader :name
-              attr_reader :stance
 
               #
               # Instance Methods
@@ -431,6 +434,10 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Load, type: :model do
 
               def author
                 []
+              end
+
+              def passive?
+                true
               end
             end
           }

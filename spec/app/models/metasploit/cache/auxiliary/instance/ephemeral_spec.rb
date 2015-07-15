@@ -88,7 +88,14 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
         description = FactoryGirl.generate :metasploit_cache_auxiliary_instance_description
         name = FactoryGirl.generate :metasploit_cache_auxiliary_instance_name
         license_abbreviation = FactoryGirl.generate :metasploit_cache_license_abbreviation
+
         stance = FactoryGirl.generate :metasploit_cache_module_stance
+
+        if stance == Metasploit::Cache::Module::Stance::PASSIVE
+          passive = true
+        else
+          passive = false
+        end
 
         allow(action).to receive(:name).and_return(default_action_name)
 
@@ -98,7 +105,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
         allow(instance).to receive(:description).and_return(description)
         allow(instance).to receive(:license).and_return(license_abbreviation)
         allow(instance).to receive(:name).and_return(name)
-        allow(instance).to receive(:stance).and_return(stance)
+        allow(instance).to receive(:passive?).and_return(passive)
       }
     }
 
