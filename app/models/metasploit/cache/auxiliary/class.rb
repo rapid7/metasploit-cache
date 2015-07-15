@@ -12,6 +12,7 @@ class Metasploit::Cache::Auxiliary::Class < Metasploit::Cache::Direct::Class
   # Metadata for instances of the class whose metadata this record stores.
   has_one :auxiliary_instance,
           class_name: 'Metasploit::Cache::Auxiliary::Instance',
+          foreign_key: :auxiliary_class_id,
           inverse_of: :auxiliary_class
 
   # Reliability of Metasploit Module.

@@ -26,6 +26,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # @return [Metasploit::Cache::Auxiliary::Class]
   belongs_to :auxiliary_class,
              class_name: 'Metasploit::Cache::Auxiliary::Class',
+             foreign_key: :auxiliary_class_id,
              inverse_of: :auxiliary_instance
 
   # Code contributions to this auxiliary Metasploit Module
