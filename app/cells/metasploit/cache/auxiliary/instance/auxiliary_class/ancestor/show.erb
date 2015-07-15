@@ -19,7 +19,7 @@ class <%= metasploit_class_relative_name %> < <%= superclass %>
     ].freeze
   end
 
-  def authors
+  def author
     [
 <%- contributions.each do |contribution| -%>
   <%- email_address = contribution.email_address

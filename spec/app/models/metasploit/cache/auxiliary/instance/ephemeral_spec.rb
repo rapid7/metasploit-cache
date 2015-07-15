@@ -93,7 +93,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
         allow(action).to receive(:name).and_return(default_action_name)
 
         allow(instance).to receive(:actions).and_return([action])
-        allow(instance).to receive(:authors).and_return([author])
+        allow(instance).to receive(:author).and_return([author])
         allow(instance).to receive(:default_action).and_return(default_action_name)
         allow(instance).to receive(:description).and_return(description)
         allow(instance).to receive(:license).and_return(license_abbreviation)

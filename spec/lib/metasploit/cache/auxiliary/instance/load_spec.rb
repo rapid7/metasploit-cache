@@ -136,7 +136,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Load, type: :model do
             )
           }
 
-          klass.send(:define_method, :authors) {
+          klass.send(:define_method, :author) {
             authors
           }
 
@@ -429,7 +429,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Load, type: :model do
                 []
               end
 
-              def authors
+              def author
                 []
               end
             end

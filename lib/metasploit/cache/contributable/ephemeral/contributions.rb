@@ -159,10 +159,11 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
 
   # The set of attributes from the `source` Metasploit Module instance.
   #
-  # @param source [#authors] Metasploit Module instance
+  # @param source [#author] Metasploit Module instance
   # @return [Set<Hash{Symbol => Hash{Symbol => String}}>] Set of author.names and email_address.full.
   def self.source_attributes_set(source)
-    source.authors.each_with_object(Set.new) do |author, set|
+    # It's always Enumerable, but not pluralized
+    source.author.each_with_object(Set.new) do |author, set|
       attributes = {
           author: {
               name: author.name

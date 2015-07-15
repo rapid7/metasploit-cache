@@ -467,11 +467,11 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
 
     let(:source) {
       double('Metasploit Module instance').tap { |contributable|
-        expect(contributable).to receive(:authors).and_return(authors)
+        expect(contributable).to receive(:author).and_return(authors)
       }
     }
 
-    context 'with empty authors' do
+    context 'with empty author' do
       let(:authors) {
         []
       }
@@ -479,7 +479,7 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
       it { is_expected.to eq(Set.new) }
     end
 
-    context 'with present authors' do
+    context 'with present author' do
       let(:authors) {
         [
             author
@@ -566,7 +566,7 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
     }
 
     let(:source) {
-      double('Metasploit Module instance', authors: [])
+      double('Metasploit Module instance', author: [])
     }
 
     it 'calls build_added' do
