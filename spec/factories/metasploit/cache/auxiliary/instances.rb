@@ -4,7 +4,10 @@ FactoryGirl.define do
   #
 
   factory :metasploit_cache_auxiliary_instance,
-          class: Metasploit::Cache::Auxiliary::Instance do
+          class: Metasploit::Cache::Auxiliary::Instance,
+          traits: [
+              :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents
+          ] do
     transient do
       action_count 1
       contribution_count 1
@@ -70,7 +73,7 @@ FactoryGirl.define do
     transient do
       auxiliary_class_ancestor_contents? true
       auxiliary_class_ancestor_metasploit_class_relative_name { generate :metasploit_cache_module_ancestor_metasploit_module_relative_name }
-      auxiliary_class_ancestor_superclass { 'Metasploit::Cache::Auxiliary::Class:Superclass' }
+      auxiliary_class_ancestor_superclass { 'Metasploit::Cache::Direct::Class::Superclass' }
     end
 
     after(:build) do |auxiliary_instance, evaluator|
@@ -94,8 +97,7 @@ FactoryGirl.define do
                 "when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait."
         end
 
-
-        real_pathname = module_ancestor.real_pathname
+        real_pathname = auxiliary_ancestor.real_pathname
 
         unless real_pathname
           raise ArgumentError,
@@ -109,11 +111,11 @@ FactoryGirl.define do
 
         context = Object.new
         cell = Cell::Base.cell_for(
-                             'metasploit/cache/auxiliary/instance/auxiliary/class/ancestor',
-                             context,
-                             auxiliary_instance,
-                             metasploit_class_relative_name: evaluator.auxiliary_class_ancestor_relative_name,
-                             superclass: evaluator.auxiliary_class_ancestor_superclass
+            'metasploit/cache/auxiliary/instance/auxiliary_class/ancestor',
+            context,
+            auxiliary_instance,
+            metasploit_class_relative_name: evaluator.auxiliary_class_ancestor_metasploit_class_relative_name,
+            superclass: evaluator.auxiliary_class_ancestor_superclass
         )
 
         real_pathname.open('wb') do |f|

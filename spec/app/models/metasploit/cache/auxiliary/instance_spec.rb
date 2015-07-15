@@ -34,6 +34,103 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
       }
 
       it { is_expected.to be_valid }
+
+      context 'metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait' do
+        subject(:metasploit_cache_auxiliary_instance) {
+          FactoryGirl.build(
+              :metasploit_cache_auxiliary_instance,
+              auxiliary_class: auxiliary_class
+          )
+        }
+
+        context 'with #auxiliary_class' do
+          let(:auxiliary_class) {
+            FactoryGirl.build(
+                :metasploit_cache_auxiliary_class,
+                ancestor: auxiliary_ancestor,
+                ancestor_contents?: false
+            )
+          }
+
+          context 'with Metasploit::Cache::Direct::Class#ancestor' do
+            let(:auxiliary_ancestor) {
+              FactoryGirl.build(
+                  :metasploit_cache_auxiliary_ancestor,
+                  content?: false,
+                  relative_path: relative_path
+              )
+            }
+
+            context 'with Metasploit::Cache::Module::Ancestor#real_pathname' do
+              let(:reference_name) {
+                FactoryGirl.generate :metasploit_cache_module_ancestor_reference_name
+              }
+
+              let(:relative_path) {
+                "auxiliary/#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
+              }
+
+              it 'writes auxiliary Metasploit Module to #real_pathname' do
+                metasploit_cache_auxiliary_instance
+
+                expect(auxiliary_ancestor.real_pathname).to exist
+              end
+            end
+
+            context 'without Metasploit::Cache::Module::Ancestor#real_pathname' do
+              let(:relative_path) {
+                nil
+              }
+
+              it 'raises ArgumentError' do
+                expect {
+                  metasploit_cache_auxiliary_instance
+                }.to raise_error(
+                         ArgumentError,
+                         "Metasploit::Cache::Auxiliary::Ancestor#real_pathname is `nil` and content cannot be " \
+                         "written.  If this is expected, set `auxiliary_class_ancestor_contents?: false` " \
+                         "when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait."
+                     )
+              end
+            end
+          end
+
+          context 'without Metasploit::Cache::Direct::Class#ancestor' do
+            let(:auxiliary_ancestor) {
+              nil
+            }
+
+            it 'raises ArgumentError' do
+              expect {
+                metasploit_cache_auxiliary_instance
+              }.to raise_error(
+                       ArgumentError,
+                       "Metasploit::Cache::Auxiliary::Class#ancestor is `nil` and content cannot be written.  " \
+                       "If this is expected, set `auxiliary_ancestor_contents?: false` " \
+                       "when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait."
+                   )
+            end
+          end
+        end
+
+        context 'without #auxiliary_class' do
+          let(:auxiliary_class) {
+            nil
+          }
+
+          it 'raises ArgumentError' do
+            expect {
+              metasploit_cache_auxiliary_instance
+            }.to raise_error(
+                     ArgumentError,
+                     "Metasploit::Cache::Auxiliary::Instance#auxiliary_class is `nil` and it can't be used to look " \
+                     "up Metasploit::Cache::Direct::Class#ancestor to write content. " \
+                     "If this is expected, set `auxiliary_class_ancestor_contents?: false` " \
+                     "when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait."
+                 )
+          end
+        end
+      end
     end
   end
 

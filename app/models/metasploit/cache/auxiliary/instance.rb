@@ -4,6 +4,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
 
   include Metasploit::Cache::Batch::Root
 
+  autoload :AuxiliaryClass
   autoload :Ephemeral
 
   #
