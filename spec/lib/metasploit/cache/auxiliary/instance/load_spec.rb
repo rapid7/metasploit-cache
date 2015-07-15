@@ -160,11 +160,14 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Load, type: :model do
             name
           }
 
+          # Only one branch will be covered
+          # :nocov:
           if context_auxiliary_instance.stance == Metasploit::Cache::Module::Stance::PASSIVE
             passive = true
           else
             passive = false
           end
+          # :nocov:
 
           klass.send(:define_method, :passive?) {
             passive
