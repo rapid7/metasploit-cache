@@ -28,10 +28,6 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
           )
         }
 
-        let(:metasploit_module) {
-          module_ancestor_load.metasploit_module
-        }
-
         let(:module_ancestor_load) {
           Metasploit::Cache::Module::Ancestor::Load.new(
               # This should match the major version number of metasploit-framework
