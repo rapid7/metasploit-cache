@@ -10,6 +10,7 @@ module Metasploit::Cache::Payload::Staged
   extend ActiveSupport::Autoload
 
   autoload :Class
+  autoload :Instance
 
   #
   # Module Methods
