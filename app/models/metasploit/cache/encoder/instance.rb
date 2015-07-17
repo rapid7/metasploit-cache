@@ -6,6 +6,7 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
 
   autoload :EncoderClass
   autoload :Ephemeral
+  autoload :Load
 
   #
   #
