@@ -1,0 +1,63 @@
+# Module Type: <%= encoder_class.ancestor.module_type %>
+# Reference Name: <%= encoder_class.ancestor.reference_name %>
+class <%= metasploit_class_relative_name %> < <%= superclass %>
+  #
+  # CONSTANTS
+  #
+
+  Rank = <%= encoder_class.rank.number %>
+
+  #
+  # Instance Methods
+  #
+
+  def arch
+    [
+<%- architecturable_architectures.each do |architecturable_architecture| -%>
+      '<%= architecturable_architecture.architecture.abbreviation %>'
+<%- end -%>
+    ]
+  end
+
+  def author
+    [
+<%- contributions.each do |contribution| -%>
+  <%- email_address = contribution.email_address
+
+      if email_address
+        email = "'#{email_address.full}'"
+      else
+        email = "nil"
+      end
+  -%>
+      OpenStruct.new(name: '<%= contribution.author.name %>', email: <%= email %>)
+<%- end -%>
+    ]
+  end
+
+  def description
+    '<%= description %>'
+  end
+
+  def license
+    [
+<%- licensable_licenses.each do |licensable_license| -%>
+      '<%= licensable_license.license.abbreviation %>'
+<%- end -%>
+    ]
+  end
+
+  def name
+    '<%= name %>'
+  end
+
+  def platform
+    OpenStruct.new(
+      platforms: [
+<%- platformable_platforms.each do |platformable_platform| -%>
+        OpenStruct.new(full_name: '<%= platformable_platform.platform.fully_qualified_name %>')
+<%- end -%>
+      ]
+    )
+  end
+end

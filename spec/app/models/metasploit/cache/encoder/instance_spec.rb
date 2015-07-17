@@ -28,6 +28,103 @@ RSpec.describe Metasploit::Cache::Encoder::Instance do
       }
 
       it { is_expected.to be_valid }
+      
+      context 'metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait' do
+        subject(:metasploit_cache_encoder_instance) {
+          FactoryGirl.build(
+              :metasploit_cache_encoder_instance,
+              encoder_class: encoder_class
+          )
+        }
+
+        context 'with #encoder_class' do
+          let(:encoder_class) {
+            FactoryGirl.build(
+                :metasploit_cache_encoder_class,
+                ancestor: encoder_ancestor,
+                ancestor_contents?: false
+            )
+          }
+
+          context 'with Metasploit::Cache::Direct::Class#ancestor' do
+            let(:encoder_ancestor) {
+              FactoryGirl.build(
+                  :metasploit_cache_encoder_ancestor,
+                  content?: false,
+                  relative_path: relative_path
+              )
+            }
+
+            context 'with Metasploit::Cache::Module::Ancestor#real_pathname' do
+              let(:reference_name) {
+                FactoryGirl.generate :metasploit_cache_module_ancestor_reference_name
+              }
+
+              let(:relative_path) {
+                "encoder/#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
+              }
+
+              it 'writes encoder Metasploit Module to #real_pathname' do
+                metasploit_cache_encoder_instance
+
+                expect(encoder_ancestor.real_pathname).to exist
+              end
+            end
+
+            context 'without Metasploit::Cache::Module::Ancestor#real_pathname' do
+              let(:relative_path) {
+                nil
+              }
+
+              it 'raises ArgumentError' do
+                expect {
+                  metasploit_cache_encoder_instance
+                }.to raise_error(
+                         ArgumentError,
+                         "Metasploit::Cache::Encoder::Ancestor#real_pathname is `nil` and content cannot be " \
+                         "written.  If this is expected, set `encoder_class_ancestor_contents?: false` " \
+                         "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
+                     )
+              end
+            end
+          end
+
+          context 'without Metasploit::Cache::Direct::Class#ancestor' do
+            let(:encoder_ancestor) {
+              nil
+            }
+
+            it 'raises ArgumentError' do
+              expect {
+                metasploit_cache_encoder_instance
+              }.to raise_error(
+                       ArgumentError,
+                       "Metasploit::Cache::Encoder::Class#ancestor is `nil` and content cannot be written.  " \
+                       "If this is expected, set `encoder_ancestor_contents?: false` " \
+                       "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
+                   )
+            end
+          end
+        end
+
+        context 'without #encoder_class' do
+          let(:encoder_class) {
+            nil
+          }
+
+          it 'raises ArgumentError' do
+            expect {
+              metasploit_cache_encoder_instance
+            }.to raise_error(
+                     ArgumentError,
+                     "Metasploit::Cache::Encoder::Instance#encoder_class is `nil` and it can't be used to look " \
+                     "up Metasploit::Cache::Direct::Class#ancestor to write content. " \
+                     "If this is expected, set `encoder_class_ancestor_contents?: false` " \
+                     "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
+                 )
+          end
+        end
+      end
     end
   end
 
