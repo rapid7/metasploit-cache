@@ -7,7 +7,8 @@ module Metasploit::Cache::Ephemeral
   # Runs transaction on `destination_class` using temporary from the connection pool that is checked in to the
   # connection pool at the end of `block`.
   #
-  # @param destination [Class<ActiveRecord::Base>, #connection_pool, #transaction] an `ActiveRecord::Base` subclass
+  # @param destination_class [Class<ActiveRecord::Base>, #connection_pool, #transaction] an `ActiveRecord::Base`
+  #   subclass.
   # @yield Block run database transaction
   # @yieldreturn [Object] value to return
   # @return [Object] value returned from `block`
