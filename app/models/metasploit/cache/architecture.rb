@@ -6,7 +6,6 @@ class Metasploit::Cache::Architecture < ActiveRecord::Base
   include Metasploit::Model::Translation
   include Metasploit::Model::Search
 
-  autoload :Ephemeral
   autoload :Seed
 
   #
