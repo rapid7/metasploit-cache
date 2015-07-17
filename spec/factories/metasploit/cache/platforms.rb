@@ -16,4 +16,6 @@ FactoryGirl.define do
 
     platform
   end
+
+  sequence :metasploit_cache_platform_fully_qualified_name, fully_qualified_names.cycle
 end

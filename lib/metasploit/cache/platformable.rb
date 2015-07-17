@@ -2,6 +2,7 @@
 module Metasploit::Cache::Platformable
   extend ActiveSupport::Autoload
 
+  autoload :Ephemeral
   autoload :Platform
 
   #
