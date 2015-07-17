@@ -31,6 +31,7 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   # @return [Metasploit::Cache::Encoder::Class]
   belongs_to :encoder_class,
              class_name: 'Metasploit::Cache::Encoder::Class',
+             foreign_key: :encoder_class_id,
              inverse_of: :encoder_instance
 
   # Joins {#licenses} to this encoder Metasploit Module.

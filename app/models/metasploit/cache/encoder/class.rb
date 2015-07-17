@@ -13,6 +13,7 @@ class Metasploit::Cache::Encoder::Class < Metasploit::Cache::Direct::Class
   has_one :encoder_instance,
           class_name: 'Metasploit::Cache::Encoder::Instance',
           dependent: :destroy,
+          foreign_key: :encoder_class_id,
           inverse_of: :encoder_class
 
   # Reliability of Metasploit Module.
