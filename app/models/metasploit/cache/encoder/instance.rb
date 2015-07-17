@@ -1,5 +1,11 @@
 # Instance-level metadata for an encoder  Metasploit Module.
 class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
+  include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+
   #
   #
   # Associations
@@ -30,7 +36,9 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   # Joins {#licenses} to this encoder Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
-           class_name: 'Metasploit::Cache::Licensable::License'
+           class_name: 'Metasploit::Cache::Licensable::License',
+           dependent: :destroy,
+           inverse_of: :licensable
 
   # Joins {#platforms} to this encoder Metasploit Module.
   has_many :platformable_platforms,
