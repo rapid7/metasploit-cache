@@ -157,7 +157,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Load, type: :model do
           }
 
           platforms = encoder_instance.platformable_platforms.map { |platformable_platform|
-            double('Platform', full_name: platformable_platform.platform.fully_qualified_name)
+            double('Platform', realname: platformable_platform.platform.fully_qualified_name)
           }
           platform_list = double('Platform List', platforms: platforms)
 

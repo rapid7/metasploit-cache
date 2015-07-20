@@ -55,7 +55,7 @@ class <%= metasploit_class_relative_name %> < <%= superclass %>
     OpenStruct.new(
       platforms: [
 <%- platformable_platforms.each do |platformable_platform| -%>
-        OpenStruct.new(full_name: '<%= platformable_platform.platform.fully_qualified_name %>')
+        OpenStruct.new(realname: '<%= platformable_platform.platform.fully_qualified_name %>')
 <%- end -%>
       ]
     )
