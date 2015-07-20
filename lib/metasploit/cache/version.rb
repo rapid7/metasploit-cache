@@ -11,9 +11,9 @@ module Metasploit
       # The minor version number, scoped to the {MAJOR} version number.
       MINOR = 67
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-      PATCH = 2
+      PATCH = 3
       # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version.
-      PRERELEASE = 'load-encoder-instance-from-metasploit-framework'
+      PRERELEASE = 'exploit-instance-ephemeral-and-load'
 
       #
       # Module Methods
