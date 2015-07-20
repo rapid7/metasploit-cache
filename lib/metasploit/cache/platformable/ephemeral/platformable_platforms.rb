@@ -10,7 +10,7 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   # @param destination [#platformable_platforms]
   # @param destination_attribute_set [Set<String>] Set of {Metasploit::Cache::Platform#platform} on
   #   `#platformable_platforms` on `destination`.
-  # @param source_attribute_set [Set<String>] Set of `#name` of `#platforms` of `#platform` of `source`.
+  # @param source_attribute_set [Set<String>] Set of `#realname` of `#platforms` of `#platform` of `source`.
   # @return [#platformable_platforms] `destination`
   def self.build_added(destination:, destination_attribute_set:, source_attribute_set:)
     cached_added_attribute_set = Metasploit::Cache::Ephemeral::AttributeSet.added(
@@ -39,7 +39,7 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   # currently persisted as `#platformable_platforms` on `destination`.
   #
   # @param destination [#platformable_platforms]
-  # @return [Set<String>] Set of {Metasplit::Cache::Platform#fully_qualified_name}
+  # @return [Set<String>] Set of {Metasploit::Cache::Platform#fully_qualified_name}
   def self.destination_attribute_set(destination)
     if destination.new_record?
       Set.new
@@ -86,7 +86,7 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   # @return [Set<String>] Set of platform fully-qualified names
   def self.source_attribute_set(source)
     source.platform.platforms.each_with_object(Set.new) { |platform, set|
-      set.add platform.full_name
+      set.add platform.realname
     }
   end
 
