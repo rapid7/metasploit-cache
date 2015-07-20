@@ -101,7 +101,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
 
         allow(instance).to receive(:license).and_return(license_abbreviation)
 
-        platform = double('Platform', full_name: 'Windows XP')
+        platform = double('Platform', realname: 'Windows XP')
         platform_list = double('Platform List', platforms: [platform])
 
         allow(instance).to receive(:platform).and_return(platform_list)

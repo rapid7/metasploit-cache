@@ -238,7 +238,7 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
     context 'with present platform.platforms' do
       let(:platforms) {
         [
-            double('Platform', full_name: platform_fully_qualified_name)
+            double('Platform', realname: platform_fully_qualified_name)
         ]
       }
 
@@ -246,7 +246,7 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
         FactoryGirl.generate :metasploit_cache_platform_fully_qualified_name
       }
 
-      it 'includes platform.platforms #full_name' do
+      it 'includes platform.platforms #realname' do
         expect(source_attribute_set).to include(platform_fully_qualified_name)
       end
     end
