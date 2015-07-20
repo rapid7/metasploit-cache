@@ -2,8 +2,23 @@
 # Metasploit Module instances.
 module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   #
+  # CONSTANTS
+  #
+
+  # `#realname` use for source platforms to indicate all platforms are supported.
+  SOURCE_ANY_PLATFORM_REALNAME = ''
+
+  #
   # Module Methods
   #
+
+  # Whether the `source_platforms` represents the source support any platform.
+  #
+  # @return [true] any platform is supported.
+  # @return [false] only specific platforms are supported.
+  def self.any_source_platform?(source_platforms)
+    source_platforms.length == 1 && source_platforms[0].realname == SOURCE_ANY_PLATFORM_REALNAME
+  end
 
   # Builds new {Metasploit::Cache::Platformable::Platform} as `#platformable_platforms` on `destination`
   #
@@ -79,15 +94,26 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
     destination
   end
 
+  # @note If `source` `#platform` `#platforms` contains a single entry that is just `''`, then it is assumed to mean all
+  #   platforms and the {Metasploit::Cache::Platform.root_fully_qualified_name_set} will be returned.
+  #
   # The set of platform fully qualified names from `#platforms` on `#platform` on the `source` Metasploit Module
   # instance.
   #
   # @param source [#platform] Metasploit Module instance
   # @return [Set<String>] Set of platform fully-qualified names
   def self.source_attribute_set(source)
-    source.platform.platforms.each_with_object(Set.new) { |platform, set|
-      set.add platform.realname
-    }
+    source_platforms = source.platform.platforms
+
+    if any_source_platform?(source_platforms)
+      platform_fully_qualified_name_set = Metasploit::Cache::Platform.root_fully_qualified_name_set
+    else
+      platform_fully_qualified_name_set = source_platforms.each_with_object(Set.new) { |platform, set|
+        set.add platform.realname
+      }
+    end
+
+    platform_fully_qualified_name_set
   end
 
   # Synchronizes `#platforms` from `#platform` from Metasploit Module instance `source` to persisted

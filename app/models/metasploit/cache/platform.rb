@@ -142,9 +142,11 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   # Class Methods
   #
 
-  # List of valid {#fully_qualified_name} derived from {Metasploit::Cache::Platform::Seed::RELATIVE_NAME_TREE}.
+  # @note Use {root_fully_qualified_name_set} to get just the the covering set of {#fully_qualified_name}.
   #
-  # @return [Array<String>]
+  # Set of valid {#fully_qualified_name} derived from {Metasploit::Cache::Platform::Seed::RELATIVE_NAME_TREE}.
+  #
+  # @return [Set<String>]
   def self.fully_qualified_name_set
     unless instance_variable_defined? :@fully_qualified_name_set
       @fully_qualified_name_set = Set.new
@@ -169,6 +171,21 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
     end
 
     @fully_qualified_name_set
+  end
+
+  # @note Use {fully_qualified_name_set} to get the expanded set of {#fully_qualified_name}.
+  #
+  # Set of valid {#fully_qualified_name} derived from roots of {Metasploit::Cache::Platform::Seed::RELATIVE_NAME_TREE}.
+  #
+  # @return [Set<String>]
+  def self.root_fully_qualified_name_set
+    unless instance_variable_defined? :@root_fully_qualified_name_set
+      @root_fully_qualified_name_set = self::Seed::RELATIVE_NAME_TREE.each_key.each_with_object(Set.new) do |root_fully_qualified_name, set|
+        set.add root_fully_qualified_name
+      end
+    end
+
+    @root_fully_qualified_name_set
   end
 
   #
