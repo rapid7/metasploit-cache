@@ -117,7 +117,7 @@ RSpec.describe Metasploit::Cache::Platform::Seed do
         it { should include('7') }
       end
 
-      it { should include('UNIX') }
+      it { should include('Unix') }
     end
   end
 end

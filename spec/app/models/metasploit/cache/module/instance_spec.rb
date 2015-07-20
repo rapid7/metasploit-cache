@@ -100,7 +100,7 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
     context 'with unrelated platform' do
       let(:other_platform_fully_qualified_name) do
-        'UNIX'
+        'Unix'
       end
 
       it 'does not include Metasploit::Cache::Module::Instance' do
