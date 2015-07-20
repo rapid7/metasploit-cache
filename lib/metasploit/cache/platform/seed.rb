@@ -76,7 +76,7 @@ module Metasploit::Cache::Platform::Seed
           },
           '7' => nil
       },
-      'UNIX' => nil
+      'Unix' => nil
   }
 
   #

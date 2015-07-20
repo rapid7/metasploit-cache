@@ -193,7 +193,7 @@ RSpec.describe Metasploit::Cache::Platform do
 
     it { should include 'Windows 7' }
 
-    it { should include 'UNIX' }
+    it { should include 'Unix' }
   end
 
   context '#derived_fully_qualified_name' do
