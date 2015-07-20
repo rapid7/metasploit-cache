@@ -2,6 +2,17 @@
 # instances
 module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures
   #
+  # CONSTANTS
+  #
+
+  CANONICAL_ABBREVIATIONS_BY_SOURCE_ABBREVIATION = {
+      'mips' => [
+          'mipsbe',
+          'mipsle'
+      ]
+  }
+
+  #
   # Module Methods
   #
 
@@ -85,8 +96,15 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
   # @param source [#arch] Metasploit Module instance
   # @return [Set<String>] Set of architecture abbreviations
   def self.source_attribute_set(source)
-    # It's always Enumerable, but not pluralized
-    Set.new source.arch
+    source.arch.each_with_object(Set.new) { |abbreviation, set|
+      canonical_abbreviations = CANONICAL_ABBREVIATIONS_BY_SOURCE_ABBREVIATION[abbreviation]
+
+      if canonical_abbreviations
+        set.merge(canonical_abbreviations)
+      else
+        set.add abbreviation
+      end
+    }
   end
 
   # Synchronizes `#arch` from Metasploit Module instance `source` to persisted `#architecturable_architectures` on
