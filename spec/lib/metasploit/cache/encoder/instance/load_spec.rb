@@ -514,4 +514,62 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Load, type: :model do
       end
     end
   end
+  
+  # :nocov:
+  # Can't just use the tag on the context because the below code will still run even if tag is filtered out
+  unless Bundler.settings.without.include? 'content'
+    context 'metasploit-framework', :content do
+      module_path_real_paths = Metasploit::Framework::Engine.paths['modules'].existent_directories
+
+      module_path_real_paths.each do |module_path_real_path|
+        module_path_real_pathname = Pathname.new(module_path_real_path)
+        module_path_relative_pathname = module_path_real_pathname.relative_path_from(Metasploit::Framework::Engine.root)
+
+        # use relative pathname so that context name is not dependent on build directory
+        context module_path_relative_pathname.to_s do
+          #
+          # Shared examples
+          #
+
+          #
+          # lets
+          #
+
+          let(:module_path) do
+            FactoryGirl.create(
+                :metasploit_cache_module_path,
+                gem: 'metasploit-framework',
+                name: 'modules',
+                real_path: module_path_real_path
+            )
+          end
+
+          it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
+                                module_path_real_pathname,
+                                'encoders' do
+            let(:direct_class) {
+              module_ancestor.build_encoder_class
+            }
+
+            let(:module_ancestors) {
+              module_path.encoder_ancestors
+            }
+
+            let(:module_instance) {
+              direct_class.build_encoder_instance
+            }
+
+            let(:module_instance_load) {
+              described_class.new(
+                  encoder_instance: module_instance,
+                  encoder_metasploit_module_class: direct_class_load.metasploit_class,
+                  logger: logger
+              )
+            }
+          end
+        end
+      end
+    end
+  end
+  # :nocov:
 end
