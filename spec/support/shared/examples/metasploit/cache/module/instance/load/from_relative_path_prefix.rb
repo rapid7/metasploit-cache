@@ -43,6 +43,9 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
           expect(direct_class_load).to be_valid
           expect(direct_class).to be_persisted
 
+          module_instance_load.valid?
+
+          expect(module_instance).to be_valid
           expect(module_instance_load).to be_valid
           expect(module_instance).to be_persisted
         end
