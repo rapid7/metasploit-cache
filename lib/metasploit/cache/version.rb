@@ -12,8 +12,7 @@ module Metasploit
       MINOR = 67
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 1
-      # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version.
-      PRERELEASE = 'load-auxiliary-instance-from-metasploit-framework'
+      
 
 
       #
