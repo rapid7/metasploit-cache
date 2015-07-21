@@ -91,6 +91,24 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
     destination
   end
 
+  # Reduces `destination` by {destroying the removed `#architecturable_architectures` destroy_removed} and
+  # {building the added `#architecturable_architectures` build_added}.
+  #
+  # @param destination [#architecturable_architectures] a {Metasploit::Cache::Architecturable::Architecture#architecturable}.
+  # @param destination_attribute_set [Set<String>] Set of {Metasploit::Cache::Architecture#abbreviation}
+  # @param source_attribute_set [Set<String>] Set of architecture abbreviations
+  # @return [#architecturable_architectures] `destination`
+  def self.reduce(destination:, destination_attribute_set:, source_attribute_set:)
+    [:destroy_removed, :build_added].reduce(destination) { |block_destination, method|
+      public_send(
+          method,
+          destination: block_destination,
+          destination_attribute_set: destination_attribute_set,
+          source_attribute_set: source_attribute_set
+      )
+    }
+  end
+
   # The set of architecture abbreviations from `#arch` from the `source` Metasploit Module instance.
   #
   # @param source [#arch] Metasploit Module instance
@@ -115,17 +133,11 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
   # @return [#architecturable_architectures] `destination`
   def self.synchronize(destination:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
-      cached_destination_attributes_set = destination_attribute_set(destination)
-      cached_source_attributes_set = source_attribute_set(source)
-
-      [:destroy_removed, :build_added].reduce(destination) { |block_destination, method|
-        public_send(
-            method,
-            destination: block_destination,
-            destination_attribute_set: cached_destination_attributes_set,
-            source_attribute_set: cached_source_attributes_set
-        )
-      }
+      reduce(
+          destination: destination,
+          destination_attribute_set: destination_attribute_set(destination),
+          source_attribute_set: source_attribute_set(source)
+      )
     }
   end
 end
