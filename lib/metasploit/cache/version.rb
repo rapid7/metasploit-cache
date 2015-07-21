@@ -15,6 +15,7 @@ module Metasploit
       # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version.
       PRERELEASE = 'encoder-instance-ephemeral-and-load'
 
+
       #
       # Module Methods
       #

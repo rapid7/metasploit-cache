@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528140442) do
+ActiveRecord::Schema.define(version: 20150716152805) do
 
   create_table "mc_actionable_actions", force: true do |t|
     t.string  "name",            null: false
@@ -324,6 +324,12 @@ ActiveRecord::Schema.define(version: 20150528140442) do
   add_index "mc_payload_staged_classes", ["payload_stage_instance_id"], name: "index_mc_payload_staged_classes_on_payload_stage_instance_id"
   add_index "mc_payload_staged_classes", ["payload_stager_instance_id", "payload_stage_instance_id"], name: "unique_mc_payload_staged_classes", unique: true
   add_index "mc_payload_staged_classes", ["payload_stager_instance_id"], name: "index_mc_payload_staged_classes_on_payload_stager_instance_id"
+
+  create_table "mc_payload_staged_instances", force: true do |t|
+    t.integer "payload_staged_class_id", null: false
+  end
+
+  add_index "mc_payload_staged_instances", ["payload_staged_class_id"], name: "index_mc_payload_staged_instances_on_payload_staged_class_id", unique: true
 
   create_table "mc_payload_stager_instances", force: true do |t|
     t.text    "description",             null: false
