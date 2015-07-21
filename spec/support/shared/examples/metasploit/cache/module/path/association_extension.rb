@@ -55,10 +55,6 @@ RSpec.shared_examples_for 'Metasploit::Cache::Module::Path::AssociationExtension
           existing_module_ancestors.map(&:relative_path)
         end
 
-        let(:module_ancestor_relative_paths) do
-          existing_module_ancestor_relative_paths + new_module_ancestor_relative_paths
-        end
-
         let(:new_module_ancestor_relative_paths) do
           new_module_ancestors.map(&:relative_path)
         end

@@ -1,5 +1,13 @@
 # Instance-level metadata for an auxiliary Metasploit Module.
 class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
+  include Metasploit::Cache::Batch::Root
+
+  autoload :AuxiliaryClass
+  autoload :Ephemeral
+  autoload :Load
+
   #
   #
   # Associations
@@ -20,6 +28,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # @return [Metasploit::Cache::Auxiliary::Class]
   belongs_to :auxiliary_class,
              class_name: 'Metasploit::Cache::Auxiliary::Class',
+             foreign_key: :auxiliary_class_id,
              inverse_of: :auxiliary_instance
 
   # Code contributions to this auxiliary Metasploit Module
@@ -103,11 +112,6 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # Validations
   #
 
-  validates :actions,
-            length: {
-                minimum: 1
-            }
-
   validates :auxiliary_class,
             presence: true
   
@@ -139,21 +143,6 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
             inclusion: {
                 in: Metasploit::Cache::Module::Stance::ALL
             }
-
-  #
-  # Instance Methods
-  #
-
-  private
-
-  # Validates that {#default_action}, when it is set, is in {#actions}.
-  #
-  # @return [void]
-  def actions_contains_default_action
-    unless default_action.nil? || actions.include?(default_action)
-      errors.add(:actions, :does_not_contain_default_action)
-    end
-  end
 
   # Switch back to public for load hooks
   public

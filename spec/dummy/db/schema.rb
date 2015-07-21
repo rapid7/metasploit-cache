@@ -147,8 +147,8 @@ ActiveRecord::Schema.define(version: 20150716152805) do
 
   create_table "mc_licenses", force: true do |t|
     t.string "abbreviation", null: false
-    t.text   "summary",      null: false
-    t.string "url",          null: false
+    t.text   "summary"
+    t.string "url"
   end
 
   add_index "mc_licenses", ["abbreviation"], name: "index_mc_licenses_on_abbreviation", unique: true

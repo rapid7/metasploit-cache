@@ -428,10 +428,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
             )
           end
 
-          it_should_behave_like 'relative_path_prefix',
-                                direct_class_build: :build_auxiliary_class,
-                                module_path_association: :auxiliary_ancestors,
-                                relative_path_prefix: 'auxiliary'
+          # @see spec/lib/metasploit/cache/auxiliary/instance/load_spec.rb for 'auxiliary' test
 
           it_should_behave_like 'relative_path_prefix',
                                 direct_class_build: :build_nop_class,

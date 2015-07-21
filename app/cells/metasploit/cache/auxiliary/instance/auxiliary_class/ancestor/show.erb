@@ -1,0 +1,69 @@
+# Module Type: <%= auxiliary_class.ancestor.module_type %>
+# Reference Name: <%= auxiliary_class.ancestor.reference_name %>
+class <%= metasploit_class_relative_name %> < <%= superclass %>
+  #
+  # CONSTANTS
+  #
+
+  Rank = <%= auxiliary_class.rank.number %>
+
+  #
+  # Instance Methods
+  #
+
+  def actions
+    [
+<%- actions.each do |action| -%>
+      OpenStruct.new(name: '<%= action.name %>'),
+<%- end -%>
+    ].freeze
+  end
+
+  def author
+    [
+<%- contributions.each do |contribution| -%>
+  <%- email_address = contribution.email_address
+
+      if email_address
+        email = "'#{email_address.full}'"
+      else
+        email = "nil"
+      end
+  -%>
+      OpenStruct.new(name: '<%= contribution.author.name %>', email: <%= email %>)
+<%- end -%>
+    ]
+  end
+
+  def default_action
+<%- if default_action -%>
+    '<%= default_action.name %>'
+<%- else -%>
+    nil
+<%- end -%>
+  end
+
+  def description
+    '<%= description %>'
+  end
+
+  def license
+    [
+<%- licensable_licenses.each do |licensable_license| -%>
+      '<%= licensable_license.license.abbreviation %>'
+<%- end -%>
+    ]
+  end
+
+  def name
+    '<%= name %>'
+  end
+
+  def passive?
+<%- if stance == Metasploit::Cache::Module::Stance::PASSIVE -%>
+    true
+<%- else -%>
+    false
+<%- end -%>
+  end
+end

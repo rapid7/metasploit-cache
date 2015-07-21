@@ -235,6 +235,7 @@ en:
 
       errors:
         messages:
+          record_invalid: "Validation failed: %{errors}"
           # have to duplicate activerecord.model.errors.message.taken because of the different i18n_scope
           taken: "has already been taken"
 

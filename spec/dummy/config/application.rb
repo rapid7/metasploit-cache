@@ -45,6 +45,9 @@ module Dummy
     # Enable escaping HTML in JSON.
     config.active_support.escape_html_entities_in_json = true
 
+    # Make deprecations on missing `references` into errors
+    config.active_record.disable_implicit_join_references = true
+
     # Enable the asset pipeline
     config.assets.enabled = true
 

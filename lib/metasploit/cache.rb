@@ -36,11 +36,13 @@ module Metasploit
     autoload :Batch
     autoload :Cacheable
     autoload :Constant
+    autoload :Contributable
     autoload :Contribution
     autoload :Derivation
     autoload :Direct
     autoload :EmailAddress
     autoload :Encoder
+    autoload :Ephemeral
     autoload :Error
     autoload :Exploit
     autoload :File

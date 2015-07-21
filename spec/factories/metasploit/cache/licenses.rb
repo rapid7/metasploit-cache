@@ -1,8 +1,11 @@
 FactoryGirl.define do
   factory :metasploit_cache_license, class: Metasploit::Cache::License do
     abbreviation { generate :metasploit_cache_license_abbreviation }
-    summary { generate :metasploit_cache_license_summary }
-    url { generate :metasploit_cache_license_url }
+
+    factory :full_metasploit_cache_license do
+      summary { generate :metasploit_cache_license_summary }
+      url { generate :metasploit_cache_license_url }
+    end
   end
 
   sequence :metasploit_cache_license_abbreviation do |n|

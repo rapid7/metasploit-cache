@@ -2,6 +2,7 @@
 module Metasploit::Cache::Licensable
   extend ActiveSupport::Autoload
 
+  autoload :Ephemeral
   autoload :License
 
   #
