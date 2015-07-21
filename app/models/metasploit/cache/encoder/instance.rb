@@ -8,6 +8,7 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
 
   # Joins {#architectures} to this encoder Metasploit Module.
   has_many :architecturable_architectures,
+           as: :architecturable,
            class_name: 'Metasploit::Cache::Architecturable::Architecture',
            dependent: :destroy,
            inverse_of: :architecturable
@@ -33,6 +34,7 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
 
   # Joins {#platforms} to this encoder Metasploit Module.
   has_many :platformable_platforms,
+           as: :platformable,
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platformable

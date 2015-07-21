@@ -56,6 +56,10 @@ RSpec.describe Metasploit::Cache::Module::Reference do
           )
         end
 
+        let(:error) {
+          I18n.translate!('errors.messages.taken')
+        }
+
         context 'with batched' do
           include Metasploit::Cache::Spec::Matcher
           include_context 'Metasploit::Cache::Batch.batch'
@@ -63,7 +67,7 @@ RSpec.describe Metasploit::Cache::Module::Reference do
           it 'should not add error on #reference_id' do
             new_module_reference.valid?
 
-            expect(new_module_reference.errors[:reference_id]).not_to include('has already been taken')
+            expect(new_module_reference.errors[:reference_id]).not_to include(error)
           end
 
           it 'should raise ActiveRecord::RecordNotUnique when saved' do
@@ -77,7 +81,7 @@ RSpec.describe Metasploit::Cache::Module::Reference do
           it 'should record error on reference_id' do
             new_module_reference.valid?
 
-            expect(new_module_reference.errors[:reference_id]).to include('has already been taken')
+            expect(new_module_reference.errors[:reference_id]).to include(error)
           end
         end
       end

@@ -32,6 +32,7 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   # {Metasploit::Cache::Payload::Stager::Instance stager payload}, or {Metasploit::Cache::Post::Instance post}) Metasploit
   # Modules or {Metasploit::Cache::Exploit::Target exploit Metasploit Module targets}.
   has_many :platformable_platforms,
+           as: :platformable,
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platform
@@ -117,12 +118,6 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   derives :fully_qualified_name, validate: true
 
   #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :relative_name
-
-  #
   # Search
   #
 
@@ -188,7 +183,7 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   def derived_fully_qualified_name
     if relative_name.present?
       if parent
-        "#{parent.fully_qualified_name} #{relative_name}"
+        "#{parent.fully_qualified_name} #{relative_name}".encode('UTF-8')
       else
         relative_name
       end

@@ -83,7 +83,7 @@ RSpec.describe Metasploit::Cache::Module::Target::Architecture do
       end
 
       let(:error) do
-        I18n.translate!('metasploit.model.errors.messages.taken')
+        I18n.translate!('errors.messages.taken')
       end
 
       let(:module_target) do

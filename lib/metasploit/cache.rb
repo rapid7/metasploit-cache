@@ -3,6 +3,8 @@
 #
 
 require 'active_support'
+# required by awesome_nested_set/move, but not explicitly required by it
+require 'active_support/core_ext/module/delegation'
 require 'awesome_nested_set'
 require 'metasploit/concern'
 require 'metasploit/model'

@@ -91,20 +91,6 @@ RSpec.shared_examples_for 'Metasploit::Cache::Module::Path::AssociationExtension
           each_changed
         end
 
-        it 'should use Set to calculate new relative_paths' do
-          set = Set.new(module_ancestor_relative_paths)
-
-          expect(Set).to receive(:new) { |actual_relative_paths|
-                           expect(actual_relative_paths).to match_array(module_ancestor_relative_paths)
-                         }.and_return(set)
-
-          existing_module_ancestor_relative_paths.each do |relative_path|
-            expect(set).to receive(:delete).with(relative_path).and_call_original
-          end
-
-          each_changed
-        end
-
         context ':assume_changed option' do
           context 'with true' do
             let(:options) do
@@ -255,7 +241,7 @@ RSpec.shared_examples_for 'Metasploit::Cache::Module::Path::AssociationExtension
             end
 
             it 'should set #total to #relative_paths #length' do
-              expected_total = target.relative_paths.length
+              expected_total = target.send(:relative_paths).length
 
               expect(progress_bar).to receive(:total=).with(expected_total).and_call_original
 
@@ -347,7 +333,7 @@ RSpec.shared_examples_for 'Metasploit::Cache::Module::Path::AssociationExtension
 
           context 'without progress bar' do
             it 'should set #total to #relative_paths #length' do
-              expected_total = target.relative_paths.length
+              expected_total = target.send(:relative_paths).length
 
               expect_any_instance_of(Metasploit::Cache::NullProgressBar).to receive(:total=).with(expected_total)
 
@@ -422,7 +408,7 @@ RSpec.shared_examples_for 'Metasploit::Cache::Module::Path::AssociationExtension
 
     context '#real_path_rule' do
       subject(:real_path_rule) do
-        target.real_path_rule
+        target.send(:real_path_rule)
       end
 
       it { is_expected.to be_a File::Find }
@@ -458,7 +444,7 @@ RSpec.shared_examples_for 'Metasploit::Cache::Module::Path::AssociationExtension
 
     context '#relative_paths' do
       subject(:relative_paths) do
-        target.relative_paths
+        target.send(:relative_paths)
       end
 
       #

@@ -3,23 +3,13 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in metasploit-cache.gemspec
 gemspec
 
-# TODO remove once this version of metasploit-model is out of prerelease
-gem 'metasploit-model',
-    tag: 'v0.29.2.pre.validates.pre.nilness.pre.of',
-    github: 'rapid7/metasploit-model'
-# TODO remove once metasploit-version has owners besides Trevor and I can prerelease the gem.
-gem 'metasploit-version',
-    branch: 'v0.1.3.pre.changelog.pre.template',
-    github: 'rapid7/metasploit-version',
-    group: :development
-
 group :content do
   gem 'metasploit-framework',
       github: 'rapid7/metasploit-framework',
-      ref: '1099084fb04164034e5520564828d57915d3a63a'
+      ref: '1bfa84b37bcacb7e634a430da42053f67a942627'
   gem 'metasploit-framework-db',
       github: 'rapid7/metasploit-framework',
-      ref: '1099084fb04164034e5520564828d57915d3a63a'
+      ref: '1bfa84b37bcacb7e634a430da42053f67a942627'
 
   #
   # These gem versions are taken from
@@ -27,8 +17,8 @@ group :content do
   # need to be pinned so the schema.rb doesn't keep changing when `~>` compatible versions are released.
   #
 
-  gem 'metasploit-credential', '0.14.0'
-  gem 'metasploit_data_models', '0.23.0'
+  gem 'metasploit-credential', '1.0.0'
+  gem 'metasploit_data_models', '1.2.5'
 end
 
 # used by dummy application
@@ -52,8 +42,8 @@ group :test do
   # rails is not used because activerecord should not be included, but rails would normally coordinate the versions
   # between its dependencies, which is now handled by this constraint.
   rails_version_constraint = [
-      '>= 3.2.0',
-      '< 4.0.0'
+      '>= 4.0.9',
+      '< 4.1.0'
   ]
 
   # Dummy app uses actionpack for ActionController, but not rails since it doesn't use activerecord.

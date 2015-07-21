@@ -11,6 +11,7 @@ class Metasploit::Cache::EmailAddress < ActiveRecord::Base
 
   # Credits where authors used this email address for their contributions.
   has_many :contributions,
+           as: :email_address,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :email_address
@@ -65,14 +66,6 @@ class Metasploit::Cache::EmailAddress < ActiveRecord::Base
   derives :domain, :validate => true
   derives :full, :validate => true
   derives :local, :validate => true
-
-  #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :domain
-  attr_accessible :full
-  attr_accessible :local
 
   #
   # Search Attributes

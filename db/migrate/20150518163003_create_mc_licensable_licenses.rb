@@ -5,8 +5,8 @@ class CreateMcLicensableLicenses < ActiveRecord::Migration
   # @return [void]
   def up
     create_table TABLE_NAME do |t|
-      t.references :licensable, polymorphic: true, index:true, null:false
-      t.references :license, null: false, index:true
+      t.references :licensable, polymorphic: true, null:false
+      t.references :license, null: false
 
       t.timestamps
     end

@@ -47,11 +47,6 @@ RSpec.describe Metasploit::Cache::Module::Architecture do
     end
   end
 
- context 'mass assignment security' do
-   it { is_expected.to allow_mass_assignment_of(:architecture) }
-   it { is_expected.to allow_mass_assignment_of(:module_instance) }
- end
-
   context 'validations' do
     it { should validate_presence_of(:architecture) }
 
@@ -111,10 +106,14 @@ RSpec.describe Metasploit::Cache::Module::Architecture do
             }
           end
 
+          let(:error) {
+            I18n.translate!('errors.messages.taken')
+          }
+
           it 'does not record error on architecture_id' do
             new_module_architecture.valid?
 
-            expect(new_module_architecture.errors[:architecture_id]).not_to include('has already been taken')
+            expect(new_module_architecture.errors[:architecture_id]).not_to include(error)
           end
 
           it 'should raise ActiveRecord::RecordNotUnique when saved' do
@@ -155,6 +154,18 @@ RSpec.describe Metasploit::Cache::Module::Architecture do
             )
           end
 
+          #
+          # lets
+          #
+
+          let(:error) {
+            I18n.translate!('errors.messages.taken')
+          }
+
+          #
+          # Callbacks
+          #
+
           before(:each) do
             existing_module_instance.module_architectures << new_module_architecture
           end
@@ -164,7 +175,7 @@ RSpec.describe Metasploit::Cache::Module::Architecture do
           it 'should record error on architecture_id' do
             new_module_architecture.valid?
 
-            expect(new_module_architecture.errors[:architecture_id]).to include('has already been taken')
+            expect(new_module_architecture.errors[:architecture_id]).to include(error)
           end
         end
 

@@ -24,11 +24,6 @@ RSpec.describe Metasploit::Cache::Module::Action do
     end
   end
 
-  context 'mass assignment security' do
-    it { should_not allow_mass_assignment_of(:module_instance_id) }
-    it { should allow_mass_assignment_of(:name) }
-  end
-
   context 'search' do
     let(:base_class) {
       Metasploit::Cache::Module::Action
@@ -49,7 +44,7 @@ RSpec.describe Metasploit::Cache::Module::Action do
       #
 
       let(:error) do
-        I18n.translate!('metasploit.model.errors.messages.taken')
+        I18n.translate!('errors.messages.taken')
       end
 
       let(:existing_module_action) do

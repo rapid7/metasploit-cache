@@ -27,10 +27,6 @@ RSpec.describe Metasploit::Cache::Author do
     end
   end
 
-  context 'mass assignment security' do
-    it { should allow_mass_assignment_of(:name) }
-  end
-
   context 'search' do
     let(:base_class) {
       Metasploit::Cache::Author

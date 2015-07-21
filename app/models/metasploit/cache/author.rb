@@ -12,6 +12,7 @@ class Metasploit::Cache::Author < ActiveRecord::Base
 
   # Joins to this author.
   has_many :contributions,
+           as: :author,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :author
@@ -48,12 +49,6 @@ class Metasploit::Cache::Author < ActiveRecord::Base
   #   Full name (First + Last name) or handle of author.
   #
   #   @return [String]
-
-  #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :name
 
   #
   # Search Attributes

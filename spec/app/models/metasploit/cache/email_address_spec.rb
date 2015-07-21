@@ -53,12 +53,6 @@ RSpec.describe Metasploit::Cache::EmailAddress do
     end
   end
 
-  context 'mass assignment security' do
-    it { should allow_mass_assignment_of(:domain) }
-    it { should allow_mass_assignment_of(:full) }
-    it { should allow_mass_assignment_of(:local) }
-  end
-
   context 'search' do
     let(:base_class) {
       Metasploit::Cache::EmailAddress
@@ -77,7 +71,7 @@ RSpec.describe Metasploit::Cache::EmailAddress do
     #
 
     let(:error) do
-      I18n.translate!('metasploit.model.errors.messages.taken')
+      I18n.translate!('errors.messages.taken')
     end
 
     let(:existing_domain) do

@@ -26,6 +26,7 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
 
   # Joins this {Metasploit::Cache::Reference} to {#auxiliary_instances}, {#exploit_instances}, and {#post_instances}.
   has_many :referencable_references,
+           as: :referencable,
            class_name: 'Metasploit::Cache::Referencable::Reference',
            dependent: :destroy,
            foreign_key: :reference_id,
@@ -81,13 +82,6 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
   #
 
   derives :url, validate: false
-
-  #
-  # Mass Assignment Security
-  #
-
-  attr_accessible :designation
-  attr_accessible :url
 
   #
   # Search Attributes

@@ -23,7 +23,9 @@ class CreateMcModulePlatforms < ActiveRecord::Migration
     end
 
     change_table TABLE_NAME do |t|
-      t.index [:module_instance_id, :platform_id], :unique => true
+      t.index [:module_instance_id, :platform_id],
+              name: 'unique_mc_module_platforms',
+              unique: true
     end
   end
 end

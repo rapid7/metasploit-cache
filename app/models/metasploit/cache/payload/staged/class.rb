@@ -63,6 +63,41 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
             presence: true
 
   #
+  # Class Methods
+  #
+
+  # Binds combined bind values from subqueries onto the combined query's relation.
+  #
+  # @param relation [ActiveRecord::Relation] Relation that does not have bind_values for `Arel::Nodes::BindParam`s.
+  # @param bind_values [Array<Array(ActiveRecord::ConnectionAdapters::Column, Object)>] Array of bind values
+  #   (pairs of columns and values) for the combined query.  Must be in order of final query.
+  # @return [ActiveRecord::Relation] a new relation with values bound.
+  def self.bind_renumbered_bind_params(relation, bind_values)
+    bind_values.reduce(relation) { |bound_relation, bind_value|
+        bound_relation.bind(bind_value)
+    }
+  end
+
+  # Renumbers the `Arel::Nodes::BindParam`s when combining subquery
+  #
+  # @param node [Arel::Nodes::Node, #grep] a Arel node that has `Arel::Nodes::BindParam` findable with `#grep`.
+  # @param bind_values [Array<Array(ActiveRecord::ConnectionAdapters::Column, Object)>] Array of bind values
+  #   (pairs of columns and values) for the combined query.  Must be in order of final query.
+  # @param start [Integer] The starting index to look up in `bind_values`.
+  # @return [Integer] the `start` for the next call to `renumber_bind_params`
+  def self.renumber_bind_params(node, bind_values, start=0)
+    index = start
+
+    node.grep(Arel::Nodes::BindParam) do |bind_param|
+      column = bind_values[index].first
+      bind_param.replace connection.substitute_at(column, index)
+      index += 1
+    end
+
+    index
+  end
+
+  #
   # Instance Methods
   #
   
@@ -90,12 +125,26 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   def architectures
     # TODO replace with ActiveRecord::QueryMethods.none
     if payload_stage_instance && payload_stager_instance
+      payload_stage_architectures = payload_stage_instance.architectures
+      payload_stager_architectures = payload_stager_instance.architectures
+
+      # @see https://github.com/rails/rails/commit/2e6625fb775783cdbc721391be18a073a5b9a9c8
+      bind_values = payload_stage_architectures.bind_values + payload_stager_architectures.bind_values
+
       intersection = payload_stage_instance.architectures.intersect(payload_stager_instance.architectures)
+
+      [:left, :right].reduce(0) { |start, side|
+        operand = intersection.send(side)
+
+        self.class.renumber_bind_params(operand, bind_values, start)
+      }
+
       architecture_table = Metasploit::Cache::Architecture.arel_table
 
-      Metasploit::Cache::Architecture.from(
+      relation = Metasploit::Cache::Architecture.from(
           architecture_table.create_table_alias(intersection, architecture_table.name)
       )
+      self.class.bind_renumbered_bind_params(relation, bind_values)
     end
   end
 
@@ -118,10 +167,12 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   #
   # @return [void]
   def compatible_platforms
-    arel = platforms_arel
+    arel_and_bind_values = platforms_arel_and_bind_values
 
-    unless arel.nil?
-      if Metasploit::Cache::Platform.find_by_sql(arel.take(1)).empty?
+    unless arel_and_bind_values.nil?
+      arel, bind_values = arel_and_bind_values
+
+      if Metasploit::Cache::Platform.find_by_sql(arel.take(1), bind_values).empty?
         errors.add(:base, :incompatible_platforms)
       end
     end
@@ -134,25 +185,35 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   # The nested set intersection of {#payload_stage_instance} {Metasploit::Cache::Payload::Stage::Instance#platforms} and
   # {#payload_stager_instance} {Metasploit::Cache::Payload::Stager::Instance#platforms}.
   #
-  # @return [Arel::SelectManager] An AREL select that will return the platforms supported by this staged payload
-  #   Metasploit Module.
+  # @return [Array(Arel::SelectManager, Array<Array(ActiveRecord::ConnectionAdapters::Column, Object)>)] An AREL select
+  #   that will return the platforms supported by this staged payload Metasploit Module along with the bind values for
+  #   any `Arel::Nodes::BindParam`s in the `Arel::SelectManager`.
   # @return [nil] unless {#payload_stage_instance} and {#payload_stager_instance} are present
-  def platforms_arel
+  def platforms_arel_and_bind_values
     # TODO replace with ActiveRecord::QueryMethods.none
     if payload_stage_instance && payload_stager_instance
       payload_stage_platforms_table = Arel::Table.new(:payload_stage_platforms)
       payload_stager_platforms_table = Arel::Table.new(:payload_stager_platforms)
 
+      payload_stage_platforms_relation = payload_stage_instance.platforms
+      payload_stager_platforms_relation = payload_stager_instance.platforms
+
+      bind_values = payload_stage_platforms_relation.bind_values + payload_stager_platforms_relation.bind_values
+
       payload_stage_platforms_cte = Arel::Nodes::As.new(
           payload_stage_platforms_table,
-          # @see https://github.com/rails/arel/issues/309
-          Arel.sql("(#{payload_stage_instance.platforms.to_sql})")
+          payload_stage_platforms_relation.arel
       )
+
+      start = self.class.renumber_bind_params(payload_stage_platforms_cte.right.ast, bind_values)
+
       payload_stager_platforms_cte = Arel::Nodes::As.new(
           payload_stager_platforms_table,
-          # @see https://github.com/rails/arel/issues/309
-          Arel.sql("(#{payload_stager_instance.platforms.to_sql})")
+          payload_stager_platforms_relation.arel
       )
+
+      self.class.renumber_bind_params(payload_stager_platforms_cte.right.ast, bind_values, start)
+
       union = subset_query(payload_stage_platforms_table, payload_stager_platforms_table).union(
           subset_query(payload_stager_platforms_table, payload_stage_platforms_table)
       )
@@ -165,12 +226,14 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
           platforms_table.name
       )
 
-      platforms_table.from(union_alias).project(
+      arel = platforms_table.from(union_alias).project(
           platforms_table[Arel.star]
       ).with(
           payload_stage_platforms_cte,
           payload_stager_platforms_cte
       )
+
+      [arel, bind_values]
     end
   end
 

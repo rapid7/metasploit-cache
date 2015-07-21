@@ -91,13 +91,6 @@ RSpec.describe Metasploit::Cache::Authority do
     end
   end
 
-  context 'mass assignment security' do
-    it { should allow_mass_assignment_of(:abbreviation) }
-    it { should allow_mass_assignment_of(:obsolete) }
-    it { should allow_mass_assignment_of(:summary) }
-    it { should allow_mass_assignment_of(:url) }
-  end
-
   context 'search' do
     let(:base_class) {
       Metasploit::Cache::Authority
@@ -186,7 +179,7 @@ RSpec.describe Metasploit::Cache::Authority do
     #
 
     let(:error) do
-      I18n.translate!('metasploit.model.errors.messages.taken')
+      I18n.translate!('errors.messages.taken')
     end
 
     #

@@ -176,7 +176,7 @@ RSpec.describe Metasploit::Cache::Contribution do
       #
 
       let(:error) {
-        I18n.translate!('activerecord.errors.messages.taken')
+        I18n.translate!('errors.messages.taken')
       }
 
       #
