@@ -3,6 +3,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
 
   context 'association' do
     it { is_expected.to belong_to(:payload_stage_instance).class_name('Metasploit::Cache::Payload::Stage::Instance').inverse_of(:payload_staged_classes) }
+    it { is_expected.to have_one(:payload_staged_instance).class_name('Metasploit::Cache::Payload::Staged::Instance').dependent(:destroy).inverse_of(:payload_staged_class).with_foreign_key(:payload_staged_class_id) }
     it { is_expected.to belong_to(:payload_stager_instance).class_name('Metasploit::Cache::Payload::Stager::Instance').inverse_of(:payload_staged_classes) }
   end
 
