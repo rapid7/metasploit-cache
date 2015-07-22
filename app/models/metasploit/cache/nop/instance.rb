@@ -16,6 +16,7 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   # Code contributions to this nop Metasploit Module.
   has_many :contributions,
            as: :contributable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :contributable

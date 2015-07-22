@@ -16,6 +16,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # Code contributions to this single payload Metasploit Module
   has_many :contributions,
            as: :contributable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :contributable

@@ -16,6 +16,7 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   # Code contributions ot this stage payload Metasploit Module
   has_many :contributions,
            as: :contributable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :contributable

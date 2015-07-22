@@ -203,111 +203,62 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
 
   context 'destination_attributes_set' do
     subject(:destination_attributes_set) {
-      described_class.destination_attributes_set(destination)
+      described_class.destination_attributes_set(contribution_by_attributes)
     }
 
-    context 'with new record' do
-      let(:destination) {
-        Metasploit::Cache::Auxiliary::Instance.new
+    context 'with empty contribution_by_attributes' do
+      let(:contribution_by_attributes) {
+        {}
       }
 
-      it { is_expected.to eq(Set.new) }
+      it { is_expected.to eq Set.new }
     end
 
-    context 'with persisted record' do
-      let(:author) {
-        FactoryGirl.create(:metasploit_cache_author)
+    context 'with present contribution_by_attributes' do
+      let(:attributes) {
+        {
+            author: {
+                name: FactoryGirl.generate(:metasploit_cache_author_name)
+            },
+            email_address: {
+                full: "#{FactoryGirl.generate(:metasploit_cache_email_address_local)}@#{FactoryGirl.generate(:metasploit_cache_email_address_domain)}"
+            }
+        }
       }
 
-      context 'with Metasploit::Cache::Contribution#email_address' do
-        #
-        # lets
-        #
-
-        let(:email_address) {
-          FactoryGirl.create(:metasploit_cache_email_address)
+      let(:contribution_by_attributes) {
+        {
+            attributes => double('Metasploit::Cache::Contribution')
         }
+      }
 
-        #
-        # let!s
-        #
-
-        let!(:destination) {
-          FactoryGirl.build(
-              :metasploit_cache_auxiliary_instance,
-              contribution_count: 0
-          ).tap { |contributable|
-            contributable.contributions.build(
-                author: author,
-                email_address: email_address
-            )
-
-            contributable.save!
-          }
-        }
-
-        it 'includes [:author][:name]' do
-          expect(destination_attributes_set).to include(
-                                                    hash_including(
-                                                        author: {
-                                                            name: author.name
-                                                        }
-                                                    )
-                                                )
-        end
-
-        it 'includes [:email_address][:full]' do
-          expect(destination_attributes_set).to include(
-                                                    hash_including(
-                                                        email_address: {
-                                                            full: email_address.full
-                                                        }
-                                                    )
-                                                )
-        end
-      end
-
-      context 'without Metasploit::Cache::EmailAddress#full' do
-        let(:destination) {
-          FactoryGirl.build(
-              :metasploit_cache_auxiliary_instance,
-              contribution_count: 0
-          ).tap { |contributable|
-            contributable.contributions.build(
-                author: author
-            )
-
-            contributable.save!
-          }
-        }
-
-        it 'includes [:author][:name], but not [:email_address]' do
-          expect(destination_attributes_set).to include(
-                                                    author: {
-                                                        name: author.name
-                                                    }
-                                                )
-        end
+      it 'contains attributes' do
+        expect(destination_attributes_set).to include(attributes)
       end
     end
   end
 
-  context 'destroy_removed' do
-    subject(:destroy_removed) {
-      described_class.destroy_removed(
+  context 'mark_removed_for_destruction' do
+    subject(:mark_removed_for_destruction) {
+      described_class.mark_removed_for_destruction(
+                         contribution_by_attributes: contribution_by_attributes,
                          destination: destination,
                          destination_attributes_set: destination_attributes_set,
                          source_attributes_set: source_attributes_set
       )
     }
 
+    let(:destination_attributes_set) {
+      described_class.destination_attributes_set(contribution_by_attributes)
+    }
+
     context 'with new record' do
       let(:destination) {
         Metasploit::Cache::Auxiliary::Instance.new
       }
 
-      let(:destination_attributes_set) {
-        Set.new
+      let(:contribution_by_attributes) {
+        {}
       }
 
       let(:source_attributes_set) {
@@ -316,7 +267,7 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
 
       it 'does not change destination.contributions' do
         expect {
-          destroy_removed
+          mark_removed_for_destruction
         }.not_to change {
                    destination.contributions(true).count
                  }
@@ -327,6 +278,13 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
       #
       # lets
       #
+
+      let(:contribution_by_attributes) {
+        {
+            destination_attributes_array.first => destination.contributions.first,
+            destination_attributes_array.second => destination.contributions.second
+        }
+      }
 
       let(:destination_attributes_array) {
         [
@@ -390,9 +348,17 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
 
         it 'does not change destination.contributions' do
           expect {
-            destroy_removed
+            mark_removed_for_destruction
           }.not_to change {
                      destination.contributions(true).count
+                   }
+        end
+
+        it 'does not mark and destination.contributions for destruction' do
+          expect {
+            mark_removed_for_destruction
+          }.not_to change {
+                     destination.contributions.each.count(&:marked_for_destruction?)
                    }
         end
       end
@@ -410,13 +376,31 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
                       ]
             }
 
-            it 'removes contribution with both author.name AND email_address.full' do
+            it 'marks for destruction contribution with both author.name AND email_address.full' do
               expect {
-                destroy_removed
-              }.to change(destination.contributions, :count).by(-1)
+                mark_removed_for_destruction
+              }.to change {
+                     destination.contributions.each.count(&:marked_for_destruction?)
+                   }.by(1)
+            end
 
-              expect(destination.contributions(true).map(&:author)).to include(second_author)
-              expect(destination.contributions(true).map(&:email_address)).not_to include(first_email_address)
+            it 'does not destroy any contributions' do
+              expect {
+                mark_removed_for_destruction
+              }.not_to change(destination.contributions, :count)
+            end
+
+            context 'with saved destination' do
+              it 'removes contribution with both author.name AND email_address.full' do
+                mark_removed_for_destruction
+
+                expect {
+                  destination.save!
+                }.to change(destination.contributions, :count).by(-1)
+
+                expect(destination.contributions(true).map(&:author)).to include(second_author)
+                expect(destination.contributions(true).map(&:email_address)).not_to include(first_email_address)
+              end
             end
           end
 
@@ -434,13 +418,31 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
                       ]
             }
 
-            it 'removes contribution with only author.name' do
+            it 'marks for destruction contribution with only author.name' do
               expect {
-                destroy_removed
-              }.to change(destination.contributions, :count).by(-1)
+                mark_removed_for_destruction
+              }.to change {
+                     destination.contributions.each.count(&:marked_for_destruction?)
+                   }.by(1)
+            end
 
-              expect(destination.contributions(true).map(&:author)).not_to include(second_author)
-              expect(destination.contributions(true).map(&:email_address)).to include(first_email_address)
+            it 'does not destroy any contributions' do
+              expect {
+                mark_removed_for_destruction
+              }.not_to change(destination.contributions, :count)
+            end
+
+            context 'with destination saved' do
+              it 'removes contribution with only author.name' do
+                mark_removed_for_destruction
+
+                expect {
+                  destination.save!
+                }.to change(destination.contributions, :count).by(-1)
+
+                expect(destination.contributions(true).map(&:author)).not_to include(second_author)
+                expect(destination.contributions(true).map(&:email_address)).to include(first_email_address)
+              end
             end
           end
         end
@@ -450,10 +452,28 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
             Set.new
           }
 
-          it 'removes all matching contributions' do
+          it 'marks for destruction all matching contributions' do
             expect {
-              destroy_removed
-            }.to change(destination.contributions, :count).by(-2)
+              mark_removed_for_destruction
+            }.to change {
+                   destination.contributions.each.count(&:marked_for_destruction?)
+                 }.by(2)
+          end
+
+          it 'does not destroy all contributions' do
+            expect {
+              mark_removed_for_destruction
+            }.not_to change(destination.contributions, :count)
+          end
+
+          context 'with destination saved' do
+            it 'removes all matching contributions' do
+              mark_removed_for_destruction
+
+              expect {
+                destination.save!
+              }.to change(destination.contributions, :count).by(-2)
+            end
           end
         end
       end
@@ -577,8 +597,8 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
       synchronize
     end
 
-    it 'calls destroy_removed' do
-      expect(described_class).to receive(:destroy_removed).with(
+    it 'calls mark_removed_for_destruction' do
+      expect(described_class).to receive(:mark_removed_for_destruction).with(
                                      hash_including(destination: destination)
                                  )
 

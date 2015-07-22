@@ -24,6 +24,7 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Code contributions to this post Metasploit Module.
   has_many :contributions,
            as: :contributable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :contributable
