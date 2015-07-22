@@ -17,6 +17,7 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   # Joins {#architectures} to this encoder Metasploit Module.
   has_many :architecturable_architectures,
            as: :architecturable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Architecturable::Architecture',
            dependent: :destroy,
            inverse_of: :architecturable
