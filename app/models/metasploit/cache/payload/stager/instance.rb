@@ -29,6 +29,7 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   # Joins {#licenses} to this stager payload Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Licensable::License'
 
   # Staged payload Metasploit Module formed by combining this stager payload Metasploit Module with a compatible stage

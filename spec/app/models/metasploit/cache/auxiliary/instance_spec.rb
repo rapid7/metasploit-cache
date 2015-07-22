@@ -6,7 +6,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
     it { is_expected.to have_many(:actions).autosave(true).class_name('Metasploit::Cache::Actionable::Action').dependent(:destroy).inverse_of(:actionable) }
     it { is_expected.to have_many(:contributions).autosave(true).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contributable) }
     it { is_expected.to belong_to(:default_action).class_name('Metasploit::Cache::Actionable::Action').inverse_of(:actionable) }
-    it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:licensable) }
+    it { is_expected.to have_many(:licensable_licenses).autosave(true).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:licensable) }
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License').through(:licensable_licenses) }
     it { is_expected.to have_many(:referencable_references).class_name('Metasploit::Cache::Referencable::Reference').dependent(:destroy).inverse_of(:referencable) }
     it { is_expected.to have_many(:references).class_name('Metasploit::Cache::Reference').through(:referencable_references) }

@@ -52,6 +52,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Licensable::License',
            dependent: :destroy,
            inverse_of: :licensable

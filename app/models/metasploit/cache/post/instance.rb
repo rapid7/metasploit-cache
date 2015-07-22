@@ -41,6 +41,7 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Joins {#licenses} to this post Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Licensable::License',
            dependent: :destroy,
            inverse_of: :licensable
