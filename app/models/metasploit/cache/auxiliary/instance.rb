@@ -19,6 +19,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # @return [ActiveRecord::Relation<Metasploit::Cache::Actionable::Action>]
   has_many :actions,
            as: :actionable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Actionable::Action',
            dependent: :destroy,
            inverse_of: :actionable
