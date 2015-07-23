@@ -11,7 +11,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
     it { is_expected.to have_many(:payload_staged_classes).class_name('Metasploit::Cache::Payload::Staged::Class').dependent(:destroy).inverse_of(:payload_stager_instance) }
     it { is_expected.to belong_to(:payload_stager_class).class_name('Metasploit::Cache::Payload::Stager::Class').inverse_of(:payload_stager_instance) }
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
-    it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
+    it { is_expected.to have_many(:platformable_platforms).autosave(true).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
   end
 
   context 'database' do

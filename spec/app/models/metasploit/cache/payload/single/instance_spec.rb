@@ -10,7 +10,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
     it { is_expected.to belong_to(:payload_single_class).class_name('Metasploit::Cache::Payload::Single::Class').inverse_of(:payload_single_instance) }
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
-    it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
+    it { is_expected.to have_many(:platformable_platforms).autosave(true).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
   end
 
   context 'database' do
