@@ -13,6 +13,13 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Payload::Stage::Instance',
              inverse_of: :payload_staged_classes
 
+  # Staged payload Metasploit Module combining {#payload_staged_instance} and {#payload_stager_instance}.
+  has_one :payload_staged_instance,
+          class_name: 'Metasploit::Cache::Payload::Staged::Instance',
+          dependent: :destroy,
+          foreign_key: :payload_staged_class_id,
+          inverse_of: :payload_staged_class
+
   # Stager payload Metasploit Module that exploit Metasploit Module runs on target system and which then downloads
   # {#payload_stage_instance stage payload Metasploit Module} to complete this staged payload Metasploit Module on the
   # target system.
