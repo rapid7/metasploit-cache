@@ -9,6 +9,7 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
   # Joins {#architectures} to this stage payload Metasploit Module.
   has_many :architecturable_architectures,
            as: :architecturable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Architecturable::Architecture',
            dependent: :destroy,
            inverse_of: :architecturable

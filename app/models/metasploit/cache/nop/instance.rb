@@ -9,6 +9,7 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   # Joins {#architectures} to this nop Metasploit Module.
   has_many :architecturable_architectures,
            as: :architecturable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Architecturable::Architecture',
            dependent: :destroy,
            inverse_of: :architecturable
