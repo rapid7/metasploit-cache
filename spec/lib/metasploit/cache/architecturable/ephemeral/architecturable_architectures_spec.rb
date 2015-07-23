@@ -267,10 +267,6 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
       Set.new [FactoryGirl.generate(:metasploit_cache_architecture_abbreviation)]
     }
 
-    let(:source) {
-      double('Metasploit Module instance', arch: [])
-    }
-
     it 'calls build_added' do
       expect(described_class).to receive(:build_added).with(
                                      hash_including(
