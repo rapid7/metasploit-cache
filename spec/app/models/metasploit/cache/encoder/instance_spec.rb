@@ -8,6 +8,8 @@ RSpec.describe Metasploit::Cache::Encoder::Instance do
     it { is_expected.to belong_to(:encoder_class).class_name('Metasploit::Cache::Encoder::Class').inverse_of(:encoder_instance) }
     it { is_expected.to have_many(:licensable_licenses).autosave(true).class_name('Metasploit::Cache::Licensable::License')}
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
+    it { is_expected.to have_many(:platformable_platforms).autosave(true).class_name('Metasploit::Cache::Platformable::Platform').dependent(:destroy).inverse_of(:platformable) }
+    it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform').through(:platformable_platforms) }
   end
 
   context 'database' do

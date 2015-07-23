@@ -47,6 +47,7 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   # Joins {#platforms} to this stager payload Metasploit Module.
   has_many :platformable_platforms,
            as: :platformable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platformable
