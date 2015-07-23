@@ -91,6 +91,25 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
     destination
   end
 
+  # Reduces `destination` by
+  # {marking for destruction the removed `#platformable_platforms` mark_removed_for_destruction} and
+  # {building the added `#platformable_platforms` build_added}.
+  #
+  # @param destination [#platformable_platforms] a {Metasploit::Cache::Platformable::Platform#platformable}.
+  # @param destination_attribute_set [Set<String>] Set of {Metasploit::Cache::Platform#fully_qualified_name}
+  # @param source_attribute_set [Set<String>] Set of platform fully-qualified names
+  # @return [#platformable_platforms] `destination`
+  def self.reduce(destination:, destination_attribute_set:, source_attribute_set:)
+    [:mark_removed_for_destruction, :build_added].reduce(destination) { |block_destination, method|
+      public_send(
+          method,
+          destination: block_destination,
+          destination_attribute_set: destination_attribute_set,
+          source_attribute_set: source_attribute_set
+      )
+    }
+  end
+
   # @note If `source` `#platform` `#platforms` contains a single entry that is just `''`, then it is assumed to mean all
   #   platforms and the {Metasploit::Cache::Platform.root_fully_qualified_name_set} will be returned.
   #
@@ -121,17 +140,11 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   # @return [#platformable_platforms] `destination`
   def self.synchronize(destination:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
-      cached_destination_attributes_set = destination_attribute_set(destination)
-      cached_source_attributes_set = source_attribute_set(source)
-
-      [:mark_removed_for_destruction, :build_added].reduce(destination) { |block_destination, method|
-        public_send(
-            method,
-            destination: block_destination,
-            destination_attribute_set: cached_destination_attributes_set,
-            source_attribute_set: cached_source_attributes_set
-        )
-      }
+      reduce(
+          destination: destination,
+          destination_attribute_set: destination_attribute_set(destination),
+          source_attribute_set: source_attribute_set(source)
+      )
     }
   end
 end
