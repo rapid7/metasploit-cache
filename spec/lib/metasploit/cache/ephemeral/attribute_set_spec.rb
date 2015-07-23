@@ -122,4 +122,25 @@ RSpec.describe Metasploit::Cache::Ephemeral::AttributeSet do
       expect(removed).to eq(Set.new [:removed])
     end
   end
+
+  context 'retained' do
+    subject(:retained) do
+      described_class.retained(
+          destination: destination,
+          source: source
+      )
+    end
+
+    let(:destination) {
+      Set.new ['only in destination', 'common']
+    }
+
+    let(:source) {
+      Set.new ['only in source', 'common']
+    }
+
+    it 'is intersection of destination and source' do
+      expect(retained).to eq Set.new ['common']
+    end
+  end
 end
