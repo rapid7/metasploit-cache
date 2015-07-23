@@ -201,6 +201,85 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
     end
   end
 
+  context 'contribution_by_attributes' do
+    subject(:contribution_by_attributes) {
+      described_class.contribution_by_attributes(destination)
+    }
+
+    let(:attributes) {
+      contribution_by_attributes.keys.first
+    }
+
+    context 'with new destination' do
+      let(:destination) {
+        Metasploit::Cache::Auxiliary::Instance.new
+      }
+
+      it { is_expected.to eq({}) }
+    end
+
+    context 'with persisted destination' do
+      let(:author) {
+        FactoryGirl.create(:metasploit_cache_author)
+      }
+
+      context 'with Metasploit::Cache::Contributon#email_address' do
+        let(:destination) {
+          FactoryGirl.build(
+              :metasploit_cache_auxiliary_instance,
+              contribution_count: 0
+          ).tap { |contributable|
+            contributable.contributions.build(
+                author: author,
+                email_address: email_address
+            )
+
+            contributable.save!
+          }
+        }
+
+        let(:email_address) {
+          FactoryGirl.create(:metasploit_cache_email_address)
+        }
+
+        context 'attributes key' do
+          it 'includes author.name as [:author][:name]' do
+            expect(attributes[:author]).to eq({name: author.name})
+          end
+
+          it 'includes email_address.full as [:email_address][:full]' do
+            expect(attributes[:email_address]).to eq({full: email_address.full})
+          end
+        end
+      end
+
+      context 'without Metasploit::Cache::Contributon#email_address' do
+        let(:destination) {
+          FactoryGirl.build(
+              :metasploit_cache_auxiliary_instance,
+              contribution_count: 0
+          ).tap { |contributable|
+            contributable.contributions.build(
+                author: author
+            )
+
+            contributable.save!
+          }
+        }
+
+        context 'attributes key' do
+          it 'includes author.name as [:author][:name]' do
+            expect(attributes[:author]).to eq({name: author.name})
+          end
+
+          it 'does not include [:email_address]' do
+            expect(attributes).not_to have_key :email_address
+          end
+        end
+      end
+    end
+  end
+
   context 'destination_attributes_set' do
     subject(:destination_attributes_set) {
       described_class.destination_attributes_set(contribution_by_attributes)
