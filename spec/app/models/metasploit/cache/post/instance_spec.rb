@@ -12,7 +12,7 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
     it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
     it { is_expected.to belong_to(:post_class).class_name('Metasploit::Cache::Post::Class').inverse_of(:post_instance) }
-    it { is_expected.to have_many(:referencable_references).class_name('Metasploit::Cache::Referencable::Reference').dependent(:destroy).inverse_of(:referencable) }
+    it { is_expected.to have_many(:referencable_references).autosave(true).class_name('Metasploit::Cache::Referencable::Reference').dependent(:destroy).inverse_of(:referencable) }
     it { is_expected.to have_many(:references).class_name('Metasploit::Cache::Reference').through(:referencable_references) }
   end
 

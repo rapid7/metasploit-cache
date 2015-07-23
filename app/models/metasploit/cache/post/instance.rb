@@ -62,6 +62,7 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Joins {#references} to this auxiliary Metasploit Module.
   has_many :referencable_references,
            as: :referencable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Referencable::Reference',
            dependent: :destroy,
            inverse_of: :referencable
