@@ -164,9 +164,9 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
     end
   end
 
-  context 'destroy_removed' do
-    subject(:destroy_removed) {
-      described_class.destroy_removed(
+  context 'mark_removed_for_destruction' do
+    subject(:mark_removed_for_destruction) {
+      described_class.mark_removed_for_destruction(
           destination: destination,
           destination_attribute_set: destination_attribute_set,
           source_attribute_set: source_attribute_set
@@ -188,11 +188,11 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
             Set.new
           }
 
-          it 'does not change destination.actions' do
+          it 'does not mark any destination.actions for destruction' do
             expect {
-              destroy_removed
+              mark_removed_for_destruction
             }.not_to change {
-                       destination.actions.length
+                       destination.actions.each.count(&:marked_for_destruction?)
                      }
           end
         end
@@ -206,11 +206,11 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
             FactoryGirl.generate :metasploit_cache_actionable_action_name
           }
 
-          it 'does not change destination.actions' do
+          it 'does not mark any destination.actions for destruction' do
             expect {
-              destroy_removed
+              mark_removed_for_destruction
             }.not_to change {
-                       destination.actions.length
+                       destination.actions.each.count(&:marked_for_destruction?)
                      }
           end
         end
@@ -240,11 +240,11 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
             Set.new
           }
 
-          it "doesn't change destination.actions" do
+          it 'does not mark any destination.actions for destruction' do
             expect {
-              destroy_removed
+              mark_removed_for_destruction
             }.not_to change {
-                       destination.actions.length
+                       destination.actions.each.count(&:marked_for_destruction?)
                      }
           end
         end
@@ -258,11 +258,11 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
             FactoryGirl.generate :metasploit_cache_actionable_action_name
           }
 
-          it "doesn't change destination.actions" do
+          it "doesn't mark any destination.actions for destruction" do
             expect {
-              destroy_removed
+              mark_removed_for_destruction
             }.not_to change {
-                       destination.actions.length
+                       destination.actions.each.count(&:marked_for_destruction)
                      }
           end
         end
@@ -293,11 +293,11 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
             destination_attribute_set
           }
 
-          it "doesn't change actions" do
+          it "doesn't mark and actions for destruction" do
             expect {
-              destroy_removed
+              mark_removed_for_destruction
             }.not_to change {
-                       destination.actions.length
+                       destination.actions.each.count(&:marked_for_destruction?)
                      }
           end
         end
@@ -311,10 +311,26 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
             FactoryGirl.generate :metasploit_cache_actionable_action_name
           }
 
-          it 'destroys all actions' do
+          it 'marks all actions for destruction' do
             expect {
-              destroy_removed
-            }.to change(destination.actions, :count).to(0)
+              mark_removed_for_destruction
+            }.to change { destination.actions.each.count(&:marked_for_destruction?) }.to(2)
+          end
+
+          it 'does not destroy any actions' do
+            expect {
+              mark_removed_for_destruction
+            }.not_to change(destination.actions, :count)
+          end
+
+          context 'with destination saved' do
+            it 'destroys all actions' do
+              mark_removed_for_destruction
+
+              expect {
+                destination.save!
+              }.to change(destination.actions, :count).to(0)
+            end
           end
         end
 
@@ -323,12 +339,28 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
             Set.new [destination_attribute_set.first]
           }
 
-          it 'destroys actions with name in :destination_attribute_set, but not :source_attribute_set' do
+          it 'marks actions with name in destination_attribute_set, but not source_attribute_set for destruction' do
             expect {
-              destroy_removed
-            }.to change(destination.actions, :count).by(-1)
+              mark_removed_for_destruction
+            }.to change { destination.actions.each.count(&:marked_for_destruction?) }.by(1)
+          end
 
-            expect(destination.actions(true).map(&:name)).to match_array(source_attribute_set)
+          it 'does not destory any actions' do
+            expect {
+              mark_removed_for_destruction
+            }.not_to change(destination.actions, :count)
+          end
+
+          context 'with destination saved' do
+            it 'destroys actions with name in :destination_attribute_set, but not :source_attribute_set' do
+              mark_removed_for_destruction
+
+              expect {
+                destination.save!
+              }.to change(destination.actions, :count).by(-1)
+
+              expect(destination.reload.actions.map(&:name)).to match_array(source_attribute_set)
+            end
           end
         end
 
@@ -341,11 +373,11 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
             FactoryGirl.generate :metasploit_cache_actionable_action_name
           }
 
-          it "doesn't destroy any actions" do
+          it "doesn't mark any actions for destruction" do
             expect {
-              destroy_removed
+              mark_removed_for_destruction
             }.not_to change {
-                       destination.actions.length
+                       destination.actions.each.count(&:marked_for_destruction?)
                      }
           end
         end
@@ -442,8 +474,8 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
       )
     }
 
-    it 'calls destroy_removed' do
-      expect(described_class).to receive(:destroy_removed).with(
+    it 'calls mark_removed_for_destruction' do
+      expect(described_class).to receive(:mark_removed_for_destruction).with(
                                      hash_including(destination: destination)
                                  )
 

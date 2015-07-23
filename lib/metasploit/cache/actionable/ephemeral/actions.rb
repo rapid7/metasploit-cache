@@ -37,24 +37,25 @@ module Metasploit::Cache::Actionable::Ephemeral::Actions
     end
   end
 
-  # Destroys {#actions} on `destination` that are persisted to `destination`, but don't exist in `source`.
+  # Marks for destruction {#actions} on `destination` that are persisted to `destination`, but don't exist in `source`.
   #
   # @param destination [#actions]
   # @param destination_attribute_set [Set<String>] Set of {Metasploit::Cache::Module::Action#name}s of `destination`'s
   #   `#actions`.
   # @param source_attribute_set [Set<String>] Set of Metasploit Module instance's action name.
   # @return [#actions] `destination`
-  def self.destroy_removed(destination:, destination_attribute_set:, source_attribute_set:)
+  def self.mark_removed_for_destruction(destination:, destination_attribute_set:, source_attribute_set:)
     removed_attributes_set = Metasploit::Cache::Ephemeral::AttributeSet.removed(
         destination: destination_attribute_set,
         source: source_attribute_set
     )
 
     unless destination.new_record? || removed_attributes_set.empty?
-      destination.actions.where(
-          # AREL cannot visit Set
-          name: removed_attributes_set.to_a
-      ).destroy_all
+      destination.actions.each do |action|
+        if removed_attributes_set.include? action.name
+          action.mark_for_destruction
+        end
+      end
     end
 
     destination
@@ -89,7 +90,7 @@ module Metasploit::Cache::Actionable::Ephemeral::Actions
       cached_destination_attribute_set = destination_attribute_set(destination)
       cached_source_attribute_set = source_attribute_set(source)
 
-      reduced = destroy_removed(
+      reduced = mark_removed_for_destruction(
           destination: destination,
           destination_attribute_set: cached_destination_attribute_set,
           source_attribute_set: cached_source_attribute_set

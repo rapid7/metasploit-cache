@@ -90,9 +90,9 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
     end
   end
 
-  context 'destroy_removed' do
-    subject(:destroy_removed) {
-      described_class.destroy_removed(
+  context 'mark_removed_for_destruction' do
+    subject(:mark_removed_for_destruction) {
+      described_class.mark_removed_for_destruction(
                          destination: destination,
                          destination_attribute_set: destination_attribute_set,
                          source_attribute_set: source_attribute_set
@@ -114,7 +114,7 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
 
       it 'does not change destination.platformable_platforms' do
         expect {
-          destroy_removed
+          mark_removed_for_destruction
         }.not_to change {
                    destination.platformable_platforms(true).count
                  }
@@ -170,12 +170,28 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
           destination_attribute_set
         }
 
-        it 'does not change destination.platformable_platforms' do
+        it 'does not mark for destruction any destination.platformable_platforms' do
           expect {
-            destroy_removed
+            mark_removed_for_destruction
           }.not_to change {
-                     destination.platformable_platforms(true).count
+                     destination.platformable_platforms.each.count(&:marked_for_destruction?)
                    }
+        end
+
+        it 'does not destroy any destination.platformable_platforms' do
+          expect {
+            mark_removed_for_destruction
+          }.not_to change(destination.platformable_platforms, :count)
+        end
+
+        context 'with destination saved' do
+          it 'does not destory any destination.platformable_platforms' do
+            mark_removed_for_destruction
+
+            expect {
+              destination.save!
+            }.not_to change(destination.platformable_platforms, :count)
+          end
         end
       end
 
@@ -187,12 +203,30 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
                     ]
           }
 
-          it 'removes platformable_platform with platform.fully_qualified_name' do
+          it 'marks for destruction matching destination.platformable_platforms' do
             expect {
-              destroy_removed
-            }.to change(destination.platformable_platforms, :count).by(-1)
+              mark_removed_for_destruction
+            }.to change {
+                   destination.platformable_platforms.each.count(&:marked_for_destruction?)
+                 }.by(1)
+          end
 
-            expect(destination.platformable_platforms(true).map(&:platform)).to include(second_platform)
+          it 'does not destroy any destination.platformable_platforms' do
+            expect {
+              mark_removed_for_destruction
+            }.not_to change(destination.platformable_platforms, :count)
+          end
+
+          context 'with destination saved' do
+            it 'removes platformable_platform with platform.fully_qualified_name' do
+              mark_removed_for_destruction
+
+              expect {
+                destination.save!
+              }.to change(destination.platformable_platforms, :count).by(-1)
+
+              expect(destination.platformable_platforms(true).map(&:platform)).to include(second_platform)
+            end
           end
         end
 
@@ -201,10 +235,27 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
             Set.new
           }
 
-          it 'removes all matching platformable_platforms' do
+          it 'marks for destruction matching destination.platformable_platforms' do
             expect {
-              destroy_removed
-            }.to change(destination.platformable_platforms, :count).by(-2)
+              mark_removed_for_destruction
+            }.to change {
+                   destination.platformable_platforms.each.count(&:marked_for_destruction?)
+                 }.by(2)
+          end
+
+          it 'does not destroy any destination.platformable_platforms' do
+            expect {
+              mark_removed_for_destruction
+            }.not_to change(destination.platformable_platforms, :count)
+          end
+
+          context 'with destination saved' do
+            it 'removes all matching platformable_platforms' do
+              mark_removed_for_destruction
+              expect {
+                destination.save!
+              }.to change(destination.platformable_platforms, :count).by(-2)
+            end
           end
         end
       end
@@ -282,8 +333,8 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
       synchronize
     end
 
-    it 'calls destroy_removed' do
-      expect(described_class).to receive(:destroy_removed).with(
+    it 'calls mark_removed_for_destruction' do
+      expect(described_class).to receive(:mark_removed_for_destruction).with(
                                      hash_including(destination: destination)
                                  )
 

@@ -9,6 +9,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # Joins {#architectures} to this single payload Metasploit Module.
   has_many :architecturable_architectures,
            as: :architecturable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Architecturable::Architecture',
            dependent: :destroy,
            inverse_of: :architecturable
@@ -16,6 +17,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # Code contributions to this single payload Metasploit Module
   has_many :contributions,
            as: :contributable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :contributable
@@ -28,6 +30,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Licensable::License'
 
   # The class-level metadata for this single payload Metasploit Module.
@@ -38,6 +41,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # Joins {#platforms} to this single payload Metasploit Module.
   has_many :platformable_platforms,
            as: :platformable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platformable

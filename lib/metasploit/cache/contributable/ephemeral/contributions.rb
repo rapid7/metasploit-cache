@@ -72,15 +72,14 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
     destination
   end
 
-  # The set of {Metasploit::Cache::Contribution} attributes currently persisted as `#contributions` on `destination`.
+  # Maps attributes of `#contributions` on `destination` to those `#contributions`.
   #
-  # @param destination [#contributions]
-  # @return [Set<Hash{Symbol => Hash{Symbol => String}}>]
-  def self.destination_attributes_set(destination)
+  # @return [Hash{Hash{author: Hash{name: String}, email_address: Hash{full: String}}, Hash{author: Hash{name: String}} => Metasploit::Cache::Contribution}]
+  def self.contribution_by_attributes(destination)
     if destination.new_record?
-      Set.new
+      {}
     else
-      destination.contributions.each_with_object(Set.new) do |contribution, set|
+      destination.contributions.each_with_object({}) do |contribution, hash|
         attributes = {
             author: {
                 name: contribution.author.name
@@ -95,63 +94,40 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
           }
         end
 
-        set.add attributes
+        hash[attributes] = contribution
       end
     end
   end
 
-  # Destroys {Metasploit::Cache::Contribution} `#contributions` of {Metasploit::Cache::Contribution#contributable}
-  # `destination` that are persisted, but don't exist in `source`.
+  # The set of {Metasploit::Cache::Contribution} attributes currently persisted as `#contributions` on `destination`.
   #
+  # @param destination [Hash{Hash{author: Hash{name: String}, email_address: Hash{full: String}}, Hash{author: Hash{name: String}} => Metasploit::Cache::Contribution}]
+  # @return [Set<Hash{author: Hash{name: String}, email_address: Hash{full: String}}, Hash{author: Hash{name: String}}>]
+  def self.destination_attributes_set(contribution_by_attributes)
+    Set.new contribution_by_attributes.each_key
+  end
+
+  # Marks for destruction {Metasploit::Cache::Contribution} `#contributions` of
+  # {Metasploit::Cache::Contribution#contributable} `destination` that are persisted, but don't exist in `source`.
+  #
+  # @param contribution_by_attributes [Hash{Hash{author: Hash{name: String}, email_address: Hash{full: String}}, Hash{author: Hash{name: String}} => Metasploit::Cache::Contribution}]
   # @param destination [#contributions]
   # @param destination_attributes_set [Set<Hash{Symbol => Hash{Symbol => String}}>] Set of attributes from
   #   `#contributions` on `destination`.
   # @param source_attributes_set [Set<Hash{Symbol => Hash{Symbol => String}}>] Set of attributes from `source`
   #   `#authors`.
   # @return [#contributions] `destination`
-  def self.destroy_removed(destination:, destination_attributes_set:, source_attributes_set:)
+  def self.mark_removed_for_destruction(contribution_by_attributes:, destination:, destination_attributes_set:, source_attributes_set:)
     cached_removed_attributes_set = Metasploit::Cache::Ephemeral::AttributeSet.removed(
         destination: destination_attributes_set,
         source: source_attributes_set
     )
 
     unless destination.new_record? || cached_removed_attributes_set.empty?
-      attributes_conditions_list = cached_removed_attributes_set.collect { |removed_attributes|
-        attributes_conditions = Metasploit::Cache::Author.arel_table[:name].eq(removed_attributes[:author][:name])
-
-        email_address_attributes = removed_attributes[:email_address]
-
-        if email_address_attributes
-          attributes_conditions = attributes_conditions.and(
-              Metasploit::Cache::EmailAddress.arel_table[:full].eq(email_address_attributes[:full])
-          )
-        else
-          attributes_conditions = attributes_conditions.and(
-              Metasploit::Cache::Contribution.arel_table[:email_address_id].eq(nil)
-          )
-        end
-
-        attributes_conditions
-      }
-
-      removed_set_conditions = attributes_conditions_list.inject { |set_conditions, attributes_conditions|
-        set_conditions.or(attributes_conditions)
-      }
-
-      # includes + references triggers LEFT JOIN
-      relation = destination.contributions.joins(
-          :author
-      ).includes(
-           :email_address
-      ).references(
-          :email_address
-      ).where(
-          removed_set_conditions
-      ).readonly(
-          false
-      )
-
-      relation.destroy_all
+      cached_removed_attributes_set.each do |removed_attributes|
+        contribution = contribution_by_attributes.fetch(removed_attributes)
+        contribution.mark_for_destruction
+      end
     end
 
     destination
@@ -189,17 +165,21 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # @return [#contributions] `destination`
   def self.synchronize(destination:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
-      cached_destination_attributes_set = destination_attributes_set(destination)
+      cached_contribution_by_attributes = contribution_by_attributes(destination)
+      cached_destination_attributes_set = destination_attributes_set(cached_contribution_by_attributes)
       cached_source_attributes_set = source_attributes_set(source)
 
-      [:destroy_removed, :build_added].reduce(destination) { |block_destination, method|
-        public_send(
-            method,
-            destination: block_destination,
-            destination_attributes_set: cached_destination_attributes_set,
-            source_attributes_set: cached_source_attributes_set
-        )
-      }
+      reduced = mark_removed_for_destruction(
+          contribution_by_attributes: cached_contribution_by_attributes,
+          destination: destination,
+          destination_attributes_set: cached_destination_attributes_set,
+          source_attributes_set: cached_source_attributes_set
+      )
+      build_added(
+          destination: reduced,
+          destination_attributes_set: cached_destination_attributes_set,
+          source_attributes_set: cached_source_attributes_set
+      )
     }
   end
 end
