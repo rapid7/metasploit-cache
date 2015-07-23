@@ -90,9 +90,9 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
     end
   end
 
-  context 'destroy_removed' do
-    subject(:destroy_removed) {
-      described_class.destroy_removed(
+  context 'mark_removed_for_destruction' do
+    subject(:mark_removed_for_destruction) {
+      described_class.mark_removed_for_destruction(
                          destination: destination,
                          destination_attribute_set: destination_attribute_set,
                          source_attribute_set: source_attribute_set
@@ -114,7 +114,7 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
 
       it 'does not change destination.architecturable_architectures' do
         expect {
-          destroy_removed
+          mark_removed_for_destruction
         }.not_to change {
                    destination.architecturable_architectures(true).count
                  }
@@ -172,7 +172,7 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
 
         it 'does not change destination.architecturable_architectures' do
           expect {
-            destroy_removed
+            mark_removed_for_destruction
           }.not_to change {
                      destination.architecturable_architectures(true).count
                    }
@@ -187,12 +187,30 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
                     ]
           }
 
-          it 'removes architecturable_architecture with architecture.abbreviation' do
+          it 'marks architecturable_architecture with architecture.abbreviation for destruction' do
             expect {
-              destroy_removed
-            }.to change(destination.architecturable_architectures, :count).by(-1)
+              mark_removed_for_destruction
+            }.to change {
+                   destination.architecturable_architectures.to_a.count(&:marked_for_destruction?)
+                 }.by(1)
+          end
 
-            expect(destination.architecturable_architectures(true).map(&:architecture)).to include(second_architecture)
+          it 'does not remove architecturable_architecture with architecture.abbreviation' do
+            expect {
+              mark_removed_for_destruction
+            }.not_to change(destination.architecturable_architectures, :count)
+          end
+
+          context 'with destination saved' do
+            it 'removes architecturable_architecture with architecture.abbreviation' do
+              mark_removed_for_destruction
+
+              expect {
+                destination.save!
+              }.to change(destination.architecturable_architectures, :count).by(-1)
+
+              expect(destination.architecturable_architectures(true).map(&:architecture)).to include(second_architecture)
+            end
           end
         end
 
@@ -201,10 +219,27 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
             Set.new
           }
 
-          it 'removes all matching architecturable_architectures' do
+          it 'marks all matching architecturable_architectures for destruction' do
             expect {
-              destroy_removed
-            }.to change(destination.architecturable_architectures, :count).by(-2)
+              mark_removed_for_destruction
+            }.to change {
+                   destination.architecturable_architectures.to_a.count(&:marked_for_destruction?)
+                 }.by(2)
+          end
+
+          it 'does not remove architecturable_architectures' do
+            expect {
+              mark_removed_for_destruction
+            }.not_to change(destination.architecturable_architectures, :count)
+          end
+
+          context 'with destination saved' do
+            it 'removes all matching architecturable_architectures' do
+              mark_removed_for_destruction
+              expect {
+                destination.save!
+              }.to change(destination.architecturable_architectures, :count).by(-2)
+            end
           end
         end
       end
@@ -271,8 +306,8 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
       synchronize
     end
 
-    it 'calls destroy_removed' do
-      expect(described_class).to receive(:destroy_removed).with(
+    it 'calls mark_removed_for_destruction' do
+      expect(described_class).to receive(:mark_removed_for_destruction).with(
                                      hash_including(destination: destination)
                                  )
 

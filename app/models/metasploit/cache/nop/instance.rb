@@ -9,6 +9,7 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   # Joins {#architectures} to this nop Metasploit Module.
   has_many :architecturable_architectures,
            as: :architecturable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Architecturable::Architecture',
            dependent: :destroy,
            inverse_of: :architecturable
@@ -16,6 +17,7 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   # Code contributions to this nop Metasploit Module.
   has_many :contributions,
            as: :contributable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :contributable
@@ -23,6 +25,7 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Licensable::License'
 
   # The class level metadata for this nop Metasploit Module.
@@ -33,6 +36,7 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   # Joins {#platforms} to this encoder Metasploit Module.
   has_many :platformable_platforms,
            as: :platformable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platformable

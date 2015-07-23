@@ -119,9 +119,9 @@ RSpec.describe Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses do
     end
   end
 
-  context 'destroy_removed' do
-    subject(:destroy_removed) {
-      described_class.destroy_removed(
+  context 'mark_removed_for_destruction' do
+    subject(:mark_removed_for_destruction) {
+      described_class.mark_removed_for_destruction(
                          destination: destination,
                          destination_attribute_set: destination_attribute_set,
                          source_attribute_set: source_attribute_set
@@ -141,14 +141,22 @@ RSpec.describe Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses do
         Set.new
       }
 
-      it 'does not change destination.licenses' do
+      it 'does not mark for destruction any destination.licensable_licenses' do
         expect {
-          destroy_removed
-        }.not_to change(destination.licenses, :count)
+          mark_removed_for_destruction
+        }.not_to change {
+                   destination.licensable_licenses.each.count(&:marked_for_destruction?)
+                 }
+      end
+
+      it 'does not destroy any destination.licensable_licenses' do
+        expect {
+          mark_removed_for_destruction
+        }.not_to change(destination.licensable_licenses, :count)
       end
 
       it 'returns destination' do
-        expect(destroy_removed).to eq(destination)
+        expect(mark_removed_for_destruction).to eq(destination)
       end
     end
 
@@ -169,14 +177,32 @@ RSpec.describe Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses do
           Set.new [destination.licenses.first.abbreviation]
         }
 
-        it 'destroys removed destination.licensable_licenses' do
+        it 'does not destroy any destination.licensable_licenses' do
           expect {
-            destroy_removed
-          }.to change(destination.licensable_licenses, :count).by(-1)
+            mark_removed_for_destruction
+          }.not_to change(destination.licensable_licenses, :count)
+        end
+
+        it 'marks for destruction removed destination.licensable_licenses' do
+          expect {
+            mark_removed_for_destruction
+          }.to change {
+                 destination.licensable_licenses.each.count(&:marked_for_destruction?)
+               }
         end
 
         it 'returns destination' do
-          expect(destroy_removed).to eq(destination)
+          expect(mark_removed_for_destruction).to eq(destination)
+        end
+
+        context 'with saved destination' do
+          it 'destroys removed destination.licensable_licenses' do
+            mark_removed_for_destruction
+
+            expect {
+              destination.save!
+            }.to change(destination.licensable_licenses, :count).by(-1)
+          end
         end
       end
 
@@ -185,14 +211,28 @@ RSpec.describe Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses do
           destination_attribute_set
         }
 
-        it 'destroyes no destination.licensable_licenses' do
+        it 'destroys no destination.licensable_licenses' do
           expect {
-            destroy_removed
+            mark_removed_for_destruction
+          }.not_to change(destination.licensable_licenses, :count)
+        end
+
+        it 'marks for destruction no destination.licensable_licenses' do
+          expect {
+            mark_removed_for_destruction
           }.not_to change(destination.licensable_licenses, :count)
         end
 
         it 'returns destination' do
-          expect(destroy_removed).to eq(destination)
+          expect(mark_removed_for_destruction).to eq(destination)
+        end
+
+        context 'with destination saved' do
+          it 'destroys no destination.licensable_licenses' do
+            expect {
+              mark_removed_for_destruction
+            }.not_to change(destination.licensable_licenses, :count)
+          end
         end
       end
     end
@@ -264,8 +304,8 @@ RSpec.describe Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses do
       synchronize
     end
 
-    it 'calls destroy_removed' do
-      expect(described_class).to receive(:destroy_removed).with(
+    it 'calls mark_removed_for_destruction' do
+      expect(described_class).to receive(:mark_removed_for_destruction).with(
                                      hash_including(destination: destination)
                                  )
 

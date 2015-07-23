@@ -65,7 +65,7 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
     end
   end
 
-  # Destroys {Metasploit::Cache::Platformable::Platform} `#platformable_platforms` of
+  # Marks for destruction {Metasploit::Cache::Platformable::Platform} `#platformable_platforms` of
   # {Metasploit::Cache::Platformable::Platform#platformable} `destination` that are persisted, but don't exist in
   # `source`.
   #
@@ -74,21 +74,18 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   #   `#platformable_platforms` on `destination`.
   # @param source_attribute_set [Set<String>] Set of platform full names from `#platform` from `source`.
   # @return [#platformable_platforms] `destination`
-  def self.destroy_removed(destination:, destination_attribute_set:, source_attribute_set:)
+  def self.mark_removed_for_destruction(destination:, destination_attribute_set:, source_attribute_set:)
     cached_removed_attribute_set = Metasploit::Cache::Ephemeral::AttributeSet.removed(
         destination: destination_attribute_set,
         source: source_attribute_set
     )
 
     unless destination.new_record? || cached_removed_attribute_set.empty?
-      destination.platformable_platforms.joins(
-          :platform
-      ).where(
-           Metasploit::Cache::Platform.arel_table[:fully_qualified_name].in(
-               # AREL cannot visit Set
-               cached_removed_attribute_set.to_a
-           )
-      ).readonly(false).destroy_all
+      destination.platformable_platforms.each do |platformable_platform|
+        if cached_removed_attribute_set.include? platformable_platform.platform.fully_qualified_name
+          platformable_platform.mark_for_destruction
+        end
+      end
     end
 
     destination
@@ -127,7 +124,7 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
       cached_destination_attributes_set = destination_attribute_set(destination)
       cached_source_attributes_set = source_attribute_set(source)
 
-      [:destroy_removed, :build_added].reduce(destination) { |block_destination, method|
+      [:mark_removed_for_destruction, :build_added].reduce(destination) { |block_destination, method|
         public_send(
             method,
             destination: block_destination,

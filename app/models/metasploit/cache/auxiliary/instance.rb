@@ -19,6 +19,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # @return [ActiveRecord::Relation<Metasploit::Cache::Actionable::Action>]
   has_many :actions,
            as: :actionable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Actionable::Action',
            dependent: :destroy,
            inverse_of: :actionable
@@ -34,6 +35,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # Code contributions to this auxiliary Metasploit Module
   has_many :contributions,
            as: :contributable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :contributable
@@ -50,6 +52,7 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Licensable::License',
            dependent: :destroy,
            inverse_of: :licensable

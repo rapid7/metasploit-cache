@@ -9,6 +9,7 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Joins {#architectures} to this post Metasploit Module.
   has_many :architecturable_architectures,
            as: :architecturable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Architecturable::Architecture',
            dependent: :destroy,
            inverse_of: :architecturable
@@ -18,12 +19,14 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # @return [ActiveRecord::Relation<Metasploit::Cache::Actionable::Action>]
   has_many :actions,
            as: :actionable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Actionable::Action',
            inverse_of: :actionable
 
   # Code contributions to this post Metasploit Module.
   has_many :contributions,
            as: :contributable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Contribution',
            dependent: :destroy,
            inverse_of: :contributable
@@ -40,6 +43,7 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Joins {#licenses} to this post Metasploit Module.
   has_many :licensable_licenses,
            as: :licensable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Licensable::License',
            dependent: :destroy,
            inverse_of: :licensable
@@ -47,6 +51,7 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Joins {#platforms} to this post Metasploit Module.
   has_many :platformable_platforms,
            as: :platformable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Platformable::Platform',
            dependent: :destroy,
            inverse_of: :platformable
@@ -59,6 +64,7 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Joins {#references} to this auxiliary Metasploit Module.
   has_many :referencable_references,
            as: :referencable,
+           autosave: true,
            class_name: 'Metasploit::Cache::Referencable::Reference',
            dependent: :destroy,
            inverse_of: :referencable
