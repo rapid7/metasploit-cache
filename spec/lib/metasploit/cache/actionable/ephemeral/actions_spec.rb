@@ -557,7 +557,15 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
     end
 
     context 'without #source_default_action_name' do
+      let(:source_default_action_name) {
+        nil
+      }
 
+      it 'sets destination.default_action to nil' do
+        expect {
+          update_default_action
+        }.to change(destination, :default_action).to(nil)
+      end
     end
   end
 end
