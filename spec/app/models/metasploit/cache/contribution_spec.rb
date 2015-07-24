@@ -25,6 +25,18 @@ RSpec.describe Metasploit::Cache::Contribution do
   end
   
   context 'factories' do
+    context 'metasploit_cache_contribution' do
+      subject(:metasploit_cache_contribution) {
+        FactoryGirl.build(:metasploit_cache_contribution)
+      }
+
+      it { is_expected.not_to be_valid }
+
+      it 'has nil #contributable' do
+        expect(metasploit_cache_contribution.contributable).to be_nil
+      end
+    end
+
     context 'metasploit_cache_auxiliary_contribution' do
       subject(:metasploit_cache_auxiliary_contribution) {
         FactoryGirl.build(:metasploit_cache_auxiliary_contribution)
