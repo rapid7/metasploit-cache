@@ -29,42 +29,6 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
         expect(metasploit_cache_actionable_action.actionable).to be_nil
       end
     end
-
-    context 'metasploit_cache_auxiliary_action' do
-      subject(:metasploit_cache_auxiliary_action) {
-        FactoryGirl.build(:metasploit_cache_auxiliary_action)
-      }
-
-      it { is_expected.to be_valid }
-
-      it { is_expected.to be_a described_class }
-
-      context '#actionable' do
-        subject(:actionable) {
-          metasploit_cache_auxiliary_action.actionable
-        }
-
-        it { is_expected.to be_a Metasploit::Cache::Auxiliary::Instance }
-      end
-    end
-
-    context 'metasploit_cache_post_action' do
-      subject(:metasploit_cache_post_action) {
-        FactoryGirl.build(:metasploit_cache_post_action)
-      }
-
-      it { is_expected.to be_valid }
-
-      it { is_expected.to be_a described_class }
-
-      context '#actionable' do
-        subject(:actionable) {
-          metasploit_cache_post_action.actionable
-        }
-
-        it { is_expected.to be_a Metasploit::Cache::Post::Instance }
-      end
-    end
   end
 
   context 'validations' do
@@ -95,7 +59,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
 
       let!(:existing_actionable_action) {
         FactoryGirl.create(
-            :metasploit_cache_auxiliary_action,
+            :metasploit_cache_actionable_action,
             actionable: existing_actionable,
             name: existing_name
         )
@@ -106,7 +70,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           context 'with same #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_action,
+                  :metasploit_cache_actionable_action,
                   actionable: existing_actionable,
                   name: existing_name
               )
@@ -141,7 +105,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           context 'with different #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_action,
+                  :metasploit_cache_actionable_action,
                   actionable: existing_actionable
               )
             }
@@ -157,14 +121,15 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
         context 'with different #actionable_id' do
           let!(:new_actionable) {
             FactoryGirl.build(
-                :metasploit_cache_auxiliary_action
+                :metasploit_cache_actionable_action,
+                actionable: FactoryGirl.build(:metasploit_cache_auxiliary_instance)
             )
           }
 
           context 'with same #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_action,
+                  :metasploit_cache_actionable_action,
                   actionable: new_actionable,
                   name: existing_name
               )
@@ -180,7 +145,7 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
           context 'with different #name' do
             let(:new_actionable_action) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_action,
+                  :metasploit_cache_actionable_action,
                   actionable: new_actionable
               )
             }
