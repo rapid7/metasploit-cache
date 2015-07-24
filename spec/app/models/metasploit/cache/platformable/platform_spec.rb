@@ -21,6 +21,18 @@ RSpec.describe Metasploit::Cache::Platformable::Platform do
   end
 
   context 'factories' do
+    context 'metasploit_cache_platformable_platform' do
+      subject(:metasploit_cache_platformable_platform) {
+        FactoryGirl.build(:metasploit_cache_platformable_platform)
+      }
+
+      it { is_expected.not_to be_valid }
+
+      it 'has nil #platformable' do
+        expect(metasploit_cache_platformable_platform.platformable).to be_nil
+      end
+    end
+
     context 'metasploit_cache_encoder_platform' do
       subject(:metasploit_cache_encoder_platform) {
         FactoryGirl.build(:metasploit_cache_encoder_platform)
