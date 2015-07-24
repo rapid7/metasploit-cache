@@ -6,14 +6,12 @@ FactoryGirl.define do
   factory :metasploit_cache_auxiliary_instance,
           class: Metasploit::Cache::Auxiliary::Instance,
           traits: [
+              :metasploit_cache_auxiliary_instance_actions,
+              :metasploit_cache_auxiliary_instance_contributions,
+              :metasploit_cache_auxiliary_instance_licensable_licenses,
+              # Must be after all association traits so associations are built when writing contents
               :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents
           ] do
-    transient do
-      action_count 1
-      contribution_count 1
-      licensable_license_count 1
-    end
-
     description { generate :metasploit_cache_auxiliary_instance_description }
     name { generate :metasploit_cache_auxiliary_instance_name }
     stance { generate :metasploit_cache_module_stance }
@@ -23,34 +21,6 @@ FactoryGirl.define do
     #
 
     association :auxiliary_class, factory: :metasploit_cache_auxiliary_class
-
-    #
-    # Callbacks
-    #
-
-    # Create associated objects w/ the counts established above in the
-    # transient attributes. This enables specs using these factories to
-    # specify a number of associated objects and therefore easily make valid/invalid
-    # instances.
-    after(:build) { |auxiliary_instance, evaluator|
-      auxiliary_instance.actions = build_list(
-          :metasploit_cache_auxiliary_action,
-          evaluator.action_count,
-          actionable: auxiliary_instance
-      )
-      
-      auxiliary_instance.contributions = build_list(
-          :metasploit_cache_auxiliary_contribution,
-          evaluator.contribution_count,
-          contributable: auxiliary_instance
-      )
-      
-      auxiliary_instance.licensable_licenses = build_list(
-          :metasploit_cache_auxiliary_license,
-          evaluator.licensable_license_count,
-          licensable: auxiliary_instance
-      )
-    }
   end
 
   #
@@ -63,6 +33,76 @@ FactoryGirl.define do
 
   sequence :metasploit_cache_auxiliary_instance_name do |n|
     "Metasploit::Cache::Auxiliary::Instance#name #{n}"
+  end
+
+  #
+  # Traits
+  #
+
+  trait :metasploit_cache_auxiliary_instance_actions do
+    transient do
+      action_count 1
+    end
+
+    #
+    # Callbacks
+    #
+
+    # Create associated objects w/ the count established above in the
+    # transient attribute. This enables specs using these factories to
+    # specify a number of associated objects and therefore easily make valid/invalid
+    # instances.
+    after(:build) do |auxiliary_instance, evaluator|
+      auxiliary_instance.actions = build_list(
+          :metasploit_cache_auxiliary_action,
+          evaluator.action_count,
+          actionable: auxiliary_instance
+      )
+    end
+  end
+
+  trait :metasploit_cache_auxiliary_instance_contributions do
+    transient do
+      contribution_count 1
+    end
+
+    #
+    # Callbacks
+    #
+
+    # Create associated objects w/ the count established above in the
+    # transient attribute. This enables specs using these factories to
+    # specify a number of associated objects and therefore easily make valid/invalid
+    # instances.
+    after(:build) do |auxiliary_instance, evaluator|
+      auxiliary_instance.contributions = build_list(
+          :metasploit_cache_auxiliary_contribution,
+          evaluator.contribution_count,
+          contributable: auxiliary_instance
+      )
+    end
+  end
+
+  trait :metasploit_cache_auxiliary_instance_licensable_licenses do
+    transient do
+      licensable_license_count 1
+    end
+
+    #
+    # Callbacks
+    #
+
+    # Create associated objects w/ the count established above in the
+    # transient attribute. This enables specs using these factories to
+    # specify a number of associated objects and therefore easily make valid/invalid
+    # instances.
+    after(:build) do |auxiliary_instance, evaluator|
+      auxiliary_instance.licensable_licenses = build_list(
+          :metasploit_cache_auxiliary_license,
+          evaluator.licensable_license_count,
+          licensable: auxiliary_instance
+      )
+    end
   end
 
   #
