@@ -6,7 +6,7 @@ FactoryGirl.define do
   factory :metasploit_cache_encoder_instance,
           class: Metasploit::Cache::Encoder::Instance,
           traits: [
-              :metasploit_cache_encoder_instance_architecturable_architectures,
+              :metasploit_cache_architecturable_architecturable_architectures,
               :metasploit_cache_encoder_instance_contributions,
               :metasploit_cache_encoder_instance_licensable_licenses,
               :metasploit_cache_encoder_instance_platformable_platforms,
@@ -38,20 +38,6 @@ FactoryGirl.define do
   #
   # Traits
   #
-
-  trait :metasploit_cache_encoder_instance_architecturable_architectures do
-    transient do
-      architecturable_architecture_count 1
-    end
-
-    after(:build) do |encoder_instance, evaluator|
-      encoder_instance.architecturable_architectures = build_list(
-          :metasploit_cache_encoder_architecture,
-          evaluator.architecturable_architecture_count,
-          architecturable: encoder_instance
-      )
-    end
-  end
 
   trait :metasploit_cache_encoder_instance_contributions do
     transient do

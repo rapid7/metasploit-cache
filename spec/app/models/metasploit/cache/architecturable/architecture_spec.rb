@@ -19,6 +19,18 @@ RSpec.describe Metasploit::Cache::Architecturable::Architecture do
   end
 
   context 'factories' do
+    context 'metasploit_cache_architecturable_architecture' do
+      subject(:metasploit_cache_architecturable_architecture) {
+        FactoryGirl.build(:metasploit_cache_architecturable_architecture)
+      }
+
+      it { is_expected.not_to be_valid }
+
+      it 'has nil #architecturable' do
+        expect(metasploit_cache_architecturable_architecture.architecturable).to be_nil
+      end
+    end
+
     context 'metasploit_cache_encoder_architecture' do
       subject(:metasploit_cache_encoder_architecture) {
         FactoryGirl.build(:metasploit_cache_encoder_architecture)
