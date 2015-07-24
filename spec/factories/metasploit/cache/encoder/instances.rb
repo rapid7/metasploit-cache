@@ -6,15 +6,13 @@ FactoryGirl.define do
   factory :metasploit_cache_encoder_instance,
           class: Metasploit::Cache::Encoder::Instance,
           traits: [
+              :metasploit_cache_encoder_instance_architecturable_architectures,
+              :metasploit_cache_encoder_instance_contributions,
+              :metasploit_cache_encoder_instance_licensable_licenses,
+              :metasploit_cache_encoder_instance_platformable_platforms,
+              # Must be after all association traits so associations are populated before generating content
               :metasploit_cache_encoder_instance_encoder_class_ancestor_contents
           ] do
-    transient do
-      architecturable_architecture_count 1
-      contribution_count 1
-      licensable_license_count 1
-      platformable_platform_count 1
-    end
-
     description { generate :metasploit_cache_encoder_instance_description }
     name { generate :metasploit_cache_encoder_instance_name }
 
@@ -23,36 +21,6 @@ FactoryGirl.define do
     #
 
     association :encoder_class, factory: :metasploit_cache_encoder_class
-
-    #
-    # Callbacks
-    #
-
-    after(:build) do |encoder_instance, evaluator|
-      encoder_instance.architecturable_architectures = build_list(
-          :metasploit_cache_encoder_architecture,
-          evaluator.architecturable_architecture_count,
-          architecturable: encoder_instance
-      )
-      
-      encoder_instance.contributions = build_list(
-        :metasploit_cache_encoder_contribution,
-        evaluator.contribution_count,
-        contributable: encoder_instance
-      )
-      
-      encoder_instance.licensable_licenses = build_list(
-        :metasploit_cache_encoder_license,
-        evaluator.licensable_license_count,
-        licensable: encoder_instance
-      )
-      
-      encoder_instance.platformable_platforms = build_list(
-          :metasploit_cache_encoder_platform,
-          evaluator.platformable_platform_count,
-          platformable: encoder_instance
-      )
-    end
   end
 
   #
@@ -70,6 +38,62 @@ FactoryGirl.define do
   #
   # Traits
   #
+
+  trait :metasploit_cache_encoder_instance_architecturable_architectures do
+    transient do
+      architecturable_architecture_count 1
+    end
+
+    after(:build) do |encoder_instance, evaluator|
+      encoder_instance.architecturable_architectures = build_list(
+          :metasploit_cache_encoder_architecture,
+          evaluator.architecturable_architecture_count,
+          architecturable: encoder_instance
+      )
+    end
+  end
+
+  trait :metasploit_cache_encoder_instance_contributions do
+    transient do
+      contribution_count 1
+    end
+
+    after(:build) do |encoder_instance, evaluator|
+      encoder_instance.contributions = build_list(
+          :metasploit_cache_encoder_contribution,
+          evaluator.contribution_count,
+          contributable: encoder_instance
+      )
+    end
+  end
+
+  trait :metasploit_cache_encoder_instance_licensable_licenses do
+    transient do
+      licensable_license_count 1
+    end
+
+    after(:build) do |encoder_instance, evaluator|
+      encoder_instance.licensable_licenses = build_list(
+          :metasploit_cache_encoder_license,
+          evaluator.licensable_license_count,
+          licensable: encoder_instance
+      )
+    end
+  end
+
+  trait :metasploit_cache_encoder_instance_platformable_platforms do
+    transient do
+      platformable_platform_count 1
+    end
+
+    after(:build) do |encoder_instance, evaluator|
+      encoder_instance.platformable_platforms = build_list(
+          :metasploit_cache_encoder_platform,
+          evaluator.platformable_platform_count,
+          platformable: encoder_instance
+      )
+    end
+  end
 
   trait :metasploit_cache_encoder_instance_encoder_class_ancestor_contents do
     transient do
