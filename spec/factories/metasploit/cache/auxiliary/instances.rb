@@ -6,7 +6,7 @@ FactoryGirl.define do
   factory :metasploit_cache_auxiliary_instance,
           class: Metasploit::Cache::Auxiliary::Instance,
           traits: [
-              :metasploit_cache_auxiliary_instance_actions,
+              :metasploit_cache_actionable_actions,
               :metasploit_cache_contributable_contributions,
               :metasploit_cache_licensable_licensable_licenses,
               # Must be after all association traits so associations are built when writing contents
@@ -38,28 +38,6 @@ FactoryGirl.define do
   #
   # Traits
   #
-
-  trait :metasploit_cache_auxiliary_instance_actions do
-    transient do
-      action_count 1
-    end
-
-    #
-    # Callbacks
-    #
-
-    # Create associated objects w/ the count established above in the
-    # transient attribute. This enables specs using these factories to
-    # specify a number of associated objects and therefore easily make valid/invalid
-    # instances.
-    after(:build) do |auxiliary_instance, evaluator|
-      auxiliary_instance.actions = build_list(
-          :metasploit_cache_auxiliary_action,
-          evaluator.action_count,
-          actionable: auxiliary_instance
-      )
-    end
-  end
 
   trait :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents do
     transient do

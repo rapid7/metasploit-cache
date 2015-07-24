@@ -18,6 +18,18 @@ RSpec.describe Metasploit::Cache::Actionable::Action do
   end
 
   context 'factories' do
+    context 'metapsloit_cache_actionable_action' do
+      subject(:metasploit_cache_actionable_action) {
+        FactoryGirl.build(:metasploit_cache_actionable_action)
+      }
+
+      it { is_expected.not_to be_valid }
+
+      it 'has nil #actioanble' do
+        expect(metasploit_cache_actionable_action.actionable).to be_nil
+      end
+    end
+
     context 'metasploit_cache_auxiliary_action' do
       subject(:metasploit_cache_auxiliary_action) {
         FactoryGirl.build(:metasploit_cache_auxiliary_action)

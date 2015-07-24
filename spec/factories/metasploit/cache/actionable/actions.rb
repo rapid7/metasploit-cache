@@ -3,16 +3,20 @@ FactoryGirl.define do
   # Factories
   #
 
-  factory :metasploit_cache_auxiliary_action,
-          class: Metasploit::Cache::Actionable::Action,
-          traits: [:metasploit_cache_actionable_action] do
-    association :actionable, factory: :metasploit_cache_auxiliary_instance
-  end
+  factory :metasploit_cache_actionable_action,
+          class: Metasploit::Cache::Actionable::Action do
+    # @note this factory is invalid unless caller sets actionable
+    actionable nil
 
-  factory :metasploit_cache_post_action,
-          class: Metasploit::Cache::Actionable::Action,
-          traits: [:metasploit_cache_actionable_action] do
-    association :actionable, factory: :metasploit_cache_post_instance
+    name { generate :metasploit_cache_actionable_action_name }
+
+    factory :metasploit_cache_auxiliary_action do
+      association :actionable, factory: :metasploit_cache_auxiliary_instance
+    end
+
+    factory :metasploit_cache_post_action do
+      association :actionable, factory: :metasploit_cache_post_instance
+    end
   end
 
   #
@@ -21,13 +25,5 @@ FactoryGirl.define do
 
   sequence :metasploit_cache_actionable_action_name do |n|
     "Metasploit::Cache::Actionable::Action#name #{n}"
-  end
-
-  #
-  # Traits
-  #
-
-  trait :metasploit_cache_actionable_action do
-    name { generate :metasploit_cache_actionable_action_name }
   end
 end
