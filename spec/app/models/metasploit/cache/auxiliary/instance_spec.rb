@@ -75,6 +75,92 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
 
                 expect(auxiliary_ancestor.real_pathname).to exist
               end
+
+              context 'with multiple elements in each association' do
+                subject(:metasploit_cache_auxiliary_instance) {
+                  FactoryGirl.build(
+                      :metasploit_cache_auxiliary_instance,
+                      auxiliary_class: auxiliary_class,
+                      action_count: action_count,
+                      contribution_count: contribution_count,
+                      licensable_license_count: licensable_license_count
+                  )
+                }
+
+                let(:action_count) {
+                  2
+                }
+
+                let(:contribution_count) {
+                  2
+                }
+
+                let(:direct_class_load) {
+                  Metasploit::Cache::Direct::Class::Load.new(
+                      direct_class: auxiliary_class,
+                      logger: logger,
+                      metasploit_module: module_ancestor_load.metasploit_module
+                  )
+                }
+
+                let(:licensable_license_count) {
+                  2
+                }
+
+                let(:logger) {
+                  ActiveSupport::TaggedLogging.new(
+                      Logger.new(log_string_io)
+                  )
+                }
+
+                let(:log_string_io) {
+                  StringIO.new
+                }
+
+                let(:module_ancestor_load) {
+                  Metasploit::Cache::Module::Ancestor::Load.new(
+                      # This should match the major version number of metasploit-framework
+                      maximum_version: 4,
+                      module_ancestor: auxiliary_ancestor,
+                      logger: logger
+                  )
+                }
+
+                let(:module_instance_load) {
+                  Metasploit::Cache::Auxiliary::Instance::Load.new(
+                      auxiliary_instance: metasploit_cache_auxiliary_instance,
+                      auxiliary_metasploit_module_class: direct_class_load.metasploit_class,
+                      logger: logger
+                  )
+                }
+
+                before(:each) do
+                  # ensure file is written for auxiliary load
+                  metasploit_cache_auxiliary_instance
+
+                  # remove factory records so that load is forced to populate
+                  metasploit_cache_auxiliary_instance.actions = []
+                  metasploit_cache_auxiliary_instance.contributions = []
+                  metasploit_cache_auxiliary_instance.licensable_licenses = []
+                end
+
+                it 'is loadable' do
+                  expect(module_ancestor_load).to load_metasploit_module
+
+                  expect(direct_class_load).to be_valid
+                  expect(auxiliary_class).to be_persisted
+
+                  module_instance_load.valid?
+
+                  expect(metasploit_cache_auxiliary_instance).to be_valid
+                  expect(metasploit_cache_auxiliary_instance_load).to be_valid
+                  expect(metasploit_cache_auxiliary_instance).to be_persisted
+
+                  expect(metasploit_cache_auxiliary_instance.actions.count).to eq(action_count)
+                  expect(metasploit_cache_auxiliary_instance.contributions.count).to eq(contribution_count)
+                  expect(metasploit_cache_auxiliary_instance.licensable_liceneses.count).to eq(licensable_license_count)
+                end
+              end
             end
 
             context 'without Metasploit::Cache::Module::Ancestor#real_pathname' do
