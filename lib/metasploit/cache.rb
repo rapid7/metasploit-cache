@@ -26,6 +26,7 @@ module Metasploit
     extend ActiveSupport::Autoload
 
     autoload :Actionable
+    autoload :AncestorCell
     autoload :Architecture
     autoload :Architecturable
     autoload :Association
