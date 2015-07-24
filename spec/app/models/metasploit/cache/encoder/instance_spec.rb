@@ -63,7 +63,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
               }
 
               let(:relative_path) {
-                "encoder/#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
+                "encoders/#{reference_name}#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
               }
 
               it 'writes encoder Metasploit Module to #real_pathname' do
