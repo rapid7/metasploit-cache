@@ -8,7 +8,7 @@ RSpec::Matchers.define :load_metasploit_module do
   failure_message do |module_ancestor_load|
     lines = []
     lines << "#{module_ancestor_load.class} expected to be valid " \
-             "and load #{module_ancestor_load.module_ancestor.full_name}, " \
+             "and load #{module_ancestor_load.module_ancestor.real_pathname}, " \
              "but had errors:"
     lines.concat module_ancestor_load.errors.full_messages
 
