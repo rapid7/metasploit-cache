@@ -16,6 +16,7 @@ class Metasploit::Cache::Encoder::Instance::EncoderClass::AncestorCell < Cell::V
   extend ActiveSupport::Autoload
 
   include Cell::Twin::Properties
+  include Metasploit::Cache::AncestorCell
 
   autoload :Twin
 

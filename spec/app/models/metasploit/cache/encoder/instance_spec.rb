@@ -71,6 +71,101 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
 
                 expect(encoder_ancestor.real_pathname).to exist
               end
+
+              context 'with multiple elements in each association' do
+                include_context 'Metasploit::Cache::Spec::Unload.unload'
+
+                subject(:metasploit_cache_encoder_instance) {
+                  FactoryGirl.build(
+                      :metasploit_cache_encoder_instance,
+                      encoder_class: encoder_class,
+                      architecturable_architecture_count: architecturable_architecture_count,
+                      contribution_count: contribution_count,
+                      licensable_license_count: licensable_license_count,
+                      platformable_platform_count: platformable_platform_count
+                  )
+                }
+
+                let(:architecturable_architecture_count) {
+                  2
+                }
+
+                let(:contribution_count) {
+                  2
+                }
+
+                let(:direct_class_load) {
+                  Metasploit::Cache::Direct::Class::Load.new(
+                      direct_class: encoder_class,
+                      logger: logger,
+                      metasploit_module: module_ancestor_load.metasploit_module
+                  )
+                }
+
+                let(:licensable_license_count) {
+                  2
+                }
+
+                let(:logger) {
+                  ActiveSupport::TaggedLogging.new(
+                      Logger.new(log_string_io)
+                  )
+                }
+
+                let(:log_string_io) {
+                  StringIO.new
+                }
+
+                let(:module_ancestor_load) {
+                  Metasploit::Cache::Module::Ancestor::Load.new(
+                      # This should match the major version number of metasploit-framework
+                      maximum_version: 4,
+                      module_ancestor: encoder_ancestor,
+                      logger: logger
+                  )
+                }
+
+                let(:module_instance_load) {
+                  Metasploit::Cache::Encoder::Instance::Load.new(
+                      encoder_instance: metasploit_cache_encoder_instance,
+                      encoder_metasploit_module_class: direct_class_load.metasploit_class,
+                      logger: logger
+                  )
+                }
+
+                let(:platformable_platform_count) {
+                  2
+                }
+
+                before(:each) do
+                  # ensure file is written for encoder load
+                  metasploit_cache_encoder_instance
+
+                  # remove factory records so that load is forced to populate
+                  metasploit_cache_encoder_instance.architecturable_architectures = []
+                  metasploit_cache_encoder_instance.contributions = []
+                  metasploit_cache_encoder_instance.licensable_licenses = []
+                  metasploit_cache_encoder_instance.platformable_platforms = []
+                end
+
+                it 'is loadable' do
+                  expect(module_ancestor_load).to load_metasploit_module
+
+                  expect(direct_class_load).to be_valid
+                  expect(encoder_class).to be_persisted
+
+                  module_instance_load.valid?
+
+                  expect(metasploit_cache_encoder_instance).to be_valid
+                  expect(module_instance_load).to be_valid
+                  expect(metasploit_cache_encoder_instance).to be_persisted
+
+                  expect(metasploit_cache_encoder_instance.architecturable_architectures.count).to eq(architecturable_architecture_count)
+                  expect(metasploit_cache_encoder_instance.contributions.count).to eq(contribution_count)
+                  expect(metasploit_cache_encoder_instance.licensable_licenses.count).to eq(licensable_license_count)
+                  expect(metasploit_cache_encoder_instance.platformable_platforms.count).to eq(platformable_platform_count)
+                end
+              end
             end
 
             context 'without Metasploit::Cache::Module::Ancestor#real_pathname' do

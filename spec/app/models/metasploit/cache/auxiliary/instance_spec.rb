@@ -77,6 +77,8 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
               end
 
               context 'with multiple elements in each association' do
+                include_context 'Metasploit::Cache::Spec::Unload.unload'
+
                 subject(:metasploit_cache_auxiliary_instance) {
                   FactoryGirl.build(
                       :metasploit_cache_auxiliary_instance,
@@ -153,12 +155,12 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                   module_instance_load.valid?
 
                   expect(metasploit_cache_auxiliary_instance).to be_valid
-                  expect(metasploit_cache_auxiliary_instance_load).to be_valid
+                  expect(module_instance_load).to be_valid
                   expect(metasploit_cache_auxiliary_instance).to be_persisted
 
                   expect(metasploit_cache_auxiliary_instance.actions.count).to eq(action_count)
                   expect(metasploit_cache_auxiliary_instance.contributions.count).to eq(contribution_count)
-                  expect(metasploit_cache_auxiliary_instance.licensable_liceneses.count).to eq(licensable_license_count)
+                  expect(metasploit_cache_auxiliary_instance.licensable_licenses.count).to eq(licensable_license_count)
                 end
               end
             end

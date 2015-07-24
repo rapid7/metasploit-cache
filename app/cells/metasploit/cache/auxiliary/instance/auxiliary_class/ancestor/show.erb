@@ -13,15 +13,15 @@ class <%= metasploit_class_relative_name %> < <%= superclass %>
 
   def actions
     [
-<%- actions.each do |action| -%>
-      OpenStruct.new(name: '<%= action.name %>'),
+<%- separate(actions, ',') do |action, separator| -%>
+      OpenStruct.new(name: '<%= action.name %>')<%= separator %>
 <%- end -%>
     ].freeze
   end
 
   def author
     [
-<%- contributions.each do |contribution| -%>
+<%- separate(contributions, ',') do |contribution, separator| -%>
   <%- email_address = contribution.email_address
 
       if email_address
@@ -30,7 +30,7 @@ class <%= metasploit_class_relative_name %> < <%= superclass %>
         email = "nil"
       end
   -%>
-      OpenStruct.new(name: '<%= contribution.author.name %>', email: <%= email %>)
+      OpenStruct.new(name: '<%= contribution.author.name %>', email: <%= email %>)<%= separator %>
 <%- end -%>
     ]
   end
@@ -49,8 +49,8 @@ class <%= metasploit_class_relative_name %> < <%= superclass %>
 
   def license
     [
-<%- licensable_licenses.each do |licensable_license| -%>
-      '<%= licensable_license.license.abbreviation %>'
+<%- separate(licensable_licenses, ',') do |licensable_license, separator| -%>
+      '<%= licensable_license.license.abbreviation %>'<%= separator %>
 <%- end -%>
     ]
   end
