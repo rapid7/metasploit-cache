@@ -262,6 +262,51 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
     end
   end
 
+  context 'reduce' do
+    subject(:reduce) {
+      described_class.reduce(
+          destination: destination,
+          destination_attribute_set: destination_attribute_set,
+          source_attribute_set: source_attribute_set
+      )
+    }
+
+    let(:destination) {
+      Metasploit::Cache::Encoder::Instance.new
+    }
+
+    let(:destination_attribute_set) {
+      Set.new
+    }
+
+    let(:source_attribute_set) {
+      Set.new [FactoryGirl.generate(:metasploit_cache_platform_fully_qualified_name)]
+    }
+
+    it 'calls build_added' do
+      expect(described_class).to receive(:build_added).with(
+                                     hash_including(
+                                         destination: destination,
+                                         destination_attribute_set: destination_attribute_set,
+                                         source_attribute_set: source_attribute_set
+                                     )
+                                 ).and_call_original
+
+      reduce
+    end
+
+    it 'calls mark_removed_for_destruction' do
+      expect(described_class).to receive(:mark_removed_for_destruction).with(
+                                     hash_including(
+                                         destination: destination,
+                                         destination_attribute_set: destination_attribute_set,
+                                         source_attribute_set: source_attribute_set                                     )
+                                 ).and_call_original
+
+      reduce
+    end
+  end
+
   context 'source_attribute_set' do
     subject(:source_attribute_set) {
       described_class.source_attribute_set(source)
@@ -325,16 +370,8 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
       )
     }
 
-    it 'calls build_added' do
-      expect(described_class).to receive(:build_added).with(
-                                     hash_including(destination: destination)
-                                 )
-
-      synchronize
-    end
-
-    it 'calls mark_removed_for_destruction' do
-      expect(described_class).to receive(:mark_removed_for_destruction).with(
+    it 'calls reduce' do
+      expect(described_class).to receive(:reduce).with(
                                      hash_including(destination: destination)
                                  )
 
