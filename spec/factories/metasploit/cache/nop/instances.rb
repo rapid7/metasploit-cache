@@ -3,10 +3,10 @@ FactoryGirl.define do
           class: Metasploit::Cache::Nop::Instance,
           traits: [
               :metasploit_cache_architecturable_architecturable_architectures,
-              :metasploit_cache_contributable_contributions
+              :metasploit_cache_contributable_contributions,
+              :metasploit_cache_licensable_licensable_licenses
           ] do
     transient do
-      licensable_license_count 1
       platformable_platform_count 1
     end
 
@@ -24,12 +24,6 @@ FactoryGirl.define do
     #
 
     after(:build) do |nop_instance, evaluator|
-      nop_instance.licensable_licenses = build_list(
-        :metasploit_cache_nop_license,
-        evaluator.licensable_license_count,
-        licensable: nop_instance
-      )
-      
       nop_instance.platformable_platforms = build_list(
           :metasploit_cache_nop_platform,
           evaluator.platformable_platform_count,

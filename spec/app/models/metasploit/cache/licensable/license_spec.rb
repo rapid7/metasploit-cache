@@ -24,7 +24,10 @@ RSpec.describe Metasploit::Cache::Licensable::License do
 
     context 'with existing record' do
       let!(:existing_licensable_license) {
-        FactoryGirl.create(:metasploit_cache_auxiliary_license)
+        FactoryGirl.create(
+            :metasploit_cache_licensable_license,
+            licensable: FactoryGirl.build(:metasploit_cache_auxiliary_instance)
+        )
       }
 
       it { is_expected.to validate_uniqueness_of(:license_id).scoped_to(:licensable_type, :licensable_id) }
@@ -42,70 +45,6 @@ RSpec.describe Metasploit::Cache::Licensable::License do
       it 'has nil #licensable' do
         expect(metasploit_cache_licensable_license.licensable).to be_nil
       end
-    end
-    
-    context 'metasploit_cache_auxiliary_license' do
-      subject(:metasploit_cache_auxiliary_license) {
-        FactoryGirl.build(:metasploit_cache_auxiliary_license)
-      }
-      
-      it { is_expected.to be_valid }
-    end
-     
-    context 'metasploit_cache_encoder_license' do
-      subject(:metasploit_cache_encoder_license) {
-        FactoryGirl.build(:metasploit_cache_encoder_license)
-      }
-      
-      it { is_expected.to be_valid }
-    end   
-     
-    context 'metasploit_cache_exploit_license' do
-      subject(:metasploit_cache_exploit_license) {
-        FactoryGirl.build(:metasploit_cache_exploit_license)
-      }
-      
-      it { is_expected.to be_valid }
-    end   
-     
-    context 'metasploit_cache_nop_license' do
-      subject(:metasploit_cache_nop_license) {
-        FactoryGirl.build(:metasploit_cache_nop_license)
-      }
-      
-      it { is_expected.to be_valid }
-    end   
-     
-    context 'metasploit_cache_payload_single_license' do
-      subject(:metasploit_cache_payload_single_license) {
-        FactoryGirl.build(:metasploit_cache_payload_single_license)
-      }
-      
-      it { is_expected.to be_valid }
-    end   
-     
-    context 'metasploit_cache_payload_stage_license' do
-      subject(:metasploit_cache_payload_stage_license) {
-        FactoryGirl.build(:metasploit_cache_payload_stage_license)
-      }
-      
-      it { is_expected.to be_valid }
-    end   
-    
-    context 'metasploit_cache_payload_stager_license' do
-      subject(:metasploit_cache_payload_stager_license) {
-        FactoryGirl.build(:metasploit_cache_payload_stager_license)
-      }
-      
-      it { is_expected.to be_valid }
-    end    
-        
-    context 'metasploit_cache_post_license' do
-      subject(:metasploit_cache_post_license) {
-        FactoryGirl.build(:metasploit_cache_post_license)
-      }
-      
-      it { is_expected.to be_valid }
     end
   end
 end

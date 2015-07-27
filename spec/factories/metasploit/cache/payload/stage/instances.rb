@@ -3,10 +3,10 @@ FactoryGirl.define do
           class: Metasploit::Cache::Payload::Stage::Instance,
           traits: [
               :metasploit_cache_architecturable_architecturable_architectures,
-              :metasploit_cache_contributable_contributions
+              :metasploit_cache_contributable_contributions,
+              :metasploit_cache_licensable_licensable_licenses
           ] do
     transient do
-      licensable_license_count 1
       platformable_platform_count 1
     end
 
@@ -25,12 +25,6 @@ FactoryGirl.define do
     #
 
     after(:build) do |payload_stage_instance, evaluator|
-      payload_stage_instance.licensable_licenses = build_list(
-        :metasploit_cache_payload_stage_license,
-        evaluator.licensable_license_count,
-        licensable: payload_stage_instance
-      )
-      
       payload_stage_instance.platformable_platforms = build_list(
           :metasploit_cache_payload_stage_platform,
           evaluator.platformable_platform_count,
