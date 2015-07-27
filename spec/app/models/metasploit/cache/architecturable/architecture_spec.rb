@@ -30,62 +30,6 @@ RSpec.describe Metasploit::Cache::Architecturable::Architecture do
         expect(metasploit_cache_architecturable_architecture.architecturable).to be_nil
       end
     end
-
-    context 'metasploit_cache_encoder_architecture' do
-      subject(:metasploit_cache_encoder_architecture) {
-        FactoryGirl.build(:metasploit_cache_encoder_architecture)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_exploit_target_architecture' do
-      subject(:metasploit_cache_exploit_target_architecture) {
-        FactoryGirl.build(:metasploit_cache_exploit_target_architecture)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_nop_architecture' do
-      subject(:metasploit_cache_nop_architecture) {
-        FactoryGirl.build(:metasploit_cache_nop_architecture)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_payload_single_architecture' do
-      subject(:metasploit_cache_payload_single_architecture) {
-        FactoryGirl.build(:metasploit_cache_payload_single_architecture)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_payload_stage_architecture' do
-      subject(:metasploit_cache_payload_stage_architecture) {
-        FactoryGirl.build(:metasploit_cache_payload_stage_architecture)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_payload_stager_architecture' do
-      subject(:metasploit_cache_payload_stager_architecture) {
-        FactoryGirl.build(:metasploit_cache_payload_stager_architecture)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_post_architecture' do
-      subject(:metasploit_cache_post_architecture) {
-        FactoryGirl.build(:metasploit_cache_post_architecture)
-      }
-
-      it { is_expected.to be_valid }
-    end
   end
 
   context 'validations' do
@@ -94,7 +38,10 @@ RSpec.describe Metasploit::Cache::Architecturable::Architecture do
 
     context 'with pre-existing record' do
       let!(:existing_architecturable_architecture) {
-        FactoryGirl.create(:metasploit_cache_encoder_architecture)
+        FactoryGirl.create(
+            :metasploit_cache_architecturable_architecture,
+            architecturable: FactoryGirl.build(:metasploit_cache_encoder_instance)
+        )
       }
 
       it { is_expected.to validate_uniqueness_of(:architecture_id).scoped_to(:architecturable_type, :architecturable_id) }

@@ -1,6 +1,9 @@
 FactoryGirl.define do
   factory :metasploit_cache_payload_single_instance,
-          class: Metasploit::Cache::Payload::Single::Instance do
+          class: Metasploit::Cache::Payload::Single::Instance,
+          traits: [
+              :metasploit_cache_architecturable_architecturable_architectures
+          ] do
     transient do
       contribution_count 1
       architecturable_architecture_count 1
@@ -24,12 +27,6 @@ FactoryGirl.define do
     #
 
     after(:build) do |payload_single_instance, evaluator|
-      payload_single_instance.architecturable_architectures = build_list(
-          :metasploit_cache_payload_single_architecture,
-          evaluator.architecturable_architecture_count,
-          architecturable: payload_single_instance
-      )
-      
       payload_single_instance.contributions = build_list(
         :metasploit_cache_payload_single_contribution,
         evaluator.contribution_count,
