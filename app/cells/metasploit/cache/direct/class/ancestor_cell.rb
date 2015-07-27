@@ -5,23 +5,21 @@ require 'cell/twin'
 # In addition to content from {Metasploit::Cache::Module::AncestorCell}, it also includes the `Rank` constant using
 # the {Metasploit::Cache::Direct::Class#rank} {Metasploit::Cache::Module::Rank#number}.
 class Metasploit::Cache::Direct::Class::AncestorCell < Cell::ViewModel
-  extend ActiveSupport::Autoload
-
-  include Cell::Twin::Properties
-
-  autoload :Twin
-
   #
   # Properties
   #
 
-  properties Twin
+  property :ancestor
+  property :rank
 
   #
   # Instance Methods
   #
 
-  def show
-    render
+  def show(metasploit_module_relative_name:, superclass:)
+    render locals: {
+               metasploit_module_relative_name: metasploit_module_relative_name,
+               superclass: superclass
+           }
   end
 end

@@ -1,10 +1,6 @@
 RSpec.describe Metasploit::Cache::Payload::Direct::Class::AncestorCell, type: :cell do
   subject(:payload_direct_class_ancestor_cell) {
-    cell(
-        'metasploit/cache/payload/direct/class/ancestor',
-        payload_direct_class,
-        metasploit_module_relative_name: metasploit_module_relative_name
-    )
+    described_class.(payload_direct_class)
   }
 
   let(:payload_direct_class) {
@@ -18,7 +14,10 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::AncestorCell, type: :c
   context 'cell rendering' do
     context 'rendering template' do
       subject(:template) {
-        payload_direct_class_ancestor_cell.call
+        payload_direct_class_ancestor_cell.(
+            :show,
+            metasploit_module_relative_name: metasploit_module_relative_name
+        )
       }
 
       context 'Metasploit::Cache::Payload::Ancestor#payload_type' do

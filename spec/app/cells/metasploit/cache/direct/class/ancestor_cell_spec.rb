@@ -1,11 +1,6 @@
 RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
   subject(:direct_class_ancestor_cell) {
-    cell(
-        'metasploit/cache/direct/class/ancestor',
-        direct_class,
-        metasploit_module_relative_name: metasploit_module_relative_name,
-        superclass: 'Metasploit::Model::Base'
-    )
+    described_class.(direct_class)
   }
 
   let(:direct_class) {
@@ -19,7 +14,11 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
   context 'cell rendering' do
     context 'rendering template' do
       subject(:template) {
-        direct_class_ancestor_cell.call
+        direct_class_ancestor_cell.(
+            :show,
+            metasploit_module_relative_name: metasploit_module_relative_name,
+            superclass: 'Metasploit::Model::Base'
+        )
       }
 
       context 'Metasploit::Cache::Module::Ancestor#module_type' do

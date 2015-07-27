@@ -1,11 +1,6 @@
 RSpec.describe Metasploit::Cache::Module::AncestorCell, type: :cell do
   subject(:module_ancestor_cell) {
-    cell(
-        'metasploit/cache/module/ancestor',
-        module_ancestor,
-        metasploit_module_relative_name: metasploit_module_relative_name,
-        superclass: 'Metasploit::Model::Base'
-    )
+    described_class.(module_ancestor)
   }
 
   let(:metasploit_module_relative_name) {
@@ -19,7 +14,11 @@ RSpec.describe Metasploit::Cache::Module::AncestorCell, type: :cell do
   context 'cell rendering' do
     context 'rendering template' do
       subject(:template) {
-        module_ancestor_cell.call
+        module_ancestor_cell.(
+            :show,
+            metasploit_module_relative_name: metasploit_module_relative_name,
+            superclass: 'Metasploit::Model::Base'
+        )
       }
 
       context 'Metasploit::Cache::Module::Ancestor#module_type' do

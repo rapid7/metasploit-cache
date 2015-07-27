@@ -13,24 +13,29 @@ require 'cell/twin'
 # `#name` for {Metasploit::Cache::Auxiliary::Instance#name}, and `#stance` for
 # {Metasploit::Cache::Auxiliary::Instance#stance}.
 class Metasploit::Cache::Auxiliary::Instance::AuxiliaryClass::AncestorCell < Cell::ViewModel
-  extend ActiveSupport::Autoload
-
-  include Cell::Twin::Properties
   include Metasploit::Cache::AncestorCell
-
-  autoload :Twin
 
   #
   # Properties
   #
 
-  properties Twin
+  property :actions
+  property :auxiliary_class
+  property :contributions
+  property :default_action
+  property :description
+  property :licensable_licenses
+  property :name
+  property :stance
 
   #
   # Instance Methods
   #
 
-  def show
-    render
+  def show(metasploit_class_relative_name:, superclass:)
+    render locals: {
+               metasploit_class_relative_name: metasploit_class_relative_name,
+               superclass: superclass
+           }
   end
 end

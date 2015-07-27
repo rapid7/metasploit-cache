@@ -54,17 +54,16 @@ FactoryGirl.define do
         # make directory
         real_pathname.parent.mkpath
 
-        context = Object.new
-        cell = Cell::Base.cell_for(
-            'metasploit/cache/direct/class/ancestor',
-            context,
-            direct_class,
-            metasploit_module_relative_name: evaluator.ancestor_metasploit_class_relative_name,
-            superclass: evaluator.ancestor_superclass
-        )
+        cell = Metasploit::Cache::Direct::Class::AncestorCell.(direct_class)
 
         real_pathname.open('wb') do |f|
-          f.write(cell.call)
+          f.write(
+              cell.(
+                  :show,
+                  metasploit_module_relative_name: evaluator.ancestor_metasploit_class_relative_name,
+                  superclass: evaluator.ancestor_superclass
+              )
+          )
         end
       end
     end

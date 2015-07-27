@@ -13,24 +13,28 @@ require 'cell/twin'
 # `#name` for {Metasploit::Cache::Encoder::Instance#name}, and `#platform` for
 # {Metasploit::Cache::Encoder#platformable_platforms}.
 class Metasploit::Cache::Encoder::Instance::EncoderClass::AncestorCell < Cell::ViewModel
-  extend ActiveSupport::Autoload
-
-  include Cell::Twin::Properties
   include Metasploit::Cache::AncestorCell
-
-  autoload :Twin
 
   #
   # Properties
   #
 
-  properties Twin
+  property :architecturable_architectures
+  property :encoder_class
+  property :contributions
+  property :description
+  property :licensable_licenses
+  property :name
+  property :platformable_platforms
 
   #
   # Instance Methods
   #
 
-  def show
-    render
+  def show(metasploit_class_relative_name:, superclass:)
+    render locals: {
+               metasploit_class_relative_name: metasploit_class_relative_name,
+               superclass: superclass
+           }
   end
 end

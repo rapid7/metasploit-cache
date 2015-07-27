@@ -46,19 +46,18 @@ FactoryGirl.define do
                 "when using the :metasploit_cache_payload_direct_class_ancestor_contents trait."
         end
 
+        cell = Metasploit::Cache::Payload::Direct::Class::AncestorCell.(direct_class)
+
         # make directory
         real_pathname.parent.mkpath
 
-        context = Object.new
-        cell = Cell::Base.cell_for(
-            'metasploit/cache/payload/direct/class/ancestor',
-            context,
-            direct_class,
-            metasploit_module_relative_name: evaluator.ancestor_metasploit_class_relative_name,
-        )
-
         real_pathname.open('wb') do |f|
-          f.write(cell.call)
+          f.write(
+              cell.(
+                  :show,
+                  metasploit_module_relative_name: evaluator.ancestor_metasploit_class_relative_name,
+              )
+          )
         end
       end
     end

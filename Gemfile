@@ -24,7 +24,9 @@ end
 # used by dummy application
 group :development, :test do
   # Templates for Metasploit Modules
-  gem 'cells', '~> 3.11'
+  gem 'cells', '~> 4.0'
+  # Template engine must be explicitly selected for cells
+  gem 'cells-erb'
   # Twins for cells so that options can be passed to cell() calls
   gem 'disposable', '~> 0.0.9'
   # supplies factories for producing model instance for specs
@@ -65,7 +67,7 @@ group :test do
   gem 'railties', *rails_version_constraint
   gem 'rspec'
   # Test cells used to generate templates for Metasploit Modules
-  gem 'rspec-cells', '~> 0.2.2'
+  gem 'rspec-cells', '~> 0.3.3'
   # need rspec-rails >= 2.12.0 as 2.12.0 adds support for redefining named subject in nested context that uses the
   # named subject from the outer context without causing a stack overflow.
   gem 'rspec-rails', '>= 2.12.0'

@@ -41,14 +41,6 @@ FactoryGirl.define do
     after(:build) do |payload_ancestor, evaluator|
       # needed to allow for usage of trait with invalid relative_path, when `content?: false` should be set
       if evaluator.content?
-        context = Object.new
-        cell = Cell::Base.cell_for(
-                             'metasploit/cache/payload/ancestor',
-                             context,
-                             payload_ancestor,
-                             metasploit_module_relative_name: evaluator.metasploit_module_relative_name
-        )
-
         real_pathname = payload_ancestor.real_pathname
 
         unless real_pathname
@@ -58,11 +50,18 @@ FactoryGirl.define do
                 "when using the :metasploit_cache_payload_ancestor_contents trait."
         end
 
+        cell = Metasploit::Cache::Payload::AncestorCell.(payload_ancestor)
+
         # make directory
         real_pathname.parent.mkpath
 
         real_pathname.open('wb') do |f|
-          f.write(cell.call)
+          f.write(
+              cell.(
+                  :show,
+                      metasploit_module_relative_name: evaluator.metasploit_module_relative_name
+              )
+          )
         end
       end
     end

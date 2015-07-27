@@ -76,20 +76,19 @@ FactoryGirl.define do
                 "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
         end
 
+        cell = Metasploit::Cache::Encoder::Instance::EncoderClass::AncestorCell.(encoder_instance)
+
         # make directory
         real_pathname.parent.mkpath
 
-        context = Object.new
-        cell = Cell::Base.cell_for(
-            'metasploit/cache/encoder/instance/encoder_class/ancestor',
-            context,
-            encoder_instance,
-            metasploit_class_relative_name: evaluator.encoder_class_ancestor_metasploit_class_relative_name,
-            superclass: evaluator.encoder_class_ancestor_superclass
-        )
-
         real_pathname.open('wb') do |f|
-          f.write(cell.call)
+          f.write(
+              cell.(
+                  :show,
+                  metasploit_class_relative_name: evaluator.encoder_class_ancestor_metasploit_class_relative_name,
+                  superclass: evaluator.encoder_class_ancestor_superclass
+              )
+          )
         end
       end
     end
