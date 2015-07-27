@@ -3,12 +3,9 @@ FactoryGirl.define do
           class: Metasploit::Cache::Post::Instance,
           traits: [
               :metasploit_cache_contributable_contributions,
-              :metasploit_cache_licensable_licensable_licenses
+              :metasploit_cache_licensable_licensable_licenses,
+              :metasploit_cache_platformable_platformable_platforms
           ] do
-    transient do
-      platformable_platform_count 1
-    end
-
     description { generate :metasploit_cache_post_instance_description }
     disclosed_on { generate :metasploit_cache_post_instance_disclosed_on }
     name { generate :metasploit_cache_post_instance_name }
@@ -19,18 +16,6 @@ FactoryGirl.define do
     #
 
     association :post_class, factory: :metasploit_cache_post_class
-
-    #
-    # Callbacks
-    #
-
-    after(:build) do |post_instance, evaluator|
-      post_instance.platformable_platforms = build_list(
-          :metasploit_cache_post_platform,
-          evaluator.platformable_platform_count,
-          platformable: post_instance
-      )
-    end
   end
 
   #

@@ -32,62 +32,6 @@ RSpec.describe Metasploit::Cache::Platformable::Platform do
         expect(metasploit_cache_platformable_platform.platformable).to be_nil
       end
     end
-
-    context 'metasploit_cache_encoder_platform' do
-      subject(:metasploit_cache_encoder_platform) {
-        FactoryGirl.build(:metasploit_cache_encoder_platform)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_exploit_target_platform' do
-      subject(:metasploit_cache_exploit_target_platform) {
-        FactoryGirl.build(:metasploit_cache_exploit_target_platform)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_nop_platform' do
-      subject(:metasploit_cache_nop_platform) {
-        FactoryGirl.build(:metasploit_cache_nop_platform)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_payload_single_platform' do
-      subject(:metasploit_cache_payload_single_platform) {
-        FactoryGirl.build(:metasploit_cache_payload_single_platform)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_payload_stage_platform' do
-      subject(:metasploit_cache_payload_stage_platform) {
-        FactoryGirl.build(:metasploit_cache_payload_stage_platform)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_payload_stager_platform' do
-      subject(:metasploit_cache_payload_stager_platform) {
-        FactoryGirl.build(:metasploit_cache_payload_stager_platform)
-      }
-
-      it { is_expected.to be_valid }
-    end
-
-    context 'metasploit_cache_post_platform' do
-      subject(:metasploit_cache_post_platform) {
-        FactoryGirl.build(:metasploit_cache_post_platform)
-      }
-
-      it { is_expected.to be_valid }
-    end
   end
 
   context 'validations' do
@@ -96,7 +40,10 @@ RSpec.describe Metasploit::Cache::Platformable::Platform do
 
     context 'with pre-existing record' do
       let!(:existing_platformable_platform) {
-        FactoryGirl.create(:metasploit_cache_encoder_platform)
+        FactoryGirl.create(
+            :metasploit_cache_platformable_platform,
+            platformable: FactoryGirl.build(:metasploit_cache_encoder_instance)
+        )
       }
 
       it { is_expected.to validate_uniqueness_of(:platform_id).scoped_to(:platformable_type, :platformable_id) }
