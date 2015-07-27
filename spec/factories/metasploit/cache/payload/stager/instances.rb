@@ -2,11 +2,10 @@ FactoryGirl.define do
   factory :metasploit_cache_payload_stager_instance,
           class: Metasploit::Cache::Payload::Stager::Instance,
           traits: [
-              :metasploit_cache_architecturable_architecturable_architectures
+              :metasploit_cache_architecturable_architecturable_architectures,
+              :metasploit_cache_contributable_contributions
           ] do
     transient do
-      architecturable_architecture_count 1
-      contribution_count 1
       licensable_license_count 1
       platformable_platform_count 1
     end
@@ -28,12 +27,6 @@ FactoryGirl.define do
     #
 
     after(:build) do |payload_stager_instance, evaluator|
-      payload_stager_instance.contributions = build_list(
-          :metasploit_cache_payload_stager_contribution,
-          evaluator.contribution_count,
-          contributable: payload_stager_instance
-      )
-      
       payload_stager_instance.licensable_licenses = build_list(
         :metasploit_cache_payload_stager_license,
         evaluator.licensable_license_count,

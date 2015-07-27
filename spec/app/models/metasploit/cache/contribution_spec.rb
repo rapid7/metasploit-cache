@@ -36,134 +36,6 @@ RSpec.describe Metasploit::Cache::Contribution do
         expect(metasploit_cache_contribution.contributable).to be_nil
       end
     end
-
-    context 'metasploit_cache_auxiliary_contribution' do
-      subject(:metasploit_cache_auxiliary_contribution) {
-        FactoryGirl.build(:metasploit_cache_auxiliary_contribution)
-      }
-      
-      it { is_expected.to be_valid }
-      
-      context '#contributable' do
-        subject(:contributable) {
-          metasploit_cache_auxiliary_contribution.contributable
-        }
-        
-        it { is_expected.to be_a Metasploit::Cache::Auxiliary::Instance }
-      end
-    end
-    
-    context 'metasploit_cache_encoder_contribution' do
-      subject(:metasploit_cache_encoder_contribution) {
-        FactoryGirl.build(:metasploit_cache_encoder_contribution)
-      }
-      
-      it { is_expected.to be_valid }
-      
-      context '#contributable' do
-        subject(:contributable) {
-          metasploit_cache_encoder_contribution.contributable
-        }
-        
-        it { is_expected.to be_a Metasploit::Cache::Encoder::Instance }
-      end
-    end   
-    
-    context 'metasploit_cache_exploit_contribution' do
-      subject(:metasploit_cache_exploit_contribution) {
-        FactoryGirl.build(:metasploit_cache_exploit_contribution)
-      }
-      
-      it { is_expected.to be_valid }
-      
-      context '#contributable' do
-        subject(:contributable) {
-          metasploit_cache_exploit_contribution.contributable
-        }
-        
-        it { is_expected.to be_a Metasploit::Cache::Exploit::Instance }
-      end
-    end
-    
-    context 'metasploit_cache_nop_contribution' do
-      subject(:metasploit_cache_nop_contribution) {
-        FactoryGirl.build(:metasploit_cache_nop_contribution)
-      }
-      
-      it { is_expected.to be_valid }
-      
-      context '#contributable' do
-        subject(:contributable) {
-          metasploit_cache_nop_contribution.contributable
-        }
-        
-        it { is_expected.to be_a Metasploit::Cache::Nop::Instance }
-      end
-    end
-
-    context 'metasploit_cache_payload_single_contribution' do
-      subject(:metasploit_cache_payload_single_contribution) {
-        FactoryGirl.build(:metasploit_cache_payload_single_contribution)
-      }
-
-      it { is_expected.to be_valid }
-
-      context '#contributable' do
-        subject(:contributable) {
-          metasploit_cache_payload_single_contribution.contributable
-        }
-
-        it { is_expected.to be_a Metasploit::Cache::Payload::Single::Instance }
-      end
-    end
-
-    context 'metasploit_cache_payload_stage_contribution' do
-      subject(:metasploit_cache_payload_stage_contribution) {
-        FactoryGirl.build(:metasploit_cache_payload_stage_contribution)
-      }
-
-      it { is_expected.to be_valid }
-
-      context '#contributable' do
-        subject(:contributable) {
-          metasploit_cache_payload_stage_contribution.contributable
-        }
-
-        it { is_expected.to be_a Metasploit::Cache::Payload::Stage::Instance }
-      end
-    end
-
-    context 'metasploit_cache_payload_stager_contribution' do
-      subject(:metasploit_cache_payload_stager_contribution) {
-        FactoryGirl.build(:metasploit_cache_payload_stager_contribution)
-      }
-
-      it { is_expected.to be_valid }
-
-      context '#contributable' do
-        subject(:contributable) {
-          metasploit_cache_payload_stager_contribution.contributable
-        }
-
-        it { is_expected.to be_a Metasploit::Cache::Payload::Stager::Instance }
-      end
-    end
-
-    context 'metasploit_cache_post_contribution' do
-      subject(:metasploit_cache_post_contribution) {
-        FactoryGirl.build(:metasploit_cache_post_contribution)
-      }
-
-      it { is_expected.to be_valid }
-
-      context '#contributable' do
-        subject(:contributable) {
-          metasploit_cache_post_contribution.contributable
-        }
-
-        it { is_expected.to be_a Metasploit::Cache::Post::Instance }
-      end
-    end
   end
 
   context 'validations' do
@@ -172,7 +44,11 @@ RSpec.describe Metasploit::Cache::Contribution do
 
     context 'with existing record' do
       let!(:existing_contribution) {
-        FactoryGirl.create(:metasploit_cache_auxiliary_contribution, :metasploit_cache_contribution_email_address)
+        FactoryGirl.create(
+            :metasploit_cache_contribution,
+            :metasploit_cache_contribution_email_address,
+            contributable: FactoryGirl.build(:metasploit_cache_auxiliary_instance)
+        )
       }
 
       it { is_expected.to validate_uniqueness_of(:author_id).scoped_to([:contributable_type, :contributable_id]) }
@@ -196,7 +72,11 @@ RSpec.describe Metasploit::Cache::Contribution do
       #
 
       let!(:first_contribution) {
-        FactoryGirl.create(:metasploit_cache_auxiliary_contribution, :metasploit_cache_contribution_email_address)
+        FactoryGirl.create(
+            :metasploit_cache_contribution,
+            :metasploit_cache_contribution_email_address,
+            contributable: FactoryGirl.build(:metasploit_cache_auxiliary_instance)
+        )
       }
 
       context 'with same #email_address' do
@@ -208,7 +88,7 @@ RSpec.describe Metasploit::Cache::Contribution do
 
             let(:second_contribution) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_contribution,
+                  :metasploit_cache_contribution,
                   contributable: first_contribution.contributable,
                   email_address: first_contribution.email_address
               )
@@ -232,7 +112,8 @@ RSpec.describe Metasploit::Cache::Contribution do
 
             let(:second_contribution) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_contribution,
+                  :metasploit_cache_contribution,
+                  contributable: FactoryGirl.build(:metasploit_cache_auxiliary_instance),
                   email_address: first_contribution.email_address
               )
             }
@@ -257,8 +138,9 @@ RSpec.describe Metasploit::Cache::Contribution do
 
             let(:second_contribution) {
               FactoryGirl.build(
-                  :metasploit_cache_encoder_contribution,
+                  :metasploit_cache_contribution,
                   contributable_id: first_contribution.contributable_id,
+                  contributable_type: 'Metasploit::Cache::Encoder::Instance',
                   email_address: first_contribution.email_address
               )
             }
@@ -281,7 +163,8 @@ RSpec.describe Metasploit::Cache::Contribution do
 
             let(:second_contribution) {
               FactoryGirl.build(
-                  :metasploit_cache_encoder_contribution,
+                  :metasploit_cache_contribution,
+                  contributable: FactoryGirl.build(:metasploit_cache_encoder_instance),
                   email_address: first_contribution.email_address
               )
             }
@@ -302,7 +185,8 @@ RSpec.describe Metasploit::Cache::Contribution do
       context 'without #email_address' do
         let(:second_contribution) {
           FactoryGirl.build(
-              :metasploit_cache_encoder_contribution,
+              :metasploit_cache_contribution,
+              contributable: FactoryGirl.build(:metasploit_cache_encoder_instance),
               email_address: nil
           )
         }
