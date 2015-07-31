@@ -9,7 +9,7 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
   # The in-memory encoder Metasploit Module instance being cached.
   #
   # @return [Object]
-  attr_accessor :encoder_metasploit_module_instance
+  attr_accessor :metasploit_module_instance
 
   # Tagged logger to which to log {#persist} errors.
   #
@@ -20,7 +20,7 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
   # Resurrecting Attributes
   #
 
-  # Cached metadata for this {#encoder_metasploit_module_instance}.
+  # Cached metadata for this {#metasploit_module_instance}.
   #
   # @return [Metasploit::Cache::Encoder::Instance]
   resurrecting_attr_accessor(:encoder_instance) {
@@ -37,7 +37,7 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
   # Validations
   #
 
-  validates :encoder_metasploit_module_instance,
+  validates :metasploit_module_instance,
             presence: true
   validates :logger,
             presence: true
@@ -56,7 +56,7 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
   # @return [Metasploit::Cache:Encoder::Instance] `#persisted?` will be `false` if saving fails.
   def persist(to: encoder_instance)
     [:description, :name].each do |attribute|
-      to.send("#{attribute}=", encoder_metasploit_module_instance.send(attribute))
+      to.send("#{attribute}=", metasploit_module_instance.send(attribute))
     end
 
     synchronizers = [
@@ -69,7 +69,7 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
     synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
       synchronizer.synchronize(
           destination: block_destination,
-          source: encoder_metasploit_module_instance
+          source: metasploit_module_instance
       )
     }
 
@@ -110,6 +110,6 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
   #
   # @return [String]
   def real_path_sha1_hex_digest
-    encoder_metasploit_module_instance.class.ephemeral_cache_by_source[:ancestor].real_path_sha1_hex_digest
+    metasploit_module_instance.class.ephemeral_cache_by_source[:ancestor].real_path_sha1_hex_digest
   end
 end

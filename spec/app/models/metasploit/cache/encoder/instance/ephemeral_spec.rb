@@ -11,7 +11,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
 
       let(:encoder_instance_ephemeral) {
         described_class.new(
-            encoder_metasploit_module_instance: encoder_metasploit_module_instance
+            metasploit_module_instance: metasploit_module_instance
         )
       }
 
@@ -23,7 +23,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
         )
       }
 
-      let(:encoder_metasploit_module_instance) {
+      let(:metasploit_module_instance) {
         double('encoder Metasploit Module instance').tap { |instance|
           allow(instance).to receive(:class).and_return(metasploit_class)
         }
@@ -55,7 +55,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
 
   context 'validations' do
     it { is_expected.to validate_presence_of(:logger) }
-    it { is_expected.to validate_presence_of(:encoder_metasploit_module_instance) }
+    it { is_expected.to validate_presence_of(:metasploit_module_instance) }
   end
 
   context '#persist' do
@@ -66,11 +66,11 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
     let(:encoder_instance_ephemeral) {
       described_class.new(
           logger: logger,
-          encoder_metasploit_module_instance: encoder_metasploit_module_instance
+          metasploit_module_instance: metasploit_module_instance
       )
     }
 
-    let(:encoder_metasploit_module_instance) {
+    let(:metasploit_module_instance) {
       double('encoder Metasploit Module instance').tap { |instance|
         allow(instance).to receive(:class).and_return(metasploit_class)
 

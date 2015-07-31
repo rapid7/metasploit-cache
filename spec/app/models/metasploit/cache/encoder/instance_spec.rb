@@ -126,9 +126,10 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
                 }
 
                 let(:module_instance_load) {
-                  Metasploit::Cache::Encoder::Instance::Load.new(
-                      encoder_instance: metasploit_cache_encoder_instance,
-                      encoder_metasploit_module_class: direct_class_load.metasploit_class,
+                  Metasploit::Cache::Module::Instance::Load.new(
+                      ephemeral_class: Metasploit::Cache::Encoder::Instance::Ephemeral,
+                      metasploit_module_class: direct_class_load.metasploit_class,
+                      module_instance: metasploit_cache_encoder_instance,
                       logger: logger
                   )
                 }
@@ -153,6 +154,8 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
 
                   expect(direct_class_load).to be_valid
                   expect(encoder_class).to be_persisted
+
+                  expect(module_ancestor_load).to be_valid(:loading)
 
                   module_instance_load.valid?
 

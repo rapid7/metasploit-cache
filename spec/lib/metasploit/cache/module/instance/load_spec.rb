@@ -594,6 +594,31 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
               )
             }
           end
+
+          it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
+                                module_path_real_pathname,
+                                'encoders' do
+            let(:direct_class) {
+              module_ancestor.build_encoder_class
+            }
+
+            let(:module_ancestors) {
+              module_path.encoder_ancestors
+            }
+
+            let(:module_instance) {
+              direct_class.build_encoder_instance
+            }
+
+            let(:module_instance_load) {
+              described_class.new(
+                  ephemeral_class: Metasploit::Cache::Encoder::Instance::Ephemeral,
+                  module_instance: module_instance,
+                  metasploit_module_class: direct_class_load.metasploit_class,
+                  logger: logger
+              )
+            }
+          end
         end
       end
     end
