@@ -11,7 +11,7 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   # The in-memory auxiliary Metasploit Module instance being cached.
   #
   # @return [Object]
-  attr_accessor :auxiliary_metasploit_module_instance
+  attr_accessor :metasploit_module_instance
 
   # Tagged logger to which to log {#persist} errors.
   #
@@ -39,7 +39,7 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   # Validations
   #
 
-  validates :auxiliary_metasploit_module_instance,
+  validates :metasploit_module_instance,
             presence: true
   validates :logger,
             presence: true
@@ -58,10 +58,10 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   # @return [Metasploit::Cache::Auxiliary::Instance] `#persisted?` will be `false` if saving fails.
   def persist(to: auxiliary_instance)
     [:description, :name].each do |attribute|
-      to.send("#{attribute}=", auxiliary_metasploit_module_instance.send(attribute))
+      to.send("#{attribute}=", metasploit_module_instance.send(attribute))
     end
 
-    if auxiliary_metasploit_module_instance.passive?
+    if metasploit_module_instance.passive?
       to.stance = Metasploit::Cache::Module::Stance::PASSIVE
     else
       to.stance = Metasploit::Cache::Module::Stance::AGGRESSIVE
@@ -76,7 +76,7 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
     synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
       synchronizer.synchronize(
                       destination: block_destination,
-                      source: auxiliary_metasploit_module_instance
+                      source: metasploit_module_instance
       )
     }
 
@@ -117,6 +117,6 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   #
   # @return [String]
   def real_path_sha1_hex_digest
-    auxiliary_metasploit_module_instance.class.ephemeral_cache_by_source[:ancestor].real_path_sha1_hex_digest
+    metasploit_module_instance.class.ephemeral_cache_by_source[:ancestor].real_path_sha1_hex_digest
   end
 end

@@ -11,7 +11,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
 
       let(:auxiliary_instance_ephemeral) {
         described_class.new(
-            auxiliary_metasploit_module_instance: auxiliary_metasploit_module_instance
+            metasploit_module_instance: metasploit_module_instance
         )
       }
 
@@ -23,7 +23,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
         )
       }
 
-      let(:auxiliary_metasploit_module_instance) {
+      let(:metasploit_module_instance) {
         double('auxiliary Metasploit Module instance').tap { |instance|
           allow(instance).to receive(:class).and_return(metasploit_class)
         }
@@ -55,7 +55,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
 
   context 'validations' do
     it { is_expected.to validate_presence_of(:logger) }
-    it { is_expected.to validate_presence_of(:auxiliary_metasploit_module_instance) }
+    it { is_expected.to validate_presence_of(:metasploit_module_instance) }
   end
 
   context '#persist' do
@@ -66,11 +66,11 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
     let(:auxiliary_instance_ephemeral) {
       described_class.new(
           logger: logger,
-          auxiliary_metasploit_module_instance: auxiliary_metasploit_module_instance
+          metasploit_module_instance: metasploit_module_instance
       )
     }
 
-    let(:auxiliary_metasploit_module_instance) {
+    let(:metasploit_module_instance) {
       double('auxiliary Metasploit Module instance').tap { |instance|
         allow(instance).to receive(:class).and_return(metasploit_class)
 

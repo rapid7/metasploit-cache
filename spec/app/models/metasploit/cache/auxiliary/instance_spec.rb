@@ -129,9 +129,10 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                 }
 
                 let(:module_instance_load) {
-                  Metasploit::Cache::Auxiliary::Instance::Load.new(
-                      auxiliary_instance: metasploit_cache_auxiliary_instance,
-                      auxiliary_metasploit_module_class: direct_class_load.metasploit_class,
+                  Metasploit::Cache::Module::Instance::Load.new(
+                      ephemeral_class: Metasploit::Cache::Auxiliary::Instance::Ephemeral,
+                      metasploit_module_class: direct_class_load.metasploit_class,
+                      module_instance: metasploit_cache_auxiliary_instance,
                       logger: logger
                   )
                 }
@@ -151,6 +152,8 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
 
                   expect(direct_class_load).to be_valid
                   expect(auxiliary_class).to be_persisted
+
+                  expect(module_instance_load).to be_valid(:loading)
 
                   module_instance_load.valid?
 

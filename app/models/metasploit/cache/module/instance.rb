@@ -7,6 +7,7 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
 
+  autoload :Load
   autoload :Spec
 
   #
