@@ -332,18 +332,32 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
     end
 
     context 'with present platform.platforms' do
-      let(:platforms) {
-        [
-            double('Platform', realname: platform_fully_qualified_name)
-        ]
-      }
+      context "with ''" do
+        let(:platforms) {
+          [
+              double('Platform', realname: '')
+          ]
+        }
 
-      let(:platform_fully_qualified_name) {
-        FactoryGirl.generate :metasploit_cache_platform_fully_qualified_name
-      }
+        it 'includes all fully qualified platform names' do
+          expect(source_attribute_set).to eq Metasploit::Cache::Platform.root_fully_qualified_name_set
+        end
+      end
 
-      it 'includes platform.platforms #realname' do
-        expect(source_attribute_set).to include(platform_fully_qualified_name)
+      context "without ''" do
+        let(:platforms) {
+          [
+              double('Platform', realname: platform_fully_qualified_name)
+          ]
+        }
+
+        let(:platform_fully_qualified_name) {
+          FactoryGirl.generate :metasploit_cache_platform_fully_qualified_name
+        }
+
+        it 'includes platform.platforms #realname' do
+          expect(source_attribute_set).to include(platform_fully_qualified_name)
+        end
       end
     end
   end
