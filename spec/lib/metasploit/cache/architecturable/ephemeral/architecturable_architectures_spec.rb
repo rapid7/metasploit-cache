@@ -311,18 +311,32 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
     end
 
     context 'with present arch' do
-      let(:arch) {
-        [
-            architecture_abbreviation
-        ]
-      }
+      context "with 'mips'" do
+        let(:arch) {
+          [
+              'mips'
+          ]
+        }
 
-      let(:architecture_abbreviation) {
-        FactoryGirl.generate :metasploit_cache_architecture_abbreviation
-      }
+        it "includes 'mipsbe' and 'mipsle'" do
+          expect(source_attribute_set).to eq Set.new(['mipsbe', 'mipsle'])
+        end
+      end
 
-      it 'includes elements of arch' do
-        expect(source_attribute_set).to include(architecture_abbreviation)
+      context "without 'mips'" do
+        let(:arch) {
+          [
+              architecture_abbreviation
+          ]
+        }
+
+        let(:architecture_abbreviation) {
+          FactoryGirl.generate :metasploit_cache_architecture_abbreviation
+        }
+
+        it 'includes elements of arch' do
+          expect(source_attribute_set).to include(architecture_abbreviation)
+        end
       end
     end
   end
