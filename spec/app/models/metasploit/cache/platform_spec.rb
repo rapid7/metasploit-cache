@@ -235,4 +235,33 @@ RSpec.describe Metasploit::Cache::Platform do
       it { should be_nil }
     end
   end
+
+  context 'root_fully_qualified_name_set' do
+    subject(:root_fully_qualified_name_set) do
+      described_class.root_fully_qualified_name_set
+    end
+
+    it { should include 'AIX' }
+    it { should include 'Android' }
+    it { should include 'BSD' }
+    it { should include 'BSDi' }
+    it { should include 'Cisco' }
+    it { should include 'Firefox' }
+    it { should include 'FreeBSD' }
+    it { should include 'HPUX' }
+    it { should include 'IRIX' }
+    it { should include 'Java' }
+    it { should include 'Javascript' }
+    it { should include 'NetBSD' }
+    it { should include 'Netware' }
+    it { should include 'NodeJS' }
+    it { should include 'OpenBSD' }
+    it { should include 'OSX' }
+    it { should include 'PHP' }
+    it { should include 'Python' }
+    it { should include 'Ruby' }
+    it { should include 'Solaris'}
+    it { should include 'Windows' }
+    it { should include 'Unix' }
+  end
 end
