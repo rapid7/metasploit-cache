@@ -41,4 +41,13 @@ module Metasploit::Cache::Ephemeral::AttributeSet
   def self.removed(destination:, source:)
     destination - source
   end
+
+  # The set of attributes for records to either maintained or updated on destination.
+  #
+  # @param destination [Set] set of attributes from destination persisted cache
+  # @param source [Set] set of attributes from in-memory Metasploit Module instance
+  # @return [Set]
+  def self.retained(destination:, source:)
+    destination & source
+  end
 end

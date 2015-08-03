@@ -477,7 +477,7 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
     it 'calls mark_removed_for_destruction' do
       expect(described_class).to receive(:mark_removed_for_destruction).with(
                                      hash_including(destination: destination)
-                                 )
+                                 ).and_call_original
 
       synchronize
     end
@@ -485,7 +485,7 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
     it 'calls build_added' do
       expect(described_class).to receive(:build_added).with(
                                      hash_including(destination: destination)
-                                 )
+                                 ).and_call_original
 
       synchronize
     end
@@ -493,7 +493,7 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
     it 'calls update_default_action' do
       expect(described_class).to receive(:update_default_action).with(
                                      hash_including(destination: destination)
-                                 )
+                                 ).and_call_original
 
       synchronize
     end
@@ -557,7 +557,15 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
     end
 
     context 'without #source_default_action_name' do
+      let(:source_default_action_name) {
+        nil
+      }
 
+      it 'sets destination.default_action to nil' do
+        expect {
+          update_default_action
+        }.to change(destination, :default_action).to(nil)
+      end
     end
   end
 end
