@@ -2,6 +2,7 @@
 module Metasploit::Cache::Referencable
   extend ActiveSupport::Autoload
 
+  autoload :Ephemeral
   autoload :Reference
 
   #
