@@ -212,7 +212,6 @@ RSpec.describe Metasploit::Cache::Reference::Ephemeral do
         {}
       }
 
-
       it { is_expected.to eq [] }
     end
 
