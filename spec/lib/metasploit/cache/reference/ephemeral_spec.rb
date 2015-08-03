@@ -107,7 +107,7 @@ RSpec.describe Metasploit::Cache::Reference::Ephemeral do
     end
 
     it 'sets Hash#default_proc to proc returned by new_by_attributes_proc' do
-      new_by_attributes_proc = ->(hash, attributes){}
+      new_by_attributes_proc = ->(hash, attributes) {}
 
       allow(described_class).to receive(:new_by_attributes_proc).and_return(new_by_attributes_proc)
 
