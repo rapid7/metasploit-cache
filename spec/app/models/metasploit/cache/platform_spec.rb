@@ -141,7 +141,7 @@ RSpec.describe Metasploit::Cache::Platform do
     it { should include 'Python' }
     it { should include 'Ruby' }
 
-    it { should include 'Solaris'}
+    it { should include 'Solaris' }
     it { should include 'Solaris 4' }
     it { should include 'Solaris 5' }
     it { should include 'Solaris 6' }
@@ -260,7 +260,7 @@ RSpec.describe Metasploit::Cache::Platform do
     it { should include 'PHP' }
     it { should include 'Python' }
     it { should include 'Ruby' }
-    it { should include 'Solaris'}
+    it { should include 'Solaris' }
     it { should include 'Windows' }
     it { should include 'Unix' }
   end
