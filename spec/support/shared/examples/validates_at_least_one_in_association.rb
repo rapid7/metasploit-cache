@@ -1,5 +1,5 @@
 # validate_length_of from shoulda-matchers assumes attribute is String and doesn't work on associations
-RSpec.shared_examples_for 'validates at least one in association' do |association, factory:|
+RSpec.shared_examples_for 'validates at least one in association' do |association, factory:, traits: []|
   association_count_key = "#{association.to_s.singularize}_count".to_sym
 
   let(:error) {
@@ -13,6 +13,7 @@ RSpec.shared_examples_for 'validates at least one in association' do |associatio
     subject(:instance) {
       FactoryGirl.build(
           factory,
+          *traits,
           association_count_key => 0
       )
     }
@@ -28,6 +29,7 @@ RSpec.shared_examples_for 'validates at least one in association' do |associatio
     subject(:instance) {
       FactoryGirl.build(
           factory,
+          *traits,
           association_count_key => 1
       )
     }
