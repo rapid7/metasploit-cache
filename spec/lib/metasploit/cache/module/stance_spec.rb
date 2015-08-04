@@ -24,5 +24,18 @@ RSpec.describe Metasploit::Cache::Module::Stance do
 
       it { should == 'passive' }
     end
+
+    context 'PRECEDENCE' do
+      subject(:precedence) {
+        described_class::PRECEDENCE
+      }
+
+      it 'should list AGGRESSIVE before PASSIVE' do
+        expect(precedence).to eq [
+                                     described_class::AGGRESSIVE,
+                                     described_class::PASSIVE
+                                 ]
+      end
+    end
   end
 end

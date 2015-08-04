@@ -13,4 +13,10 @@ module Metasploit::Cache::Module::Stance
       AGGRESSIVE,
       PASSIVE
   ]
+
+  # If a module has an array of stances, then {AGGRESSIVE} is favored or {PASSIVE}.
+  PRECEDENCE = [
+      AGGRESSIVE,
+      PASSIVE
+  ]
 end
