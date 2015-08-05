@@ -31,10 +31,16 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
                                      )
           end
 
-          it 'should call recoverable_save outside batch mode' do
-            expect(base_instance).to receive(:recoverable_save) {
+          it 'should call valid? outside batch mode' do
+            expect(base_instance).to receive(:valid?) {
                                        expect(Metasploit::Cache::Batch).not_to be_batched
                                      }
+
+            batched_save
+          end
+
+          it 'logs exception as error' do
+            expect(base_instance.logger).to receive(:error).with(an_instance_of(ActiveRecord::RecordNotUnique))
 
             batched_save
           end
@@ -58,10 +64,16 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
                                            }
                 end
 
-                it 'should call recoverable_save outside batch mode' do
-                  expect(base_instance).to receive(:recoverable_save) {
+                it 'should call valid? outside batch mode' do
+                  expect(base_instance).to receive(:valid?) {
                                              expect(Metasploit::Cache::Batch).not_to be_batched
                                            }
+
+                  batched_save
+                end
+
+                it 'logs exception as error' do
+                  expect(base_instance.logger).to receive(:error).with(an_instance_of(ActiveRecord::StatementInvalid))
 
                   batched_save
                 end
@@ -128,10 +140,16 @@ RSpec.shared_examples_for 'Metasploit::Cache::Batch::Root' do
                                            }
                 end
 
-                it 'should call recoverable_save outside batch mode' do
-                  expect(base_instance).to receive(:recoverable_save) {
+                it 'should call valid? outside batch mode' do
+                  expect(base_instance).to receive(:valid?) {
                                              expect(Metasploit::Cache::Batch).not_to be_batched
                                            }
+
+                  batched_save
+                end
+
+                it 'logs exception as error' do
+                  expect(base_instance.logger).to receive(:error).with(an_instance_of(ActiveRecord::StatementInvalid))
 
                   batched_save
                 end

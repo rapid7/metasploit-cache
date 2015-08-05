@@ -34,9 +34,10 @@ module Metasploit::Cache::Batch::Root
 
   # Attempts to save record while in {Metasploit::Cache::Batch.batch}, which disables costly uniqueness validations.
   # If `ActiveRecord::RecordNotUnique` error is raised because of the underlying unique index in the database, then the
-  # save is retried normally.
+  # validations are run outside of batch mode so uniqueness validation error can be gathered.
   #
-  # @return (see #recoverable_save)
+  # @return [true] if save successful
+  # @return [false] if save unsucessful
   def batched_save
     begin
       Metasploit::Cache::Batch.batch {
@@ -45,12 +46,22 @@ module Metasploit::Cache::Batch::Root
     # Different rescue blocks will be used for different adapters, but having < 100% coverage was causing new code to be
     # left uncovered, so mark as nocov so coverage remains 100%.
     # :nocov:
-    rescue ActiveRecord::RecordNotUnique
-      recoverable_save
+    rescue ActiveRecord::RecordNotUnique => active_record_record_not_unique
+      logger.error(active_record_record_not_unique)
+      # rerun validations outside of batch mode
+      valid?
+
+      # save was not successful
+      false
     rescue ActiveRecord::StatementInvalid => active_record_statement_invalid
       if defined? SQLite3::ConstraintException
         if active_record_statement_invalid.cause.is_a? SQLite3::ConstraintException
-          recoverable_save
+          logger.error(active_record_statement_invalid)
+
+          # rerun validations outside of batch mode
+          valid?
+
+          false
         else
           # reraise
           raise

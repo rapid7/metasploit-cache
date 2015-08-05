@@ -9,7 +9,15 @@ RSpec.describe Metasploit::Cache::Batch::Root do
     Class.new do
       include described_class
 
+      def logger
+        @logger ||= Logger.new(StringIO.new)
+      end
+
       def save
+
+      end
+
+      def valid?
 
       end
     end
