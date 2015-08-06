@@ -9,6 +9,9 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
       'mips' => [
           'mipsbe',
           'mipsle'
+      ],
+      'x64' => [
+          'x86_64'
       ]
   }
 

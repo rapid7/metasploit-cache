@@ -1,4 +1,30 @@
 RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures do
+  let(:logger) {
+    ActiveSupport::TaggedLogging.new(
+        Logger.new(log_string_io)
+    )
+  }
+
+  let(:log_string_io) {
+    StringIO.new
+  }
+
+  context 'CONSTANTS' do
+    context 'CANONICAL_ABBREVATIONS_BY_SOURCE_ABBREVATION' do
+      subject(:canonical_abbreviations_by_source_abbreviation) {
+        described_class::CANONICAL_ABBREVIATIONS_BY_SOURCE_ABBREVIATION
+      }
+
+      it "maps 'mips' to ['mipsbe', 'mipsle'] because mips archiectures are endian-specific" do
+        expect(canonical_abbreviations_by_source_abbreviation['mips']).to match_array ['mipsbe', 'mipsle']
+      end
+
+      it "maps 'x64' to 'x86_64' because multiple architectures have 64-bit variants" do
+        expect(canonical_abbreviations_by_source_abbreviation['x64']).to match_array ['x86_64']
+      end
+    end
+  end
+
   context 'build_added' do
     subject(:build_added) {
       described_class.build_added(
@@ -323,7 +349,19 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
         end
       end
 
-      context "without 'mips'" do
+      context "with 'x64'" do
+        let(:arch) {
+          [
+              'x64'
+          ]
+        }
+
+        it "includes 'x86_64'" do
+          expect(source_attribute_set).to eq Set.new ['x86_64']
+        end
+      end
+
+      context 'otherwise' do
         let(:arch) {
           [
               architecture_abbreviation
