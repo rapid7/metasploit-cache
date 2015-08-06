@@ -15,7 +15,7 @@ module Metasploit::Cache::Platform::Seed
       'Firefox' => nil,
       'FreeBSD' => nil,
       'HPUX' => nil,
-      'IRIX' => nil,
+      'Irix' => nil,
       'Java' => nil,
       'Javascript' => nil,
       'Linux' => nil,
