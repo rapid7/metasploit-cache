@@ -15,7 +15,7 @@ RSpec.describe Metasploit::Cache::Platform::Seed do
       it { should include('HPUX') }
       it { should include('Irix') }
       it { should include('Java') }
-      it { should include('Javascript') }
+      it { should include('JavaScript') }
       it { should include('Linux') }
       it { should include('NetBSD') }
       it { should include('Netware') }

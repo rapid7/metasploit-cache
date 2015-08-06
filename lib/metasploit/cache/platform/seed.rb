@@ -17,7 +17,7 @@ module Metasploit::Cache::Platform::Seed
       'HPUX' => nil,
       'Irix' => nil,
       'Java' => nil,
-      'Javascript' => nil,
+      'JavaScript' => nil,
       'Linux' => nil,
       'NetBSD' => nil,
       'Netware' => nil,
