@@ -154,6 +154,20 @@ RSpec.describe Metasploit::Cache::Reference do
           it_should_behave_like 'derives', :url, :validates => false
         end
 
+        context 'WPVDB' do
+          let(:abbreviation) do
+            'WPVDB'
+          end
+
+          let(:designation) do
+            FactoryGirl.generate :metasploit_cache_reference_wpvdb_designation
+          end
+
+          it_should_behave_like 'derives',
+                                :url,
+                                validates: false
+        end
+
         context 'ZDI' do
           let(:abbreviation) do
             'ZDI'

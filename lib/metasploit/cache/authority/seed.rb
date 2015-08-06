@@ -72,6 +72,12 @@ module Metasploit::Cache::Authority::Seed
           :url => 'http://www.waraxe.us/content-cat-1.html'
       },
       {
+          abbreviation: 'WPVDB',
+          obsolete: false,
+          summary: 'WPScan Vulnerability Database',
+          url: 'https://wpvulndb.com'
+      },
+      {
           abbreviation: 'ZDI',
           obsolete: false,
           summary: 'Zero Day Initiative',

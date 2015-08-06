@@ -17,6 +17,7 @@ class Metasploit::Cache::Authority < ActiveRecord::Base
   autoload :Seed
   autoload :UsCertVu
   autoload :Waraxe
+  autoload :Wpvdb
   autoload :Zdi
 
   #

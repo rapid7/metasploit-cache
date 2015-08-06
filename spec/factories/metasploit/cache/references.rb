@@ -123,6 +123,10 @@ FactoryGirl.define do
     "%d-SA#%d" % [year, number]
   end
 
+  sequence(:metasploit_cache_reference_wpvdb_designation) { |n|
+    n.to_s
+  }
+
   sequence :metasploit_cache_reference_zdi_designation do |n|
     year, number = n.divmod(1000)
 

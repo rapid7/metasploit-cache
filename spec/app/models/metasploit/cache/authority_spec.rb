@@ -180,6 +180,13 @@ RSpec.describe Metasploit::Cache::Authority do
                           :url => 'http://www.waraxe.us/content-cat-1.html'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
+                          :abbreviation => 'WPVDB',
+                          :extension_name => 'Metasploit::Cache::Authority::Wpvdb',
+                          :obsolete => false,
+                          :summary => 'WPScan Vulnerability Database',
+                          :url => 'https://wpvulndb.com'
+
+    it_should_behave_like 'Metasploit::Cache::Authority seed',
                           abbreviation: 'ZDI',
                           extension_name: 'Metasploit::Cache::Authority::Zdi',
                           obsolete: false,
