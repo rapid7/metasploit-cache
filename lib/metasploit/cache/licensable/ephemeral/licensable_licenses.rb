@@ -79,9 +79,11 @@ module Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
   # Synchronizes license from Metasploit Module instance `source` to persisted `#licenses` on `destination`.
   #
   # @param destination [#licenses] a {Metasploit::Cache::Licensable::License#licensable}.
+  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
+  #   {Metasploit::Cache::Module::Ancestor#real_pathnam}.
   # @param source [#license] a Metasploit Module instance
   # @return [#licenses] `destination`
-  def self.synchronize(destination:, source:)
+  def self.synchronize(destination:, logger:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
       cached_destination_attribute_set = destination_attribute_set(destination)
       cached_source_attribute_set = source_attribute_set(source)

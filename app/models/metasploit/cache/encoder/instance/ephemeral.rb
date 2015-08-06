@@ -72,6 +72,7 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
       synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
         synchronizer.synchronize(
             destination: block_destination,
+            logger: logger,
             source: metasploit_module_instance
         )
       }

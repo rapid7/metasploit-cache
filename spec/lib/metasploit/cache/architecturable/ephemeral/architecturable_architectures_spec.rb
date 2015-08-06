@@ -345,12 +345,27 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
     subject(:synchronize) {
       described_class.synchronize(
                          destination: destination,
+                         logger: logger,
                          source: source
       )
     }
 
+    #
+    # lets
+    #
+
     let(:destination) {
       Metasploit::Cache::Encoder::Instance.new
+    }
+
+    let(:logger) {
+      ActiveSupport::TaggedLogging.new(
+          Logger.new(log_string_io)
+      )
+    }
+
+    let(:log_string_io) {
+      StringIO.new
     }
 
     let(:source) {

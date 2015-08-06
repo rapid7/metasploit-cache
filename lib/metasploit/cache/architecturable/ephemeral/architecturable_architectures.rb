@@ -127,9 +127,11 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
   # {#destination}.
   #
   # @param destination [#architecturable_architectures] a {Metasploit::Cache::Architecturable::Architecture#architecturable}.
+  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
+  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
   # @param source [#arch] a Metasploit Module instance
   # @return [#architecturable_architectures] `destination`
-  def self.synchronize(destination:, source:)
+  def self.synchronize(destination:, logger:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
       reduce(
           destination: destination,

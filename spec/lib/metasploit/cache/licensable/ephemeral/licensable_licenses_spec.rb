@@ -284,12 +284,23 @@ RSpec.describe Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses do
     subject(:synchronize) {
       described_class.synchronize(
           destination: destination,
+          logger: logger,
           source: source
       )
     }
 
     let(:destination) {
       Metasploit::Cache::Auxiliary::Instance.new
+    }
+
+    let(:logger) {
+      ActiveSupport::TaggedLogging.new(
+          Logger.new(log_string_io)
+      )
+    }
+
+    let(:log_string_io) {
+      StringIO.new
     }
 
     let(:source) {

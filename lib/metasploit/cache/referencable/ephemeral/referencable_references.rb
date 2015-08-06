@@ -164,9 +164,11 @@ module Metasploit::Cache::Referencable::Ephemeral::ReferencableReferences
   # {#destination}.
   #
   # @param destination [#referencable_references] a {Metasploit::Cache::Referencable::Reference#referencable}.
+  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
+  #   {Metasploit::Cache::Module::Ancestor#real_pathnam}.
   # @param source [#references] a Metasploit Module instance
   # @return [#referencable_references] `destination`
-  def self.synchronize(destination:, source:)
+  def self.synchronize(destination:, logger:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
       cached_referencable_reference_by_attributes = referencable_reference_by_attributes(destination)
       cached_destination_attributes_set = destination_attributes_set(cached_referencable_reference_by_attributes)

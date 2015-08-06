@@ -83,9 +83,11 @@ module Metasploit::Cache::Actionable::Ephemeral::Actions
   # Synchronizes actions from Metasploit Module instance `source` to persisted `#actions` on `destination`.
   #
   # @param destination [ActiveRecord::Base, #actions]
+  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
+  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
   # @param source [#actions] Metasploit Module instance
   # @return [#actions] `destination`
-  def self.synchronize(destination:, source:)
+  def self.synchronize(destination:, logger:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
       cached_destination_attribute_set = destination_attribute_set(destination)
       cached_source_attribute_set = source_attribute_set(source)

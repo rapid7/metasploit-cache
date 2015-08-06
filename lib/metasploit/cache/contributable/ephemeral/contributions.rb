@@ -161,9 +161,11 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # Synchronizes authors from Metasploit Module instance `source` to persisted `#contributions` on {#destination}.
   #
   # @param destination [#contributions] a {Metasploit::Cache::Contribution#contributable}.
+  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
+  #   {Metasploit::Cache::Module::Ancestor#real_pathnam}.
   # @param source [#authors] a Metasploit Module instance
   # @return [#contributions] `destination`
-  def self.synchronize(destination:, source:)
+  def self.synchronize(destination:, logger:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
       cached_contribution_by_attributes = contribution_by_attributes(destination)
       cached_destination_attributes_set = destination_attributes_set(cached_contribution_by_attributes)

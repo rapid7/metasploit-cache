@@ -136,9 +136,11 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   # `#platformable_platforms` on {#destination}.
   #
   # @param destination [#platformable_platforms] a {Metasploit::Cache::Platformable::Platform#platformable}.
+  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
+  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
   # @param source [#platform] a Metasploit Module instance
   # @return [#platformable_platforms] `destination`
-  def self.synchronize(destination:, source:)
+  def self.synchronize(destination:, logger:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
       reduce(
           destination: destination,

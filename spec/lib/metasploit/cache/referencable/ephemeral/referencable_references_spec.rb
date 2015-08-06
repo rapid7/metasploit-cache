@@ -1,4 +1,14 @@
 RSpec.describe Metasploit::Cache::Referencable::Ephemeral::ReferencableReferences do
+  let(:logger) {
+    ActiveSupport::TaggedLogging.new(
+        Logger.new(log_string_io)
+    )
+  }
+
+  let(:log_string_io) {
+    StringIO.new
+  }
+
   context 'authority_abbreviation_set' do
     subject(:authority_abbreviation_set) {
       described_class.authority_abbreviation_set(attributes_set)
@@ -673,6 +683,7 @@ RSpec.describe Metasploit::Cache::Referencable::Ephemeral::ReferencableReference
     subject(:synchronize) {
       described_class.synchronize(
                          destination: destination,
+                         logger: logger,
                          source: source
       )
     }

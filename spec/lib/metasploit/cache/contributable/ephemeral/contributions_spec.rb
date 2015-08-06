@@ -656,12 +656,17 @@ RSpec.describe Metasploit::Cache::Contributable::Ephemeral::Contributions do
     subject(:synchronize) {
       described_class.synchronize(
                          destination: destination,
+                         logger: logger,
                          source: source
       )
     }
 
     let(:destination) {
       Metasploit::Cache::Auxiliary::Instance.new
+    }
+
+    let(:logger) {
+      double('ActiveSuppoort::TaggedLogger')
     }
 
     let(:source) {
