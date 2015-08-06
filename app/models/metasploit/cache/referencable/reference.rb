@@ -32,7 +32,8 @@ class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
   # The reference associated with the referencable
   belongs_to :reference,
              class_name: 'Metasploit::Cache::Reference',
-             inverse_of: :referencable_references
+             inverse_of: :referencable_references,
+             validate: true
 
   #
   # Validations
