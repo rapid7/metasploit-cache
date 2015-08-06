@@ -133,6 +133,10 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
   #
   # @return [void]
   def metasploit_module_class_new_valid
+    # ensure metasploit_module_instance loading is attempted prior to check if there was an exception.  This ensures
+    # there is no dependency on validation order.
+    metasploit_module_instance
+
     if metasploit_module_class_new_exception
       errors.add(
                 :metasploit_module_class_new,
