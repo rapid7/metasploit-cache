@@ -68,6 +68,20 @@ RSpec.describe Metasploit::Cache::Reference do
                                 validates: false
         end
 
+        context 'EDB' do
+          let(:abbreviation) {
+            'EDB'
+          }
+
+          let(:designation) {
+            FactoryGirl.generate :metasploit_cache_reference_edb_designation
+          }
+
+          it_should_behave_like 'derives',
+                                :url,
+                                validates: false
+        end
+
         context 'MSB' do
           let(:abbreviation) do
             'MSB'

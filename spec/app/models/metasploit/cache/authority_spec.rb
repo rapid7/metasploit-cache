@@ -124,6 +124,13 @@ RSpec.describe Metasploit::Cache::Authority do
                           url: 'https://cwe.mitre.org/data/index.html'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
+                          abbreviation: 'EDB',
+                          extension_name: 'Metasploit::Cache::Authority::Edb',
+                          obsolete: false,
+                          summary: 'Offensive Security Exploit Database Archive',
+                          url: 'https://www.exploit-db.com'
+
+    it_should_behave_like 'Metasploit::Cache::Authority seed',
                           :abbreviation => 'MIL',
                           :extension_name => nil,
                           :obsolete => true,

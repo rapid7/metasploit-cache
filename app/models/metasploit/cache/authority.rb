@@ -9,6 +9,7 @@ class Metasploit::Cache::Authority < ActiveRecord::Base
   autoload :Bid
   autoload :Cve
   autoload :Cwe
+  autoload :Edb
   autoload :Msb
   autoload :Osvdb
   autoload :Pmasa

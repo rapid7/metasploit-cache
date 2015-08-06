@@ -85,6 +85,10 @@ FactoryGirl.define do
     n.to_s
   }
 
+  sequence(:metasploit_cache_reference_edb_designation) { |n|
+    n.to_s
+  }
+
   sequence :metasploit_cache_reference_msb_designation do |n|
     number = n % 1000
     year = n / 1000

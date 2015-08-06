@@ -24,6 +24,12 @@ module Metasploit::Cache::Authority::Seed
           url: 'https://cwe.mitre.org/data/index.html'
       },
       {
+          abbreviation: 'EDB',
+          obsolete: false,
+          summary: 'Offensive Security Exploit Database Archive',
+          url: 'https://www.exploit-db.com'
+      },
+      {
           :abbreviation => 'MIL',
           :obsolete => true,
           :summary => 'milw0rm',
