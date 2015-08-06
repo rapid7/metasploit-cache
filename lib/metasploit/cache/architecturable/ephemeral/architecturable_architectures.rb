@@ -113,12 +113,19 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
   # The set of architecture abbreviations from `#arch` from the `source` Metasploit Module instance.
   #
   # @param source [#arch] Metasploit Module instance
+  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with the
+  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
   # @return [Set<String>] Set of architecture abbreviations
-  def self.source_attribute_set(source)
+  def self.source_attribute_set(source, logger:)
     source.arch.each_with_object(Set.new) { |abbreviation, set|
       canonical_abbreviations = CANONICAL_ABBREVIATIONS_BY_SOURCE_ABBREVIATION[abbreviation]
 
       if canonical_abbreviations
+        logger.warn {
+          "Deprecated, non-canonical architecture abbreviation (#{abbreviation.inspect}) converted to canonical " \
+          "abbreviations (#{canonical_abbreviations.inspect})"
+        }
+
         set.merge(canonical_abbreviations)
       else
         set.add abbreviation
@@ -139,7 +146,10 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
       reduce(
           destination: destination,
           destination_attribute_set: destination_attribute_set(destination),
-          source_attribute_set: source_attribute_set(source)
+          source_attribute_set: source_attribute_set(
+              source,
+              logger: logger
+          )
       )
     }
   end

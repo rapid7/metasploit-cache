@@ -319,7 +319,10 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
 
   context 'source_attribute_set' do
     subject(:source_attribute_set) {
-      described_class.source_attribute_set(source)
+      described_class.source_attribute_set(
+          source,
+          logger: logger
+      )
     }
 
     let(:source) {
@@ -344,6 +347,15 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
           ]
         }
 
+        it 'logs warning that abbreviation is deprecated' do
+          source_attribute_set
+
+          expect(log_string_io.string).to include(
+                                              'Deprecated, non-canonical architecture abbreviation ("mips") ' \
+                                              'converted to canonical abbreviations (["mipsbe", "mipsle"])'
+                                          )
+        end
+
         it "includes 'mipsbe' and 'mipsle'" do
           expect(source_attribute_set).to eq Set.new(['mipsbe', 'mipsle'])
         end
@@ -355,6 +367,15 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
               'x64'
           ]
         }
+
+        it 'logs warning that abbreviation is deprecated' do
+          source_attribute_set
+
+          expect(log_string_io.string).to include(
+                                              'Deprecated, non-canonical architecture abbreviation ("x64") converted ' \
+                                              'to canonical abbreviations (["x86_64"])'
+                                          )
+        end
 
         it "includes 'x86_64'" do
           expect(source_attribute_set).to eq Set.new ['x86_64']
