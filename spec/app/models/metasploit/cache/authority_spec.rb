@@ -117,6 +117,13 @@ RSpec.describe Metasploit::Cache::Authority do
                           :url => 'http://cvedetails.com'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
+                          abbreviation: 'CWE',
+                          extension_name: 'Metasploit::Cache::Authority::Cwe',
+                          obsolete: false,
+                          summary: 'Common Weakness Enumeration',
+                          url: 'https://cwe.mitre.org/data/index.html'
+
+    it_should_behave_like 'Metasploit::Cache::Authority seed',
                           :abbreviation => 'MIL',
                           :extension_name => nil,
                           :obsolete => true,

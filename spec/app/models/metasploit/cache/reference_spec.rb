@@ -54,6 +54,20 @@ RSpec.describe Metasploit::Cache::Reference do
           it_should_behave_like 'derives', :url, :validates => false
         end
 
+        context 'CWE' do
+          let(:abbreviation) {
+            'CWE'
+          }
+
+          let(:designation) {
+            FactoryGirl.generate :metasploit_cache_reference_cwe_designation
+          }
+
+          it_should_behave_like 'derives',
+                                :url,
+                                validates: false
+        end
+
         context 'MSB' do
           let(:abbreviation) do
             'MSB'
