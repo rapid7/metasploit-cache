@@ -119,6 +119,10 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                   StringIO.new
                 }
 
+                let(:metasploit_framework) {
+                  double('Metasploit::Framework')
+                }
+
                 let(:module_ancestor_load) {
                   Metasploit::Cache::Module::Ancestor::Load.new(
                       # This should match the major version number of metasploit-framework
@@ -131,9 +135,10 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                 let(:module_instance_load) {
                   Metasploit::Cache::Module::Instance::Load.new(
                       ephemeral_class: Metasploit::Cache::Auxiliary::Instance::Ephemeral,
+                      logger: logger,
+                      metasploit_framework: metasploit_framework,
                       metasploit_module_class: direct_class_load.metasploit_class,
                       module_instance: metasploit_cache_auxiliary_instance,
-                      logger: logger
                   )
                 }
 

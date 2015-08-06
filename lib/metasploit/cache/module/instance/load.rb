@@ -9,6 +9,11 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
   # @return [#new(metasploit_module_instance: Object, logger: ActiveSupport::TaggedLogging)]
   attr_accessor :ephemeral_class
 
+  # Framework that {#metasploit_module_class} `#initialize` can access Metasploit Framework world state.
+  #
+  # @return metasploit_framework [#events]
+  attr_accessor :metasploit_framework
+
   # The module instance being loaded.
   #
   # @return [ActiveRecord::Base]
@@ -21,7 +26,7 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
 
   # `Metasploit<n>` ruby `Class` declared in {Metasploit::Cache::Module::Ancestor#contents}.
   #
-  # @return [Class]
+  # @return [Class, #framework=]
   attr_accessor :metasploit_module_class
 
   # Exception raised when `new` is called on {#metasploit_module_class}.
@@ -50,13 +55,15 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
 
   validates :ephemeral_class,
             presence: true
-  validates :module_instance,
+  validates :metasploit_framework,
             presence: true
   validates :metasploit_module_instance,
             presence: {
                 unless: :loading_context?
             }
   validates :metasploit_module_class,
+            presence: true
+  validates :module_instance,
             presence: true
   validates :logger,
             presence: true
@@ -109,6 +116,8 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
   #   Exception is saved to `metasploit_module_class_new_exception`.
   def metasploit_module_class_new
     begin
+      metasploit_module_class.framework = metasploit_framework
+
       metasploit_module_class.new
     rescue Interrupt
       # handle Interrupt as pass-through unlike other Exceptions so users can bail with Ctrl+C

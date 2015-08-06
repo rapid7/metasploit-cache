@@ -22,6 +22,15 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
           )
         }
 
+        let(:metasploit_framework) {
+          double(
+              'Metasploit Framework',
+              datastore: double('Metasploit Framework datastore').tap { |datastore|
+                allow(datastore).to receive(:[]).with(anything).and_return(nil)
+              }
+          )
+        }
+
         let(:module_ancestor) {
           module_ancestors.build(
               relative_path: relative_pathname.to_path

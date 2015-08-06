@@ -108,6 +108,10 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
         Metasploit::Cache::Auxiliary::Instance::Ephemeral
       }
 
+      let(:metasploit_framework) {
+        double('Metasploit::Framework')
+      }
+
       let(:module_instance) {
         FactoryGirl.build(:metasploit_cache_auxiliary_instance)
       }
@@ -115,14 +119,23 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
       let(:module_instance_load) {
         described_class.new(
             ephemeral_class: ephemeral_class,
-            module_instance: module_instance,
+            logger: logger,
+            metasploit_framework: metasploit_framework,
             metasploit_module_class: metasploit_module_class,
-            logger: logger
+            module_instance: module_instance
         )
       }
 
       let(:metasploit_module_class) {
-        Class.new.tap { |klass|
+        Class.new do
+          #
+          # Class Attributes
+          #
+
+          class << self
+            attr_accessor :framework
+          end
+        end.tap { |klass|
           actions = module_instance.actions.map { |action|
             double("Metasploit Module Action", name: action.name)
           }
@@ -255,7 +268,11 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
     }
 
     let(:metasploit_module_class) {
-      double('Metasploit Module class')
+      Class.new do
+        class << self
+          attr_accessor :framework
+        end
+      end
     }
 
     context 'with Exception' do
@@ -329,12 +346,17 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
         Metasploit::Cache::Auxiliary::Instance::Ephemeral
       }
 
+      let(:metasploit_framework) {
+        double('Metasploit::Framework')
+      }
+
       let(:module_instance_load) {
         described_class.new(
             ephemeral_class: ephemeral_class,
-            module_instance: module_instance,
+            logger: logger,
+            metasploit_framework: metasploit_framework,
             metasploit_module_class: metasploit_module_class,
-            logger: logger
+            module_instance: module_instance
         ).tap { |block_module_instance_load|
           expect(block_module_instance_load).to be_valid(:loading)
         }
@@ -381,9 +403,10 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
             described_class.new(
                 ephemeral_class: ephemeral_class,
-                module_instance: module_instance,
                 logger: logger,
-                metasploit_module_class: direct_class_load.metasploit_class
+                metasploit_framework: metasploit_framework,
+                metasploit_module_class: direct_class_load.metasploit_class,
+                module_instance: module_instance
             )
           }
 
@@ -433,6 +456,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
           let(:metasploit_module_class) {
             Class.new do
+              #
+              # Class Attributes
+              #
+
+              class << self
+                attr_accessor :framework
+              end
+
               #
               # Attributes
               #
@@ -484,11 +515,23 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
         }
 
         let(:metasploit_module_class) {
-          Class.new.tap { |klass|
-            klass.send(:define_method, :initialize) {
+          Class.new do
+            #
+            # Class Attributes
+            #
+
+            class << self
+              attr_accessor :framework
+            end
+
+            #
+            # initialize
+            #
+
+            def initialize
               raise Exception
-            }
-          }
+            end
+          end
         }
 
         it { is_expected.to be_nil }
@@ -588,9 +631,10 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
             let(:module_instance_load) {
               described_class.new(
                   ephemeral_class: Metasploit::Cache::Auxiliary::Instance::Ephemeral,
-                  module_instance: module_instance,
+                  logger: logger,
+                  metasploit_framework: metasploit_framework,
                   metasploit_module_class: direct_class_load.metasploit_class,
-                  logger: logger
+                  module_instance: module_instance
               )
             }
           end
@@ -613,9 +657,10 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
             let(:module_instance_load) {
               described_class.new(
                   ephemeral_class: Metasploit::Cache::Encoder::Instance::Ephemeral,
-                  module_instance: module_instance,
+                  logger: logger,
+                  metasploit_framework: metasploit_framework,
                   metasploit_module_class: direct_class_load.metasploit_class,
-                  logger: logger
+                  module_instance: module_instance
               )
             }
           end
