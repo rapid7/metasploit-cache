@@ -129,9 +129,9 @@ RSpec.describe Metasploit::Cache::Platform do
     it { should include 'Firefox' }
     it { should include 'FreeBSD' }
     it { should include 'HPUX' }
-    it { should include 'IRIX' }
+    it { should include 'Irix' }
     it { should include 'Java' }
-    it { should include 'Javascript' }
+    it { should include 'JavaScript' }
     it { should include 'NetBSD' }
     it { should include 'Netware' }
     it { should include 'NodeJS' }
@@ -249,9 +249,9 @@ RSpec.describe Metasploit::Cache::Platform do
     it { should include 'Firefox' }
     it { should include 'FreeBSD' }
     it { should include 'HPUX' }
-    it { should include 'IRIX' }
+    it { should include 'Irix' }
     it { should include 'Java' }
-    it { should include 'Javascript' }
+    it { should include 'JavaScript' }
     it { should include 'NetBSD' }
     it { should include 'Netware' }
     it { should include 'NodeJS' }
