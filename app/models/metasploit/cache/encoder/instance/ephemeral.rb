@@ -66,21 +66,25 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
         Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
     ]
 
-    synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
-      synchronizer.synchronize(
-          destination: block_destination,
-          source: metasploit_module_instance
-      )
-    }
+    synchronized = nil
 
-    saved = ActiveRecord::Base.connection_pool.with_connection {
-      synchronized.batched_save
-    }
-
-    unless saved
-      log_error(synchronized) {
-        "Could not be persisted to #{synchronized.class}: #{synchronized.errors.full_messages.to_sentence}"
+    with_encoder_instance_tag(to) do |tagged|
+      synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
+        synchronizer.synchronize(
+            destination: block_destination,
+            source: metasploit_module_instance
+        )
       }
+
+      saved = ActiveRecord::Base.connection_pool.with_connection {
+        synchronized.batched_save
+      }
+
+      unless saved
+        tagged.error {
+          "Could not be persisted to #{synchronized.class}: #{synchronized.errors.full_messages.to_sentence}"
+        }
+      end
     end
 
     synchronized
@@ -88,28 +92,27 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
 
   private
 
-  # Logs errors to {#logger} with `encoder_instance`'s {Metasploit::Cache::Encoder::Instance#encoder_class}'s
-  # {Metasploit::Cache::Direct::Class#ancestor}'s {Metasploit::Cache::Module::Ancestor#real_pathname}.
-  #
-  # @yield Block called when logger severity is error or worse.
-  # @yieldreturn [String] Message to print to log as error if logger severity level allows for print of ERROR messages.
-  # @return [void]
-  def log_error(encoder_instance, &block)
-    if logger.error?
-      real_path = ActiveRecord::Base.connection_pool.with_connection {
-        encoder_instance.encoder_class.ancestor.real_pathname.to_s
-      }
-
-      logger.tagged(real_path) do |tagged|
-        tagged.error(&block)
-      end
-    end
-  end
-
   # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} used to resurrect {#auxiliary_instance}.
   #
   # @return [String]
   def real_path_sha1_hex_digest
     metasploit_module_instance.class.ephemeral_cache_by_source[:ancestor].real_path_sha1_hex_digest
+  end
+  
+  # Tags log with {Metasploit::Cache::Encoder::Instance#encoder_class}
+  # {Metasploit::Cache::Encoder::Class#ancestor} {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  #
+  # @param encoder_instance [Metasploit::Cache::Encoder::Instance]
+  # @yield [tagged_logger]
+  # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] {#logger} with
+  #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
+  # @yieldreturn [void]
+  # @return [void]
+  def with_encoder_instance_tag(encoder_instance, &block)
+    real_path = ActiveRecord::Base.connection_pool.with_connection {
+      encoder_instance.encoder_class.ancestor.real_pathname.to_s
+    }
+
+    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
   end
 end

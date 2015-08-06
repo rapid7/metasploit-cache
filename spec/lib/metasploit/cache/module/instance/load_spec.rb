@@ -419,12 +419,6 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
             )
           }
 
-          it 'logs no errors' do
-            metasploit_module_instance
-
-            expect(log_string_io.string).to be_blank
-          end
-
           it 'makes valid #module_instance' do
             # Doesn't use change so that be_valid's printing is better
             expect(module_instance).not_to be_valid
@@ -498,12 +492,6 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           let!(:direct_class) {
             FactoryGirl.create(:metasploit_cache_auxiliary_class)
           }
-
-          it 'logs errors' do
-            metasploit_module_instance
-
-            expect(log_string_io.string).not_to be_blank
-          end
 
           it { is_expected.to be_nil }
         end

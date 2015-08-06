@@ -50,6 +50,7 @@ module Metasploit
     autoload :Invalid
     autoload :Licensable
     autoload :License
+    autoload :Logged
     autoload :Login
     autoload :Module
     autoload :NilifyBlanks
