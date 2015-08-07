@@ -27,7 +27,11 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
               'Metasploit Framework',
               datastore: double('Metasploit Framework datastore').tap { |datastore|
                 allow(datastore).to receive(:[]).with(anything).and_return(nil)
-              }
+              },
+              events: double(
+                  'Metasploit Framework events',
+                  add_exploit_subscriber: nil
+              )
           )
         }
 
