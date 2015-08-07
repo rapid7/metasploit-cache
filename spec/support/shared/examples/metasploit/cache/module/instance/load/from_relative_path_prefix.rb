@@ -1,4 +1,4 @@
-shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_prefix' do |module_path_real_pathname, relative_path_prefix|
+shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_prefix' do |module_path_real_pathname, relative_path_prefix, pending_reason_by_display_path: {}|
   context relative_path_prefix do
     real_prefix_pathname = module_path_real_pathname.join(relative_path_prefix)
 
@@ -10,10 +10,10 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
 
     rule.find do |real_path|
       real_pathname = Pathname.new(real_path)
-      display_pathname = real_pathname.relative_path_from(real_prefix_pathname)
+      display_path = real_pathname.relative_path_from(real_prefix_pathname).to_s
       relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
 
-      context display_pathname.to_s do
+      context display_path do
         let(:direct_class_load) {
           Metasploit::Cache::Direct::Class::Load.new(
               direct_class: direct_class,
@@ -50,7 +50,15 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
           )
         }
 
-        it 'loads Metasploit Module instance' do
+        options = {}
+
+        pending_reason = pending_reason_by_display_path[display_path]
+
+        if pending_reason
+          options[:pending] = pending_reason
+        end
+
+        it 'loads Metasploit Module instance', options do
           expect(module_ancestor_load).to load_metasploit_module
 
           expect(direct_class_load).to be_valid
