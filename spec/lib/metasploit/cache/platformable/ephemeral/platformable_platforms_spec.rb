@@ -1,9 +1,20 @@
 RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms do
+  let(:logger) {
+    ActiveSupport::TaggedLogging.new(
+        Logger.new(log_string_io)
+    )
+  }
+
+  let(:log_string_io) {
+    StringIO.new
+  }
+
   context 'build_added' do
     subject(:build_added) {
       described_class.build_added(
           destination: destination,
           destination_attribute_set: destination_attribute_set,
+          logger: logger,
           source_attribute_set: source_attribute_set
       )
     }
@@ -21,22 +32,51 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
     }
 
     context 'with added platform fully_qualified_names' do
-      let(:source_platform_fully_qualified_name) {
-        FactoryGirl.generate :metasploit_cache_platform_fully_qualified_name
-      }
-
       let(:source_attribute_set) {
         Set.new [source_platform_fully_qualified_name]
       }
 
-      it 'builds platformable_platform' do
-        expect {
-          build_added
-        }.to change(destination.platformable_platforms, :length).by(1)
+      context 'with seeded Metasploit::Cache::Platform#fully_qualified_name' do
+        let(:source_platform_fully_qualified_name) {
+          FactoryGirl.generate :metasploit_cache_platform_fully_qualified_name
+        }
+
+        it 'builds platformable_platform' do
+          expect {
+            build_added
+          }.to change(destination.platformable_platforms, :length).by(1)
+        end
+
+        it 'sets Metasploit::Cache::Platformable::Platform#platform to Metaploit::Cache::Platform with abbrevation' do
+          expect(build_added.platformable_platforms.first.platform.fully_qualified_name).to eq(source_platform_fully_qualified_name)
+        end
       end
 
-      it 'sets Metasploit::Cache::Platformable::Platform#platform to Metaploit::Cache::Platform with abbrevation' do
-        expect(build_added.platformable_platforms.first.platform.fully_qualified_name).to eq(source_platform_fully_qualified_name)
+      context 'without seeded Metasploit::Cache::Platform#fully_qualified_name' do
+        let(:source_platform_fully_qualified_name) {
+          'Not Seeded'
+        }
+
+        it 'builds platformable_platform' do
+          expect {
+            build_added
+          }.to change(destination.platformable_platforms, :length).by(1)
+        end
+
+        it 'sets Metasploit::Cache::Platformable::Platform#platform to nil so validations will fall and user will log at log for seed message' do
+          expect(build_added.platformable_platforms.first.platform).to be_nil
+        end
+
+        it 'logs error that fully_qualified_name was not seeded and how to seed it' do
+          build_added
+
+          expect(log_string_io.string).to eq(
+                                              'No seeded Metasploit::Cache::Platform with fully_qualified_name ' \
+                                              '("Not Seeded"). If this is a typo, correct it; otherwise, add new ' \
+                                              'Metasploit::Cache::Platform by following the instruction for adding a ' \
+                                              "new seed: https://github.com/rapid7/metasploit-cache#seeds.\n"
+                                          )
+        end
       end
     end
 
@@ -267,6 +307,7 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
       described_class.reduce(
           destination: destination,
           destination_attribute_set: destination_attribute_set,
+          logger: logger,
           source_attribute_set: source_attribute_set
       )
     }

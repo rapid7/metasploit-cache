@@ -145,6 +145,104 @@ The metasyntactic variables should be replaced in the example code in this secti
        end
 
 
+### `Metasploit::Cache::Platform`
+
+Platforms for Metasploit Modules and exploit Metasploit Module targets must be known to prevent typos and assist with
+automated compatibility between Metasploit Modules.
+
+#### Terminology
+
+The metasyntactic variables should be replace d in the example code in this section with their appropriate values.
+
+#### Code
+
+1. In `lib/metasploit/cache/platform/seed.rb`, add an entry to `RELATIVE_NAME_TREE`.  Each level is in alphabetical
+   order.  Leaf nodes point to `nil` to end the branch.
+   
+   If adding a platform without any versions, just put it at the first level
+   
+       RELATIVE_NAME_TREE = {
+         # ...
+         '<relative-name>' => nil
+         # ...
+       }
+   
+   If adding a version or variant to a pre-existing platform, nest it under the parent platform
+   
+      RELATIVE_NAME_TREE = {
+        # ...
+        '<parent-relative-name>' => {
+          `<relative-name>' => nil
+        }
+        # ...
+      }
+
+#### Specs
+
+1. In `app/models/metasploit/cache/platform_spec.rb`, in the `'.fully_qualified_names'` context, add an example for the
+   `<fully-qualified-name>` in alphabetical order
+   
+       RSpec.describe Metasploit::Cache::Platform do
+         # ...
+         context '.fully_qualified_names' do
+           # ...
+           it { is_expected.to include '<fully-qualified-name>' }
+           # ...
+         # ...
+       end
+
+##### For Root platforms
+
+NOTE: Do these steps only when adding a root platform.
+
+1. In `app/models/metasploit/cache/platform_spec.rb`, in the `'root_fully_qualified_name_set'` context, add an example
+   for the `<fully-qualified-name>` in alphabetical order.
+   
+       RSpec.describe Metasploit::Cache::Platform do
+         # ...
+         context 'root_fully_qualified_name_set' do
+           # ...
+           it { is_expected.to include '<fully-qualified-name>' }
+           # ...
+         # ...
+       end
+       
+2. In `lib/metasploit/cache/platform/seed_spec.rb`, in `'CONSTANTS'` context, in `'RELATIVE_NAME_TREE'` context, add
+   an example for the `<fully-qualified-name>` in alphabetical order.
+   
+       RSpec.describe Metasploit::Cache::Platform::Seed do
+         context 'CONSTANTS' do
+           context 'RELATIVE_NAME_TREE' do
+             # ...
+             it { is_expected.to include('<fully-qualified-name>') }
+             # ...
+           end
+         end
+         # ...
+       end
+
+##### For Nested Platforms
+
+NOTE: Do these steps only when adding non-root, nested platforms.
+
+1. In `lib/metasploit/cache/platform/seed_spec.rb`, in `'CONSTANTS'` context, in `'RELATIVE_NAME_TREE'` context, add
+   an example for the `<relative-name>` in alphabetical order.
+   
+       RSpec.describe Metasploit::Cache::Platform::Seed do
+         context 'CONSTANTS' do
+           context 'RELATIVE_NAME_TREE' do
+             # ...
+             context "['<parent-relative-name>']" do
+               # ...
+               it { is_expected.to include('<relative-name>') }
+               # ...
+             end
+             # ...
+           end
+         end
+         # ...
+       end
+
 ## Testing
 
 ### With metasploit-framework

@@ -25,9 +25,11 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   # @param destination [#platformable_platforms]
   # @param destination_attribute_set [Set<String>] Set of {Metasploit::Cache::Platform#platform} on
   #   `#platformable_platforms` on `destination`.
+  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
+  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
   # @param source_attribute_set [Set<String>] Set of `#realname` of `#platforms` of `#platform` of `source`.
   # @return [#platformable_platforms] `destination`
-  def self.build_added(destination:, destination_attribute_set:, source_attribute_set:)
+  def self.build_added(destination:, destination_attribute_set:, logger:, source_attribute_set:)
     cached_added_attribute_set = Metasploit::Cache::Ephemeral::AttributeSet.added(
         destination: destination_attribute_set,
         source: source_attribute_set
@@ -39,8 +41,16 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
         value_set: cached_added_attribute_set
     )
 
-    cached_added_attribute_set.each do |added_fully_qualified_name|
-      platform = cached_platform_by_fully_qualified_name[added_fully_qualified_name]
+    cached_added_attribute_set.each do |fully_qualified_name|
+      platform = cached_platform_by_fully_qualified_name[fully_qualified_name]
+
+      if platform.nil?
+        logger.error {
+          "No seeded Metasploit::Cache::Platform with fully_qualified_name (#{fully_qualified_name.inspect}). " \
+          'If this is a typo, correct it; otherwise, add new Metasploit::Cache::Platform by following the ' \
+          'instruction for adding a new seed: https://github.com/rapid7/metasploit-cache#seeds.'
+        }
+      end
 
       destination.platformable_platforms.build(
           platform: platform
@@ -97,17 +107,21 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   #
   # @param destination [#platformable_platforms] a {Metasploit::Cache::Platformable::Platform#platformable}.
   # @param destination_attribute_set [Set<String>] Set of {Metasploit::Cache::Platform#fully_qualified_name}
+  # @param logger (see build_added)
   # @param source_attribute_set [Set<String>] Set of platform fully-qualified names
   # @return [#platformable_platforms] `destination`
-  def self.reduce(destination:, destination_attribute_set:, source_attribute_set:)
-    [:mark_removed_for_destruction, :build_added].reduce(destination) { |block_destination, method|
-      public_send(
-          method,
-          destination: block_destination,
+  def self.reduce(destination:, destination_attribute_set:, logger:, source_attribute_set:)
+    reduced = mark_removed_for_destruction(
+          destination: destination,
           destination_attribute_set: destination_attribute_set,
           source_attribute_set: source_attribute_set
-      )
-    }
+    )
+    build_added(
+        destination: reduced,
+        destination_attribute_set: destination_attribute_set,
+        logger: logger,
+        source_attribute_set: source_attribute_set
+    )
   end
 
   # @note If `source` `#platform` `#platforms` contains a single entry that is just `''`, then it is assumed to mean all
@@ -145,6 +159,7 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
       reduce(
           destination: destination,
           destination_attribute_set: destination_attribute_set(destination),
+          logger: logger,
           source_attribute_set: source_attribute_set(source)
       )
     }
