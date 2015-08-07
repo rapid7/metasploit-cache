@@ -39,10 +39,10 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
 
         let(:module_ancestor_load) {
           Metasploit::Cache::Module::Ancestor::Load.new(
+              logger: logger,
               # This should match the major version number of metasploit-framework
               maximum_version: 4,
-              module_ancestor: module_ancestor,
-              logger: logger
+              module_ancestor: module_ancestor
           )
         }
 
