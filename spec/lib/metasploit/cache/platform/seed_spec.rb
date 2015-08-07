@@ -1,6 +1,6 @@
 RSpec.describe Metasploit::Cache::Platform::Seed do
   context 'CONSTANTS' do
-    context 'RELATIVE_NAME_TRIE' do
+    context 'RELATIVE_NAME_TREE' do
       subject(:relative_name_tree) do
         described_class::RELATIVE_NAME_TREE
       end
