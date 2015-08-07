@@ -652,6 +652,58 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
               )
             }
           end
+
+          it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
+                                module_path_real_pathname,
+                                'exploits',
+                                pending_reason_by_display_path: {
+                                    'firefox/local/exec_shellcode.rb' => 'Missing references',
+                                    'linux/http/pandora_fms_exec.rb' => 'Missing references',
+                                    'linux/local/desktop_privilege_escalation.rb' => 'Missing references',
+                                    'linux/local/zpanel_zsudo.rb' => 'Missing references',
+                                    'multi/fileformat/js_unpacker_eval_injection.rb' => 'Missing references',
+                                    'multi/handler.rb' => 'Missing DisclosureDate and missing references',
+                                    'multi/misc/java_rmi_server.rb' => 'MSF authority abbreviation is not recognized',
+                                    'osx/browser/safari_user_assisted_download_launch.rb' => 'Missing references',
+                                    'osx/local/persistence.rb' => 'Missing references',
+                                    'unix/local/setuid_nmap.rb' => 'Missing references',
+                                    'unix/webapp/generic_exec.rb' => 'Missing references',
+                                    'unix/webapp/openemr_upload_exec.rb' => 'EBD authority abbreviation is a typo for EDB',
+                                    'unix/webapp/php_eval.rb' => 'Missing references',
+                                    'unix/webapp/php_include.rb' => 'Missing references',
+                                    'unix/webapp/wp_admin_shell_upload.rb' => 'Missing references',
+                                    'windows/browser/malwarebytes_update_exec.rb' => "Authority abbreviation (' OSVDB') has space in it",
+                                    'windows/http/xampp_webdav_upload_php.rb' => 'Missing references',
+                                    'windows/local/bypassuac_injection.rb' => 'References are formatted incorrectly with an extra Array layer',
+                                    'windows/local/ntapphelpcachecontrol.rb' => 'OSVEB authority abbreviation is a typo for OSVDB',
+                                    'windows/local/payload_inject.rb' => 'Missing references',
+                                    'windows/local/persistence.rb' => 'Missing references',
+                                    'windows/local/powershell_cmd_upgrade.rb' => 'Missing references',
+                                    'windows/local/pxeexploit.rb' => 'Missing references',
+                                    'windows/local/service_permissions.rb' => 'Missing references'
+                                } do
+            let(:direct_class) {
+              module_ancestor.build_exploit_class
+            }
+
+            let(:module_ancestors) {
+              module_path.exploit_ancestors
+            }
+
+            let(:module_instance) {
+              direct_class.build_exploit_instance
+            }
+
+            let(:module_instance_load) {
+              described_class.new(
+                  ephemeral_class: Metasploit::Cache::Exploit::Instance::Ephemeral,
+                  logger: logger,
+                  metasploit_framework: metasploit_framework,
+                  metasploit_module_class: direct_class_load.metasploit_class,
+                  module_instance: module_instance,
+              )
+            }
+          end
         end
       end
     end
