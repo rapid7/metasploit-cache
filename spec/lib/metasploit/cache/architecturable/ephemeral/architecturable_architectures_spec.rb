@@ -23,6 +23,16 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
         expect(canonical_abbreviations_by_source_abbreviation['x64']).to match_array ['x86_64']
       end
     end
+
+    context 'DEFAULT_PRESENT_SOURCE_ATTRIBUTE_SET' do
+      subject(:default_present_soruce_attribute_set) {
+        described_class::DEFAULT_PRESENT_SOURCE_ATTRIBUTE_SET
+      }
+
+      it "is a set with only 'x86' because 'x86' was the first architecture supported by metasploit-framework" do
+        expect(default_present_soruce_attribute_set).to eq Set.new ['x86']
+      end
+    end
   end
 
   context 'build_added' do
@@ -272,6 +282,56 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
     end
   end
 
+  context 'present_source_attribute_set' do
+    subject(:present_source_attribute_set) {
+      described_class.present_source_attribute_set(
+          source,
+          logger: logger
+      )
+    }
+
+    let(:source) {
+      double(
+          'Source',
+          arch: source_arch
+      )
+    }
+
+    context 'with empty source_attribute_set' do
+      let(:source_arch) {
+        []
+      }
+
+      it 'returns DEFAULT_PRESENT_SOURCE_ATTRIBUTE_SET' do
+        expect(present_source_attribute_set).to eq(described_class::DEFAULT_PRESENT_SOURCE_ATTRIBUTE_SET)
+      end
+
+      it "logs warn instructing user to add 'Arch' => 'x86'" do
+        present_source_attribute_set
+
+        expect(log_string_io.string).to include(
+                                            "Has no 'Arch', so assuming 'x86'.  You should add 'Arch' => 'x86' to " \
+                                            'the module info Hash'
+                                        )
+      end
+    end
+
+    context 'with present source_attribute_set' do
+      let(:source_arch) {
+        ['x86_64']
+      }
+
+      it 'returns source_attribute_set' do
+        expect(present_source_attribute_set).to eq(
+                                                    described_class.source_attribute_set(
+                                                        source,
+                                                        logger: logger
+                                                    )
+                                                )
+      end
+    end
+  end
+
   context 'reduce' do
     subject(:reduce) {
       described_class.reduce(
@@ -431,9 +491,15 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
       double('Metasploit Module instance', arch: [])
     }
 
-    it 'calls reduce' do
+    it 'calls reduce with source_attribute_set: present_source_attribute_set' do
       expect(described_class).to receive(:reduce).with(
-                                     hash_including(destination: destination)
+                                     hash_including(
+                                         destination: destination,
+                                         source_attribute_set: described_class.present_source_attribute_set(
+                                             source,
+                                             logger: logger
+                                         )
+                                     )
                                  )
 
       synchronize

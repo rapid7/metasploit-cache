@@ -15,6 +15,11 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
       ]
   }
 
+  # metasploit-framework Metasploit Modules without an 'Arch' are assumed to be 'x86' for historical reasons.
+  DEFAULT_PRESENT_SOURCE_ATTRIBUTE_SET = Set.new(
+      ['x86'.freeze]
+  ).freeze
+
   #
   # Module Methods
   #
@@ -91,6 +96,29 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
     destination
   end
 
+  # The set of architecture abbreviations that is guarenteed to be present.
+  #
+  # @param source (see source_attribute_set)
+  # @param logger [ActiveSupport::TaggedLogger] logger tagged with {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  # @return [Set<'x86'>] if {source_attribute_set} is empty.
+  # @return [Set<String>] {source_attribute_set} if {source_attribute_set} is present.
+  def self.present_source_attribute_set(source, logger:)
+    canonical_attribute_set = source_attribute_set(
+        source,
+        logger: logger
+    )
+
+    if canonical_attribute_set.present?
+      canonical_attribute_set
+    else
+      logger.warn {
+        "Has no 'Arch', so assuming 'x86'.  You should add 'Arch' => 'x86' to the module info Hash."
+      }
+
+      DEFAULT_PRESENT_SOURCE_ATTRIBUTE_SET
+    end
+  end
+
   # Reduces `destination` by
   # {marking for destruction the removed `#architecturable_architectures` mark_removed_for_destruction} and
   # {building the added `#architecturable_architectures` build_added}.
@@ -146,7 +174,7 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
       reduce(
           destination: destination,
           destination_attribute_set: destination_attribute_set(destination),
-          source_attribute_set: source_attribute_set(
+          source_attribute_set: present_source_attribute_set(
               source,
               logger: logger
           )
