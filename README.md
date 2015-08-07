@@ -154,6 +154,12 @@ automated compatibility between Metasploit Modules.
 
 The metasyntactic variables should be replace d in the example code in this section with their appropriate values.
 
+| Metasyntactic Variable   | Description                                                                                                        | Example      |
+|--------------------------|--------------------------------------------------------------------------------------------------------------------|--------------|
+| `<relative-name>`        | The name of the platform relative to its parent.  For root platforms, this is the same as `<fully-qualified-name>` | `10`         |
+| `<parent-relative-name>` | The `<relative-name>` for the parent platform.                                                                     | `Windows`    |
+| `<fully-qualified-name>` | The `<relative-name>` of each level joined together.                                                               | `Windows 10` |
+
 #### Code
 
 1. In `lib/metasploit/cache/platform/seed.rb`, add an entry to `RELATIVE_NAME_TREE`.  Each level is in alphabetical
