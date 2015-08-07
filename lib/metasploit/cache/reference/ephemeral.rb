@@ -34,13 +34,17 @@ module Metasploit::Cache::Reference::Ephemeral
   # @param authority_by_abbreviation [Hash{String => Metasploit::Cache::Authority}] Maps
   #   {Metasploit::Cache::Authority#abbreviation} to {Metasploit::Cache::Authority} for {Metasploit::Cache::Reference}
   #   look-up in {existing_by_attributes} and initialization in {new_by_attributes_proc}.
+  # @param logger (see new_by_attributes_proc)
   # @return [Hash{Hash{authority: Hash{abbreviation: String}, designation: String}, Hash{url: String} => Metasploit::Cache::Reference}]
-  def self.by_attributes(attributes_set:, authority_by_abbreviation:)
+  def self.by_attributes(attributes_set:, authority_by_abbreviation:, logger:)
     existing_by_attributes(
         attributes_set: attributes_set,
         authority_by_abbreviation: authority_by_abbreviation
     ).tap { |hash|
-      hash.default_proc = new_by_attributes_proc(authority_by_abbreviation: authority_by_abbreviation)
+      hash.default_proc = new_by_attributes_proc(
+          authority_by_abbreviation: authority_by_abbreviation,
+          logger: logger
+      )
     }
   end
 
@@ -135,6 +139,9 @@ module Metasploit::Cache::Reference::Ephemeral
     end
   end
 
+  # @note `logger` should already be tagged with Metasploit Module instance's
+  #   {Metasploit::Cache::Module::Ancestor#real_pathname} when `#error` is called.
+  #
   # Maps Hash of {Metasploit::Cache::Reference#authority} {Metasploit::Cache::Authority#abbreviation} and
   # {Metasploit::Cache::Reference#designation} or {Metasploit::Cache::Reference#url} to new
   # {Metasploit::Cache::Reference}.
@@ -142,13 +149,24 @@ module Metasploit::Cache::Reference::Ephemeral
   # @param authority_by_abbreviation [Hash{String => Metasploit::Cache::Authority}] Maps
   #   {Metasploit::Cache::Authority#abbreviation} to {Metasploit::Cache::Authority} to look-up
   #   {Metasploit::Cache::Reference#authority}
+  # @param logger [ActiveSupport::TaggedLogger, #error] logger used if `Metaspploit::Cache::Authority#abbreviation` is
+  #   not seeded.
   # @return [Proc<<Hash{authority: Hash{abbreviation: String}, designation: String}, Hash{url: String}>, String>]
-  def self.new_by_attributes_proc(authority_by_abbreviation:)
+  def self.new_by_attributes_proc(authority_by_abbreviation:, logger:)
     ->(hash, attributes) {
       authority_attributes = attributes[:authority]
 
       if authority_attributes
-        authority = authority_by_abbreviation[authority_attributes.fetch(:abbreviation)]
+        authority_abbreviation = authority_attributes.fetch(:abbreviation)
+        authority = authority_by_abbreviation[authority_abbreviation]
+
+        if authority.nil?
+          logger.error {
+            "No seeded Metasploit::Cache::Authority with abbreviation (#{authority_abbreviation.inspect}). " \
+            'If this is a typo, correct it; otherwise, add new Metasploit::Cache::Authority by following the ' \
+            'instruction for adding a new seed: https://github.com/rapid7/metasploit-cache#seeds.'
+          }
+        end
 
         hash[attributes] = Metasploit::Cache::Reference.new(
             authority: authority,

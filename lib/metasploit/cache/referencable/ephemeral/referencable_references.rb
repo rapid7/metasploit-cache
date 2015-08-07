@@ -42,11 +42,12 @@ module Metasploit::Cache::Referencable::Ephemeral::ReferencableReferences
   #   Set of Hashes of either
   #   `{authority: {abbreviation: Metasploit::Cache::Authority#abbreviation}, designation: Metasploit::Cache::Reference#designation}`
   #   or `{url: Metasploit::Cache::Reference#url}` on `destination`.
+  # @param logger (see Metasploit::Cache::Reference::Ephemeral.new_by_attributes_proc)
   # @param source_attributes_set [Set<Hash{authority: Hash{abbreviation: String}, destination: String}, Hash{url: String}>]
   #   Set of Hashes of either `{authority: {abbreviation: ctx_id}, designation: ctx_val}` or `{url: ctx_val}` of
   #   `references` of `source`.
   # @return [#referencable_references] `destination`
-  def self.build_added(destination:, destination_attributes_set:, source_attributes_set:)
+  def self.build_added(destination:, destination_attributes_set:, logger:, source_attributes_set:)
     cached_added_attributes_set = Metasploit::Cache::Ephemeral::AttributeSet.added(
         destination: destination_attributes_set,
         source: source_attributes_set
@@ -55,7 +56,8 @@ module Metasploit::Cache::Referencable::Ephemeral::ReferencableReferences
     cached_authority_by_abbreviation = authority_by_abbreviation(cached_added_attributes_set)
     cached_reference_by_attributes = Metasploit::Cache::Reference::Ephemeral.by_attributes(
         attributes_set: cached_added_attributes_set,
-        authority_by_abbreviation: cached_authority_by_abbreviation
+        authority_by_abbreviation: cached_authority_by_abbreviation,
+        logger: logger
     )
 
     cached_added_attributes_set.each do |attributes|
@@ -183,7 +185,8 @@ module Metasploit::Cache::Referencable::Ephemeral::ReferencableReferences
       build_added(
           destination: marked,
           destination_attributes_set: cached_destination_attributes_set,
-          source_attributes_set: cached_source_attributes_set
+          source_attributes_set: cached_source_attributes_set,
+          logger: logger
       )
     }
   end

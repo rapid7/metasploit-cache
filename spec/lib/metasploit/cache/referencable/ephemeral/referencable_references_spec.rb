@@ -130,6 +130,7 @@ RSpec.describe Metasploit::Cache::Referencable::Ephemeral::ReferencableReference
       described_class.build_added(
           destination: destination,
           destination_attributes_set: destination_attributes_set,
+          logger: logger,
           source_attributes_set: source_attributes_set
       )
     }

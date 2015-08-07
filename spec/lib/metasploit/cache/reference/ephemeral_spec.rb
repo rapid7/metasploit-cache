@@ -1,4 +1,14 @@
 RSpec.describe Metasploit::Cache::Reference::Ephemeral do
+  let(:logger) {
+    ActiveSupport::TaggedLogging.new(
+        Logger.new(log_string_io)
+    )
+  }
+
+  let(:log_string_io) {
+    StringIO.new
+  }
+
   context 'attributes' do
     subject(:attributes) {
       described_class.attributes(reference)
@@ -57,7 +67,8 @@ RSpec.describe Metasploit::Cache::Reference::Ephemeral do
     subject(:by_attributes) {
       described_class.by_attributes(
           attributes_set: attributes_set,
-          authority_by_abbreviation: authority_by_abbreviation
+          authority_by_abbreviation: authority_by_abbreviation,
+          logger: logger
       )
     }
 
@@ -443,7 +454,8 @@ RSpec.describe Metasploit::Cache::Reference::Ephemeral do
   context 'new_by_attributes_proc' do
     subject(:new_by_attributes_proc) {
       described_class.new_by_attributes_proc(
-          authority_by_abbreviation: authority_by_abbreviation
+          authority_by_abbreviation: authority_by_abbreviation,
+          logger: logger
       )
     }
 
