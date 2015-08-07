@@ -56,7 +56,19 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
 
           module_instance_load.valid?
 
-          expect(module_instance).to be_valid
+          unless module_instance.valid?
+            # Only covered on failure
+            # :nocov:
+            fail "Expected #{module_instance.class} to be valid, but got errors:\n" \
+                 "#{module_instance.errors.full_messages.join("\n")}\n" \
+                 "\n" \
+                 "Log:\n" \
+                 "#{log_string_io.string}\n" \
+                 "Expected #{module_instance_load.class} to be valid, but got errors:\n" \
+                 "#{module_instance_load.errors.full_messages.join("\n")}"
+            # :nocov:
+          end
+
           expect(module_instance_load).to be_valid
           expect(module_instance).to be_persisted
         end

@@ -160,11 +160,23 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
                   expect(direct_class_load).to be_valid
                   expect(encoder_class).to be_persisted
 
-                  expect(module_ancestor_load).to be_valid(:loading)
+                  expect(module_instance_load).to be_valid(:loading)
 
                   module_instance_load.valid?
+                  
+                  unless metasploit_cache_encoder_instance.valid?
+                    # Only covered on failure
+                    # :nocov:
+                    fail "Expected #{metasploit_cache_encoder_instance.class} to be valid, but got errors:\n" \
+                         "#{metasploit_cache_encoder_instance.errors.full_messages.join("\n")}\n" \
+                         "\n" \
+                         "Log:\n" \
+                         "#{log_string_io.string}\n" \
+                         "Expected #{module_instance_load.class} to be valid, but got errors:\n" \
+                         "#{module_instance_load.errors.full_messages.join("\n")}"
+                    # :nocov:
+                  end
 
-                  expect(metasploit_cache_encoder_instance).to be_valid
                   expect(module_instance_load).to be_valid
                   expect(metasploit_cache_encoder_instance).to be_persisted
 
