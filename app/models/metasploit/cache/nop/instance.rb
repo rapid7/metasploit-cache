@@ -33,6 +33,7 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   # The class level metadata for this nop Metasploit Module.
   belongs_to :nop_class,
              class_name: 'Metasploit::Cache::Nop::Class',
+             foreign_key: :nop_class_id,
              inverse_of: :nop_instance
 
   # Joins {#platforms} to this encoder Metasploit Module.

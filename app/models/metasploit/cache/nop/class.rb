@@ -13,6 +13,7 @@ class Metasploit::Cache::Nop::Class < Metasploit::Cache::Direct::Class
   has_one :nop_instance,
           class_name: 'Metasploit::Cache::Nop::Instance',
           dependent: :destroy,
+          foreign_key: :nop_class_id,
           inverse_of: :nop_class
 
   # Reliability of Metasploit Module.

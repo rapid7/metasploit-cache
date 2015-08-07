@@ -7,7 +7,7 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
     it { is_expected.to have_many(:contributions).autosave(true).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contributable) }
     it { is_expected.to have_many(:licensable_licenses).autosave(true).class_name('Metasploit::Cache::Licensable::License')}
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
-    it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance) }
+    it { is_expected.to belong_to(:nop_class).class_name('Metasploit::Cache::Nop::Class').inverse_of(:nop_instance).with_foreign_key(:nop_class_id) }
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
     it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
   end
