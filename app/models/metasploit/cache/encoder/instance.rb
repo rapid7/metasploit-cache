@@ -115,6 +115,11 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   validates :encoder_class,
             presence: true
 
+  validates :encoder_class_id,
+            uniqueness: {
+                unless: :batched?
+            }
+
   validates :licensable_licenses,
             length: {
               minimum: 1
