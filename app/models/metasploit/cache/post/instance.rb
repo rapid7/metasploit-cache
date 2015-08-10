@@ -61,6 +61,7 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # The class level metadata for this post Metasploit Module
   belongs_to :post_class,
              class_name: 'Metasploit::Cache::Post::Class',
+             foreign_key: :post_class_id,
              inverse_of: :post_instance
 
   # Joins {#references} to this auxiliary Metasploit Module.
