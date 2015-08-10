@@ -13,6 +13,7 @@ class Metasploit::Cache::Post::Class < Metasploit::Cache::Direct::Class
   has_one :post_instance,
           class_name: 'Metasploit::Cache::Post::Instance',
           dependent: :destroy,
+          foreign_key: :post_class_id,
           inverse_of: :post_class
 
   # Reliability of Metasploit Module.
