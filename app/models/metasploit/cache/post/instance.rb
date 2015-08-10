@@ -157,6 +157,11 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
+
   validates :contributions,
             length: {
                 minimum: 1

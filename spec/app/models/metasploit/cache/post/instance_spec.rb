@@ -299,6 +299,11 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
     it_should_behave_like 'validates at least one in association',
+                          :architecturable_architectures,
+                          factory: :metasploit_cache_post_instance,
+                          traits: [:metasploit_cache_architecturable_architecturable_architectures]
+
+    it_should_behave_like 'validates at least one in association',
                           :contributions,
                           factory: :metasploit_cache_post_instance,
                           traits: [:metasploit_cache_contributable_contributions]

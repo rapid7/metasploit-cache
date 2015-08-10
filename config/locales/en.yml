@@ -87,6 +87,8 @@ en:
               too_short: "has too few platformable platforms (minimum us %{count} platformable platform)"
         metasploit/cache/post/instance:
           attributes:
+            architecturable_architectures:
+              too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
             contributions:
               too_short: "has too few contributions (minimum is %{count} contribution)"
             default_action:
