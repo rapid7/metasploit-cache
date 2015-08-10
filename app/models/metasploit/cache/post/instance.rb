@@ -1,5 +1,7 @@
 # Instance-level metadata for a post Metasploit Module.
 class Metasploit::Cache::Post::Instance < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Root
+
   #
   #
   # Associations
