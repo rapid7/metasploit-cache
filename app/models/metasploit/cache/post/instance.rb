@@ -1,5 +1,12 @@
 # Instance-level metadata for a post Metasploit Module.
 class Metasploit::Cache::Post::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
+  include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+  autoload :PostClass
+
   #
   #
   # Associations
@@ -59,6 +66,7 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # The class level metadata for this post Metasploit Module
   belongs_to :post_class,
              class_name: 'Metasploit::Cache::Post::Class',
+             foreign_key: :post_class_id,
              inverse_of: :post_instance
 
   # Joins {#references} to this auxiliary Metasploit Module.
@@ -149,6 +157,11 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   # Validations
   #
 
+  validates :architecturable_architectures,
+            length: {
+                minimum: 1
+            }
+
   validates :contributions,
             length: {
                 minimum: 1
@@ -163,9 +176,6 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
             }
   
   validates :description,
-            presence: true
-
-  validates :disclosed_on,
             presence: true
 
   validates :licensable_licenses,

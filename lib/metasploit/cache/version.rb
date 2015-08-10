@@ -9,11 +9,11 @@ module Metasploit
       # The major version number.
       MAJOR = 0
       # The minor version number, scoped to the {MAJOR} version number.
-      MINOR = 70
+      MINOR = 71
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-      PATCH = 1
+      PATCH = 2
       # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'load-nop-instance-from-metasploit-framework'
+      PRERELEASE = 'missing-batch-descendant'
 
       #
       # Module Methods
