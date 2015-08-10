@@ -28,7 +28,9 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   has_many :licensable_licenses,
            as: :licensable,
            autosave: true,
-           class_name: 'Metasploit::Cache::Licensable::License'
+           class_name: 'Metasploit::Cache::Licensable::License',
+           dependent: :destroy,
+           inverse_of: :licensable
 
   # The class level metadata for this nop Metasploit Module.
   belongs_to :nop_class,
