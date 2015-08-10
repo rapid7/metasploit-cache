@@ -1,0 +1,71 @@
+# Module Type: <%= nop_class.ancestor.module_type %>
+# Reference Name: <%= nop_class.ancestor.reference_name %>
+class <%= metasploit_class_relative_name %> < <%= superclass %>
+  #
+  # CONSTANTS
+  #
+
+  Rank = <%= nop_class.rank.number %>
+
+  #
+  # Class Attributes
+  #
+
+  class << self
+    attr_accessor :framework
+  end
+
+  #
+  # Instance Methods
+  #
+
+  def arch
+    [
+<%- separate(architecturable_architectures, ',') do |architecturable_architecture, separator| -%>
+      '<%= architecturable_architecture.architecture.abbreviation %>'<%= separator %>
+<%- end -%>
+    ]
+  end
+
+  def author
+    [
+<%- separate(contributions, ',') do |contribution, separator| -%>
+  <%- email_address = contribution.email_address
+
+      if email_address
+        email = "'#{email_address.full}'"
+      else
+        email = "nil"
+      end
+  -%>
+      OpenStruct.new(name: '<%= contribution.author.name %>', email: <%= email %>)<%= separator %>
+<%- end -%>
+    ]
+  end
+
+  def description
+    '<%= description %>'
+  end
+
+  def license
+    [
+<%- separate(licensable_licenses, ',') do |licensable_license, separator| -%>
+      '<%= licensable_license.license.abbreviation %>'<%= separator %>
+<%- end -%>
+    ]
+  end
+
+  def name
+    '<%= name %>'
+  end
+
+  def platform
+    OpenStruct.new(
+      platforms: [
+<%- separate(platformable_platforms, ',') do |platformable_platform, separator| -%>
+        OpenStruct.new(realname: '<%= platformable_platform.platform.fully_qualified_name %>')<%= separator %>
+<%- end -%>
+      ]
+    )
+  end
+end

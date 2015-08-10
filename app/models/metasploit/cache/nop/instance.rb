@@ -1,6 +1,11 @@
 # Instance-level metadata for a nop Metasploit Module
 class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
   include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+  autoload :NopClass
 
   #
   #
