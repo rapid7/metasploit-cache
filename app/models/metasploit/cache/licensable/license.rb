@@ -1,6 +1,7 @@
 # Join model for associating Metasploit::Cache::*::Instance objects with {Metasploit::Cache::License} objects.
 # Implements a polymorphic association that the other models use for implementing `#licenses`.
 class Metasploit::Cache::Licensable::License < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
 
   #
   # Attributes
@@ -47,7 +48,8 @@ class Metasploit::Cache::Licensable::License < ActiveRecord::Base
                 scope: [
                     :licensable_type,
                     :licensable_id
-                ]
+                ],
+                unless: :batched?
             }
   validates :licensable,
             presence: true
