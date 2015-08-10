@@ -369,7 +369,7 @@ ActiveRecord::Schema.define(version: 20150716152805) do
 
   create_table "mc_post_instances", force: true do |t|
     t.text    "description",       null: false
-    t.date    "disclosed_on",      null: false
+    t.date    "disclosed_on"
     t.string  "name",              null: false
     t.boolean "privileged",        null: false
     t.integer "default_action_id"
