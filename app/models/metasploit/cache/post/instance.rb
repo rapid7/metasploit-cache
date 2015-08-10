@@ -1,6 +1,11 @@
 # Instance-level metadata for a post Metasploit Module.
 class Metasploit::Cache::Post::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
   include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+  autoload :PostClass
 
   #
   #
