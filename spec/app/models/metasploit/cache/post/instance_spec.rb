@@ -20,7 +20,7 @@ RSpec.describe Metasploit::Cache::Post::Instance do
     context 'columns' do
       it { is_expected.to have_db_column(:default_action_id).of_type(:integer).with_options(null: true) }
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
-      it { is_expected.to have_db_column(:disclosed_on).of_type(:date).with_options(null: false) }
+      it { is_expected.to have_db_column(:disclosed_on).of_type(:date).with_options(null: true) }
       it { is_expected.to have_db_column(:name).of_type(:string).with_options(null: false) }
       it { is_expected.to have_db_column(:post_class_id).of_type(:integer).with_options(null: false) }
       it { is_expected.to have_db_column(:privileged).of_type(:boolean).with_options(null: false) }
@@ -293,7 +293,6 @@ RSpec.describe Metasploit::Cache::Post::Instance do
 
   context 'validations' do
     it { is_expected.to validate_presence_of :description }
-    it { is_expected.to validate_presence_of :disclosed_on }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :post_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }

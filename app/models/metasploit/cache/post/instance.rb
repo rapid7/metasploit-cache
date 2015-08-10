@@ -178,9 +178,6 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
   validates :description,
             presence: true
 
-  validates :disclosed_on,
-            presence: true
-
   validates :licensable_licenses,
             length: {
               minimum: 1
