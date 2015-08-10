@@ -2,6 +2,8 @@
 class Metasploit::Cache::License < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
+  include Metasploit::Cache::Batch::Descendant
+
   autoload :Ephemeral
 
   #
@@ -45,12 +47,14 @@ class Metasploit::Cache::License < ActiveRecord::Base
 
   validates :summary,
             uniqueness: {
-                allow_nil: true
+                allow_nil: true,
+                unless: :batched?
             }
 
   validates :url,
             uniqueness: {
-                allow_nil: true
+                allow_nil: true,
+                unless: :batched?
             }
 
 
