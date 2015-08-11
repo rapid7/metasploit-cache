@@ -39,6 +39,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # The class-level metadata for this single payload Metasploit Module.
   belongs_to :payload_single_class,
              class_name: 'Metasploit::Cache::Payload::Single::Class',
+             foreign_key: :payload_single_class_id,
              inverse_of: :payload_single_instance
 
   # Joins {#platforms} to this single payload Metasploit Module.
