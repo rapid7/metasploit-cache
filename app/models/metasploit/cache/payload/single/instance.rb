@@ -1,5 +1,7 @@
 # Instance-level metadata for single payload Metasploit Modules
 class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Root
+
   #
   #
   # Associations
