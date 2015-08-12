@@ -1,5 +1,7 @@
 # Instance-level metadata for stage payload Metasploit Module
 class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Root
+
   #
   #
   # Associations
