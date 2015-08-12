@@ -1,6 +1,11 @@
 # Instance-level metadata for stager payload Metasploit Module
 class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
   include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+  autoload :PayloadStagerClass
 
   #
   #

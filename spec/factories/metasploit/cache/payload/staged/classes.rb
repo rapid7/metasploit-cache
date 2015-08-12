@@ -39,7 +39,12 @@ FactoryGirl.define do
     }
 
     payload_stager_instance {
-      build(:metasploit_cache_payload_stager_instance, architecturable_architecture_count: 0).tap { |block_payload_stager_instance|
+      build(
+          :metasploit_cache_payload_stager_instance,
+          :metasploit_cache_contributable_contributions,
+          :metasploit_cache_licensable_licensable_licenses,
+          :metasploit_cache_payload_handable_handler
+      ).tap { |block_payload_stager_instance|
         block_payload_stager_instance.architecturable_architectures = compatible_architectures.map { |compatible_architecture|
           Metasploit::Cache::Architecturable::Architecture.new(
               architecturable: block_payload_stager_instance,

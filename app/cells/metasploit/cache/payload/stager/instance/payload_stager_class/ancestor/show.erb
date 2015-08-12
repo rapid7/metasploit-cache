@@ -1,0 +1,75 @@
+# Module Type: <%= payload_stager_class.ancestor.module_type %>
+# Reference Name: <%= payload_stager_class.ancestor.reference_name %>
+module <%= metasploit_module_relative_name %>
+  #
+  # CONSTANTS
+  #
+
+  Rank = <%= payload_stager_class.rank.number %>
+
+  #
+  # Instance Methods
+  #
+
+  def arch
+    [
+<%- separate(architecturable_architectures, ',') do |architecturable_architecture, separator| -%>
+      '<%= architecturable_architecture.architecture.abbreviation %>'<%= separator %>
+<%- end -%>
+    ]
+  end
+
+  def author
+    [
+<%- separate(contributions, ',') do |contribution, separator| -%>
+  <%- email_address = contribution.email_address
+
+      if email_address
+        email = "'#{email_address.full}'"
+      else
+        email = "nil"
+      end
+  -%>
+      OpenStruct.new(name: '<%= contribution.author.name %>', email: <%= email %>)<%= separator %>
+<%- end -%>
+    ]
+  end
+
+  def description
+    '<%= description %>'
+  end
+
+  def handler_klass
+    # Not a class since this only emulates the interface used by metasploit-cache
+    OpenStruct.new(
+      general_handler_type: '<%= handler.general_handler_type %>',
+      handler_type: '<%= handler.handler_type %>'
+    )
+  end
+
+  def license
+    [
+<%- separate(licensable_licenses, ',') do |licensable_license, separator| -%>
+      '<%= licensable_license.license.abbreviation %>'<%= separator %>
+<%- end -%>
+    ]
+  end
+
+  def name
+    '<%= name %>'
+  end
+
+  def platform
+    OpenStruct.new(
+      platforms: [
+<%- separate(platformable_platforms, ',') do |platformable_platform, separator| -%>
+        OpenStruct.new(realname: '<%= platformable_platform.platform.fully_qualified_name %>')<%= separator %>
+<%- end -%>
+      ]
+    )
+  end
+
+  def privileged
+    <%= !!privileged %>
+  end
+end
