@@ -13,6 +13,7 @@ class Metasploit::Cache::Payload::Stage::Class < Metasploit::Cache::Payload::Dir
   has_one :payload_stage_instance,
           class_name: 'Metasploit::Cache::Payload::Stage::Instance',
           dependent: :destroy,
+          foreign_key: :payload_stage_class_id,
           inverse_of: :payload_stage_class
 
   # Reliability of Metasploit Module.
