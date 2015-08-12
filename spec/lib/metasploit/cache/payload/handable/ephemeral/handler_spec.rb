@@ -14,7 +14,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
 
     context 'with persisted record' do
       let(:destination) {
-        FactoryGirl.create(:metasploit_cache_payload_single_instance)
+        FactoryGirl.create(:full_metasploit_cache_payload_single_instance)
       }
 
       it 'maps Metasploit::Cache::Payload::Handler#general_handler_type to :general_handler_type' do
@@ -67,7 +67,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
 
     context 'with same attributes' do
       let(:destination) {
-        FactoryGirl.create(:metasploit_cache_payload_single_instance)
+        FactoryGirl.create(:full_metasploit_cache_payload_single_instance)
       }
 
       let(:source) {

@@ -1,6 +1,11 @@
 # Instance-level metadata for single payload Metasploit Modules
 class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
   include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+  autoload :PayloadSingleClass
 
   #
   #
