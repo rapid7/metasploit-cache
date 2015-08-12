@@ -801,6 +801,41 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
+                                'payloads/stages' do
+            let(:direct_class) {
+              module_ancestor.build_stage_payload_class
+            }
+
+            let(:module_ancestors) {
+              module_path.stage_payload_ancestors
+            }
+
+            let(:module_instance) {
+              direct_class.build_payload_stage_instance
+            }
+
+            let(:module_instance_load) {
+              described_class.new(
+                  ephemeral_class: Metasploit::Cache::Payload::Stage::Instance::Ephemeral,
+                  logger: logger,
+                  metasploit_framework: metasploit_framework,
+                  metasploit_module_class: direct_class_load.metasploit_class,
+                  module_instance: module_instance
+              )
+            }
+
+            let(:direct_class_load) {
+              Metasploit::Cache::Payload::Direct::Class::Load.new(
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module,
+                  payload_direct_class: direct_class,
+                  payload_superclass: Msf::Payload
+              )
+            }
+          end
+
+          it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
+                                module_path_real_pathname,
                                 'post',
                                 pending_reason_by_display_path: {
                                     'firefox/gather/cookies.rb' => 'Missing platforms',
