@@ -34,7 +34,8 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
            as: :licensable,
            autosave: true,
            class_name: 'Metasploit::Cache::Licensable::License',
-           dependent: :destroy
+           dependent: :destroy,
+           inverse_of: :licensable
 
   # The class-level metadata for this single payload Metasploit Module.
   belongs_to :payload_single_class,
