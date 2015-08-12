@@ -47,6 +47,7 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   # The class-level metadata for this stager payload Metasploit Module.
   belongs_to :payload_stager_class,
              class_name: 'Metasploit::Cache::Payload::Stager::Class',
+             foreign_key: :payload_stager_class_id,
              inverse_of: :payload_stager_instance
 
   # Joins {#platforms} to this stager payload Metasploit Module.
