@@ -608,6 +608,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
               module_ancestor.build_auxiliary_class
             }
 
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
+            }
+
             let(:module_ancestors) {
               module_path.auxiliary_ancestors
             }
@@ -632,6 +640,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                 'encoders' do
             let(:direct_class) {
               module_ancestor.build_encoder_class
+            }
+
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
             }
 
             let(:module_ancestors) {
@@ -686,6 +702,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
               module_ancestor.build_exploit_class
             }
 
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
+            }
+
             let(:module_ancestors) {
               module_path.exploit_ancestors
             }
@@ -711,6 +735,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                 'nops' do
             let(:direct_class) {
               module_ancestor.build_nop_class
+            }
+
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
             }
 
             let(:module_ancestors) {
@@ -745,6 +777,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                 } do
             let(:direct_class) {
               module_ancestor.build_post_class
+            }
+
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
             }
 
             let(:module_ancestors) {

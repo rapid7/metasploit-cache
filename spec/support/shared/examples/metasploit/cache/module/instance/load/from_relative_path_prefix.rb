@@ -14,14 +14,6 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
       relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
 
       context display_path do
-        let(:direct_class_load) {
-          Metasploit::Cache::Direct::Class::Load.new(
-              direct_class: direct_class,
-              logger: logger,
-              metasploit_module: module_ancestor_load.metasploit_module
-          )
-        }
-
         let(:metasploit_framework) {
           double(
               'Metasploit Framework',
