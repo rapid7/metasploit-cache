@@ -431,12 +431,14 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
           # @see spec/lib/metasploit/cache/module/instance/load_spec.rb for 'auxiliary' tests
           # @see spec/lib/metasploit/cache/module/instance/load_spec.rb for 'encoders' tests
           # @see spec/lib/metasploit/cache/module/instance/load_spec.rb for 'exploits' tests
-          # @see spec/lib/metasploit/cache/module/instance/load_spec.rb for 'nops' tests
+
 
           it_should_behave_like 'relative_path_prefix',
-                                direct_class_build: :build_post_class,
-                                module_path_association: :post_ancestors,
-                                relative_path_prefix: 'post'
+                                direct_class_build: :build_nop_class,
+                                module_path_association: :nop_ancestors,
+                                relative_path_prefix: 'nops'
+
+          # @see spec/lib/metasploit/cache/module/instance/load_spec.rb for 'post' tests
         end
       end
     end
