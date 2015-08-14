@@ -1,5 +1,12 @@
 # Instance-level metadata for a nop Metasploit Module
 class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
+  include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+  autoload :NopClass
+
   #
   #
   # Associations
@@ -26,11 +33,14 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
   has_many :licensable_licenses,
            as: :licensable,
            autosave: true,
-           class_name: 'Metasploit::Cache::Licensable::License'
+           class_name: 'Metasploit::Cache::Licensable::License',
+           dependent: :destroy,
+           inverse_of: :licensable
 
   # The class level metadata for this nop Metasploit Module.
   belongs_to :nop_class,
              class_name: 'Metasploit::Cache::Nop::Class',
+             foreign_key: :nop_class_id,
              inverse_of: :nop_instance
 
   # Joins {#platforms} to this encoder Metasploit Module.
