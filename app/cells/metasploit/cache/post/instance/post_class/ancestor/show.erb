@@ -1,0 +1,113 @@
+# Module Type: <%= post_class.ancestor.module_type %>
+# Reference Name: <%= post_class.ancestor.reference_name %>
+class <%= metasploit_class_relative_name %> < <%= superclass %>
+  #
+  # CONSTANTS
+  #
+
+  Rank = <%= post_class.rank.number %>
+
+  #
+  # Class Attributes
+  #
+
+  class << self
+    attr_accessor :framework
+  end
+
+  #
+  # Instance Methods
+  #
+
+  def actions
+    [
+<%- separate(actions, ',') do |action, separator| -%>
+      OpenStruct.new(name: '<%= action.name %>')<%= separator %>
+<%- end -%>
+    ].freeze
+  end
+
+  def arch
+    [
+<%- separate(architecturable_architectures, ',') do |architecturable_architecture, separator| -%>
+      '<%= architecturable_architecture.architecture.abbreviation %>'<%= separator %>
+<%- end -%>
+    ]
+  end
+
+  def author
+    [
+<%- separate(contributions, ',') do |contribution, separator| -%>
+  <%- email_address = contribution.email_address
+
+      if email_address
+        email = "'#{email_address.full}'"
+      else
+        email = "nil"
+      end
+  -%>
+      OpenStruct.new(name: '<%= contribution.author.name %>', email: <%= email %>)<%= separator %>
+<%- end -%>
+    ]
+  end
+
+  def default_action
+<%- if default_action -%>
+    '<%= default_action.name %>'
+<%- else -%>
+    nil
+<%- end -%>
+  end
+
+  def description
+    '<%= description %>'
+  end
+
+  def disclosure_date
+    Date.parse('<%= disclosed_on %>')
+  end
+
+  def license
+    [
+<%- separate(licensable_licenses, ',') do |licensable_license, separator| -%>
+      '<%= licensable_license.license.abbreviation %>'<%= separator %>
+<%- end -%>
+    ]
+  end
+
+  def name
+    '<%= name %>'
+  end
+
+  def platform
+    OpenStruct.new(
+      platforms: [
+<%- separate(platformable_platforms, ',') do |platformable_platform, separator| -%>
+        OpenStruct.new(realname: '<%= platformable_platform.platform.fully_qualified_name %>')<%= separator %>
+<%- end -%>
+      ]
+    )
+  end
+
+  def privileged
+    <%= !!privileged %>
+  end
+
+  def references
+    [
+<%- separate(referencable_references, ',') do |referencable_reference, separator| -%>
+  <%- reference = referencable_reference.reference
+      authority = reference.authority -%>
+      OpenStruct.new(
+  <%- if authority -%>
+        ctx_id: '<%= authority.abbreviation %>',
+        ctx_val: '<%= reference.designation %>'
+  <%- else -%>
+        ctx_id: 'URL',
+        ctx_val: '<%= reference.url %>'
+  <%- end -%>
+      )<%= separator %>
+<%- end -%>
+    ]
+  end
+end

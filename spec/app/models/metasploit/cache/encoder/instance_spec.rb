@@ -251,6 +251,10 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
     it { is_expected.to validate_presence_of :name }
 
     it_should_behave_like 'validates at least one in association',
+                          :architecturable_architectures,
+                          factory: :metasploit_cache_encoder_instance
+
+    it_should_behave_like 'validates at least one in association',
                           :contributions,
                           factory: :metasploit_cache_encoder_instance
 

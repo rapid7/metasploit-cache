@@ -232,7 +232,7 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
         #
 
         let!(:destination) {
-          FactoryGirl.create(:metasploit_cache_post_instance)
+          FactoryGirl.create(:full_metasploit_cache_post_instance)
         }
 
         context 'with empty :source_attribute_set' do
@@ -262,7 +262,7 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
             expect {
               mark_removed_for_destruction
             }.not_to change {
-                       destination.actions.each.count(&:marked_for_destruction)
+                       destination.actions.each.count(&:marked_for_destruction?)
                      }
           end
         end
