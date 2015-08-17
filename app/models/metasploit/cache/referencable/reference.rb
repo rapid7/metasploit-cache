@@ -1,6 +1,7 @@
 # Join model linking Metasploit cache objects such as Exploit and Post instances to external references
 # such as those from the CVE database (https://cve.mitre.org)
 class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
 
   #
   # Attributes
@@ -43,10 +44,11 @@ class Metasploit::Cache::Referencable::Reference < ActiveRecord::Base
             presence: true
   validates :reference_id,
             uniqueness: {
-              scope: [
-                       :referencable_type,
-                       :referencable_id
-                     ]
+                scope: [
+                    :referencable_type,
+                    :referencable_id
+                ],
+                unless: :batched?
             }
   validates :referencable,
             presence: true

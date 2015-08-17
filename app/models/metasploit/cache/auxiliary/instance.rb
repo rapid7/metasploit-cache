@@ -116,7 +116,12 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
 
   validates :auxiliary_class,
             presence: true
-  
+
+  validates :auxiliary_class_id,
+            uniqueness: {
+                unless: :batched?
+            }
+
   validates :default_action,
             inclusion: {
                 allow_nil: true,

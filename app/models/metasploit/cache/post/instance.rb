@@ -195,7 +195,9 @@ class Metasploit::Cache::Post::Instance < ActiveRecord::Base
             presence: true
 
   validates :post_class_id,
-            uniqueness: true
+            uniqueness: {
+                unless: :batched?
+            }
 
   validates :privileged,
             inclusion: {

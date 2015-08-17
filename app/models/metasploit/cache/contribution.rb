@@ -1,5 +1,7 @@
 # A contribution an `#author` made using a given `#email_address` to a polymorphic `#contributable`.
 class Metasploit::Cache::Contribution < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
+
   #
   # Associations
   #
@@ -44,7 +46,8 @@ class Metasploit::Cache::Contribution < ActiveRecord::Base
                 scope: [
                     :contributable_type,
                     :contributable_id
-                ]
+                ],
+                unless: :batched?
             }
 
   validates :contributable,
@@ -56,7 +59,8 @@ class Metasploit::Cache::Contribution < ActiveRecord::Base
                 scope: [
                     :contributable_type,
                     :contributable_id
-                ]
+                ],
+                unless: :batched?
             }
 
   #

@@ -4,6 +4,8 @@
 # {Metasploit::Cache::Payload::Stager::Instance stager payload}, or {Metasploit::Cache::Post::Instance post}) Metasploit
 # Modules or {Metasploit::Cache::Exploit::Target exploit Metasploit Module targets}.
 class Metasploit::Cache::Architecturable::Architecture < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Descendant
+
   #
   # Associations
   #
@@ -40,7 +42,8 @@ class Metasploit::Cache::Architecturable::Architecture < ActiveRecord::Base
                 scope: [
                     :architecturable_type,
                     :architecturable_id
-                ]
+                ],
+                unless: :batched?
             }
 
   #

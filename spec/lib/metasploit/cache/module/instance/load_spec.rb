@@ -608,6 +608,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
               module_ancestor.build_auxiliary_class
             }
 
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
+            }
+
             let(:module_ancestors) {
               module_path.auxiliary_ancestors
             }
@@ -632,6 +640,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                 'encoders' do
             let(:direct_class) {
               module_ancestor.build_encoder_class
+            }
+
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
             }
 
             let(:module_ancestors) {
@@ -686,6 +702,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
               module_ancestor.build_exploit_class
             }
 
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
+            }
+
             let(:module_ancestors) {
               module_path.exploit_ancestors
             }
@@ -707,6 +731,75 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
+                                'nops' do
+            let(:direct_class) {
+              module_ancestor.build_nop_class
+            }
+
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
+            }
+
+            let(:module_ancestors) {
+              module_path.nop_ancestors
+            }
+
+            let(:module_instance) {
+              direct_class.build_nop_instance
+            }
+
+            let(:module_instance_load) {
+              described_class.new(
+                  ephemeral_class: Metasploit::Cache::Nop::Instance::Ephemeral,
+                  logger: logger,
+                  metasploit_framework: metasploit_framework,
+                  metasploit_module_class: direct_class_load.metasploit_class,
+                  module_instance: module_instance
+              )
+            }
+          end
+
+          it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
+                                module_path_real_pathname,
+                                'payloads/singles' do
+            let(:direct_class) {
+              module_ancestor.build_single_payload_class
+            }
+
+            let(:module_ancestors) {
+              module_path.single_payload_ancestors
+            }
+
+            let(:module_instance) {
+              direct_class.build_payload_single_instance
+            }
+
+            let(:module_instance_load) {
+              described_class.new(
+                  ephemeral_class: Metasploit::Cache::Payload::Single::Instance::Ephemeral,
+                  logger: logger,
+                  metasploit_framework: metasploit_framework,
+                  metasploit_module_class: direct_class_load.metasploit_class,
+                  module_instance: module_instance
+              )
+            }
+
+            let(:direct_class_load) {
+              Metasploit::Cache::Payload::Direct::Class::Load.new(
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module,
+                  payload_direct_class: direct_class,
+                  payload_superclass: Msf::Payload
+              )
+            }
+          end
+
+          it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
+                                module_path_real_pathname,
                                 'post',
                                 pending_reason_by_display_path: {
                                     'firefox/gather/cookies.rb' => 'Missing platforms',
@@ -718,6 +811,14 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                 } do
             let(:direct_class) {
               module_ancestor.build_post_class
+            }
+
+            let(:direct_class_load) {
+              Metasploit::Cache::Direct::Class::Load.new(
+                  direct_class: direct_class,
+                  logger: logger,
+                  metasploit_module: module_ancestor_load.metasploit_module
+              )
             }
 
             let(:module_ancestors) {

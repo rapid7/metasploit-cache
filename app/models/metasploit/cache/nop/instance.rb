@@ -127,7 +127,9 @@ class Metasploit::Cache::Nop::Instance < ActiveRecord::Base
             presence: true
 
   validates :nop_class_id,
-            uniqueness: true
+            uniqueness: {
+                unless: :batched?
+            }
   
   validates :platformable_platforms,
             length: {

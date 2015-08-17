@@ -13,6 +13,7 @@ class Metasploit::Cache::Payload::Single::Class < Metasploit::Cache::Payload::Di
   has_one :payload_single_instance,
           class_name: 'Metasploit::Cache::Payload::Single::Instance',
           dependent: :destroy,
+          foreign_key: :payload_single_class_id,
           inverse_of: :payload_single_class
 
   # Reliability of Metasploit Module.

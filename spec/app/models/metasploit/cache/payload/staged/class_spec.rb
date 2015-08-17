@@ -54,7 +54,9 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
       let(:payload_stage_instance) {
         FactoryGirl.build(
             :metasploit_cache_payload_stage_instance,
-            architecturable_architecture_count: 0
+            :metasploit_cache_contributable_contributions,
+            :metasploit_cache_licensable_licensable_licenses,
+            :metasploit_cache_platformable_platformable_platforms
         ).tap { |payload_stage_instance|
           payload_stage_instance.architecturable_architectures << Metasploit::Cache::Architecturable::Architecture.new(
               architecturable: payload_stage_instance,
@@ -175,7 +177,9 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
       let(:payload_stage_instance) {
         FactoryGirl.build(
             :metasploit_cache_payload_stage_instance,
-            platformable_platform_count: 0
+            :metasploit_cache_architecturable_architecturable_architectures,
+            :metasploit_cache_contributable_contributions,
+            :metasploit_cache_licensable_licensable_licenses
         ).tap { |payload_stage_instance|
           payload_stage_instance.platformable_platforms << Metasploit::Cache::Platformable::Platform.new(
               platformable: payload_stage_instance,
