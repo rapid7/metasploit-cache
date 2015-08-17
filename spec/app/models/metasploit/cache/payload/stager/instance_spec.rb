@@ -50,7 +50,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
 
     it_should_behave_like 'validates at least one in association',
                           :architecturable_architectures,
-                          factory: :metasploit_cache_payload_stage_instance
+                          factory: :metasploit_cache_payload_stager_instance
 
     it_should_behave_like 'validates at least one in association',
                           :contributions,
