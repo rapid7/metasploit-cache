@@ -89,6 +89,11 @@ class Metasploit::Cache::Encoder::Instance < ActiveRecord::Base
   #
   #   @return [String]
 
+  # @!attribute encoder_class_id
+  #   The foreign key for {#encoder_class}.
+  #
+  #   @return [Integer]
+
   # @!attribute name
   #   The human-readable name of this encoder Metasploit Module.  This can be thought of as the title or summary of
   #   the Metasploit Module.
