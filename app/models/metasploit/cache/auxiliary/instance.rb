@@ -85,6 +85,11 @@ class Metasploit::Cache::Auxiliary::Instance < ActiveRecord::Base
   # Attributes
   #
 
+  # @!attribute auxiliary_class_id
+  #   The foreign key for {#auxiliary_class}.
+  #
+  #   @return [Integer]
+
   # @!attribute description
   #   The long-form human-readable description of this auxiliary Metasploit Module.
   #
