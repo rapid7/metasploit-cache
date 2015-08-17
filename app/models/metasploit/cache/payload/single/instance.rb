@@ -1,5 +1,12 @@
 # Instance-level metadata for single payload Metasploit Modules
 class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
+  include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+  autoload :PayloadSingleClass
+
   #
   #
   # Associations
@@ -31,11 +38,14 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   has_many :licensable_licenses,
            as: :licensable,
            autosave: true,
-           class_name: 'Metasploit::Cache::Licensable::License'
+           class_name: 'Metasploit::Cache::Licensable::License',
+           dependent: :destroy,
+           inverse_of: :licensable
 
   # The class-level metadata for this single payload Metasploit Module.
   belongs_to :payload_single_class,
              class_name: 'Metasploit::Cache::Payload::Single::Class',
+             foreign_key: :payload_single_class_id,
              inverse_of: :payload_single_instance
 
   # Joins {#platforms} to this single payload Metasploit Module.

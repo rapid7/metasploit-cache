@@ -1,11 +1,11 @@
-# Module Type: <%= encoder_class.ancestor.module_type %>
-# Reference Name: <%= encoder_class.ancestor.reference_name %>
-class <%= metasploit_class_relative_name %> < <%= superclass %>
+# Module Type: <%= payload_single_class.ancestor.module_type %>
+# Reference Name: <%= payload_single_class.ancestor.reference_name %>
+module <%= metasploit_module_relative_name %>
   #
   # CONSTANTS
   #
 
-  Rank = <%= encoder_class.rank.number %>
+  Rank = <%= payload_single_class.rank.number %>
 
   #
   # Instance Methods
@@ -39,6 +39,14 @@ class <%= metasploit_class_relative_name %> < <%= superclass %>
     '<%= description %>'
   end
 
+  def handler_klass
+    # Not a class since this only emulates the interface used by metasploit-cache
+    OpenStruct.new(
+      general_handler_type: '<%= handler.general_handler_type %>',
+      handler_type: '<%= handler.handler_type %>'
+    )
+  end
+
   def license
     [
 <%- separate(licensable_licenses, ',') do |licensable_license, separator| -%>
@@ -59,5 +67,9 @@ class <%= metasploit_class_relative_name %> < <%= superclass %>
 <%- end -%>
       ]
     )
+  end
+
+  def privileged
+    <%= !!privileged %>
   end
 end

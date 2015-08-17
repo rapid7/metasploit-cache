@@ -3,6 +3,7 @@
 class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
+  autoload :Ephemeral
   autoload :GeneralType
 
   #
