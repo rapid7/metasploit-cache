@@ -13,6 +13,7 @@ class Metasploit::Cache::Payload::Stager::Class < Metasploit::Cache::Payload::Di
   has_one :payload_stager_instance,
           class_name: 'Metasploit::Cache::Payload::Stager::Instance',
           dependent: :destroy,
+          foreign_key: :payload_stager_class_id,
           inverse_of: :payload_stager_class
 
   # Reliability of Metasploit Module.

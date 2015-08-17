@@ -3,7 +3,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Class, type: :model do
 
   context 'associations' do
     it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Payload::Stager::Ancestor') }
-    it { is_expected.to have_one(:payload_stager_instance).class_name('Metasploit::Cache::Payload::Stager::Instance').dependent(:destroy).inverse_of(:payload_stager_class) }
+    it { is_expected.to have_one(:payload_stager_instance).class_name('Metasploit::Cache::Payload::Stager::Instance').dependent(:destroy).inverse_of(:payload_stager_class).with_foreign_key(:payload_stager_class_id) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
