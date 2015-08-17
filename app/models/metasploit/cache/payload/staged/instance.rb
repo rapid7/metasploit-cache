@@ -4,6 +4,8 @@
 # The stager and stage payload must be compatible.  A stager and stage are compatible if they share some subset of
 # architectures and platforms.
 class Metasploit::Cache::Payload::Staged::Instance < ActiveRecord::Base
+  include Metasploit::Cache::Batch::Root
+
   #
   # Associations
   #
