@@ -1,5 +1,12 @@
 # Instance-level metadata for stager payload Metasploit Module
 class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
+  include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
+  autoload :PayloadStagerClass
+
   #
   #
   # Associations
@@ -31,7 +38,9 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   has_many :licensable_licenses,
            as: :licensable,
            autosave: true,
-           class_name: 'Metasploit::Cache::Licensable::License'
+           class_name: 'Metasploit::Cache::Licensable::License',
+           dependent: :destroy,
+           inverse_of: :licensable
 
   # Staged payload Metasploit Module formed by combining this stager payload Metasploit Module with a compatible stage
   # payload Metasploit Module.
@@ -43,6 +52,7 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   # The class-level metadata for this stager payload Metasploit Module.
   belongs_to :payload_stager_class,
              class_name: 'Metasploit::Cache::Payload::Stager::Class',
+             foreign_key: :payload_stager_class_id,
              inverse_of: :payload_stager_instance
 
   # Joins {#platforms} to this stager payload Metasploit Module.
