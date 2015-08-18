@@ -801,22 +801,22 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
-                                'payloads/stages' do
+                                'payloads/stagers' do
             let(:direct_class) {
-              module_ancestor.build_stage_payload_class
+              module_ancestor.build_stager_payload_class
             }
 
             let(:module_ancestors) {
-              module_path.stage_payload_ancestors
+              module_path.stager_payload_ancestors
             }
 
             let(:module_instance) {
-              direct_class.build_payload_stage_instance
+              direct_class.build_payload_stager_instance
             }
 
             let(:module_instance_load) {
               described_class.new(
-                  ephemeral_class: Metasploit::Cache::Payload::Stage::Instance::Ephemeral,
+                  ephemeral_class: Metasploit::Cache::Payload::Stager::Instance::Ephemeral,
                   logger: logger,
                   metasploit_framework: metasploit_framework,
                   metasploit_module_class: direct_class_load.metasploit_class,
@@ -833,7 +833,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
               )
             }
           end
-
+          
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
                                 'post',
