@@ -19,52 +19,46 @@ FactoryGirl.define do
     end
 
     payload_stage_instance {
-      build(
+      create(
           :metasploit_cache_payload_stage_instance,
           :metasploit_cache_contributable_contributions,
-          :metasploit_cache_licensable_licensable_licenses
-      ).tap { |block_payload_stage_instance|
-        block_payload_stage_instance.architecturable_architectures = compatible_architectures.map { |compatible_architecture|
-          Metasploit::Cache::Architecturable::Architecture.new(
-              architecturable: block_payload_stage_instance,
-              architecture: compatible_architecture
-          )
-        }
-
-        block_payload_stage_instance.platformable_platforms = compatible_platforms.map { |compatible_platform|
-          Metasploit::Cache::Platformable::Platform.new(
-              platformable: block_payload_stage_instance,
-              platform: compatible_platform
-          )
-        }
-
-        block_payload_stage_instance.save!
-      }
+          :metasploit_cache_licensable_licensable_licenses,
+          # Must be after all association building traits so assocations are populated for writing contents
+          :metasploit_cache_payload_stage_instance_payload_stage_class_ancestor_contents,
+          # Hash arguments are overrides and available to all traits
+          architecturable_architectures: compatible_architectures.map { |compatible_architecture|
+            Metasploit::Cache::Architecturable::Architecture.new(
+                architecture: compatible_architecture
+            )
+          },
+          platformable_platforms: compatible_platforms.map { |compatible_platform|
+            Metasploit::Cache::Platformable::Platform.new(
+                platform: compatible_platform
+            )
+          }
+      )
     }
 
     payload_stager_instance {
-      build(
+      create(
           :metasploit_cache_payload_stager_instance,
           :metasploit_cache_contributable_contributions,
           :metasploit_cache_licensable_licensable_licenses,
-          :metasploit_cache_payload_handable_handler
-      ).tap { |block_payload_stager_instance|
-        block_payload_stager_instance.architecturable_architectures = compatible_architectures.map { |compatible_architecture|
-          Metasploit::Cache::Architecturable::Architecture.new(
-              architecturable: block_payload_stager_instance,
-              architecture: compatible_architecture
-          )
-        }
-
-        block_payload_stager_instance.platformable_platforms = compatible_platforms.map { |compatible_platform|
-          Metasploit::Cache::Platformable::Platform.new(
-              platformable: block_payload_stager_instance,
-              platform: compatible_platform
-          )
-        }
-
-        block_payload_stager_instance.save!
-      }
+          :metasploit_cache_payload_handable_handler,
+          # Must be after all association building traits so assocations are populated for writing contents
+          :metasploit_cache_payload_stager_instance_payload_stager_class_ancestor_contents,
+          # Hash arguments are overrides and available to all traits
+          architecturable_architectures: compatible_architectures.map { |compatible_architecture|
+            Metasploit::Cache::Architecturable::Architecture.new(
+                architecture: compatible_architecture
+            )
+          },
+          platformable_platforms: compatible_platforms.map { |compatible_platform|
+            Metasploit::Cache::Platformable::Platform.new(
+                platform: compatible_platform
+            )
+          }
+      )
     }
   end
 end
