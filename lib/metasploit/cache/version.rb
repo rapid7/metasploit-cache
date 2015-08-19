@@ -13,7 +13,7 @@ module Metasploit
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 2
       # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'payload-staged-instance-ephemeral-and-load'
+      PRERELEASE = 'payload-staged-class-ephemeral-and-load'
 
       #
       # Module Methods
