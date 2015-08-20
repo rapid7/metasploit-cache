@@ -8,6 +8,7 @@ module Metasploit::Cache::Payload
   autoload :Direct
   autoload :Handable
   autoload :Handler
+  autoload :HandlerCell
   autoload :Single
   autoload :Stage
   autoload :Staged

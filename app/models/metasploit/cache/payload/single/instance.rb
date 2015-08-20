@@ -32,7 +32,8 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # The connection handler
   belongs_to :handler,
              class_name: 'Metasploit::Cache::Payload::Handler',
-             inverse_of: :payload_single_instances
+             inverse_of: :payload_single_instances,
+             validate: true
 
   # Joins {#licenses} to this auxiliary Metasploit Module.
   has_many :licensable_licenses,

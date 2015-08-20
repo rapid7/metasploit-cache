@@ -109,87 +109,206 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
   end
 
   context 'each_parent_constant' do
-    context 'with Msf::Modules defined' do
+    context 'with Metasploit::Cache::Payload::Handler::Namespace defined' do
       before(:each) do
-        stub_const('Msf::Modules', Module.new)
+        stub_const('Metasploit::Cache::Payload::Handler::Namespace', Module.new)
       end
 
-      context 'with Msf::Payloads defined' do
+      context 'with Msf::Modules defined' do
         before(:each) do
-          stub_const('Msf::Payloads', Module.new)
+          stub_const('Msf::Modules', Module.new)
         end
 
-        it 'yields both' do
-          expect { |b|
-            described_class.each_parent_constant(&b)
-          }.to yield_successive_args(Msf::Modules, Msf::Payloads)
+        context 'with Msf::Payloads defined' do
+          before(:each) do
+            stub_const('Msf::Payloads', Module.new)
+          end
+
+          it 'yields all three' do
+            expect { |b|
+              described_class.each_parent_constant(&b)
+            }.to yield_successive_args(Metasploit::Cache::Payload::Handler::Namespace, Msf::Modules, Msf::Payloads)
+          end
+        end
+
+        context 'without Msf::Payloads defined' do
+          before(:each) do
+            hide_const('Msf::Payloads')
+          end
+
+          it 'yields only Metasploit::Cache::Payload::Handler::Namesapce and Msf::Modules' do
+            expect { |b|
+              described_class.each_parent_constant(&b)
+            }.to yield_successive_args(Metasploit::Cache::Payload::Handler::Namespace, Msf::Modules)
+          end
+
+          it 'does not load Msf::Payloads' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Msf::Payloads }
+          end
         end
       end
 
-      context 'without Msf::Payloads defined' do
+      context 'without Msf::Modules defined' do
         before(:each) do
-          hide_const('Msf::Payloads')
+          hide_const('Msf::Modules')
         end
 
-        it 'yields only Msf::Modules' do
-          expect { |b|
-            described_class.each_parent_constant(&b)
-          }.to yield_successive_args(Msf::Modules)
+        context 'with Msf::Payloads defined' do
+          before(:each) do
+            stub_const('Msf::Payloads', Module.new)
+          end
+
+          it 'yields only Metasploit::Cache::Payload::Handler::Namesapce and Msf::Payloads' do
+            expect { |b|
+              described_class.each_parent_constant(&b)
+            }.to yield_successive_args(Metasploit::Cache::Payload::Handler::Namespace, Msf::Payloads)
+          end
+
+          it 'does not load Msf::Modules' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Msf::Modules }
+          end
         end
 
-        it 'does not load Msf::Payloads' do
-          expect {
-            described_class.to_enum(:each_parent_constant).to_a
-          }.not_to change { defined? Msf::Payloads }
+        context 'without Msf::Payalods defined' do
+          before(:each) do
+            hide_const('Msf::Payloads')
+          end
+
+          it 'yields only Metasploit::Cache::Payload::Handler::Namesapce' do
+            expect { |b|
+              described_class.each_parent_constant(&b)
+            }.to yield_successive_args(Metasploit::Cache::Payload::Handler::Namespace)
+          end
+
+          it 'does not load Msf::Modules' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Msf::Modules }
+          end
+
+          it 'does not load Msf::Payloads' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Msf::Payloads }
+          end
         end
       end
     end
 
-    context 'without Msf::Modules defined' do
+    context 'without Metasploit::Cache::Payload::Handler::Namespace' do
       before(:each) do
-        hide_const('Msf::Modules')
+        hide_const('Metasploit::Cache::Payload::Handler::Namespace')
       end
 
-      context 'with Msf::Payloads defined' do
+      context 'with Msf::Modules defined' do
         before(:each) do
-          stub_const('Msf::Payloads', Module.new)
+          stub_const('Msf::Modules', Module.new)
         end
 
-        it 'yields only Msf::Payloads' do
-          expect { |b|
-            described_class.each_parent_constant(&b)
-          }.to yield_successive_args(Msf::Payloads)
+        context 'with Msf::Payloads defined' do
+          before(:each) do
+            stub_const('Msf::Payloads', Module.new)
+          end
+
+          it 'yields only Msf::Modules and Msf::Payloads' do
+            expect { |b|
+              described_class.each_parent_constant(&b)
+            }.to yield_successive_args(Msf::Modules, Msf::Payloads)
+          end
+
+          it 'does not load Metasploit::Cache::Payload::Handler::Namespace' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Metasploit::Cache::Payload::Handler::Namespace }
+          end
         end
 
-        it 'does not load Msf::Modules' do
-          expect {
-            described_class.to_enum(:each_parent_constant).to_a
-          }.not_to change { defined? Msf::Modules }
+        context 'without Msf::Payloads defined' do
+          before(:each) do
+            hide_const('Msf::Payloads')
+          end
+
+          it 'yields only Msf::Modules' do
+            expect { |b|
+              described_class.each_parent_constant(&b)
+            }.to yield_successive_args(Msf::Modules)
+          end
+
+          it 'does not load Metasploit::Cache::Payload::Handler::Namespace' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Metasploit::Cache::Payload::Handler::Namespace }
+          end
+
+          it 'does not load Msf::Payloads' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Msf::Payloads }
+          end
         end
       end
 
-
-      context 'without Msf::Payalods defined' do
+      context 'without Msf::Modules defined' do
         before(:each) do
-          hide_const('Msf::Payloads')
+          hide_const('Msf::Modules')
         end
 
-        it 'does not yield' do
-          expect { |b|
-            described_class.each_parent_constant(&b)
-          }.not_to yield_control
+        context 'with Msf::Payloads defined' do
+          before(:each) do
+            stub_const('Msf::Payloads', Module.new)
+          end
+
+          it 'yields only Msf::Payloads' do
+            expect { |b|
+              described_class.each_parent_constant(&b)
+            }.to yield_successive_args(Msf::Payloads)
+          end
+
+          it 'does not load Metasploit::Cache::Payload::Handler::Namespace' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Metasploit::Cache::Payload::Handler::Namespace }
+          end
+
+          it 'does not load Msf::Modules' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Msf::Modules }
+          end
         end
 
-        it 'does not load Msf::Modules' do
-          expect {
-            described_class.to_enum(:each_parent_constant).to_a
-          }.not_to change { defined? Msf::Modules }
-        end
+        context 'without Msf::Payalods defined' do
+          before(:each) do
+            hide_const('Msf::Payloads')
+          end
 
-        it 'does not load Msf::Payloads' do
-          expect {
-            described_class.to_enum(:each_parent_constant).to_a
-          }.not_to change { defined? Msf::Payloads }
+          it 'does not yield' do
+            expect { |b|
+              described_class.each_parent_constant(&b)
+            }.not_to yield_control
+          end
+
+          it 'does not load Metasploit::Cache::Payload::Handler::Namespace' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Metasploit::Cache::Payload::Handler::Namespace }
+          end
+
+          it 'does not load Msf::Modules' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Msf::Modules }
+          end
+
+          it 'does not load Msf::Payloads' do
+            expect {
+              described_class.to_enum(:each_parent_constant).to_a
+            }.not_to change { defined? Msf::Payloads }
+          end
         end
       end
     end

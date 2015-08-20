@@ -9,6 +9,17 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral do
       # lets
       #
 
+      let(:existing_payload_stager_instance) {
+        FactoryGirl.create(
+            :full_metasploit_cache_payload_stager_instance,
+            handler_load_pathname: handler_load_pathname
+        )
+      }
+
+      let(:handler_load_pathname) {
+        Metasploit::Model::Spec.temporary_pathname.join('lib')
+      }
+
       let(:payload_stager_instance_ephemeral) {
         described_class.new(
             metasploit_module_instance: metasploit_module_instance
@@ -30,18 +41,27 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral do
       }
 
       #
-      # let!s
-      #
-
-      let!(:existing_payload_stager_instance) {
-        FactoryGirl.create(:full_metasploit_cache_payload_stager_instance)
-      }
-
-      #
       # Callbacks
       #
 
+      around(:each) do |example|
+        load_path_before = $LOAD_PATH.dup
+
+        begin
+          example.run
+        ensure
+          $LOAD_PATH.replace(load_path_before)
+        end
+      end
+
       before(:each) do
+        $LOAD_PATH.unshift handler_load_pathname.to_path
+
+        handler_load_pathname.mkpath
+
+        # create now that handler_load_pathname is setup
+        existing_payload_stager_instance
+
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
@@ -88,8 +108,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral do
           disclosure_date: Date.today,
           handler_klass: double(
               'payload Metasploit Module handler',
-              general_handler_type: FactoryGirl.generate(:metasploit_cache_payload_handler_general_handler_type),
-              handler_type: FactoryGirl.generate(:metasploit_cache_payload_handler_handler_type)
+              FactoryGirl.attributes_for(:metasploit_cache_payload_handler)
           ),
           name: FactoryGirl.generate(:metasploit_cache_payload_stager_instance_name),
           license: FactoryGirl.generate(:metasploit_cache_license_abbreviation),
@@ -192,6 +211,17 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral do
         []
       }
 
+      let(:existing_payload_stager_instance) {
+        FactoryGirl.create(
+            :full_metasploit_cache_payload_stager_instance,
+            handler_load_pathname: handler_load_pathname
+        )
+      }
+
+      let(:handler_load_pathname) {
+        Metasploit::Model::Spec.temporary_pathname.join('lib')
+      }
+
       let(:metasploit_class) {
         double(
             'payload stager Metasploit Module class',
@@ -201,18 +231,27 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral do
       }
 
       #
-      # let!s
-      #
-
-      let!(:existing_payload_stager_instance) {
-        FactoryGirl.create(:full_metasploit_cache_payload_stager_instance)
-      }
-
-      #
       # Callbacks
       #
 
+      around(:each) do |example|
+        load_path_before = $LOAD_PATH.dup
+
+        begin
+          example.run
+        ensure
+          $LOAD_PATH.replace(load_path_before)
+        end
+      end
+
       before(:each) do
+        $LOAD_PATH.unshift handler_load_pathname.to_path
+
+        handler_load_pathname.mkpath
+
+        # create now that handler_load_pathname is setup
+        existing_payload_stager_instance
+
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 

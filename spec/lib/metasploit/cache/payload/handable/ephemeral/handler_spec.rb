@@ -13,9 +13,40 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
     end
 
     context 'with persisted record' do
+      #
+      # lets
+      #
+
       let(:destination) {
-        FactoryGirl.create(:full_metasploit_cache_payload_single_instance)
+        FactoryGirl.create(
+            :full_metasploit_cache_payload_single_instance,
+            handler_load_pathname: handler_load_pathname
+        )
       }
+
+      let(:handler_load_pathname) {
+        Metasploit::Model::Spec.temporary_pathname.join('lib')
+      }
+
+      #
+      # Callbacks
+      #
+
+      around(:each) do |example|
+        load_path_before = $LOAD_PATH.dup
+
+        begin
+          example.run
+        ensure
+          $LOAD_PATH.replace(load_path_before)
+        end
+      end
+
+      before(:each) do
+        handler_load_pathname.mkpath
+
+        $LOAD_PATH.unshift handler_load_pathname.to_path
+      end
 
       it 'maps Metasploit::Cache::Payload::Handler#general_handler_type to :general_handler_type' do
         expect(destination_attributes[:general_handler_type]).to eq(destination.handler.general_handler_type)
@@ -37,8 +68,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
           'handled payload Metasploit Module instance',
           handler_klass: double(
               'payload Metasploit Module Handle Class',
-              general_handler_type: FactoryGirl.generate(:metasploit_cache_payload_handler_general_handler_type),
-              handler_type: FactoryGirl.generate(:metasploit_cache_payload_handler_handler_type)
+              FactoryGirl.attributes_for(:metasploit_cache_payload_handler)
           )
       )
     }
@@ -66,17 +96,51 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
     }
 
     context 'with same attributes' do
+      #
+      # lets
+      #
+
       let(:destination) {
-        FactoryGirl.create(:full_metasploit_cache_payload_single_instance)
+        FactoryGirl.create(
+            :full_metasploit_cache_payload_single_instance,
+            handler_load_pathname: handler_load_pathname
+        )
       }
 
+      let(:handler_load_pathname) {
+        Metasploit::Model::Spec.temporary_pathname.join('lib')
+      }
+
+      #
+      # Callbacks
+      #
+
+      around(:each) do |example|
+        load_path_before = $LOAD_PATH.dup
+
+        begin
+          example.run
+        ensure
+          $LOAD_PATH.replace(load_path_before)
+        end
+      end
+
+      before(:each) do
+        handler_load_pathname.mkpath
+
+        $LOAD_PATH.unshift handler_load_pathname.to_path
+      end
+
       let(:source) {
+        handler = destination.handler
+
         double(
             'single payload Metasploit Module instance',
             handler_klass: double(
                 'Metasploit Handler Class',
-                general_handler_type: destination.handler.general_handler_type,
-                handler_type: destination.handler.handler_type
+                general_handler_type: handler.general_handler_type,
+                handler_type: handler.handler_type,
+                name: handler.name
             )
         )
       }
@@ -101,13 +165,18 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
         FactoryGirl.generate :metasploit_cache_payload_handler_handler_type
       }
 
+      let(:name) {
+        FactoryGirl.generate :metasploit_cache_payload_handler_name
+      }
+
       let(:source) {
         double(
             'single payload Metasploit Module instance',
             handler_klass: double(
-                'Metasploit Handler Class',
+                'Metasploit Handler Module',
                 general_handler_type: general_handler_type,
-                handler_type: handler_type
+                handler_type: handler_type,
+                name: name
             )
         )
       }
@@ -117,7 +186,8 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
           FactoryGirl.create(
               :metasploit_cache_payload_handler,
               general_handler_type: general_handler_type,
-              handler_type: handler_type
+              handler_type: handler_type,
+              name: name
           )
         }
 

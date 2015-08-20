@@ -16,6 +16,11 @@ FactoryGirl.define do
           generate :metasploit_cache_platform
         }
       }
+
+      transient do
+        # for passing to :metasploit_cache_payload_handler_module trait
+        payload_stager_instance_handler_load_pathname nil
+      end
     end
 
     payload_stage_instance {
@@ -40,6 +45,13 @@ FactoryGirl.define do
     }
 
     payload_stager_instance {
+      if payload_stager_instance_handler_load_pathname.nil?
+        raise ArgumentError,
+              ':payload_stager_instance_handler_load_pathname must be set for :metasploit_cache_payload_staged_class ' \
+              'so it can set :handler_load_pathname for :metasploit_cache_payload_handable_handler trait ' \
+              'so it can set :load_pathname for :metasploit_cache_payload_handler_module trait'
+      end
+
       create(
           :metasploit_cache_payload_stager_instance,
           :metasploit_cache_contributable_contributions,
@@ -53,6 +65,7 @@ FactoryGirl.define do
                 architecture: compatible_architecture
             )
           },
+          handler_load_pathname: payload_stager_instance_handler_load_pathname,
           platformable_platforms: compatible_platforms.map { |compatible_platform|
             Metasploit::Cache::Platformable::Platform.new(
                 platform: compatible_platform

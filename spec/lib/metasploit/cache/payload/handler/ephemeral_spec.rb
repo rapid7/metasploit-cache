@@ -23,11 +23,16 @@ RSpec.describe Metasploit::Cache::Payload::Handler::Ephemeral do
       FactoryGirl.generate :metasploit_cache_payload_handler_handler_type
     }
 
+    let(:name) {
+      FactoryGirl.generate :metasploit_cache_payload_handler_name
+    }
+
     context 'with Metasploit::Cache::Payload::Handler' do
       let(:source) {
         Metasploit::Cache::Payload::Handler.new(
             general_handler_type: general_handler_type,
-            handler_type: handler_type
+            handler_type: handler_type,
+            name: name
         )
       }
 
@@ -37,6 +42,10 @@ RSpec.describe Metasploit::Cache::Payload::Handler::Ephemeral do
 
       it 'maps #handler_type to :handler_type' do
         expect(attributes[:handler_type]).to eq(handler_type)
+      end
+
+      it 'maps #name to :name' do
+        expect(attributes[:name]).to eq(name)
       end
     end
 
@@ -45,7 +54,8 @@ RSpec.describe Metasploit::Cache::Payload::Handler::Ephemeral do
         double(
             'payload Metasploit Module handler_klass',
             general_handler_type: general_handler_type,
-            handler_type: handler_type
+            handler_type: handler_type,
+            name: name
         )
       }
 
@@ -55,6 +65,10 @@ RSpec.describe Metasploit::Cache::Payload::Handler::Ephemeral do
 
       it 'maps #handler_type to :handler_type' do
         expect(attributes[:handler_type]).to eq(handler_type)
+      end
+
+      it 'maps #name to :name' do
+        expect(attributes[:name]).to eq(name)
       end
     end
   end

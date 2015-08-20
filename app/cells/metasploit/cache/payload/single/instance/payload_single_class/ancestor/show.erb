@@ -40,11 +40,7 @@ module <%= metasploit_module_relative_name %>
   end
 
   def handler_klass
-    # Not a class since this only emulates the interface used by metasploit-cache
-    OpenStruct.new(
-      general_handler_type: '<%= handler.general_handler_type %>',
-      handler_type: '<%= handler.handler_type %>'
-    )
+    <%= handler.name %>
   end
 
   def license

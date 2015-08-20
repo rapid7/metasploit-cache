@@ -7,7 +7,8 @@ module Metasploit::Cache::Payload::Handler::Ephemeral
   # Names of attributes on a Metasploit Handler Class and {Metasploit::Cache::Payload::Handler} that are synchronized.
   ATTRIBUTE_NAMES = [
       :general_handler_type,
-      :handler_type
+      :handler_type,
+      :name
   ].freeze
 
   #

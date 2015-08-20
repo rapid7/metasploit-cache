@@ -3,8 +3,11 @@
 class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
+  include Metasploit::Cache::Batch::Descendant
+
   autoload :Ephemeral
   autoload :GeneralType
+  autoload :Namespace
 
   #
   # Associations
@@ -37,6 +40,13 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
   #
   #   @return [String]
 
+  # @!attribute name
+  #   @note This name must be loadable with `String#constantize`.
+  #
+  #   The name of the handler ruby Module.
+  #
+  #   @return [String] a `Module#name`.
+
   #
   # Validations
   #
@@ -47,7 +57,14 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
             }
   validates :handler_type,
             presence: true,
-            uniqueness: true
+            uniqueness: {
+                unless: :batched?
+            }
+  validates :name,
+            presence: true,
+            uniqueness: {
+                unless: :batched?
+            }
 
   Metasploit::Concern.run(self)
 end

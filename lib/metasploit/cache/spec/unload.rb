@@ -73,6 +73,16 @@ module Metasploit::Cache::Spec::Unload
   # @yieldreturn [void]
   # @return [void]
   def self.each_parent_constant
+    # Assume Metasploit::Cache is defined because it's a parent namespace of this Module.
+    # Walk down tree towards actual parent constant to prevent loading of ancestors.
+    if defined?(Metasploit::Cache::Payload)
+      if defined?(Metasploit::Cache::Payload::Handler)
+        if defined?(Metasploit::Cache::Payload::Handler::Namespace)
+          yield Metasploit::Cache::Payload::Handler::Namespace
+        end
+      end
+    end
+
     if defined?(Msf)
       if defined?(Msf::Modules)
         yield Msf::Modules
