@@ -24,12 +24,13 @@ module Metasploit::Cache::Logged
   #
   # @param logged [#logger, #logger=]
   # @param logger [ActiveSupport::TaggedLogger, #tagged]
+  # @param tags [Array<String>] tags to tag logger with
   # @yield [logger]
   # @yieldparam logger [ActiveSupport::TaggedLogger] `logger` with `tag` applied
   # @yieldreturn [void]
   # @return [void]
-  def self.with_tagged_logger(logged, logger, tag, &block)
-    logger.tagged(tag) do
+  def self.with_tagged_logger(logged, logger, *tags, &block)
+    logger.tagged(tags) do
       with_logger(logged, logger, &block)
     end
   end
