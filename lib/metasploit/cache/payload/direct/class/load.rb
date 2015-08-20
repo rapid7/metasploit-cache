@@ -113,7 +113,7 @@ class Metasploit::Cache::Payload::Direct::Class::Load < Metasploit::Model::Base
   # @param payload_direct_class [Metasploit::Cache::Payload::Direct::Class] Whose names to calculate
   # @return [Array<String>]
   def self.metasploit_class_names(payload_direct_class)
-    METASPLOIT_CLASS_NAMES + ["RealPathSah1HexDigest#{payload_direct_class.ancestor.real_path_sha1_hex_digest}"]
+    METASPLOIT_CLASS_NAMES + ["RealPathSha1HexDigest#{payload_direct_class.ancestor.real_path_sha1_hex_digest}"]
   end
 
   # Sets name of anonymous ruby `Class`.
