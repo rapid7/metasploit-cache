@@ -1,6 +1,8 @@
 RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral do
   context 'resurrecting attributes' do
     context '#payload_stager_instance' do
+      include_context 'Metasploit::Cache::Spec::Unload.unload'
+
       subject(:payload_stager_instance) {
         payload_stager_instance_ephemeral.payload_stager_instance
       }
@@ -203,6 +205,8 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral do
     end
 
     context 'without :to' do
+      include_context 'Metasploit::Cache::Spec::Unload.unload'
+
       #
       # lets
       #

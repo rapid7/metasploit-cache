@@ -23,6 +23,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
   context 'factories' do
     context 'metasploit_cache_payload_staged_class' do
       context 'with :payload_stager_instance_handler_load_pathname' do
+        include_context 'Metasploit::Cache::Spec::Unload.unload'
+
         subject(:metasploit_cache_payload_staged_class) {
           FactoryGirl.build(
               :metasploit_cache_payload_staged_class,
@@ -228,6 +230,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
     it { is_expected.to validate_presence_of :payload_stager_instance }
 
     context 'validates compatible architectures' do
+      include_context 'Metasploit::Cache::Spec::Unload.unload'
+
       subject(:base_errors) {
         payload_staged_class.errors[:base]
       }
@@ -379,6 +383,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
     end
 
     context 'validates compatible platforms' do
+      include_context 'Metasploit::Cache::Spec::Unload.unload'
+
       subject(:base_errors) {
         payload_staged_class.errors[:base]
       }
@@ -547,6 +553,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
     end
 
     context 'existing record' do
+      include_context 'Metasploit::Cache::Spec::Unload.unload'
+
       #
       # lets
       #

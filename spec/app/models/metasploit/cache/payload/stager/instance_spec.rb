@@ -32,8 +32,9 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
 
   context 'factories' do
     context 'full_metasploit_cache_payload_stager_instance' do
-
       context 'with :handler_load_pathname' do
+        include_context 'Metasploit::Cache::Spec::Unload.unload'
+
         subject(:full_metasploit_cache_payload_stager_instance) {
           FactoryGirl.build(
               :full_metasploit_cache_payload_stager_instance,
@@ -357,6 +358,8 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do
+      include_context 'Metasploit::Cache::Spec::Unload.unload'
+
       #
       # lets
       #

@@ -16,6 +16,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
   context 'factories' do
     context 'metasploit_cache_payload_staged_instance' do
       context 'with :payload_staged_class_payload_stager_instance_handler_load_pathname' do
+        include_context 'Metasploit::Cache::Spec::Unload.unload'
+
         subject(:metasploit_cache_payload_staged_instance) {
           FactoryGirl.build(
               :metasploit_cache_payload_staged_instance,
@@ -79,6 +81,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
     it { is_expected.to validate_presence_of :payload_staged_class }
 
     context 'with existing record' do
+      include_context 'Metasploit::Cache::Spec::Unload.unload'
+
       #
       # lets
       #

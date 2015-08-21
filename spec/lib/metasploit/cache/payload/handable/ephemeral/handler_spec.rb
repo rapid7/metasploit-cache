@@ -13,6 +13,8 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
     end
 
     context 'with persisted record' do
+      include_context 'Metasploit::Cache::Spec::Unload.unload'
+
       #
       # lets
       #
@@ -96,6 +98,8 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
     }
 
     context 'with same attributes' do
+      include_context 'Metasploit::Cache::Spec::Unload.unload'
+
       #
       # lets
       #
