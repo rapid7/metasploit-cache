@@ -27,6 +27,7 @@ module Metasploit
 
     autoload :Actionable
     autoload :AncestorCell
+    autoload :Ancestry
     autoload :Architecture
     autoload :Architecturable
     autoload :Association
