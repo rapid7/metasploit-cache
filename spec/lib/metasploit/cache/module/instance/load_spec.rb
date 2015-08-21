@@ -806,7 +806,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
             }
 
             let(:module_ancestors) {
-              module_path.stager_payload_ancestors
+              module_path.stage_payload_ancestors
             }
 
             let(:module_instance) {
