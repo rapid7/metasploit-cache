@@ -1,38 +1,48 @@
-# Ephemeral Cache for connecting an in-memory stage payload Metasploit Module's ruby Class to its persisted
-# {Metasploit::Cache::Payload::Staged::Class}.
-class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::Base
+# Ephemeral cache for connecting an in-memory staged payload Metasploit Module's ruby instance to its persisted
+# {Metasploit::Cache::Payload::Staged::Instance}
+class Metasploit::Cache::Payload::Staged::Instance::Ephemeral < Metasploit::Model::Base
   extend Metasploit::Cache::ResurrectingAttribute
 
   #
   # Attributes
   #
 
-  # Tagged logger to which to log {#persist_direct_class} errors.
+  # The in-memory staged payload Metasploit Module instance being cached.
   #
-  # @return [ActiveSupport::TaggedLogging]
-  attr_accessor :logger
+  # @return [Object]
+  attr_accessor :metasploit_module_instance
 
-  # The Metasploit Module being cached.
+  # Tagged logger to which to log {#persist} errors.
   #
-  # @return [Class]
-  attr_accessor :payload_staged_metasploit_module_class
+  # @return [ActiveSupport::TaggerLogger]
+  attr_accessor :logger
 
   #
   # Resurrecting Attributes
   #
 
-  # Cached metadata for this Class.
+  # Cached metadata for this {#metasploit_module_instance}.
   #
-  # @return [Metasploit::Cache::Direct::Class]
-  resurrecting_attr_accessor :payload_staged_class do
+  # @return [Metasploit::Cache::Payload::Staged::Instance]
+  resurrecting_attr_accessor(:payload_staged_instance) {
     ActiveRecord::Base.connection_pool.with_connection {
+      staged_instances = Metasploit::Cache::Payload::Staged::Instance.arel_table
+      staged_classes = Metasploit::Cache::Payload::Staged::Class.arel_table
+
       stage_classes = Arel::Table.new(:stage_classes)
       stage_ancestors = Arel::Table.new(:stage_ancestors)
+
       stager_classes = Arel::Table.new(:stager_classes)
       stager_ancestors = Arel::Table.new(:stager_ancestors)
 
-      query = Metasploit::Cache::Payload::Staged::Class.joins(
-          Metasploit::Cache::Payload::Staged::Class.arel_table.join(
+      query = Metasploit::Cache::Payload::Staged::Instance.joins(
+          staged_instances.join(
+              staged_classes, Arel::InnerJoin
+          ).on(
+               staged_classes[:id].eq(
+                   staged_instances[:payload_staged_class_id]
+               )
+          ).join(
               Metasploit::Cache::Payload::Stage::Instance.arel_table, Arel::InnerJoin
           ).on(
               Metasploit::Cache::Payload::Stage::Instance.arel_table[:id].eq(
@@ -54,11 +64,17 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
               )
           ).join_sources
       ).where(
-           stage_ancestors[:real_path_sha1_hex_digest].eq(
-               ancestor_real_path_sha1_hex_digest(:stage)
-           )
+          stage_ancestors[:real_path_sha1_hex_digest].eq(
+              ancestor_real_path_sha1_hex_digest(:stage)
+          )
       ).joins(
-           Metasploit::Cache::Payload::Staged::Class.arel_table.join(
+           staged_instances.join(
+               staged_classes, Arel::InnerJoin
+           ).on(
+                staged_classes[:id].eq(
+                    staged_instances[:payload_staged_class_id]
+                )
+           ).join(
               Metasploit::Cache::Payload::Stager::Instance.arel_table, Arel::InnerJoin
           ).on(
               Metasploit::Cache::Payload::Stager::Instance.arel_table[:id].eq(
@@ -87,49 +103,44 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
 
       query.readonly(false).first
     }
-  end
+  }
 
   #
   # Validations
   #
 
-  validates :logger,
+  validates :metasploit_module_instance,
             presence: true
-  validates :payload_staged_metasploit_module_class,
+  validates :logger,
             presence: true
 
   #
   # Instance Methods
   #
 
-  # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} from `ancestor` used to resurrect
-  # {#payload_staged_class}.
-  #
-  # @param source [:stage, :stager] `:stage` to use the
-  #   {Metasploit::Cache::Payload::Staged:Class#payload_stage_instance} or `:stager` to use the
-  #   {Metasploit::Cache::Payload::Staged:Class#payload_stager_instance}
-  #
-  # @return [String]
+  # (see Metasploit::Cache::Payload::Staged::Class:Ephemeral#ancestor_real_path_sha1_hex_digest)
   def ancestor_real_path_sha1_hex_digest(source)
-    payload_staged_metasploit_module_class.ancestor_by_source.fetch(source).ephemeral_cache_by_source.fetch(:ancestor).real_path_sha1_hex_digest
+    metasploit_module_instance.class.ephemeral_cache_by_source.fetch(:class).ancestor_real_path_sha1_hex_digest(source)
   end
 
-  # @note This ephemeral cache should be validated with `valid?` prior to calling {#persist} to ensure that {#logger} is
-  #   present in case of error.
+  # @note This ephemeral cache should be validated with `#valid?` prior to calling {#persist} to ensure that {#logger}
+  #   is present in case of error.
   # @note Validation errors for `payload_stage_class` will be logged as errors tagged with
   #   {Metasploit::Cache::Module::Ancestor#real_pathname} from both
+  #   {Metasploit::Cache;:Payload::Staged::Instance#payload_staged_class}
   #   {Metasploit::Cache::Payload::Staged::Class#payload_stage_instance}
   #   {Metasploit::Cache::Payload::Stage::Instance#payload_stage_class}
   #   {Metasploit::Cache::Payload::Stage::Class#ancestor} and
+  #   {Metasploit::Cache;:Payload::Staged::Instance#payload_staged_class}
   #   {Metasploit::Cache::Payload::Staged::Class#payload_stager_instance}
   #   {Metasploit::Cache::Payload::Stager::Instance#payload_stager_class}
   #   {Metasploit::Cache::Payload::Stager::Class#ancestor}.
   #
-  # @param to [Metasploit::Cache::Payload::Stager::Class] Save cacheable data to
-  #   {Metasploit::Cache::Payload::Stager::Class}.
-  # @return [Metasploit::Cache::Payload::Stager::Class] `#persisted?` will be `false` if saving fails.
-  def persist(to: payload_staged_class)
-    with_payload_staged_class_tag(to) do |tagged|
+  # @param to [Metasploit::Cache::Payload::Staged::Instance] Sve cacheable data to {Metasploit::Cache::Payload::Staged::Instance}.
+  #   Giving `to` saves a database lookup if {#payload_staged_instance} is not loaded.
+  # @return [Metasploit::Cache:Payload::Staged::Instance] `#persisted?` will be `false` if saving fails.
+  def persist(to: payload_staged_instance)
+    with_payload_staged_instance_tag(to) do |tagged|
       # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
       saved = ActiveRecord::Base.connection_pool.with_connection {
         to.batched_save
@@ -148,20 +159,24 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   private
 
   # Tags log with {Metasploit::Cache::Module::Ancestor#real_pathname} from both
+  #   {Metasploit::Cache;:Payload::Staged::Instance#payload_staged_class}
   #   {Metasploit::Cache::Payload::Staged::Class#payload_stage_instance}
   #   {Metasploit::Cache::Payload::Stage::Instance#payload_stage_class}
   #   {Metasploit::Cache::Payload::Stage::Class#ancestor} and
+  #   {Metasploit::Cache;:Payload::Staged::Instance#payload_staged_class}
   #   {Metasploit::Cache::Payload::Staged::Class#payload_stager_instance}
   #   {Metasploit::Cache::Payload::Stager::Instance#payload_stager_class}
   #   {Metasploit::Cache::Payload::Stager::Class#ancestor}.
   #
-  # @param payload_staged_class [Metasploit::Cache::Payload::Staged::Class]
+  # @param payload_staged_instance [Metasploit::Cache::Payload::Staged::Instance]
   # @yield [tagged_logger]
   # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] {#logger} with
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tags.
   # @yieldreturn [void]
   # @return [void]
-  def with_payload_staged_class_tag(payload_staged_class, &block)
+  def with_payload_staged_instance_tag(payload_staged_instance, &block)
+    payload_staged_class = payload_staged_instance.payload_staged_class
+
     tags = ActiveRecord::Base.connection_pool.with_connection {
       [
           payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_pathname.to_s,
