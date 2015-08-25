@@ -78,6 +78,9 @@ else
       } && source_path.start_with?(spec_path)
     }
 
+    # The default of 10 minutes was too short and the test time is currently 13 - 15 minutes, so double the expected
+    # test time.
+    merge_timeout 30 * 60 * 60
     # NOTE: configure `minimum_coverage` in `Rakefile` for the `coverage` task
   end
 end
