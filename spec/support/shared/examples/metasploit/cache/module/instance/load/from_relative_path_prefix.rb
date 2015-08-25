@@ -1,3 +1,5 @@
+# Only covered when run with content tag
+# :nocov:
 shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_prefix' do |module_path_real_pathname, relative_path_prefix, pending_reason_by_display_path: {}|
   context relative_path_prefix do
     real_prefix_pathname = module_path_real_pathname.join(relative_path_prefix)
@@ -62,7 +64,6 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
 
           unless module_instance.valid?
             # Only covered on failure
-            # :nocov:
             fail "Expected #{module_instance.class} to be valid, but got errors:\n" \
                  "#{module_instance.errors.full_messages.join("\n")}\n" \
                  "\n" \
@@ -70,7 +71,6 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
                  "#{log_string_io.string}\n" \
                  "Expected #{module_instance_load.class} to be valid, but got errors:\n" \
                  "#{module_instance_load.errors.full_messages.join("\n")}"
-            # :nocov:
           end
 
           expect(module_instance_load).to be_valid
@@ -80,3 +80,4 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
     end
   end
 end
+# :nocov:
