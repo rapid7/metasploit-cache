@@ -824,12 +824,10 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
                         unless payload_staged_instance_load.valid?
                           # Only covered on failure
-                          # :nocov:
                           fail "Log:\n" \
                                "#{log_string_io.string}\n" \
                                "Expected #{payload_staged_instance_load.class} to be valid, but got errors:\n" \
                                "#{payload_staged_instance_load.errors.full_messages.join("\n")}"
-                          # :nocov:
                         end
                       else
                         expect(payload_staged_class_load).not_to be_valid(:loading)
