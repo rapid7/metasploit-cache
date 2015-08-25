@@ -118,7 +118,16 @@ class Metasploit::Cache::Payload::Staged::Instance::Ephemeral < Metasploit::Mode
   # Instance Methods
   #
 
-  # (see Metasploit::Cache::Payload::Staged::Class:Ephemeral#ancestor_real_path_sha1_hex_digest)
+  # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} from `ancestor` used to resurrect
+  # {#payload_staged_instance}.
+  #
+  # @param source [:stage, :stager] `:stage` to use the
+  #   {Metasploit::Cache::Payload::Stage::Instance#payload_stage_class}
+  #   {Metasploit::Cache::Payload::Staged:Class#payload_stage_instance} or `:stager` to use the
+  #   {Metasploit::Cache::Payload::Stage::Instance#payload_stage_class}
+  #   {Metasploit::Cache::Payload::Staged:Class#payload_stager_instance}
+  #
+  # @return [String]
   def ancestor_real_path_sha1_hex_digest(source)
     metasploit_module_instance.class.ephemeral_cache_by_source.fetch(:class).ancestor_real_path_sha1_hex_digest(source)
   end
