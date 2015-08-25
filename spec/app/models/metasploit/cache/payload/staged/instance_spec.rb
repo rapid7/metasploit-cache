@@ -26,11 +26,146 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
         }
 
         #
+        #
         # lets
         #
+        #
+
+        let(:logger) {
+          ActiveSupport::TaggedLogging.new(
+              Logger.new(logger_string_io)
+          ).tap { |logger|
+            logger.level = Logger::DEBUG
+          }
+        }
+
+        let(:logger_string_io) {
+          StringIO.new
+        }
+
+        let(:metasploit_framework) {
+          double('Metasploit Framework')
+        }
+
+        #
+        # Stage
+        #
+
+        let(:payload_stage_ancestor) {
+          payload_stage_class.ancestor
+        }
+
+        let(:payload_stage_ancestor_load) {
+          Metasploit::Cache::Module::Ancestor::Load.new(
+              logger: logger,
+              # This should match the major version number of metasploit-framework
+              maximum_version: 4,
+              module_ancestor: payload_stage_ancestor
+          )
+        }
+
+        let(:payload_stage_class) {
+          payload_stage_instance.payload_stage_class
+        }
+
+        let(:payload_stage_class_load) {
+          Metasploit::Cache::Payload::Direct::Class::Load.new(
+              logger: logger,
+              metasploit_module: payload_stage_ancestor_load.metasploit_module,
+              payload_direct_class: payload_stage_class,
+              payload_superclass: Metasploit::Cache::Direct::Class::Superclass
+          )
+        }
+
+        let(:payload_stage_instance) {
+          payload_staged_class.payload_stage_instance
+        }
+
+        let(:payload_stage_instance_load) {
+          Metasploit::Cache::Module::Instance::Load.new(
+              ephemeral_class: Metasploit::Cache::Payload::Stage::Instance::Ephemeral,
+              logger: logger,
+              metasploit_framework: metasploit_framework,
+              metasploit_module_class: payload_stage_class_load.metasploit_class,
+              module_instance: payload_stage_instance
+          )
+        }
+
+        #
+        # Staged
+        #
+
+        let(:payload_staged_class) {
+          metasploit_cache_payload_staged_instance.payload_staged_class
+        }
+
+        let(:payload_staged_class_load) {
+          Metasploit::Cache::Payload::Staged::Class::Load.new(
+              handler_module: payload_stager_instance_load.metasploit_module_instance.handler_klass,
+              logger: logger,
+              payload_stage_metasploit_module: payload_stage_ancestor_load.metasploit_module,
+              payload_staged_class: payload_staged_class,
+              payload_stager_metasploit_module: payload_stager_ancestor_load.metasploit_module,
+              payload_superclass: Metasploit::Cache::Direct::Class::Superclass
+          )
+        }
 
         let(:payload_staged_class_payload_stager_instance_handler_load_pathname) {
           Metasploit::Model::Spec.temporary_pathname.join('lib')
+        }
+
+        let(:payload_staged_instance_load) {
+          Metasploit::Cache::Module::Instance::Load.new(
+              ephemeral_class: Metasploit::Cache::Payload::Staged::Instance::Ephemeral,
+              logger: logger,
+              metasploit_framework: metasploit_framework,
+              metasploit_module_class: payload_staged_class_load.metasploit_class,
+              module_instance: metasploit_cache_payload_staged_instance
+          )
+        }
+
+        #
+        # Stager
+        #
+
+        let(:payload_stager_ancestor) {
+          payload_stager_class.ancestor
+        }
+
+        let(:payload_stager_ancestor_load) {
+          Metasploit::Cache::Module::Ancestor::Load.new(
+              # This should match the major version number of metasploit-framework
+              maximum_version: 4,
+              module_ancestor: payload_stager_ancestor,
+              logger: logger
+          )
+        }
+
+        let(:payload_stager_class) {
+          payload_stager_instance.payload_stager_class
+        }
+
+        let(:payload_stager_class_load) {
+          Metasploit::Cache::Payload::Direct::Class::Load.new(
+              logger: logger,
+              metasploit_module: payload_stager_ancestor_load.metasploit_module,
+              payload_direct_class: payload_stager_class,
+              payload_superclass: Metasploit::Cache::Direct::Class::Superclass
+          )
+        }
+
+        let(:payload_stager_instance) {
+          payload_staged_class.payload_stager_instance
+        }
+
+        let(:payload_stager_instance_load) {
+          Metasploit::Cache::Module::Instance::Load.new(
+              ephemeral_class: Metasploit::Cache::Payload::Stager::Instance::Ephemeral,
+              logger: logger,
+              metasploit_framework: metasploit_framework,
+              metasploit_module_class: payload_stager_class_load.metasploit_class,
+              module_instance: payload_stager_instance
+          )
         }
 
         #
@@ -54,6 +189,52 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
         end
 
         it { is_expected.to be_valid }
+
+        it 'is loadable' do
+          expect(payload_staged_instance_load).to be_valid
+        end
+
+        context 'Metasploit::Cache::Payload::Staged::Instance#payload_staged_class' do
+          it 'is loadable' do
+            expect(payload_staged_class_load).to be_valid
+          end
+
+          context 'Metasploit::Cache::Payload::Staged::Class#payload_stage_instance' do
+            it 'is loadable' do
+              expect(payload_stage_instance_load).to be_valid
+            end
+
+            context 'Metasploit::Cache::Payload::Stage::Instance#payload_stage_class' do
+              it 'is loadable' do
+                expect(payload_stage_class_load).to be_valid
+              end
+
+              context 'Metasploit::Cache::Payload::Stage::Class#ancestor' do
+                it 'is loadable' do
+                  expect(payload_stage_ancestor_load).to be_valid
+                end
+              end
+            end
+          end
+
+          context 'Metasploit::Cache::Payload::Staged::Class#payload_stager_instance' do
+            it 'is loadable' do
+              expect(payload_stager_instance_load).to be_valid
+            end
+
+            context 'Metasploit::Cache::Payload::Stager::Instance#payload_stager_class' do
+              it 'is loadable' do
+                expect(payload_stager_class_load).to be_valid
+              end
+
+              context 'Metasploit::Cache::Payload::Stager::Class#ancestor' do
+                it 'is loadable' do
+                  expect(payload_stager_ancestor_load).to be_valid
+                end
+              end
+            end
+          end
+        end
       end
 
       context 'without :payload_staged_class_payload_stager_instance_handler_load_pathname' do
