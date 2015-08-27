@@ -86,26 +86,6 @@ RSpec.describe Metasploit::Cache::Spec::Template do
     end
   end
 
-  context '.root' do
-    around(:each) do |example|
-      old_root = described_class.root
-
-      begin
-        example.run
-      ensure
-        described_class.root = old_root
-      end
-    end
-
-    it 'modifies subclass root when set' do
-      expected = double('root')
-
-      expect {
-        described_class.root = expected
-      }.to change(Metasploit::Cache::Module::Ancestor::Spec::Template, :root).to(expected)
-    end
-  end
-
   context '#search_real_pathname' do
     subject(:search_real_pathnames) {
       template.send(:search_real_pathnames)
