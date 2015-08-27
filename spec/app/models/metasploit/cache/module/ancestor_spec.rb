@@ -109,9 +109,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
   end
 
   context 'associations' do
-    it { should have_many(:descendants).class_name('Metasploit::Cache::Module::Class').through(:relationships) }
     it { should belong_to(:parent_path).class_name('Metasploit::Cache::Module::Path') }
-    it { should have_many(:relationships).class_name('Metasploit::Cache::Module::Relationship').dependent(:destroy) }
   end
 
   context 'database' do

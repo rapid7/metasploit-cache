@@ -146,19 +146,6 @@ en:
                 name:
                   help: "The name of the module action."
 
-        metasploit/cache/module/class:
-          search:
-            operator:
-              names:
-                full_name:
-                  help: "<module_type>/<reference_name>"
-                module_type:
-                  help: "The type of this module."
-                payload_type:
-                  help: "For payload modules, the type of payload, either 'single' or 'staged'."
-                reference_name:
-                  help: "The reference name relative to the module_type."
-
         metasploit/cache/module/rank:
           search:
             operator:

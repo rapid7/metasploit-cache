@@ -177,18 +177,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
 
   add_index "mc_module_architectures", ["module_instance_id", "architecture_id"], name: "unique_mc_module_architectures", unique: true, using: :btree
 
-  create_table "mc_module_classes", force: true do |t|
-    t.text    "full_name",      null: false
-    t.string  "module_type",    null: false
-    t.string  "payload_type"
-    t.text    "reference_name", null: false
-    t.integer "rank_id",        null: false
-  end
-
-  add_index "mc_module_classes", ["full_name"], name: "index_mc_module_classes_on_full_name", unique: true, using: :btree
-  add_index "mc_module_classes", ["module_type", "reference_name"], name: "index_mc_module_classes_on_module_type_and_reference_name", unique: true, using: :btree
-  add_index "mc_module_classes", ["rank_id"], name: "index_mc_module_classes_on_rank_id", using: :btree
-
   create_table "mc_module_paths", force: true do |t|
     t.string "gem"
     t.string "name"
@@ -212,13 +200,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
 
   add_index "mc_module_ranks", ["name"], name: "index_mc_module_ranks_on_name", unique: true, using: :btree
   add_index "mc_module_ranks", ["number"], name: "index_mc_module_ranks_on_number", unique: true, using: :btree
-
-  create_table "mc_module_relationships", force: true do |t|
-    t.integer "ancestor_id",   null: false
-    t.integer "descendant_id", null: false
-  end
-
-  add_index "mc_module_relationships", ["descendant_id", "ancestor_id"], name: "index_mc_module_relationships_on_descendant_id_and_ancestor_id", unique: true, using: :btree
 
   create_table "mc_nop_instances", force: true do |t|
     t.text    "description",  null: false
