@@ -8,11 +8,7 @@ class Metasploit::Cache::Search::Operator::Deprecated::Text < Metasploit::Model:
   # Names of operators that are unioned together for {Metasploit::Model::Search::Operator::Group::Union#operate_on}.
   OPERATOR_NAMES = [
       'description',
-      'name',
-      # authors.name, references.designation, or references.url are handled by
-      # {Metasploit::Cache::Search::Operator::Deprecated::Ref} to reuse its special parsing of the old
-      # <abbreviation OR 'URL'>-<designation or url> format.
-      'ref',
+      'name'
   ]
 
   # `description`, `name`, `actions.name`, `architectures.abbreviation`, `platform`, and `ref`.

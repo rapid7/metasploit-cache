@@ -16,26 +16,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   # {#dynamic_length_validation_options} by {#module_type} by attribute.
   DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE = {
-      module_references: {
-          Metasploit::Cache::Module::Type::AUX => {
-              minimum: 0
-          },
-          Metasploit::Cache::Module::Type::ENCODER => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::EXPLOIT => {
-              minimum: 1
-          },
-          Metasploit::Cache::Module::Type::NOP => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::PAYLOAD => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::POST => {
-              minimum: 0
-          }
-      },
       targets: {
           Metasploit::Cache::Module::Type::AUX => {
               is: 0
@@ -83,13 +63,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Class-derived metadata to go along with the instance-derived metadata in this model.
   belongs_to :module_class, class_name: 'Metasploit::Cache::Module::Class', inverse_of: :module_instance
 
-  # Joins {#references} to this {Metasploit::Cache::Module::Instance}.
-  has_many :module_references,
-           class_name: 'Metasploit::Cache::Module::Reference',
-           dependent: :destroy,
-           foreign_key: :module_instance_id,
-           inverse_of: :module_instance
-
   # Names of targets with different configurations that can be exploited by this module.
   has_many :targets,
            class_name: 'Metasploit::Cache::Module::Target',
@@ -103,20 +76,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   # The rank of this module.
   has_one :rank, :class_name => 'Metasploit::Cache::Module::Rank', :through => :module_class
-
-  #
-  # through: :module_references
-  #
-
-  # External references to the exploit or proof-of-concept (PoC) code in this module.
-  has_many :references, :class_name => 'Metasploit::Cache::Reference', :through => :module_references
-
-  #
-  # through: :references
-  #
-
-  # Authorities across all {#references} to this module.
-  has_many :authorities, :class_name => 'Metasploit::Cache::Authority', :through => :references, :uniq => true
 
   #
   # Attributes
@@ -148,8 +107,8 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #   @return [Integer, nil]
 
   # @!attribute name
-  #   The human readable name of the module.  It is unrelated to {Metasploit::Cache::Module::Class#full_name} or
-  #   {Metasploit::Cache::Module::Class#reference_name} and is better thought of as a short summary of the {#description}.
+  #   The human readable name of the module.  It is unrelated to {Metasploit::Cache::Module::Class#full_name} and is
+  #   better thought of as a short summary of the {#description}.
   #
   #   @return [String]
 
@@ -221,10 +180,8 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Search Associations
   #
 
-  search_association :authorities
   search_association :module_class
   search_association :rank
-  search_association :references
   search_association :targets
 
   #
@@ -243,15 +200,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #
 
   search_with Metasploit::Cache::Search::Operator::Deprecated::App
-  search_with Metasploit::Cache::Search::Operator::Deprecated::Authority,
-              :abbreviation => :bid
-  search_with Metasploit::Cache::Search::Operator::Deprecated::Authority,
-              :abbreviation => :cve
-  search_with Metasploit::Cache::Search::Operator::Deprecated::Authority,
-              :abbreviation => :edb
-  search_with Metasploit::Cache::Search::Operator::Deprecated::Authority,
-              :abbreviation => :osvdb
-  search_with Metasploit::Cache::Search::Operator::Deprecated::Ref
   search_with Metasploit::Cache::Search::Operator::Deprecated::Text
 
   #
@@ -273,8 +221,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
             uniqueness: {
                 unless: :batched?
             }
-  validates :module_references,
-            dynamic_length: true
   validates :name,
             presence: true
   validates :privileged,

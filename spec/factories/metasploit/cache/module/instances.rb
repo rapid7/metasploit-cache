@@ -1,7 +1,4 @@
 FactoryGirl.define do
-  factory_by_attribute = {
-      module_references: :metasploit_cache_module_reference
-  }
   # chosen so that there is at least 1 element even if 0 is allowed so that factories always test that the associated
   # records are handled.
   minimum_with_elements = 1
@@ -15,7 +12,6 @@ FactoryGirl.define do
   factory :metasploit_cache_module_instance,
           class: Metasploit::Cache::Module::Instance do
     transient do
-      module_references_length(&arbitrary_supported_length)
       targets_length(&arbitrary_supported_length)
 
       #
@@ -31,18 +27,6 @@ FactoryGirl.define do
           # only attempt to build supported associations if the module_class is valid because supports depends on a valid
           # module_type and validating the module_class will derive module_type.
           if module_class && module_class.valid?
-            factory_by_attribute.each do |attribute, factory|
-              if metasploit_cache_module_instance.allows?(attribute)
-                length = evaluator.send("#{attribute}_length")
-
-                collection = length.times.collect {
-                  FactoryGirl.build(factory, module_instance: metasploit_cache_module_instance)
-                }
-
-                metasploit_cache_module_instance.send("#{attribute}=", collection)
-              end
-            end
-
             if metasploit_cache_module_instance.allows?(:targets)
               # factory adds built module_targets to module_instance.
               FactoryGirl.build_list(

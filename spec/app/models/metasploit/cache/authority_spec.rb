@@ -1,7 +1,5 @@
 RSpec.describe Metasploit::Cache::Authority do
   context 'associations' do
-    it { should have_many(:module_instances).class_name('Metasploit::Cache::Module::Instance').through(:module_references) }
-    it { should have_many(:module_references).class_name('Metasploit::Cache::Module::Reference').through(:references) }
     it { should have_many(:references).class_name('Metasploit::Cache::Reference').dependent(:destroy) }
   end
 

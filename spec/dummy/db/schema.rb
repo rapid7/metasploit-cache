@@ -227,13 +227,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
   add_index "mc_module_ranks", ["name"], name: "index_mc_module_ranks_on_name", unique: true, using: :btree
   add_index "mc_module_ranks", ["number"], name: "index_mc_module_ranks_on_number", unique: true, using: :btree
 
-  create_table "mc_module_references", force: true do |t|
-    t.integer "module_instance_id", null: false
-    t.integer "reference_id",       null: false
-  end
-
-  add_index "mc_module_references", ["module_instance_id", "reference_id"], name: "unique_mc_module_references", unique: true, using: :btree
-
   create_table "mc_module_relationships", force: true do |t|
     t.integer "ancestor_id",   null: false
     t.integer "descendant_id", null: false
