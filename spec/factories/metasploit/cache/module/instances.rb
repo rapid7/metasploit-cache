@@ -21,22 +21,7 @@ FactoryGirl.define do
       # Can't use the after(:build) system because the associations need to be set before writing the template
 
       before_write_template {
-        ->(metasploit_cache_module_instance, evaluator){
-          module_class = metasploit_cache_module_instance.module_class
-
-          # only attempt to build supported associations if the module_class is valid because supports depends on a valid
-          # module_type and validating the module_class will derive module_type.
-          if module_class && module_class.valid?
-            if metasploit_cache_module_instance.allows?(:targets)
-              # factory adds built module_targets to module_instance.
-              FactoryGirl.build_list(
-                  :metasploit_cache_module_target,
-                  evaluator.targets_length,
-                  module_instance: metasploit_cache_module_instance
-              )
-            end
-          end
-        }
+        ->(_module_instance, _evaluator){}
       }
 
       write_template {

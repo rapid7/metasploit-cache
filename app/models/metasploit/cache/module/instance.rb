@@ -16,26 +16,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   # {#dynamic_length_validation_options} by {#module_type} by attribute.
   DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE = {
-      targets: {
-          Metasploit::Cache::Module::Type::AUX => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::ENCODER => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::EXPLOIT => {
-              minimum: 1
-          },
-          Metasploit::Cache::Module::Type::NOP => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::PAYLOAD => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::POST => {
-              is: 0
-          }
-      }
   }
 
   # {#privileged} is Boolean so, valid values are just `true` and `false`, but since both the validation and
@@ -57,18 +37,8 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #
   #
 
-  # The default target in {#targets}.
-  belongs_to :default_target, class_name: 'Metasploit::Cache::Module::Target', inverse_of: :module_instance
-
   # Class-derived metadata to go along with the instance-derived metadata in this model.
   belongs_to :module_class, class_name: 'Metasploit::Cache::Module::Class', inverse_of: :module_instance
-
-  # Names of targets with different configurations that can be exploited by this module.
-  has_many :targets,
-           class_name: 'Metasploit::Cache::Module::Target',
-           dependent: :destroy,
-           foreign_key: :module_instance_id,
-           inverse_of: :module_instance
 
   #
   # through: :module_class
@@ -80,11 +50,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #
   # Attributes
   #
-
-  # @!method default_target_id
-  #   The primary key of the associated {#default_target}.
-  #
-  #   @return [Integer, nil]
 
   # @!attribute description
   #   A long, paragraph description of what the module does.
@@ -182,7 +147,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   search_association :module_class
   search_association :rank
-  search_association :targets
 
   #
   # Search Attributes
@@ -206,11 +170,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Validations
   #
 
-  validates :default_target_id,
-            uniqueness: {
-                allow_nil: true,
-                unless: :batched?
-            }
   validates :description,
             presence: true
   validates :license,
@@ -235,8 +194,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
             nil: {
                 unless: :stanced?
             }
-  validates :targets,
-            dynamic_length: true
 
   #
   # Class Methods

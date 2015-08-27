@@ -190,17 +190,15 @@ ActiveRecord::Schema.define(version: 20150716152805) do
   add_index "mc_module_classes", ["rank_id"], name: "index_mc_module_classes_on_rank_id", using: :btree
 
   create_table "mc_module_instances", force: true do |t|
-    t.text    "description",       null: false
+    t.text    "description",     null: false
     t.date    "disclosed_on"
-    t.string  "license",           null: false
-    t.text    "name",              null: false
-    t.boolean "privileged",        null: false
+    t.string  "license",         null: false
+    t.text    "name",            null: false
+    t.boolean "privileged",      null: false
     t.string  "stance"
-    t.integer "default_target_id"
-    t.integer "module_class_id",   null: false
+    t.integer "module_class_id", null: false
   end
 
-  add_index "mc_module_instances", ["default_target_id"], name: "index_mc_module_instances_on_default_target_id", unique: true, using: :btree
   add_index "mc_module_instances", ["module_class_id"], name: "index_mc_module_instances_on_module_class_id", unique: true, using: :btree
 
   create_table "mc_module_paths", force: true do |t|
@@ -233,15 +231,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
   end
 
   add_index "mc_module_relationships", ["descendant_id", "ancestor_id"], name: "index_mc_module_relationships_on_descendant_id_and_ancestor_id", unique: true, using: :btree
-
-  create_table "mc_module_targets", force: true do |t|
-    t.integer "index",              null: false
-    t.text    "name",               null: false
-    t.integer "module_instance_id", null: false
-  end
-
-  add_index "mc_module_targets", ["module_instance_id", "index"], name: "index_mc_module_targets_on_module_instance_id_and_index", unique: true, using: :btree
-  add_index "mc_module_targets", ["module_instance_id", "name"], name: "index_mc_module_targets_on_module_instance_id_and_name", unique: true, using: :btree
 
   create_table "mc_nop_instances", force: true do |t|
     t.text    "description",  null: false

@@ -5,107 +5,11 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
   context 'CONSTANTS' do
     context 'DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE' do
-      subject(:dynamic_length_validation_options) do
-        dynamic_length_validation_options_by_module_type[module_type]
-      end
-
-      let(:dynamic_length_validation_options_by_module_type) do
-        dynamic_length_validation_options_by_module_type_by_attribute[attribute]
-      end
-
-      let(:dynamic_length_validation_options_by_module_type_by_attribute) do
+      subject(:dynamic_length_validation_options_by_module_type_by_attribute) {
         described_class::DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE
-      end
+      }
 
-      context '[:targets]' do
-        let(:attribute) do
-          :targets
-        end
-
-        context "['auxiliary']" do
-          let(:module_type) do
-            'auxiliary'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['encoder']" do
-          let(:module_type) do
-            'encoder'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['exploit']" do
-          let(:module_type) do
-            'exploit'
-          end
-
-          context "[:minimum]" do
-            subject(:minimum) {
-              dynamic_length_validation_options[:minimum]
-            }
-
-            it { is_expected.to eq(1) }
-          end
-        end
-
-        context "['nop']" do
-          let(:module_type) do
-            'nop'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['payload']" do
-          let(:module_type) do
-            'payload'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['post']" do
-          let(:module_type) do
-            'post'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-      end
+      it { is_expected.to eq({}) }
     end
 
     context 'PRIVILEGES' do
@@ -121,15 +25,12 @@ RSpec.describe Metasploit::Cache::Module::Instance do
   end
 
   context 'associations' do
-    it { should belong_to(:default_target).class_name('Metasploit::Cache::Module::Target') }
     it { should belong_to(:module_class).class_name('Metasploit::Cache::Module::Class') }
     it { should have_one(:rank).class_name('Metasploit::Cache::Module::Rank').through(:module_class) }
-    it { should have_many(:targets).class_name('Metasploit::Cache::Module::Target').dependent(:destroy).with_foreign_key(:module_instance_id) }
   end
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:default_target_id).of_type(:integer).with_options(:null => true) }
       it { should have_db_column(:description).of_type(:text).with_options(:null => false) }
       it { should have_db_column(:disclosed_on).of_type(:date).with_options(:null => true) }
       it { should have_db_column(:license).of_type(:string).with_options(:null => false) }
@@ -140,7 +41,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     end
 
     context 'indices' do
-      it { should have_db_index(:default_target_id).unique(true) }
       it { should have_db_index(:module_class_id).unique(true) }
     end
   end
@@ -175,8 +75,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should_not allow_attribute :targets }
-
           it { should be_stanced }
         end
 
@@ -186,8 +84,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
           end
 
           it { should be_valid }
-
-          it { should_not allow_attribute :targets }
 
           it { should_not be_stanced }
         end
@@ -199,8 +95,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should allow_attribute :targets }
-
           it { should be_stanced }
         end
 
@@ -210,8 +104,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
           end
 
           it { should be_valid }
-
-          it { should_not allow_attribute :targets }
 
           it { should_not be_stanced }
         end
@@ -223,8 +115,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should_not allow_attribute :targets }
-
           it { should_not be_stanced }
         end
 
@@ -234,8 +124,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
           end
 
           it { should be_valid }
-
-          it { should_not allow_attribute :targets }
 
           it { should_not be_stanced }
         end
@@ -312,7 +200,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     context 'associations' do
       it_should_behave_like 'search_association', :module_class
       it_should_behave_like 'search_association', :rank
-      it_should_behave_like 'search_association', :targets
     end
 
     context 'attributes' do
@@ -354,8 +241,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
         it_should_behave_like 'search query', :formatted_operator => 'rank.name'
         it_should_behave_like 'search query', :formatted_operator => 'rank.number'
       end
-
-      it_should_behave_like 'search query', :formatted_operator => 'targets.name'
     end
   end
 
@@ -385,66 +270,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     it { should validate_presence_of :description }
     it { should validate_presence_of :license }
     it { should validate_length_of(:module_authors) }
-
-    it_should_behave_like 'Metasploit::Cache::Module::Instance validates dynamic length of',
-                          :targets,
-                          factory: :metasploit_cache_module_target,
-                          options_by_extreme_by_module_type: {
-                              'auxiliary' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'encoder' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'exploit' => {
-                                  maximum: {
-                                      extreme: Float::INFINITY
-                                  },
-                                  minimum: {
-                                      error_type: :too_short,
-                                      extreme: 1
-                                  }
-                              },
-                              'nop' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'payload' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'post' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              }
-                          }
 
     context 'validate presence of module_class' do
       before(:each) do
@@ -633,19 +458,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       described_class.module_types_that_allow(attribute)
     end
 
-    context 'with targets' do
-      let(:attribute) do
-        :targets
-      end
-
-      it { should_not include 'auxiliary' }
-      it { should_not include 'encoder' }
-      it { should include 'exploit' }
-      it { should_not include 'nop' }
-      it { should_not include 'payload' }
-      it { should_not include 'post' }
-    end
-
     context 'DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE' do
       let(:attribute) do
         :attribute
@@ -794,8 +606,7 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
     let(:attributes) do
       [
-          :module_platforms,
-          :targets
+          :module_platforms
       ]
     end
 
@@ -881,58 +692,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       end
 
       it { is_expected.to eq(false) }
-    end
-  end
-
-  context '#targets' do
-    subject(:targets) do
-      module_instance.targets
-    end
-
-    context 'with unsaved module_instance' do
-      let(:module_instance) do
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            module_class: module_class
-        )
-      end
-
-      let(:module_class) do
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: module_type
-        )
-      end
-
-      let(:module_type) do
-        module_types.sample
-      end
-
-      let(:module_types) do
-        Metasploit::Cache::Module::Instance.module_types_that_allow(:targets)
-      end
-
-      context 'built without :module_instance' do
-        subject(:module_target) do
-          targets.build(
-              name: name
-          )
-        end
-
-        let(:name) do
-          FactoryGirl.generate :metasploit_cache_module_target_name
-        end
-
-        context '#module_instance' do
-          subject(:module_target_module_instance) do
-            module_target.module_instance
-          end
-
-          it 'should be the original module instance' do
-            expect(module_target_module_instance).to eq(module_instance)
-          end
-        end
-      end
     end
   end
 end

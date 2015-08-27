@@ -33,7 +33,6 @@ class CreateMcModuleInstances < ActiveRecord::Migration
       # References
       #
 
-      t.references :default_target, null: true
       t.references :module_class, null: false
     end
 
@@ -41,9 +40,6 @@ class CreateMcModuleInstances < ActiveRecord::Migration
       #
       # Foreign Key/Unique Indices
       #
-
-      # only one row can have a given default target because module_target has a module_instance_id foreign key
-      t.index :default_target_id, unique: true
 
       # only one row can have a given module_class_id by definition because the metadata for a Class<Msf::Module>
       # instance is stored in the instance and the class.
