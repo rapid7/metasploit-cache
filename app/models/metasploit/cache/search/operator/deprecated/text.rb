@@ -9,8 +9,6 @@ class Metasploit::Cache::Search::Operator::Deprecated::Text < Metasploit::Model:
   OPERATOR_NAMES = [
       'description',
       'name',
-      # platforms.name or targets.name
-      'platform',
       # authors.name, references.designation, or references.url are handled by
       # {Metasploit::Cache::Search::Operator::Deprecated::Ref} to reuse its special parsing of the old
       # <abbreviation OR 'URL'>-<designation or url> format.

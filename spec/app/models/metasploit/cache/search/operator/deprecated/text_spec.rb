@@ -18,12 +18,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
       it { should include 'description' }
       it { should include 'name' }
 
-      it 'should include platform instead of platforms.fully_qualified_name and targets.name' do
-        expect(operator_names).to include('platform')
-        expect(operator_names).not_to include('platforms.fully_qualified_name')
-        expect(operator_names).not_to include('targets.name')
-      end
-
       it 'should include ref instead of authors.name, references.designation and references.url to handle deprecated reference syntax' do
         expect(operator_names).to include('ref')
         expect(operator_names).not_to include('authors.name')
@@ -72,33 +66,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
           :attribute => :name,
           :klass => klass,
           :type => :string
-      )
-    end
-
-    let(:platform_class) do
-      Class.new
-    end
-
-    let(:platform_operator) do
-      Metasploit::Cache::Search::Operator::Deprecated::Platform.new(
-          :klass => klass,
-          :name => :platform
-      )
-    end
-
-    let(:platform_fully_qualified_name_operator) do
-      Metasploit::Model::Search::Operator::Attribute.new(
-          :attribute => :fully_qualified_name,
-          :klass => platform_class,
-          :type => :string
-      )
-    end
-
-    let(:platforms_fully_qualified_name_operator) do
-      Metasploit::Model::Search::Operator::Association.new(
-          :association => :platforms,
-          :source_operator => platform_fully_qualified_name_operator,
-          :klass => klass
       )
     end
 
@@ -167,15 +134,7 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
     before(:each) do
       allow(operator).to receive(:operator).with('description').and_return(description_operator)
       allow(operator).to receive(:operator).with('name').and_return(name_operator)
-      allow(operator).to receive(:operator).with('platform').and_return(platform_operator)
       allow(operator).to receive(:operator).with('ref').and_return(ref_operator)
-
-      allow(platform_operator).to receive(:operator).with(
-          'platforms.fully_qualified_name'
-      ).and_return(
-          platforms_fully_qualified_name_operator
-      )
-      allow(platform_operator).to receive(:operator).with('targets.name').and_return(targets_name_operator)
 
       allow(ref_operator).to receive(:operator).with('authorities.abbreviation').and_return(authorities_abbreviation_operator)
       allow(ref_operator).to receive(:operator).with('references.designation').and_return(references_designation_operator)
@@ -199,56 +158,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
 
       it 'should use formatted value for value' do
         expect(operation.value).to eq(formatted_value)
-      end
-    end
-
-    context 'platform' do
-      subject(:child_operation) do
-        child('platform')
-      end
-
-      context 'children' do
-        subject(:grandchildren) do
-          child_operation.children
-        end
-
-        def grandchild(formatted_operator)
-          grandchildren.find { |operation|
-            operation.operator.name == formatted_operator.to_sym
-          }
-        end
-
-        context 'platforms.fully_qualified_name' do
-          subject(:grandchild_operation) do
-            grandchild('platforms.fully_qualified_name')
-          end
-
-          context 'Metasploit::Model::Search::Operation::Association#source_operation' do
-            subject(:source_operation) {
-              grandchild_operation.source_operation
-            }
-
-            it 'should use formatted value for value' do
-              expect(source_operation.value).to eq(formatted_value)
-            end
-          end
-        end
-
-        context 'targets.name' do
-          subject(:grandchild_operation) do
-            grandchild('targets.name')
-          end
-
-          context 'Metasploit::Model::Search::Operation::Association#source_operation' do
-            subject(:source_operation) {
-              grandchild_operation.source_operation
-            }
-
-            it 'should use formatted value for value' do
-              expect(source_operation.value).to eq(formatted_value)
-            end
-          end
-        end
       end
     end
 

@@ -16,26 +16,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   # {#dynamic_length_validation_options} by {#module_type} by attribute.
   DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE = {
-      module_platforms: {
-          Metasploit::Cache::Module::Type::AUX => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::ENCODER => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::EXPLOIT => {
-              minimum: 1
-          },
-          Metasploit::Cache::Module::Type::NOP => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::PAYLOAD => {
-              minimum: 1
-          },
-          Metasploit::Cache::Module::Type::POST => {
-              minimum: 1
-          }
-      },
       module_references: {
           Metasploit::Cache::Module::Type::AUX => {
               minimum: 0
@@ -103,13 +83,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Class-derived metadata to go along with the instance-derived metadata in this model.
   belongs_to :module_class, class_name: 'Metasploit::Cache::Module::Class', inverse_of: :module_instance
 
-  # Joins this {Metasploit::Cache::Module::Instance} to its supported {Metasploit::Cache::Platform platforms}.
-  has_many :module_platforms,
-           class_name: 'Metasploit::Cache::Module::Platform',
-           dependent: :destroy,
-           foreign_key: :module_instance_id,
-           inverse_of: :module_instance
-
   # Joins {#references} to this {Metasploit::Cache::Module::Instance}.
   has_many :module_references,
            class_name: 'Metasploit::Cache::Module::Reference',
@@ -130,13 +103,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   # The rank of this module.
   has_one :rank, :class_name => 'Metasploit::Cache::Module::Rank', :through => :module_class
-
-  #
-  # through: :module_platforms
-  #
-
-  # Platforms supported by this module.
-  has_many :platforms, :class_name => 'Metasploit::Cache::Platform', :through => :module_platforms
 
   #
   # through: :module_references
@@ -216,71 +182,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
           end
         }
 
-  # @!method self.intersecting_platforms(platforms)
-  #   List of {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} that has at least 1 {Metasploit::Cache::Platform} from `platforms`.
-  #
-  #   @param platforms [Enumerable<Metasploit::Cache::Platform>, #collect] list of {Metasploit::Cache::Platform Metasploit::Cache::Platforms} need to themselves
-  #     or their descendants shared with the returned {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances'}
-  #     {Metasploit::Cache::Module::Instance#platforms}.
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
-  scope :intersecting_platforms,
-        ->(platforms){
-          platforms_arel_table = Metasploit::Cache::Platform.arel_table
-          platforms_left = platforms_arel_table[:left]
-          platforms_right = platforms_arel_table[:right]
-
-          platform_intersection_conditions = platforms.collect { |platform|
-            platform_left = platform.left
-            platform_right = platform.right
-
-            # the payload's platform is an ancestor or equal to the target `platform`
-            platforms_left.lteq(platform_left).and(
-                platforms_right.gteq(platform_right)
-            ).or(
-                # the payload's platform is a descendant or equal to the target 'platform``
-                platforms_left.gteq(platform_left).and(
-                    platforms_right.lteq(platform_right)
-                )
-            )
-          }
-          platform_intersection_union = platform_intersection_conditions.reduce(:or)
-
-          joins(
-              :platforms
-          ).where(
-              platform_intersection_union
-          )
-        }
-
-  # @!method self.intersecting_platform_fully_qualified_names(platform_fully_qualified_names)
-  #   List of {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} that has at least 1 {Metasploit::Cache::Platform}
-  #   that either has a {Metasploit::Cache::Platform#fully_qualified_name} from `platform_fully_qualified_names` or that has an
-  #   descendant with a {Metasploit::Cache::Platform#fully_qualified_name} from `platform_fully_qualified_names`.
-  #
-  #   @param platform_fully_qualified_names [Array<String>] `Array` of {Metasploit::Cache::Platform#fully_qualified_name}.
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
-  scope :intersecting_platform_fully_qualified_names,
-        ->(platform_fully_qualified_names){
-          intersecting_platforms(
-              Metasploit::Cache::Platform.where(
-                  fully_qualified_name: platform_fully_qualified_names
-              )
-          )
-        }
-
-  # @!method self.intersecting_platforms_with(module_target)
-  #   List of {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} that share at least 1 {Metasploit::Cache::Platform} or descendant with
-  #   the given `module_target`'s {Metasploit::Cache::Module::Target#platforms}.
-  #
-  #   @param module_target [Metasploit::Cache::Module::Target] target whose {Metasploit::Cache::Module::Target#platforms} need to have at least 1
-  #     {Metasploit::Cache::Platform} or its descendants shared with the returned {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances'}
-  #     {Metasploit::Cache::Module::Instance#platforms}.
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
-  scope :intersecting_platforms_with,
-        ->(module_target){
-          intersecting_platforms(module_target.platforms)
-        }
-
   # @!method self.order_by_rank
   #   Orders {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} by their {#module_class} {Metasploit::Cache::Module::Class#rank}
   #   {Metasploit::Cache::Module::Rank#number} in descending order so better, more reliable modules are first.
@@ -322,7 +223,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   search_association :authorities
   search_association :module_class
-  search_association :platforms
   search_association :rank
   search_association :references
   search_association :targets
@@ -351,28 +251,11 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
               :abbreviation => :edb
   search_with Metasploit::Cache::Search::Operator::Deprecated::Authority,
               :abbreviation => :osvdb
-  search_with Metasploit::Cache::Search::Operator::Deprecated::Platform,
-              :name => :os
-  search_with Metasploit::Cache::Search::Operator::Deprecated::Platform,
-              :name => :platform
   search_with Metasploit::Cache::Search::Operator::Deprecated::Ref
   search_with Metasploit::Cache::Search::Operator::Deprecated::Text
 
   #
-  #
   # Validations
-  #
-  #
-
-  #
-  # Method validations
-  #
-
-  validate :platforms_from_targets,
-           if: 'allows?(:targets)'
-
-  #
-  # Attribute validations
   #
 
   validates :default_target_id,
@@ -390,8 +273,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
             uniqueness: {
                 unless: :batched?
             }
-  validates :module_platforms,
-            dynamic_length: true
   validates :module_references,
             dynamic_length: true
   validates :name,
@@ -560,16 +441,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   private
 
-  # Converts a Set<Metasploit::Cache::Platform> to a human-readable representation including the
-  # {Metasploit::Cache::Platform#fully_qualified_name}.
-  #
-  # @return [String]
-  def human_platform_set(platform_set)
-    fully_qualified_names = platform_set.map(&:fully_qualified_name)
-
-    human_set(fully_qualified_names)
-  end
-
   # Converts strings to a human-readable set notation.
   #
   # @return [String]
@@ -578,38 +449,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
     comma_separated = sorted.join(', ')
 
     "{#{comma_separated}}"
-  end
-
-  # Validates that {#module_platforms} {Metasploit::Cache::Module::Platform#platform platforms} match the
-  # {#targets} {Metasploit::Cache::Module::Target#target_platforms target_platforms}
-  # {Metasploit::Cache::Module::Target::Platform#platform platforms}.
-  #
-  # @return [void]
-  def platforms_from_targets
-    actual_platform_set = Set.new module_platforms.map(&:platform)
-    expected_platform_set = Set.new
-
-    targets.each do |module_target|
-      module_target.target_platforms.each do |target_platform|
-        expected_platform_set.add target_platform.platform
-      end
-    end
-
-    extra_platform_set = actual_platform_set - expected_platform_set
-
-    unless extra_platform_set.empty?
-      human_extra_platforms = human_platform_set(extra_platform_set)
-
-      errors.add(:platforms, :extra, extra: human_extra_platforms)
-    end
-
-    missing_platform_set = expected_platform_set - actual_platform_set
-
-    unless missing_platform_set.empty?
-      human_missing_platforms = human_platform_set(missing_platform_set)
-
-      errors.add(:platforms, :missing, missing: human_missing_platforms)
-    end
   end
 
   # Switch back to public for load hooks

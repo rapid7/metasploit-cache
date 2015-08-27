@@ -2,7 +2,6 @@ FactoryGirl.define do
   factory_by_attribute = {
       module_references: :metasploit_cache_module_reference
   }
-  total_platforms = Metasploit::Cache::Platform.fully_qualified_name_set.length
   # chosen so that there is at least 1 element even if 0 is allowed so that factories always test that the associated
   # records are handled.
   minimum_with_elements = 1
@@ -16,12 +15,6 @@ FactoryGirl.define do
   factory :metasploit_cache_module_instance,
           class: Metasploit::Cache::Module::Instance do
     transient do
-      # this length is only used if supports?(:module_platforms) is true.  It can be set to 0 when
-      # supports?(:module_platforms) is true to make the after(:build) skip building the module platforms automatically.
-      module_platforms_length {
-        Random.rand(minimum_with_elements .. total_platforms)
-      }
-
       module_references_length(&arbitrary_supported_length)
       targets_length(&arbitrary_supported_length)
 
@@ -50,7 +43,6 @@ FactoryGirl.define do
               end
             end
 
-            # make sure targets are generated first so that module_platforms can be include the targets' platforms.
             if metasploit_cache_module_instance.allows?(:targets)
               # factory adds built module_targets to module_instance.
               FactoryGirl.build_list(
@@ -58,17 +50,6 @@ FactoryGirl.define do
                   evaluator.targets_length,
                   module_instance: metasploit_cache_module_instance
               )
-              # module_platforms will be derived from targets
-            else
-              # if there are no targets, then platforms need to be explicitly defined on module instance since they
-              # can't be derived from anything
-              if metasploit_cache_module_instance.allows?(:module_platforms)
-                metasploit_cache_module_instance.module_platforms = FactoryGirl.build_list(
-                    :metasploit_cache_module_platform,
-                    evaluator.module_platforms_length,
-                    module_instance: metasploit_cache_module_instance
-                )
-              end
             end
           end
         }

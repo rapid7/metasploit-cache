@@ -28,7 +28,6 @@ module Metasploit::Cache::Module
   autoload :Instance
   autoload :Namespace
   autoload :Path
-  autoload :Platform
   autoload :Relationship
   autoload :Rank
   autoload :Reference
