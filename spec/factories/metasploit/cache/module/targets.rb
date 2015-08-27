@@ -1,5 +1,4 @@
 FactoryGirl.define do
-  total_architectures = Metasploit::Cache::Architecture::ABBREVIATIONS.length
   total_platforms = Metasploit::Cache::Platform.fully_qualified_name_set.length
 
   factory :metasploit_cache_module_target,
@@ -11,7 +10,6 @@ FactoryGirl.define do
 
       module_type { generate :metasploit_cache_module_target_module_type }
 
-      target_architectures_length { Random.rand(1 .. total_architectures) }
       target_platforms_length { Random.rand(1 .. total_platforms) }
     end
 
@@ -42,7 +40,7 @@ FactoryGirl.define do
     #
 
     after(:build) { |metasploit_cache_module_target, evaluator|
-      [:architecture, :platform].each do |infix|
+      [:platform].each do |infix|
         attribute = "target_#{infix.to_s.pluralize}"
         factory = "metasploit_cache_module_target_#{infix}"
         length = evaluator.send("#{attribute}_length")

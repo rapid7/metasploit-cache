@@ -7,7 +7,6 @@ class Metasploit::Cache::Module::Target < ActiveRecord::Base
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
 
-  autoload :Architecture
   autoload :Platform
 
   #
@@ -19,27 +18,12 @@ class Metasploit::Cache::Module::Target < ActiveRecord::Base
   # Module where this target was declared.
   belongs_to :module_instance, class_name: 'Metasploit::Cache::Module::Instance', inverse_of: :targets
 
-  # Joins this target to its {#architectures}
-  has_many :target_architectures,
-           class_name: 'Metasploit::Cache::Module::Target::Architecture',
-           dependent: :destroy,
-           foreign_key: :module_target_id,
-           inverse_of: :module_target
-
   # Joins this target to its {#platforms}
   has_many :target_platforms,
            class_name: 'Metasploit::Cache::Module::Target::Platform',
            dependent: :destroy,
            foreign_key: :module_target_id,
            inverse_of: :module_target
-
-  #
-  # through: :target_architectures
-  #
-
-  # Architectures that this target supports, either by being declared specifically for this target or because this
-  # target did not override architectures and so inheritted the architecture set from the class.
-  has_many :architectures, class_name: 'Metasploit::Cache::Architecture', through: :target_architectures
 
   #
   # through: :target_platforms
@@ -70,7 +54,6 @@ class Metasploit::Cache::Module::Target < ActiveRecord::Base
                 scope: :module_instance_id,
                 unless: :batched?
             }
-  validates :target_architectures, presence: true
   validates :target_platforms, presence: true
 
   #

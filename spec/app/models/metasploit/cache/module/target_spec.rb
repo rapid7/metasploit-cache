@@ -1,9 +1,7 @@
 RSpec.describe Metasploit::Cache::Module::Target do
   context 'associations' do
-    it { should have_many(:architectures).class_name('Metasploit::Cache::Architecture').through(:target_architectures) }
     it { should belong_to(:module_instance).class_name('Metasploit::Cache::Module::Instance') }
     it { should have_many(:platforms).class_name('Metasploit::Cache::Platform').through(:target_platforms) }
-    it { should have_many(:target_architectures).class_name('Metasploit::Cache::Module::Target::Architecture').dependent(:destroy) }
     it { should have_many(:target_platforms).class_name('Metasploit::Cache::Module::Target::Platform').dependent(:destroy) }
   end
 
@@ -78,10 +76,6 @@ RSpec.describe Metasploit::Cache::Module::Target do
                 index: existing_module_target.index + 1,
                 name: existing_module_target.name
             ).tap { |module_target|
-              module_target.target_architectures.build.tap { |target_architecture|
-                target_architecture.architecture = new_architecture
-              }
-
               module_target.target_platforms.build.tap { |target_platform|
                 target_platform.platform = new_platform
               }
@@ -116,7 +110,6 @@ RSpec.describe Metasploit::Cache::Module::Target do
       end
     end
 
-    it { should validate_presence_of :target_architectures }
     it { should validate_presence_of :target_platforms }
   end
 end
