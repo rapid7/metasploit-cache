@@ -12,7 +12,6 @@ RSpec.describe Metasploit::Cache::Platform do
     it { is_expected.to have_many(:payload_stage_instances).class_name('Metasploit::Cache::Payload::Stage::Instance').source(:platformable).through(:platformable_platforms) }
     it { is_expected.to have_many(:payload_stager_instances).class_name('Metasploit::Cache::Payload::Stager::Instance').source(:platformable).through(:platformable_platforms) }
     it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').dependent(:destroy).inverse_of(:platform) }
-    it { should have_many(:target_platforms).class_name('Metasploit::Cache::Module::Target::Platform').dependent(:destroy) }
   end
 
   context 'database' do

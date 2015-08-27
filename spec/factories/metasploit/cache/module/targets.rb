@@ -1,6 +1,4 @@
 FactoryGirl.define do
-  total_platforms = Metasploit::Cache::Platform.fully_qualified_name_set.length
-
   factory :metasploit_cache_module_target,
           :class => Metasploit::Cache::Module::Target do
     transient do
@@ -9,8 +7,6 @@ FactoryGirl.define do
       module_class { FactoryGirl.create(:metasploit_cache_module_class, module_type: module_type) }
 
       module_type { generate :metasploit_cache_module_target_module_type }
-
-      target_platforms_length { Random.rand(1 .. total_platforms) }
     end
 
     #
@@ -40,19 +36,6 @@ FactoryGirl.define do
     #
 
     after(:build) { |metasploit_cache_module_target, evaluator|
-      [:platform].each do |infix|
-        attribute = "target_#{infix.to_s.pluralize}"
-        factory = "metasploit_cache_module_target_#{infix}"
-        length = evaluator.send("#{attribute}_length")
-
-        # factories add selves to associations on metasploit_cache_module_target
-        FactoryGirl.build_list(
-            factory,
-            length,
-            module_target: metasploit_cache_module_target
-        )
-      end
-
       module_instance = metasploit_cache_module_target.module_instance
 
       unless module_instance.targets.include? metasploit_cache_module_target

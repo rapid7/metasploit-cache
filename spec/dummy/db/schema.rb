@@ -234,20 +234,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
 
   add_index "mc_module_relationships", ["descendant_id", "ancestor_id"], name: "index_mc_module_relationships_on_descendant_id_and_ancestor_id", unique: true, using: :btree
 
-  create_table "mc_module_target_architectures", force: true do |t|
-    t.integer "architecture_id",  null: false
-    t.integer "module_target_id", null: false
-  end
-
-  add_index "mc_module_target_architectures", ["module_target_id", "architecture_id"], name: "unique_mc_module_target_architectures", unique: true, using: :btree
-
-  create_table "mc_module_target_platforms", force: true do |t|
-    t.integer "module_target_id", null: false
-    t.integer "platform_id",      null: false
-  end
-
-  add_index "mc_module_target_platforms", ["module_target_id", "platform_id"], name: "unique_mc_module_target_platforms", unique: true, using: :btree
-
   create_table "mc_module_targets", force: true do |t|
     t.integer "index",              null: false
     t.text    "name",               null: false

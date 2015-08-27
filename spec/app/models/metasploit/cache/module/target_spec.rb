@@ -1,8 +1,6 @@
 RSpec.describe Metasploit::Cache::Module::Target do
   context 'associations' do
     it { should belong_to(:module_instance).class_name('Metasploit::Cache::Module::Instance') }
-    it { should have_many(:platforms).class_name('Metasploit::Cache::Platform').through(:target_platforms) }
-    it { should have_many(:target_platforms).class_name('Metasploit::Cache::Module::Target::Platform').dependent(:destroy) }
   end
 
   context 'database' do
@@ -67,19 +65,11 @@ RSpec.describe Metasploit::Cache::Module::Target do
             FactoryGirl.generate :metasploit_cache_architecture
           end
 
-          let(:new_platform) do
-            FactoryGirl.generate :metasploit_cache_platform
-          end
-
           let(:new_module_target) do
             existing_module_instance.targets.build(
                 index: existing_module_target.index + 1,
                 name: existing_module_target.name
-            ).tap { |module_target|
-              module_target.target_platforms.build.tap { |target_platform|
-                target_platform.platform = new_platform
-              }
-            }
+            )
           end
 
           context 'with batched' do
@@ -109,7 +99,5 @@ RSpec.describe Metasploit::Cache::Module::Target do
         end
       end
     end
-
-    it { should validate_presence_of :target_platforms }
   end
 end
