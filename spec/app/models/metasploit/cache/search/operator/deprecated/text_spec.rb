@@ -35,27 +35,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
 
   context '#children' do
     include_context 'Metasploit::Model::Search::Operator::Group::Union#children'
-
-    let(:architecture_class) do
-      Class.new
-    end
-
-    let(:architecture_abbreviation_operator) do
-      Metasploit::Model::Search::Operator::Attribute.new(
-          :attribute => :abbreviation,
-          :klass => architecture_class,
-          :type => :string
-      )
-    end
-
-    let(:architectures_abbreviation_operator) do
-      Metasploit::Model::Search::Operator::Association.new(
-          :association => :architectures,
-          :source_operator => architecture_abbreviation_operator,
-          :klass => klass
-      )
-    end
-
     let(:authority_class) do
       Class.new
     end
@@ -188,7 +167,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
     before(:each) do
       allow(operator).to receive(:operator).with('description').and_return(description_operator)
       allow(operator).to receive(:operator).with('name').and_return(name_operator)
-      allow(operator).to receive(:operator).with('architectures.abbreviation').and_return(architectures_abbreviation_operator)
       allow(operator).to receive(:operator).with('platform').and_return(platform_operator)
       allow(operator).to receive(:operator).with('ref').and_return(ref_operator)
 
@@ -221,22 +199,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
 
       it 'should use formatted value for value' do
         expect(operation.value).to eq(formatted_value)
-      end
-    end
-
-    context 'architectures.abbreviation' do
-      subject(:operation) do
-        child('architectures.abbreviation')
-      end
-
-      context 'Metasploit::Model::Search::Operation::Association#source_operation' do
-        subject(:source_operation) {
-          operation.source_operation
-        }
-
-        it 'should use formatted value for value' do
-          expect(source_operation.value).to eq(formatted_value)
-        end
       end
     end
 

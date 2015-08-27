@@ -127,96 +127,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
         described_class::DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE
       end
 
-      context '[:module_architectures:]' do
-        let(:attribute) do
-          :module_architectures
-        end
-
-        context "['auxiliary']" do
-          let(:module_type) do
-            'auxiliary'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['encoder']" do
-          let(:module_type) do
-            'encoder'
-          end
-
-          context "[:minimum]" do
-            subject(:minimum) {
-              dynamic_length_validation_options[:minimum]
-            }
-
-            it { is_expected.to eq(1) }
-          end
-        end
-
-        context "['exploit']" do
-          let(:module_type) do
-            'exploit'
-          end
-
-          context "[:minimum]" do
-            subject(:minimum) {
-              dynamic_length_validation_options[:minimum]
-            }
-
-            it { is_expected.to eq(1) }
-          end
-        end
-
-        context "['nop']" do
-          let(:module_type) do
-            'nop'
-          end
-
-          context "[:minimum]" do
-            subject(:minimum) {
-              dynamic_length_validation_options[:minimum]
-            }
-
-            it { is_expected.to eq(1) }
-          end
-        end
-
-        context "['payload']" do
-          let(:module_type) do
-            'payload'
-          end
-
-          context "[:minimum]" do
-            subject(:minimum) {
-              dynamic_length_validation_options[:minimum]
-            }
-
-            it { is_expected.to eq(1) }
-          end
-        end
-
-        context "['post']" do
-          let(:module_type) do
-            'post'
-          end
-
-          context "[:minimum]" do
-            subject(:minimum) {
-              dynamic_length_validation_options[:minimum]
-            }
-
-            it { is_expected.to eq(1) }
-          end
-        end
-      end
-
       context '[:module_platforms]' do
         let(:attribute) do
           :module_platforms
@@ -509,12 +419,10 @@ RSpec.describe Metasploit::Cache::Module::Instance do
   end
 
   context 'associations' do
-    it { should have_many(:architectures).class_name('Metasploit::Cache::Architecture').through(:module_architectures) }
     it { should have_many(:authors).class_name('Metasploit::Cache::Author').through(:module_authors) }
     it { should have_many(:authorities).class_name('Metasploit::Cache::Authority').through(:references) }
     it { should belong_to(:default_target).class_name('Metasploit::Cache::Module::Target') }
     it { should have_many(:email_addresses).class_name('Metasploit::Cache::EmailAddress').through(:module_authors) }
-    it { should have_many(:module_architectures).class_name('Metasploit::Cache::Module::Architecture').dependent(:destroy).with_foreign_key(:module_instance_id) }
     it { should have_many(:module_authors).class_name('Metasploit::Cache::Module::Author').dependent(:destroy).with_foreign_key(:module_instance_id) }
     it { should belong_to(:module_class).class_name('Metasploit::Cache::Module::Class') }
     it { should have_many(:module_platforms).class_name('Metasploit::Cache::Module::Platform').dependent(:destroy).with_foreign_key(:module_instance_id) }
@@ -573,7 +481,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should_not allow_attribute :module_architectures }
           it { should_not allow_attribute :module_platforms }
           it { should allow_attribute :module_references }
           it { should_not allow_attribute :targets }
@@ -588,7 +495,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should allow_attribute :module_architectures }
           it { should_not allow_attribute :module_platforms }
           it { should_not allow_attribute :module_references }
           it { should_not allow_attribute :targets }
@@ -603,7 +509,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should allow_attribute :module_architectures }
           it { should allow_attribute :module_platforms }
           it { should allow_attribute :module_references }
           it { should allow_attribute :targets }
@@ -618,7 +523,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should allow_attribute :module_architectures }
           it { should_not allow_attribute :module_platforms }
           it { should_not allow_attribute :module_references }
           it { should_not allow_attribute :targets }
@@ -633,7 +537,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should allow_attribute :module_architectures }
           it { should allow_attribute :module_platforms }
           it { should_not allow_attribute :module_references }
           it { should_not allow_attribute :targets }
@@ -648,7 +551,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should allow_attribute :module_architectures }
           it { should allow_attribute :module_platforms }
           it { should allow_attribute :module_references }
           it { should_not allow_attribute :targets }
@@ -715,333 +617,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
         it 'includes unprivileged Metasploit::Cache::Module::Instances' do
           expect(compatible_privilege_with).to include(unprivileged)
-        end
-      end
-    end
-
-    context 'encoders_compatible_with' do
-      subject(:encoders_compatible_with) {
-        described_class.encoders_compatible_with(payload_instance)
-      }
-
-      #
-      # lets
-      #
-
-      let(:first_payload_architecture) {
-        Metasploit::Cache::Architecture.where(abbreviation: 'x86').first
-      }
-
-      let(:fully_matched_encoder_class) {
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: 'encoder'
-        )
-      }
-
-      let(:partially_matched_encoder_architecture) {
-        Metasploit::Cache::Architecture.where(abbreviation: 'ppc64').first
-      }
-
-      let(:partially_matched_encoder_class) {
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: 'encoder'
-        )
-      }
-
-      let(:payload_class) {
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: 'payload'
-        )
-      }
-
-      let(:second_payload_architecture) {
-        Metasploit::Cache::Architecture.where(abbreviation: 'x86_64').first
-      }
-
-      let(:unmatched_encoder_architecture) {
-        Metasploit::Cache::Architecture.where(abbreviation: 'ppc').first
-      }
-
-      let(:unmatched_encoder_class) {
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: 'encoder'
-        )
-      }
-
-      #
-      # let!s
-      #
-
-      let!(:fully_matched_encoder_instance) {
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            # zero as it will be filed in manually
-            module_architectures_length: 0,
-            module_class: fully_matched_encoder_class
-        ).tap { |module_instance|
-          module_instance.module_architectures.build(architecture: first_payload_architecture)
-          module_instance.module_architectures.build(architecture: second_payload_architecture)
-
-          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
-
-          module_instance.save!
-        }
-      }
-
-      let!(:partially_matched_encoder_instance) {
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            # zero as it will be filed in manually
-            module_architectures_length: 0,
-            module_class: partially_matched_encoder_class
-        ).tap { |module_instance|
-          module_instance.module_architectures.build(architecture: partially_matched_encoder_architecture)
-          module_instance.module_architectures.build(architecture: second_payload_architecture)
-
-          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
-
-          module_instance.save!
-        }
-      }
-
-      let!(:payload_instance) {
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            # zero as it will be filed in manually
-            module_architectures_length: 0,
-            module_class: payload_class
-        ).tap { |module_instance|
-          module_instance.module_architectures.build(architecture: first_payload_architecture)
-          module_instance.module_architectures.build(architecture: second_payload_architecture)
-
-          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
-
-          module_instance.save!
-        }
-      }
-
-      let!(:unmatched_encoder_instance) {
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            # zero as it will be filed in manually
-            module_architectures_length: 0,
-            module_class: unmatched_encoder_class
-        ).tap { |module_instance|
-          module_instance.module_architectures  .build(architecture: unmatched_encoder_architecture)
-
-          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
-
-          module_instance.save!
-        }
-      }
-
-      it 'matches encoders with same architectures', pending: 'Stopped working after Rails 4.0 upgrade.' do
-        expect(encoders_compatible_with).to include(fully_matched_encoder_instance)
-      end
-
-      it 'matches encoders with some architectures overlapping', pending: 'Stopped working after Rails 4.0 upgrade.' do
-        expect(encoders_compatible_with).to include(partially_matched_encoder_instance)
-      end
-
-      it 'does not match encoders with different architecture' do
-        expect(encoders_compatible_with).not_to include(unmatched_encoder_instance)
-      end
-
-      it 'is ordered by rank', pending: 'Stopped working after Rails 4.0 upgrade.' do
-        expected_encoders = [fully_matched_encoder_instance, partially_matched_encoder_instance].sort_by { |module_instance|
-          module_instance.rank.number
-        }.reverse # reverse to make descending
-
-        expect(encoders_compatible_with).to eq(expected_encoders)
-      end
-    end
-
-    context 'intersecting_architecture_abbreviations' do
-      subject(:intersecting_architecture_abbreviations) do
-        described_class.intersecting_architecture_abbreviations(architecture_abbreviation)
-      end
-
-      let(:other_architecture) do
-        Metasploit::Cache::Architecture.where(abbreviation: other_architecture_abbreviation).first
-      end
-
-      let(:architecture_abbreviation) do
-        FactoryGirl.generate :metasploit_cache_architecture_abbreviation
-      end
-
-      let(:other_module_class) do
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: 'payload'
-        )
-      end
-
-      #
-      # let!s
-      #
-
-      let!(:other_module_instance) do
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            module_architectures_length: 0,
-            module_class: other_module_class
-        ).tap { |module_instance|
-          module_architecture = module_instance.module_architectures.build
-          module_architecture.architecture = other_architecture
-
-          module_instance.save!
-        }
-      end
-
-      context 'with intersection' do
-        #
-        # lets
-        #
-
-        let(:other_architecture_abbreviation) do
-          architecture_abbreviation
-        end
-
-        it 'includes the Metasploit::Cache::Module::Instance' do
-          expect(intersecting_architecture_abbreviations).to include(other_module_instance)
-        end
-      end
-
-      context 'without intersection' do
-        let(:other_architecture_abbreviation) do
-          FactoryGirl.generate :metasploit_cache_architecture_abbreviation
-        end
-
-        it 'does not include the Metasploit::Cache::Module::Instance' do
-          expect(intersecting_architecture_abbreviations).not_to include(other_module_instance)
-        end
-      end
-    end
-
-    context 'intersecting_architectures_with' do
-      subject(:intersecting_architectures_with) do
-        described_class.intersecting_architectures_with(architectured)
-      end
-
-      context 'with Metasploit::Cache::Module::Instance' do
-        let(:architectured) do
-          FactoryGirl.create(
-              :metasploit_cache_module_instance,
-              module_class: module_class
-          )
-        end
-
-        let(:module_class) do
-          FactoryGirl.create(
-              :metasploit_cache_module_class,
-              module_type: 'payload'
-          )
-        end
-
-        it 'selects abbreviation from Metasploit::Cache::Module::Instance#architectures' do
-          expect(architectured.architectures).to receive(:select).with(:abbreviation).and_call_original
-
-          intersecting_architectures_with
-        end
-
-        it 'calls intersecting_architecture_abbreviations with String' do
-          expect(described_class).to receive(:intersecting_architecture_abbreviations).with(
-                                         an_instance_of(String)
-                                     )
-
-          intersecting_architectures_with
-        end
-      end
-
-      context 'with Metasploit::Cache::Module::Target' do
-        #
-        # lets
-        #
-
-        let(:architecture) do
-          FactoryGirl.generate :metasploit_cache_architecture
-        end
-
-        let(:other_module_class) do
-          FactoryGirl.create(
-              :metasploit_cache_module_class,
-              module_type: 'payload'
-          )
-        end
-
-        let(:other_architecture) do
-          FactoryGirl.generate :metasploit_cache_architecture
-        end
-
-        #
-        # let!s
-        #
-
-        let!(:architectured) do
-          FactoryGirl.build(
-              :metasploit_cache_module_target,
-              target_architectures_length: 0
-          ).tap { |module_target|
-            target_architecture = module_target.target_architectures.build
-            target_architecture.architecture = architecture
-
-            module_instance = module_target.module_instance
-            module_architecture = module_instance.module_architectures.build
-            module_architecture.architecture = architecture
-
-            module_target.save!
-          }
-        end
-
-        let!(:other_module_instance) do
-          FactoryGirl.build(
-              :metasploit_cache_module_instance,
-              module_architectures_length: 0,
-              module_class: other_module_class
-          ).tap { |module_instance|
-            module_architecture = module_instance.module_architectures.build
-            module_architecture.architecture = other_architecture
-
-            module_instance.save!
-          }
-        end
-
-        it 'selects abbreviation from Metasploit::Cache::Module::Target#architectures' do
-          expect(architectured.architectures).to receive(:select).with(:abbreviation).and_call_original
-
-          intersecting_architectures_with
-        end
-
-        it 'calls intersecting_architecture_abbreviations with String to perform a subselect' do
-          expect(described_class).to receive(:intersecting_architecture_abbreviations).with(
-                                         an_instance_of(String)
-                                     ).and_call_original
-
-          intersecting_architectures_with
-        end
-
-        context 'with intersection' do
-          let(:other_architecture) do
-            architecture
-          end
-
-          it 'includes the Metasploit::Cache::Module::Instance', pending: 'Stopped working after Rails 4.0 upgrade.' do
-            expect(intersecting_architectures_with).to include(other_module_instance)
-          end
-        end
-
-        context 'without intersection' do
-          let(:other_architecture) do
-            FactoryGirl.generate :metasploit_cache_architecture
-          end
-
-          it 'does not include the Metasploit::Cache::Module::Instance' do
-            expect(intersecting_architectures_with).not_to include(other_module_instance)
-          end
         end
       end
     end
@@ -1138,225 +713,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
         intersecting_platforms_with
       end
     end
-
-    context 'payloads_compatible_with' do
-      subject(:payloads_compatible_with) do
-        described_class.payloads_compatible_with(module_target)
-      end
-
-      #
-      # lets
-      #
-
-      let(:architecture) do
-        FactoryGirl.generate :metasploit_cache_architecture
-      end
-
-      let(:module_target) do
-        FactoryGirl.build(
-            :metasploit_cache_module_target,
-            target_architectures_length: 0,
-            target_platforms_length: 0
-        ).tap { |module_target|
-          module_target.target_architectures.build(
-              architecture: architecture
-          )
-
-          module_target.module_instance.module_architectures.build(
-              architecture: architecture
-          )
-
-          module_target.target_platforms.build(
-              platform: platform
-          )
-
-          module_target.module_instance.module_platforms.build(
-                  platform: platform
-          )
-        }
-      end
-
-      let(:platform) do
-        Metasploit::Cache::Platform.where(fully_qualified_name: platform_fully_qualified_name).first
-      end
-
-      let(:platform_fully_qualified_name) do
-        'Windows XP'
-      end
-
-      #
-      # Callbacks
-      #
-
-      before(:each) do
-        module_target.save!
-      end
-
-      it "calls with_module_type('payload')" do
-        expect(described_class).to receive(:with_module_type).with('payload').and_call_original
-
-        payloads_compatible_with
-      end
-
-      it 'calls compatible_privilege_with on the module_target.module_instance' do
-        expect(described_class).to receive(:compatible_privilege_with).with(module_target.module_instance).and_call_original
-
-        payloads_compatible_with
-      end
-
-      it 'calls intersecting_architectures_with on the module_target' do
-        expect(described_class).to receive(:intersecting_architectures_with).with(module_target).and_call_original
-
-        payloads_compatible_with
-      end
-
-      it 'calls intersecting_paltforms_with on the module_target' do
-        expect(described_class).to receive(:intersecting_platforms_with).with(module_target).and_call_original
-
-        payloads_compatible_with
-      end
-    end
-
-    context 'nops_compatible_with' do
-      subject(:nops_compatible_with) {
-        described_class.nops_compatible_with(payload_instance)
-      }
-
-      #
-      # lets
-      #
-
-      let(:first_payload_architecture) {
-        Metasploit::Cache::Architecture.where(abbreviation: 'x86').first
-      }
-
-      let(:fully_matched_nop_class) {
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: 'nop'
-        )
-      }
-
-      let(:partially_matched_nop_architecture) {
-        Metasploit::Cache::Architecture.where(abbreviation: 'ppc64').first
-      }
-
-      let(:partially_matched_nop_class) {
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: 'nop'
-        )
-      }
-
-      let(:payload_class) {
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: 'payload'
-        )
-      }
-
-      let(:second_payload_architecture) {
-        Metasploit::Cache::Architecture.where(abbreviation: 'x86_64').first
-      }
-
-      let(:unmatched_nop_architecture) {
-        Metasploit::Cache::Architecture.where(abbreviation: 'ppc').first
-      }
-
-      let(:unmatched_nop_class) {
-        FactoryGirl.create(
-            :metasploit_cache_module_class,
-            module_type: 'nop'
-        )
-      }
-
-      #
-      # let!s
-      #
-
-      let!(:fully_matched_nop_instance) {
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            # zero as it will be filed in manually
-            module_architectures_length: 0,
-            module_class: fully_matched_nop_class
-        ).tap { |module_instance|
-          module_instance.module_architectures.build(architecture: first_payload_architecture)
-          module_instance.module_architectures.build(architecture: second_payload_architecture)
-
-          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
-
-          module_instance.save!
-        }
-      }
-
-      let!(:partially_matched_nop_instance) {
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            # zero as it will be filed in manually
-            module_architectures_length: 0,
-            module_class: partially_matched_nop_class
-        ).tap { |module_instance|
-          module_instance.module_architectures.build(architecture: partially_matched_nop_architecture)
-          module_instance.module_architectures.build(architecture: second_payload_architecture)
-
-          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
-
-          module_instance.save!
-        }
-      }
-
-      let!(:payload_instance) {
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            # zero as it will be filed in manually
-            module_architectures_length: 0,
-            module_class: payload_class
-        ).tap { |module_instance|
-          module_instance.module_architectures.build(architecture: first_payload_architecture)
-          module_instance.module_architectures.build(architecture: second_payload_architecture)
-
-          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
-
-          module_instance.save!
-        }
-      }
-
-      let!(:unmatched_nop_instance) {
-        FactoryGirl.build(
-            :metasploit_cache_module_instance,
-            # zero as it will be filed in manually
-            module_architectures_length: 0,
-            module_class: unmatched_nop_class
-        ).tap { |module_instance|
-          module_instance.module_architectures  .build(architecture: unmatched_nop_architecture)
-
-          Metasploit::Cache::Module::Instance::Spec::Template.write!(module_instance: module_instance)
-
-          module_instance.save!
-        }
-      }
-
-      it 'matches nops with same architectures', pending: 'Stopped working after Rails 4.0 upgrade.' do
-        expect(nops_compatible_with).to include(fully_matched_nop_instance)
-      end
-
-      it 'matches nops with some architectures overlapping', pending: 'Stopped working after Rails 4.0 upgrade.' do
-        expect(nops_compatible_with).to include(partially_matched_nop_instance)
-      end
-
-      it 'does not match nops with different architecture' do
-        expect(nops_compatible_with).not_to include(unmatched_nop_instance)
-      end
-
-      it 'is ordered by rank', pending: 'Stopped working after Rails 4.0 upgrade.' do
-        expected_nops = [fully_matched_nop_instance, partially_matched_nop_instance].sort_by { |module_instance|
-          module_instance.rank.number
-        }.reverse # reverse to make descending
-
-        expect(nops_compatible_with).to eq(expected_nops)
-      end
-    end
   end
 
   context 'search' do
@@ -1365,7 +721,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     }
 
     context 'associations' do
-      it_should_behave_like 'search_association', :architectures
       it_should_behave_like 'search_association', :authorities
       it_should_behave_like 'search_association', :authors
       it_should_behave_like 'search_association', :email_addresses
@@ -1443,13 +798,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       it_should_behave_like 'search query', :formatted_operator => 'stance'
       it_should_behave_like 'search query', :formatted_operator => 'text'
 
-      context 'architectures' do
-        it_should_behave_like 'search query', :formatted_operator => 'architectures.abbreviation'
-        it_should_behave_like 'search query', :formatted_operator => 'architectures.bits'
-        it_should_behave_like 'search query', :formatted_operator => 'architectures.endianness'
-        it_should_behave_like 'search query', :formatted_operator => 'architectures.family'
-      end
-
       it_should_behave_like 'search query', :formatted_operator => 'authorities.abbreviation'
       it_should_behave_like 'search query', :formatted_operator => 'authors.name'
 
@@ -1507,66 +855,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     it { should validate_presence_of :description }
     it { should validate_presence_of :license }
     it { should validate_length_of(:module_authors) }
-
-    it_should_behave_like 'Metasploit::Cache::Module::Instance validates dynamic length of',
-                          :module_architectures,
-                          factory: :metasploit_cache_module_architecture,
-                          options_by_extreme_by_module_type: {
-                              'auxiliary' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'encoder' => {
-                                  maximum: {
-                                      extreme: Float::INFINITY
-                                  },
-                                  minimum: {
-                                      error_type: :too_short,
-                                      extreme: 1
-                                  }
-                              },
-                              'exploit' => {
-                                  maximum: {
-                                      extreme: Float::INFINITY
-                                  },
-                                  minimum: {
-                                      error_type: :too_short,
-                                      extreme: 1
-                                  }
-                              },
-                              'nop' => {
-                                  maximum: {
-                                      extreme: Float::INFINITY
-                                  },
-                                  minimum: {
-                                      error_type: :too_short,
-                                      extreme: 1
-                                  }
-                              },
-                              'payload' => {
-                                  maximum: {
-                                      extreme: Float::INFINITY
-                                  },
-                                  minimum: {
-                                      error_type: :too_short,
-                                      extreme: 1
-                                  }
-                              },
-                              'post' => {
-                                  maximum: {
-                                      extreme: Float::INFINITY
-                                  },
-                                  minimum: {
-                                      error_type: :too_short,
-                                      extreme: 1
-                                  }
-                              }
-                          }
 
     it_should_behave_like 'Metasploit::Cache::Module::Instance validates dynamic length of',
                           :module_platforms,
@@ -1864,116 +1152,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
         Metasploit::Cache::Module::Instance.module_types_that_allow(:targets)
       end
 
-      context '#architectures errors' do
-        subject(:architectures_errors) do
-          module_instance.errors[:architectures]
-        end
-
-        context '#architectures_from_targets' do
-          context 'with same architectures' do
-            before(:each) do
-              module_instance.valid?
-            end
-
-            it { should be_empty }
-          end
-
-          context 'without same architectures' do
-            context 'with extra architectures' do
-              #
-              # Lets
-              #
-
-              let(:error) do
-                I18n.translate(
-                    'metasploit.model.errors.models.metasploit/cache/module/instance.attributes.architectures.extra',
-                    extra: human_architecture_set
-                )
-              end
-
-              let(:expected_architecture_set) do
-                module_instance.targets.each_with_object(Set.new) do |module_target, set|
-                  module_target.target_architectures.each do |target_architecture|
-                    set.add target_architecture.architecture
-                  end
-                end
-              end
-
-              let(:extra_architecture) do
-                extra_architectures.sample
-              end
-
-              let(:extra_architectures) do
-                Metasploit::Cache::Architecture.all - expected_architecture_set.to_a
-              end
-
-              let(:human_architecture_set) do
-                "{#{extra_architecture.abbreviation}}"
-              end
-
-              #
-              # Callbacks
-              #
-
-              before(:each) do
-                module_instance.module_architectures <<  FactoryGirl.build(
-                    :metasploit_cache_module_architecture,
-                    architecture: extra_architecture,
-                    module_instance: module_instance
-                )
-
-                module_instance.valid?
-              end
-
-              it 'includes extra error' do
-                expect(architectures_errors).to include(error)
-              end
-            end
-
-            context 'with missing architectures', pending: 'Stopped working after Rails 4.0 upgrade.' do
-              #
-              # Lets
-              #
-
-              let(:error) do
-                I18n.translate(
-                    'metasploit.model.errors.models.metasploit/cache/module/instance.attributes.architectures.missing',
-                    missing: human_architecture_set
-                )
-              end
-
-              let(:human_architecture_set) do
-                "{#{missing_architecture.abbreviation}}"
-              end
-
-              let(:missing_architecture) do
-                missing_module_architecture.architecture
-              end
-
-              let(:missing_module_architecture) do
-                module_instance.module_architectures.sample
-              end
-
-              #
-              # Callbacks
-              #
-
-              before(:each) do
-                module_instance.module_architectures.reject! { |module_architecture|
-                  module_architecture == missing_module_architecture
-                }
-
-                module_instance.valid?
-              end
-
-              it 'includes missing error' do
-                expect(architectures_errors).to include(error)
-              end
-            end
-          end
-        end
-      end
-
       context '#platforms errors' do
         subject(:platforms_errors) do
           module_instance.errors[:platforms]
@@ -2177,19 +1355,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       described_class.module_types_that_allow(attribute)
     end
 
-    context 'with module_architectures' do
-      let(:attribute) do
-        :module_architectures
-      end
-
-      it { should_not include 'auxiliary' }
-      it { should include 'encoder' }
-      it { should include 'exploit' }
-      it { should include 'nop' }
-      it { should include 'payload' }
-      it { should include 'post' }
-    end
-
     context 'with module_platforms' do
       let(:attribute) do
         :module_platforms
@@ -2377,7 +1542,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
     let(:attributes) do
       [
-          :module_architectures,
           :module_platforms,
           :module_references,
           :targets

@@ -2,7 +2,6 @@ FactoryGirl.define do
   factory_by_attribute = {
       module_references: :metasploit_cache_module_reference
   }
-  total_architectures = Metasploit::Cache::Architecture::ABBREVIATIONS.length
   total_platforms = Metasploit::Cache::Platform.fully_qualified_name_set.length
   # chosen so that there is at least 1 element even if 0 is allowed so that factories always test that the associated
   # records are handled.
@@ -17,12 +16,6 @@ FactoryGirl.define do
   factory :metasploit_cache_module_instance,
           class: Metasploit::Cache::Module::Instance do
     transient do
-      # this length is only used if supports?(:module_architectures) is true.  It can be set to 0 when
-      # supports?(:module_architectures) is true to make the after(:build) skip building the module architectures automatically.
-      module_architectures_length {
-        Random.rand(minimum_with_elements .. total_architectures)
-      }
-
       module_authors_length(&arbitrary_supported_length)
 
       # this length is only used if supports?(:module_platforms) is true.  It can be set to 0 when
@@ -63,8 +56,7 @@ FactoryGirl.define do
               end
             end
 
-            # make sure targets are generated first so that module_architectures and module_platforms can be include
-            # the targets' architectures and platforms.
+            # make sure targets are generated first so that module_platforms can be include the targets' platforms.
             if metasploit_cache_module_instance.allows?(:targets)
               # factory adds built module_targets to module_instance.
               FactoryGirl.build_list(
@@ -72,24 +64,16 @@ FactoryGirl.define do
                   evaluator.targets_length,
                   module_instance: metasploit_cache_module_instance
               )
-              # module_architectures and module_platforms will be derived from targets
+              # module_platforms will be derived from targets
             else
-              # if there are no targets, then architectures and platforms need to be explicitly defined on module instance
-              # since they can't be derived from anything
-              [:architecture, :platform].each do |suffix|
-                attribute = "module_#{suffix.to_s.pluralize}".to_sym
-
-                if metasploit_cache_module_instance.allows?(attribute)
-                  factory = "metasploit_cache_module_#{suffix}"
-                  length = evaluator.send("#{attribute}_length")
-
-                  collection = FactoryGirl.build_list(
-                      factory,
-                      length,
-                      module_instance: metasploit_cache_module_instance
-                  )
-                  metasploit_cache_module_instance.send("#{attribute}=", collection)
-                end
+              # if there are no targets, then platforms need to be explicitly defined on module instance since they
+              # can't be derived from anything
+              if metasploit_cache_module_instance.allows?(:module_platforms)
+                metasploit_cache_module_instance.module_platforms = FactoryGirl.build_list(
+                    :metasploit_cache_module_platform,
+                    evaluator.module_platforms_length,
+                    module_instance: metasploit_cache_module_instance
+                )
               end
             end
           end

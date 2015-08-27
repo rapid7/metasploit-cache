@@ -16,26 +16,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   # {#dynamic_length_validation_options} by {#module_type} by attribute.
   DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE = {
-      module_architectures: {
-          Metasploit::Cache::Module::Type::AUX => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::ENCODER => {
-              minimum: 1
-          },
-          Metasploit::Cache::Module::Type::EXPLOIT => {
-              minimum: 1
-          },
-          Metasploit::Cache::Module::Type::NOP => {
-              minimum: 1
-          },
-          Metasploit::Cache::Module::Type::PAYLOAD => {
-              minimum: 1
-          },
-          Metasploit::Cache::Module::Type::POST => {
-              minimum: 1
-          }
-      },
       module_platforms: {
           Metasploit::Cache::Module::Type::AUX => {
               is: 0
@@ -123,13 +103,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # The default target in {#targets}.
   belongs_to :default_target, class_name: 'Metasploit::Cache::Module::Target', inverse_of: :module_instance
 
-  # Joins this {Metasploit::Cache::Module::Instance} to its supported {Metasploit::Cache::Architecture architectures}.
-  has_many :module_architectures,
-           class_name: 'Metasploit::Cache::Module::Architecture',
-           dependent: :destroy,
-           foreign_key: :module_instance_id,
-           inverse_of: :module_instance
-
   # Joins this with {#authors} and {#email_addresses} to model the name and email address used for an author entry in
   # the module metadata.
   has_many :module_authors,
@@ -161,13 +134,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
            dependent: :destroy,
            foreign_key: :module_instance_id,
            inverse_of: :module_instance
-
-  #
-  # through: :module_architectures
-  #
-
-  # The {Metasploit::Cache::Module::Architecture architectures} supported by this module.
-  has_many :architectures, :class_name => 'Metasploit::Cache::Architecture', :through => :module_architectures
 
   #
   # through: :module_authors
@@ -271,59 +237,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
           end
         }
 
-  # @!method self.encoders_compatible_with(module_instance)
-  #   {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} that share at least 1 {Metasploit::Cache::Architecture} with the given
-  #   `module_instance`'s {Metasploit::Cache::Module::Instance#archtiectures} and have {#module_class}
-  #   {Metasploit::Cache::Module::Class#module_type} of `'encoder'`.
-  #
-  #   @param module_instance [Metasploit::Cache::Module::Instance] module instance whose {Metasploit::Cache::Module::Instance#architectures} need to
-  #     have at least 1 {Metasploit::Cache::Architecture} shared with the returned {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances'}
-  #     {Metasploit::Cache::Module::instance#architectures}.
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
-  scope :encoders_compatible_with,
-        ->(module_instance){
-          with_module_type(
-              'encoder'
-          ).intersecting_architectures_with(
-              module_instance
-          ).select(
-              Metasploit::Cache::Module::Instance.arel_table['*']
-          ).select(
-              Metasploit::Cache::Module::Rank.arel_table[:number]
-          ).uniq.order_by_rank
-        }
-
-  # @!method self.intersecting_architecture_abbreviations
-  #   List of {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} that share at least 1 {Metasploit::Cache::Architecture#abbreviation} with
-  #   the given `architecture_abbreviations`.
-  #
-  #   @param architecture_abbreviations [Array<String>]
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
-  scope :intersecting_architecture_abbreviations,
-        ->(architecture_abbreviations){
-          joins(
-              :architectures
-          ).where(
-              Metasploit::Cache::Architecture.arel_table[:abbreviation].in(architecture_abbreviations)
-          )
-        }
-
-  # @!method self.intersecting_architectures_with(architectured)
-  #   List of {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} that share at least 1 {Metasploit::Cache::Architecture} with the given
-  #   architectured record's `#architectures`.
-  #
-  #   @param architectured [Metasploit::Cache::Module::Instance, Metasploit::Cache::Module::Target, #architectures] target whose `#architectures`
-  #     need to have at least 1 {Metasploit::Cache::Architecture} shared with the returned
-  #     {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances'} {Metasploit::Cache::Module::Instance#architectures}.
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
-  scope :intersecting_architectures_with,
-        ->(architectured){
-          intersecting_architecture_abbreviations(
-              # TODO check if `to_sql can be removed in Rails 4.1+`
-              architectured.architectures.select(:abbreviation).to_sql
-          )
-        }
-
   # @!method self.intersecting_platforms(platforms)
   #   List of {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} that has at least 1 {Metasploit::Cache::Platform} from `platforms`.
   #
@@ -389,28 +302,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
           intersecting_platforms(module_target.platforms)
         }
 
-  # @!method self.nops_compatible_with(module_instance)
-  #   {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} that share at least 1 {Metasploit::Cache::Architecture} with the given
-  #   `module_instance`'s {Metasploit::Cache::Module::Instance#archtiectures} and have {#module_class}
-  #   {Metasploit::Cache::Module::Class#module_type} of `'nop'`.
-  #
-  #   @param module_instance [Metasploit::Cache::Module::Instance] module instance whose {Metasploit::Cache::Module::Instance#architectures} need to
-  #     have at least 1 {Metasploit::Cache::Architecture} shared with the returned {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances'}
-  #     {Metasploit::Cache::Module::instance#architectures}.
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
-  scope :nops_compatible_with,
-        ->(module_instance){
-          with_module_type(
-              'nop'
-          ).intersecting_architectures_with(
-              module_instance
-          ).select(
-              Metasploit::Cache::Module::Instance.arel_table['*']
-          ).select(
-              Metasploit::Cache::Module::Rank.arel_table[:number]
-          ).uniq.order_by_rank
-        }
-
   # @!method self.order_by_rank
   #   Orders {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances} by their {#module_class} {Metasploit::Cache::Module::Class#rank}
   #   {Metasploit::Cache::Module::Rank#number} in descending order so better, more reliable modules are first.
@@ -440,35 +331,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
           )
         }
 
-  # @!method self.payloads_compatible_with(module_target)
-  #   @note In addition to the compatibility checks down using the module cache: (1) the actual `Msf::Payload`
-  #     referenced by the {Metasploit::Cache::Module::Instance} must be checked that it's `Msf::Payload#size` fits the size
-  #     restrictions of the `Msf::Exploit#payload_space`; and (2) the compatibility checks performed by
-  #     `Msf::Module#compatible?` all pass.
-  #
-  #   {Metasploit::Cache::Module::Instance} that have (1) 'payload' for {Metasploit::Cache::Module::Instance#module_type}; (2) a least 1
-  #   {Metasploit::Cache::Architecture} shared between the {Metasploit::Cache::Module::Instance#architectures} and this target's {#architectures};
-  #   (3) at least one shared platform or platform descendant between {Metasploit::Cache::Module::Instance#platforms} and this
-  #   target's {#platforms} or their descendants; and, optionally, (4) that are NOT {Metasploit::Cache::Module::Instance#privileged?}
-  #   if and only if {Metasploit::Cache::Module::Target#module_instance} is NOT {Metasploit::Cache::Module::Instance#privileged?}.
-  #
-  #   @param module_target [Metasploit::Cache::Module::Target] target with {Metasploit::Cache::Module::Target#architectures} and
-  #     {Metasploit::Cache::Module::Target#platforms} that need to be compatible with the returned payload
-  #     {Metasploit::Cache::Module::Instance Metasploit::Cache::Module::Instances}.
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Instance>]
-  scope :payloads_compatible_with,
-        ->(module_target){
-          with_module_type(
-              'payload'
-          ).compatible_privilege_with(
-              module_target.module_instance
-          ).intersecting_architectures_with(
-              module_target
-          ).intersecting_platforms_with(
-              module_target
-          ).order_by_rank
-        }
-
   #
   #
   # Search
@@ -479,7 +341,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Search Associations
   #
 
-  search_association :architectures
   search_association :authorities
   search_association :authors
   search_association :email_addresses
@@ -531,8 +392,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Method validations
   #
 
-  validate :architectures_from_targets,
-           if: 'allows?(:targets)'
   validate :platforms_from_targets,
            if: 'allows?(:targets)'
 
@@ -549,8 +408,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
             presence: true
   validates :license,
             presence: true
-  validates :module_architectures,
-            dynamic_length: true
   validates :module_authors,
             length: {
                 minimum: MINIMUM_MODULE_AUTHORS_LENGTH
@@ -730,49 +587,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   end
 
   private
-
-  # Validates that the {#module_architectures}
-  # {Metasploit::Cache::Module::Architecture#architecture architectures} match the {#targets}
-  # {Metasploit::Cache::Module::Target#target_architectures target_architectures}
-  # {Metasploit::Cache::Module::Target::Architecture#architecture architectures}.
-  #
-  # @return [void]
-  def architectures_from_targets
-    actual_architecture_set = Set.new module_architectures.map(&:architecture)
-    expected_architecture_set = Set.new
-
-    targets.each do |module_target|
-      module_target.target_architectures.each do |target_architecture|
-        expected_architecture_set.add target_architecture.architecture
-      end
-    end
-
-    extra_architecture_set = actual_architecture_set - expected_architecture_set
-
-    unless extra_architecture_set.empty?
-      human_extra_architectures = human_architecture_set(extra_architecture_set)
-
-      errors.add(:architectures, :extra, extra: human_extra_architectures)
-    end
-
-    missing_architecture_set = expected_architecture_set - actual_architecture_set
-
-    unless missing_architecture_set.empty?
-      human_missing_architectures = human_architecture_set(missing_architecture_set)
-
-      errors.add(:architectures, :missing, missing: human_missing_architectures)
-    end
-  end
-
-  # Converts a Set<Metasploit::Cache::Architecture> to a human readable representation including the
-  # {Metasploit::Cache::Architecture#abbreviation}.
-  #
-  # @return [String]
-  def human_architecture_set(architecture_set)
-    abbreviations = architecture_set.map(&:abbreviation)
-
-    human_set(abbreviations)
-  end
 
   # Converts a Set<Metasploit::Cache::Platform> to a human-readable representation including the
   # {Metasploit::Cache::Platform#fully_qualified_name}.

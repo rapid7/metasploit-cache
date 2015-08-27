@@ -16,21 +16,6 @@ FactoryGirl.define do
         unless module_target.target_architectures.include? module_target_architecture
           module_target.target_architectures << module_target_architecture
         end
-
-        architecture = module_target_architecture.architecture
-        module_instance = module_target.module_instance
-
-        if architecture && module_instance
-          actual_architecture_set = module_instance.module_architectures.map(&:architecture)
-
-          unless actual_architecture_set.include? architecture
-            module_instance.module_architectures << FactoryGirl.build(
-                :metasploit_cache_module_architecture,
-                architecture: architecture,
-                module_instance: module_instance
-            )
-          end
-        end
       end
     end
   end
