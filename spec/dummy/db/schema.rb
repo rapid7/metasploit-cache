@@ -189,18 +189,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
   add_index "mc_module_classes", ["module_type", "reference_name"], name: "index_mc_module_classes_on_module_type_and_reference_name", unique: true, using: :btree
   add_index "mc_module_classes", ["rank_id"], name: "index_mc_module_classes_on_rank_id", using: :btree
 
-  create_table "mc_module_instances", force: true do |t|
-    t.text    "description",     null: false
-    t.date    "disclosed_on"
-    t.string  "license",         null: false
-    t.text    "name",            null: false
-    t.boolean "privileged",      null: false
-    t.string  "stance"
-    t.integer "module_class_id", null: false
-  end
-
-  add_index "mc_module_instances", ["module_class_id"], name: "index_mc_module_instances_on_module_class_id", unique: true, using: :btree
-
   create_table "mc_module_paths", force: true do |t|
     t.string "gem"
     t.string "name"

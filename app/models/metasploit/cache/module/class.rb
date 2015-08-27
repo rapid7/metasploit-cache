@@ -34,13 +34,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
   #
   #
 
-  # Instance-derived metadata to go along with the class-derived metadata from this model.
-  has_one :module_instance,
-          class_name: 'Metasploit::Cache::Module::Instance',
-          dependent: :destroy,
-          foreign_key: :module_class_id,
-          inverse_of: :module_class
- 
   # The reliability of the module and likelyhood that the module won't knock over the service or host being exploited.
   # Bigger values are better.
   belongs_to :rank, class_name: 'Metasploit::Cache::Module::Rank', inverse_of: :module_classes
@@ -137,19 +130,6 @@ class Metasploit::Cache::Module::Class < ActiveRecord::Base
           )
         }
 
-  # @!method self.with_module_instances(module_instances)
-  #   {Metasploit::Cache::Module::Class Metasploit::Cache::Module::Classes} associated with the `module_instances`.
-  #   Allows converting queries using {Metasploit::Cache::Module::Instance} scopes to
-  #   {Metasploit::Cache::Module::Class} scopes.
-  #
-  #   @param module_instances [ActiveRecord::Relation<Metasploit::Cache::Module::Class>]
-  #   @return [ActiveRecord::Relation<Metasploit::Cache::Module::Class>]
-  scope :with_module_instances,
-        ->(module_instances){
-          module_class_ids = module_instances.joins(:module_class).select(Metasploit::Cache::Module::Class.arel_table[:id])
-          where(id: module_class_ids)
-        }
-  
   #
   # Search Attributes
   #
