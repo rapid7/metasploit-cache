@@ -16,8 +16,6 @@ FactoryGirl.define do
   factory :metasploit_cache_module_instance,
           class: Metasploit::Cache::Module::Instance do
     transient do
-      module_authors_length(&arbitrary_supported_length)
-
       # this length is only used if supports?(:module_platforms) is true.  It can be set to 0 when
       # supports?(:module_platforms) is true to make the after(:build) skip building the module platforms automatically.
       module_platforms_length {
@@ -35,10 +33,6 @@ FactoryGirl.define do
 
       before_write_template {
         ->(metasploit_cache_module_instance, evaluator){
-          metasploit_cache_module_instance.module_authors = evaluator.module_authors_length.times.collect {
-            FactoryGirl.build(:metasploit_cache_module_author, module_instance: metasploit_cache_module_instance)
-          }
-
           module_class = metasploit_cache_module_instance.module_class
 
           # only attempt to build supported associations if the module_class is valid because supports depends on a valid

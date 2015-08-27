@@ -78,9 +78,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
       }
   }
 
-  # Minimum length of {#module_authors}.
-  MINIMUM_MODULE_AUTHORS_LENGTH = 1
-
   # {#privileged} is Boolean so, valid values are just `true` and `false`, but since both the validation and
   # factory need an array of valid values, this constant exists.
   PRIVILEGES = [
@@ -102,14 +99,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   # The default target in {#targets}.
   belongs_to :default_target, class_name: 'Metasploit::Cache::Module::Target', inverse_of: :module_instance
-
-  # Joins this with {#authors} and {#email_addresses} to model the name and email address used for an author entry in
-  # the module metadata.
-  has_many :module_authors,
-           class_name: 'Metasploit::Cache::Module::Author',
-           dependent: :destroy,
-           foreign_key: :module_instance_id,
-           inverse_of: :module_instance
 
   # Class-derived metadata to go along with the instance-derived metadata in this model.
   belongs_to :module_class, class_name: 'Metasploit::Cache::Module::Class', inverse_of: :module_instance
@@ -134,16 +123,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
            dependent: :destroy,
            foreign_key: :module_instance_id,
            inverse_of: :module_instance
-
-  #
-  # through: :module_authors
-  #
-
-  # The names of the authors of this module.
-  has_many :authors, :class_name => 'Metasploit::Cache::Author', :through => :module_authors
-
-  # The email addresses of the authors of this module.
-  has_many :email_addresses, :class_name => 'Metasploit::Cache::EmailAddress', :through => :module_authors, :uniq => true
 
   #
   # through: :module_class
@@ -342,8 +321,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #
 
   search_association :authorities
-  search_association :authors
-  search_association :email_addresses
   search_association :module_class
   search_association :platforms
   search_association :rank
@@ -366,7 +343,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #
 
   search_with Metasploit::Cache::Search::Operator::Deprecated::App
-  search_with Metasploit::Cache::Search::Operator::Deprecated::Author
   search_with Metasploit::Cache::Search::Operator::Deprecated::Authority,
               :abbreviation => :bid
   search_with Metasploit::Cache::Search::Operator::Deprecated::Authority,
@@ -408,10 +384,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
             presence: true
   validates :license,
             presence: true
-  validates :module_authors,
-            length: {
-                minimum: MINIMUM_MODULE_AUTHORS_LENGTH
-            }
   validates :module_class,
             presence: true
   validates :module_class_id,

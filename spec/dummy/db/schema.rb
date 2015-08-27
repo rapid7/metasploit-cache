@@ -177,17 +177,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
 
   add_index "mc_module_architectures", ["module_instance_id", "architecture_id"], name: "unique_mc_module_architectures", unique: true, using: :btree
 
-  create_table "mc_module_authors", force: true do |t|
-    t.integer "author_id",          null: false
-    t.integer "email_address_id"
-    t.integer "module_instance_id", null: false
-  end
-
-  add_index "mc_module_authors", ["author_id"], name: "index_mc_module_authors_on_author_id", using: :btree
-  add_index "mc_module_authors", ["email_address_id"], name: "index_mc_module_authors_on_email_address_id", using: :btree
-  add_index "mc_module_authors", ["module_instance_id", "author_id"], name: "index_mc_module_authors_on_module_instance_id_and_author_id", unique: true, using: :btree
-  add_index "mc_module_authors", ["module_instance_id"], name: "index_mc_module_authors_on_module_instance_id", using: :btree
-
   create_table "mc_module_classes", force: true do |t|
     t.text    "full_name",      null: false
     t.string  "module_type",    null: false

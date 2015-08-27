@@ -225,9 +225,6 @@ en:
           actions:
             one: 'action'
             other: 'actions'
-          module_authors:
-            one: 'module author'
-            other: 'module authors'
           module_references:
             one: 'module reference'
             other: 'module references'

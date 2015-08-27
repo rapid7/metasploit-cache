@@ -398,14 +398,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       end
     end
 
-    context 'MINIMUM_MODULE_AUTHORS_LENGTH' do
-      subject(:minimum_module_authors_length) do
-        described_class::MINIMUM_MODULE_AUTHORS_LENGTH
-      end
-
-      it { should == 1 }
-    end
-
     context 'PRIVILEGES' do
       subject(:privileges) do
         described_class::PRIVILEGES
@@ -419,11 +411,8 @@ RSpec.describe Metasploit::Cache::Module::Instance do
   end
 
   context 'associations' do
-    it { should have_many(:authors).class_name('Metasploit::Cache::Author').through(:module_authors) }
     it { should have_many(:authorities).class_name('Metasploit::Cache::Authority').through(:references) }
     it { should belong_to(:default_target).class_name('Metasploit::Cache::Module::Target') }
-    it { should have_many(:email_addresses).class_name('Metasploit::Cache::EmailAddress').through(:module_authors) }
-    it { should have_many(:module_authors).class_name('Metasploit::Cache::Module::Author').dependent(:destroy).with_foreign_key(:module_instance_id) }
     it { should belong_to(:module_class).class_name('Metasploit::Cache::Module::Class') }
     it { should have_many(:module_platforms).class_name('Metasploit::Cache::Module::Platform').dependent(:destroy).with_foreign_key(:module_instance_id) }
     it { should have_many(:module_references).class_name('Metasploit::Cache::Module::Reference').dependent(:destroy).with_foreign_key(:module_instance_id) }
@@ -722,8 +711,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
     context 'associations' do
       it_should_behave_like 'search_association', :authorities
-      it_should_behave_like 'search_association', :authors
-      it_should_behave_like 'search_association', :email_addresses
       it_should_behave_like 'search_association', :module_class
       it_should_behave_like 'search_association', :platforms
       it_should_behave_like 'search_association', :rank
@@ -744,9 +731,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       it_should_behave_like 'search_with',
                             Metasploit::Cache::Search::Operator::Deprecated::App,
                             :name => :app
-      it_should_behave_like 'search_with',
-                            Metasploit::Cache::Search::Operator::Deprecated::Author,
-                            :name => :author
       it_should_behave_like 'search_with',
                             Metasploit::Cache::Search::Operator::Deprecated::Authority,
                             :abbreviation => :bid,
@@ -799,12 +783,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       it_should_behave_like 'search query', :formatted_operator => 'text'
 
       it_should_behave_like 'search query', :formatted_operator => 'authorities.abbreviation'
-      it_should_behave_like 'search query', :formatted_operator => 'authors.name'
-
-      context 'email_addresses' do
-        it_should_behave_like 'search query', :formatted_operator => 'email_addresses.domain'
-        it_should_behave_like 'search query', :formatted_operator => 'email_addresses.local'
-      end
 
       context 'module_class' do
         it_should_behave_like 'search query', :formatted_operator => 'module_class.full_name'
