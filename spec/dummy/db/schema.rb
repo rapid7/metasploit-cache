@@ -158,13 +158,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
   add_index "mc_licenses", ["summary"], name: "index_mc_licenses_on_summary", unique: true, using: :btree
   add_index "mc_licenses", ["url"], name: "index_mc_licenses_on_url", unique: true, using: :btree
 
-  create_table "mc_module_actions", force: true do |t|
-    t.integer "module_instance_id", null: false
-    t.text    "name",               null: false
-  end
-
-  add_index "mc_module_actions", ["module_instance_id", "name"], name: "index_mc_module_actions_on_module_instance_id_and_name", unique: true, using: :btree
-
   create_table "mc_module_ancestors", force: true do |t|
     t.string   "type"
     t.datetime "real_path_modified_at",                null: false
@@ -214,12 +207,10 @@ ActiveRecord::Schema.define(version: 20150716152805) do
     t.text    "name",              null: false
     t.boolean "privileged",        null: false
     t.string  "stance"
-    t.integer "default_action_id"
     t.integer "default_target_id"
     t.integer "module_class_id",   null: false
   end
 
-  add_index "mc_module_instances", ["default_action_id"], name: "index_mc_module_instances_on_default_action_id", unique: true, using: :btree
   add_index "mc_module_instances", ["default_target_id"], name: "index_mc_module_instances_on_default_target_id", unique: true, using: :btree
   add_index "mc_module_instances", ["module_class_id"], name: "index_mc_module_instances_on_module_class_id", unique: true, using: :btree
 

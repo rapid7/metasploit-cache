@@ -17,7 +17,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
 
       it { should include 'description' }
       it { should include 'name' }
-      it { should include 'actions.name' }
 
       it 'should include platform instead of platforms.fully_qualified_name and targets.name' do
         expect(operator_names).to include('platform')
@@ -36,26 +35,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
 
   context '#children' do
     include_context 'Metasploit::Model::Search::Operator::Group::Union#children'
-
-    let(:action_name_operator) do
-      Metasploit::Model::Search::Operator::Attribute.new(
-          :attribute => :name,
-          :klass => action_class,
-          :type => :string
-      )
-    end
-
-    let(:action_class) do
-      Class.new
-    end
-
-    let(:actions_name_operator) do
-      Metasploit::Model::Search::Operator::Association.new(
-          :association => :actions,
-          :source_operator => action_name_operator,
-          :klass => klass
-      )
-    end
 
     let(:architecture_class) do
       Class.new
@@ -209,7 +188,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
     before(:each) do
       allow(operator).to receive(:operator).with('description').and_return(description_operator)
       allow(operator).to receive(:operator).with('name').and_return(name_operator)
-      allow(operator).to receive(:operator).with('actions.name').and_return(actions_name_operator)
       allow(operator).to receive(:operator).with('architectures.abbreviation').and_return(architectures_abbreviation_operator)
       allow(operator).to receive(:operator).with('platform').and_return(platform_operator)
       allow(operator).to receive(:operator).with('ref').and_return(ref_operator)
@@ -243,22 +221,6 @@ RSpec.describe Metasploit::Cache::Search::Operator::Deprecated::Text do
 
       it 'should use formatted value for value' do
         expect(operation.value).to eq(formatted_value)
-      end
-    end
-
-    context 'actions.name' do
-      subject(:operation) do
-        child('actions.name')
-      end
-
-      context 'Metasploit::Model::Search::Operation::Association#source_operation' do
-        subject(:source_operation) {
-          operation.source_operation
-        }
-
-        it 'should use formatted value for value' do
-          expect(source_operation.value).to eq(formatted_value)
-        end
       end
     end
 

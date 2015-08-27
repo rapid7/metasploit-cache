@@ -16,26 +16,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
 
   # {#dynamic_length_validation_options} by {#module_type} by attribute.
   DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE = {
-      actions: {
-          Metasploit::Cache::Module::Type::AUX => {
-              minimum: 0
-          },
-          Metasploit::Cache::Module::Type::ENCODER => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::EXPLOIT => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::NOP => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::PAYLOAD => {
-              is: 0
-          },
-          Metasploit::Cache::Module::Type::POST => {
-              minimum: 0
-          }
-      },
       module_architectures: {
           Metasploit::Cache::Module::Type::AUX => {
               is: 0
@@ -140,16 +120,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #
   #
 
-  # Auxiliary actions to perform when this running this module.
-  has_many :actions,
-           class_name: 'Metasploit::Cache::Module::Action',
-           dependent: :destroy,
-           foreign_key: :module_instance_id,
-           inverse_of: :module_instance
-
-  # The default action in {#actions}.
-  belongs_to :default_action, class_name: 'Metasploit::Cache::Module::Action', inverse_of: :module_instance
-
   # The default target in {#targets}.
   belongs_to :default_target, class_name: 'Metasploit::Cache::Module::Target', inverse_of: :module_instance
 
@@ -240,11 +210,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   #
   # Attributes
   #
-
-  # @!method default_action_id
-  #   The primary key of the associated {#default_action}.
-  #
-  #   @return [Integer, nil]
 
   # @!method default_target_id
   #   The primary key of the associated {#default_target}.
@@ -514,7 +479,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Search Associations
   #
 
-  search_association :actions
   search_association :architectures
   search_association :authorities
   search_association :authors
@@ -576,13 +540,6 @@ class Metasploit::Cache::Module::Instance < ActiveRecord::Base
   # Attribute validations
   #
 
-  validates :actions,
-            dynamic_length: true
-  validates :default_action_id,
-            uniqueness: {
-                allow_nil: true,
-                unless: :batched?
-            }
   validates :default_target_id,
             uniqueness: {
                 allow_nil: true,

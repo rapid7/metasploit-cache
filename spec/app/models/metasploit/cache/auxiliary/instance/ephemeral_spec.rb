@@ -84,7 +84,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral do
         allow(author).to receive(:email).and_return(email_address_full)
 
         action = double('auxiliary Metasploit Module instance action')
-        default_action_name = FactoryGirl.generate :metasploit_cache_module_action_name
+        default_action_name = FactoryGirl.generate :metasploit_cache_actionable_action_name
         description = FactoryGirl.generate :metasploit_cache_auxiliary_instance_description
         name = FactoryGirl.generate :metasploit_cache_auxiliary_instance_name
         license_abbreviation = FactoryGirl.generate :metasploit_cache_license_abbreviation

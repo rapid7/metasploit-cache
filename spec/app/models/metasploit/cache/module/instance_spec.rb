@@ -127,96 +127,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
         described_class::DYNAMIC_LENGTH_VALIDATION_OPTIONS_BY_MODULE_TYPE_BY_ATTRIBUTE
       end
 
-      context "[:actions]" do
-        let(:attribute) do
-          :actions
-        end
-
-        context "['auxiliary']" do
-          let(:module_type) do
-            'auxiliary'
-          end
-
-          context "[:minimum]" do
-            subject(:minimum) {
-              dynamic_length_validation_options[:minimum]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['encoder']" do
-          let(:module_type) do
-            'encoder'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['exploit']" do
-          let(:module_type) do
-            'exploit'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['nop']" do
-          let(:module_type) do
-            'nop'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['payload']" do
-          let(:module_type) do
-            'payload'
-          end
-
-          context "[:is]" do
-            subject(:is) {
-              dynamic_length_validation_options[:is]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-
-        context "['post']" do
-          let(:module_type) do
-            'post'
-          end
-
-          context "[:minimum]" do
-            subject(:minimum) {
-              dynamic_length_validation_options[:minimum]
-            }
-
-            it { is_expected.to eq(0) }
-          end
-        end
-      end
-
       context '[:module_architectures:]' do
         let(:attribute) do
           :module_architectures
@@ -599,11 +509,9 @@ RSpec.describe Metasploit::Cache::Module::Instance do
   end
 
   context 'associations' do
-    it { should have_many(:actions).class_name('Metasploit::Cache::Module::Action').dependent(:destroy).with_foreign_key(:module_instance_id) }
     it { should have_many(:architectures).class_name('Metasploit::Cache::Architecture').through(:module_architectures) }
     it { should have_many(:authors).class_name('Metasploit::Cache::Author').through(:module_authors) }
     it { should have_many(:authorities).class_name('Metasploit::Cache::Authority').through(:references) }
-    it { should belong_to(:default_action).class_name('Metasploit::Cache::Module::Action') }
     it { should belong_to(:default_target).class_name('Metasploit::Cache::Module::Target') }
     it { should have_many(:email_addresses).class_name('Metasploit::Cache::EmailAddress').through(:module_authors) }
     it { should have_many(:module_architectures).class_name('Metasploit::Cache::Module::Architecture').dependent(:destroy).with_foreign_key(:module_instance_id) }
@@ -619,7 +527,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:default_action_id).of_type(:integer).with_options(:null => true) }
       it { should have_db_column(:default_target_id).of_type(:integer).with_options(:null => true) }
       it { should have_db_column(:description).of_type(:text).with_options(:null => false) }
       it { should have_db_column(:disclosed_on).of_type(:date).with_options(:null => true) }
@@ -631,7 +538,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     end
 
     context 'indices' do
-      it { should have_db_index(:default_action_id).unique(true) }
       it { should have_db_index(:default_target_id).unique(true) }
       it { should have_db_index(:module_class_id).unique(true) }
     end
@@ -667,7 +573,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should allow_attribute :actions }
           it { should_not allow_attribute :module_architectures }
           it { should_not allow_attribute :module_platforms }
           it { should allow_attribute :module_references }
@@ -683,7 +588,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should_not allow_attribute :actions }
           it { should allow_attribute :module_architectures }
           it { should_not allow_attribute :module_platforms }
           it { should_not allow_attribute :module_references }
@@ -699,7 +603,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should_not allow_attribute :actions }
           it { should allow_attribute :module_architectures }
           it { should allow_attribute :module_platforms }
           it { should allow_attribute :module_references }
@@ -715,7 +618,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should_not allow_attribute :actions }
           it { should allow_attribute :module_architectures }
           it { should_not allow_attribute :module_platforms }
           it { should_not allow_attribute :module_references }
@@ -731,7 +633,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should_not allow_attribute :actions }
           it { should allow_attribute :module_architectures }
           it { should allow_attribute :module_platforms }
           it { should_not allow_attribute :module_references }
@@ -747,7 +648,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
           it { should be_valid }
 
-          it { should allow_attribute :actions }
           it { should allow_attribute :module_architectures }
           it { should allow_attribute :module_platforms }
           it { should allow_attribute :module_references }
@@ -1465,7 +1365,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     }
 
     context 'associations' do
-      it_should_behave_like 'search_association', :actions
       it_should_behave_like 'search_association', :architectures
       it_should_behave_like 'search_association', :authorities
       it_should_behave_like 'search_association', :authors
@@ -1544,8 +1443,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       it_should_behave_like 'search query', :formatted_operator => 'stance'
       it_should_behave_like 'search query', :formatted_operator => 'text'
 
-      it_should_behave_like 'search query', :formatted_operator => 'actions.name'
-
       context 'architectures' do
         it_should_behave_like 'search query', :formatted_operator => 'architectures.abbreviation'
         it_should_behave_like 'search query', :formatted_operator => 'architectures.bits'
@@ -1610,64 +1507,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
     it { should validate_presence_of :description }
     it { should validate_presence_of :license }
     it { should validate_length_of(:module_authors) }
-
-    it_should_behave_like 'Metasploit::Cache::Module::Instance validates dynamic length of',
-                          :actions,
-                          factory: :metasploit_cache_module_action,
-                          options_by_extreme_by_module_type: {
-                              'auxiliary' => {
-                                  maximum: {
-                                      extreme: Float::INFINITY
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'encoder' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'exploit' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'nop' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'payload' => {
-                                  maximum: {
-                                      error_type: :wrong_length,
-                                      extreme: 0
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              },
-                              'post' => {
-                                  maximum: {
-                                      extreme: Float::INFINITY
-                                  },
-                                  minimum: {
-                                      extreme: 0
-                                  }
-                              }
-                          }
 
     it_should_behave_like 'Metasploit::Cache::Module::Instance validates dynamic length of',
                           :module_architectures,
@@ -2338,19 +2177,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
       described_class.module_types_that_allow(attribute)
     end
 
-    context 'with actions' do
-      let(:attribute) do
-        :actions
-      end
-
-      it { should include 'auxiliary' }
-      it { should_not include 'encoder' }
-      it { should_not include 'exploit' }
-      it { should_not include 'nop' }
-      it { should_not include 'payload' }
-      it { should include 'post' }
-    end
-
     context 'with module_architectures' do
       let(:attribute) do
         :module_architectures
@@ -2551,7 +2377,6 @@ RSpec.describe Metasploit::Cache::Module::Instance do
 
     let(:attributes) do
       [
-          :actions,
           :module_architectures,
           :module_platforms,
           :module_references,

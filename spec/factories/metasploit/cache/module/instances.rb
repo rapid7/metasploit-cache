@@ -1,6 +1,5 @@
 FactoryGirl.define do
   factory_by_attribute = {
-      actions: :metasploit_cache_module_action,
       module_references: :metasploit_cache_module_reference
   }
   total_architectures = Metasploit::Cache::Architecture::ABBREVIATIONS.length
@@ -18,8 +17,6 @@ FactoryGirl.define do
   factory :metasploit_cache_module_instance,
           class: Metasploit::Cache::Module::Instance do
     transient do
-      actions_length(&arbitrary_supported_length)
-
       # this length is only used if supports?(:module_architectures) is true.  It can be set to 0 when
       # supports?(:module_architectures) is true to make the after(:build) skip building the module architectures automatically.
       module_architectures_length {
@@ -65,8 +62,6 @@ FactoryGirl.define do
                 metasploit_cache_module_instance.send("#{attribute}=", collection)
               end
             end
-
-            metasploit_cache_module_instance.default_action = metasploit_cache_module_instance.actions.sample
 
             # make sure targets are generated first so that module_architectures and module_platforms can be include
             # the targets' architectures and platforms.
