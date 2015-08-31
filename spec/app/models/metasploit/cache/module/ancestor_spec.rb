@@ -1,10 +1,6 @@
 RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
   subject(:module_ancestor) {
-    FactoryGirl.build(module_ancestor_factory)
-  }
-
-  let(:module_ancestor_factory) {
-    FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+    FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
   }
 
   context 'CONSTANTS' do
@@ -156,11 +152,11 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
         module_ancestor
       end
 
-      context 'with payload' do
-        let(:real_path_creator) do
-          FactoryGirl.build(real_path_creator_factory)
-        end
+      let(:real_path_creator) do
+        FactoryGirl.build(real_path_creator_factory)
+      end
 
+      context 'with payload' do
         context 'with single' do
           let(:real_path_creator_factory) {
             :metasploit_cache_payload_single_ancestor
@@ -175,12 +171,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       end
 
       context 'without payload' do
-        let(:real_path_creator) do
-          FactoryGirl.build(real_path_creator_factory)
-        end
-
         let(:real_path_creator_factory) {
-          FactoryGirl.generate :metasploit_cache_non_payload_ancestor_factory
+          :metasploit_cache_auxiliary_ancestor
         }
 
         it { should be_valid }
@@ -326,7 +318,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
       let(:module_ancestor) {
         FactoryGirl.build(
-                       module_ancestor_factory,
+                       :metasploit_cache_auxiliary_ancestor,
                        module_type: module_type
         )
       }
@@ -356,19 +348,11 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     context 'relative_path' do
       context 'validate uniqueness' do
         #
-        # lets
-        #
-
-        let(:original_ancestor_factory) {
-          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
-        }
-
-        #
         # let!s
         #
 
         let!(:original_ancestor) do
-          FactoryGirl.create(original_ancestor_factory)
+          FactoryGirl.create(:metasploit_cache_auxiliary_ancestor)
         end
 
         context 'with same relative_path' do
@@ -432,34 +416,22 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
       context 'validates uniqueness' do
         #
-        # lets
-        #
-
-        let(:original_ancestor_factory) {
-          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
-        }
-
-        #
         # let!s
         #
 
         let!(:original_ancestor) do
-          FactoryGirl.create(original_ancestor_factory)
+          FactoryGirl.create(:metasploit_cache_auxiliary_ancestor)
         end
 
         context 'with same real_path_sha1_hex_digest' do
           subject(:same_real_path_sha1_hex_digest_ancestor) do
             FactoryGirl.build(
-                same_real_path_sha1_hex_digest_ancestor_factory,
+                :metasploit_cache_encoder_ancestor,
                 # real_path_sha1_hex_digest is derived, but not validated (as it would take too long)
                 # so it can just be set directly
                 :real_path_sha1_hex_digest => original_ancestor.real_path_sha1_hex_digest
             )
           end
-
-          let(:same_real_path_sha1_hex_digest_ancestor_factory) {
-            FactoryGirl.generate :metasploit_cache_module_ancestor_factory
-          }
 
           context 'with batched' do
             include Metasploit::Cache::Spec::Matcher
@@ -752,7 +724,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     context 'without #relative_path' do
       let(:module_ancestor) {
         FactoryGirl.build(
-            module_ancestor_factory,
+            :metasploit_cache_auxiliary_ancestor,
             content?: false,
             relative_path: nil
         )
@@ -769,7 +741,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
     let(:module_ancestor) do
       FactoryGirl.build(
-          module_ancestor_factory,
+          :metasploit_cache_auxiliary_ancestor,
           reference_name: reference_name
       )
     end

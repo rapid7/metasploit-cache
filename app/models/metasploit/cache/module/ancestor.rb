@@ -14,7 +14,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
 
   autoload :Ephemeral
   autoload :Load
-  autoload :Spec
 
   #
   # CONSTANTS

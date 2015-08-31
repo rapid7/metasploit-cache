@@ -3,11 +3,6 @@ FactoryGirl.define do
   # Sequences
   #
 
-  sequence :metasploit_cache_non_payload_ancestor_factory,
-           Metasploit::Cache::Module::Ancestor::Spec.random_non_payload_factory
-
-  sequence :metasploit_cache_module_ancestor_factory, Metasploit::Cache::Module::Ancestor::Spec.random_factory
-
   minimum_version = 1
   maximum_version = 4
   range = maximum_version - minimum_version + 1
