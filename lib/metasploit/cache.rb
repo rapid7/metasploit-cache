@@ -67,7 +67,6 @@ module Metasploit
     autoload :Referencable
     autoload :Reference
     autoload :ResurrectingAttribute
-    autoload :Search
     autoload :Spec
     autoload :Translation
     autoload :Visitation
