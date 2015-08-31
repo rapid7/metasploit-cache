@@ -170,13 +170,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
   add_index "mc_module_ancestors", ["real_path_sha1_hex_digest"], name: "index_mc_module_ancestors_on_real_path_sha1_hex_digest", unique: true, using: :btree
   add_index "mc_module_ancestors", ["relative_path"], name: "index_mc_module_ancestors_on_relative_path", unique: true, using: :btree
 
-  create_table "mc_module_architectures", force: true do |t|
-    t.integer "architecture_id",    null: false
-    t.integer "module_instance_id", null: false
-  end
-
-  add_index "mc_module_architectures", ["module_instance_id", "architecture_id"], name: "unique_mc_module_architectures", unique: true, using: :btree
-
   create_table "mc_module_paths", force: true do |t|
     t.string "gem"
     t.string "name"
