@@ -179,13 +179,6 @@ ActiveRecord::Schema.define(version: 20150716152805) do
   add_index "mc_module_paths", ["gem", "name"], name: "index_mc_module_paths_on_gem_and_name", unique: true, using: :btree
   add_index "mc_module_paths", ["real_path"], name: "index_mc_module_paths_on_real_path", unique: true, using: :btree
 
-  create_table "mc_module_platforms", force: true do |t|
-    t.integer "module_instance_id", null: false
-    t.integer "platform_id",        null: false
-  end
-
-  add_index "mc_module_platforms", ["module_instance_id", "platform_id"], name: "unique_mc_module_platforms", unique: true, using: :btree
-
   create_table "mc_module_ranks", force: true do |t|
     t.string  "name",   null: false
     t.integer "number", null: false
