@@ -72,7 +72,7 @@ module Metasploit::Cache::Derivation
     # @option options [Boolean] :validate (false) If `true`, validates `attribute` using {DerivationValidator}.  If
     #   `false`, does no validation on `attribute`.
     # @return [void]
-    def derives(attribute, options={})
+    def derives(attribute, options = {})
       options.assert_valid_keys(:validate)
 
       validate = options.fetch(:validate, false)
