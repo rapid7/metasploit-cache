@@ -223,9 +223,9 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
             }.to raise_error(
                      ArgumentError,
                      "Metasploit::Cache::Auxiliary::Instance#auxiliary_class is `nil` and it can't be used to look " \
-                     "up Metasploit::Cache::Direct::Class#ancestor to write content. " \
-                     "If this is expected, set `auxiliary_class_ancestor_contents?: false` " \
-                     "when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait."
+                     'up Metasploit::Cache::Direct::Class#ancestor to write content. ' \
+                     'If this is expected, set `auxiliary_class_ancestor_contents?: false` ' \
+                     'when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait.'
                  )
           end
         end
