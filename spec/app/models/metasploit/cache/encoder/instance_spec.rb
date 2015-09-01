@@ -189,9 +189,9 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
                   metasploit_cache_encoder_instance
                 }.to raise_error(
                          ArgumentError,
-                         "Metasploit::Cache::Encoder::Ancestor#real_pathname is `nil` and content cannot be " \
-                         "written.  If this is expected, set `encoder_class_ancestor_contents?: false` " \
-                         "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
+                         'Metasploit::Cache::Encoder::Ancestor#real_pathname is `nil` and content cannot be ' \
+                         'written.  If this is expected, set `encoder_class_ancestor_contents?: false` ' \
+                         'when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait.'
                      )
               end
             end
@@ -207,9 +207,9 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
                 metasploit_cache_encoder_instance
               }.to raise_error(
                        ArgumentError,
-                       "Metasploit::Cache::Encoder::Class#ancestor is `nil` and content cannot be written.  " \
-                       "If this is expected, set `encoder_ancestor_contents?: false` " \
-                       "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
+                       'Metasploit::Cache::Encoder::Class#ancestor is `nil` and content cannot be written.  ' \
+                       'If this is expected, set `encoder_ancestor_contents?: false` ' \
+                       'when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait.'
                    )
             end
           end
@@ -226,9 +226,9 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
             }.to raise_error(
                      ArgumentError,
                      "Metasploit::Cache::Encoder::Instance#encoder_class is `nil` and it can't be used to look " \
-                     "up Metasploit::Cache::Direct::Class#ancestor to write content. " \
-                     "If this is expected, set `encoder_class_ancestor_contents?: false` " \
-                     "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
+                     'up Metasploit::Cache::Direct::Class#ancestor to write content. ' \
+                     'If this is expected, set `encoder_class_ancestor_contents?: false` ' \
+                     'when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait.'
                  )
           end
         end

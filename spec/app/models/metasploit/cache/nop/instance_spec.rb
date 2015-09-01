@@ -203,9 +203,9 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
                   full_metasploit_cache_nop_instance
                 }.to raise_error(
                          ArgumentError,
-                         "Metasploit::Cache::Nop::Ancestor#real_pathname is `nil` and content cannot be " \
-                         "written.  If this is expected, set `nop_class_ancestor_contents?: false` " \
-                         "when using the :metasploit_cache_nop_instance_nop_class_ancestor_contents trait."
+                         'Metasploit::Cache::Nop::Ancestor#real_pathname is `nil` and content cannot be ' \
+                         'written.  If this is expected, set `nop_class_ancestor_contents?: false` ' \
+                         'when using the :metasploit_cache_nop_instance_nop_class_ancestor_contents trait.'
                      )
               end
             end
@@ -221,9 +221,9 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
                 full_metasploit_cache_nop_instance
               }.to raise_error(
                        ArgumentError,
-                       "Metasploit::Cache::Nop::Class#ancestor is `nil` and content cannot be written.  " \
-                       "If this is expected, set `nop_ancestor_contents?: false` " \
-                       "when using the :metasploit_cache_nop_instance_nop_class_ancestor_contents trait."
+                       'Metasploit::Cache::Nop::Class#ancestor is `nil` and content cannot be written.  ' \
+                       'If this is expected, set `nop_ancestor_contents?: false` ' \
+                       'when using the :metasploit_cache_nop_instance_nop_class_ancestor_contents trait.'
                    )
             end
           end
@@ -240,9 +240,9 @@ RSpec.describe Metasploit::Cache::Nop::Instance do
             }.to raise_error(
                      ArgumentError,
                      "Metasploit::Cache::Nop::Instance#nop_class is `nil` and it can't be used to look " \
-                     "up Metasploit::Cache::Direct::Class#ancestor to write content. " \
-                     "If this is expected, set `nop_class_ancestor_contents?: false` " \
-                     "when using the :metasploit_cache_nop_instance_nop_class_ancestor_contents trait."
+                     'up Metasploit::Cache::Direct::Class#ancestor to write content. ' \
+                     'If this is expected, set `nop_class_ancestor_contents?: false` ' \
+                     'when using the :metasploit_cache_nop_instance_nop_class_ancestor_contents trait.'
                  )
           end
         end

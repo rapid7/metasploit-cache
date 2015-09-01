@@ -186,9 +186,9 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                   metasploit_cache_auxiliary_instance
                 }.to raise_error(
                          ArgumentError,
-                         "Metasploit::Cache::Auxiliary::Ancestor#real_pathname is `nil` and content cannot be " \
-                         "written.  If this is expected, set `auxiliary_class_ancestor_contents?: false` " \
-                         "when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait."
+                         'Metasploit::Cache::Auxiliary::Ancestor#real_pathname is `nil` and content cannot be ' \
+                         'written.  If this is expected, set `auxiliary_class_ancestor_contents?: false` ' \
+                         'when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait.'
                      )
               end
             end
@@ -204,9 +204,9 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                 metasploit_cache_auxiliary_instance
               }.to raise_error(
                        ArgumentError,
-                       "Metasploit::Cache::Auxiliary::Class#ancestor is `nil` and content cannot be written.  " \
-                       "If this is expected, set `auxiliary_ancestor_contents?: false` " \
-                       "when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait."
+                       'Metasploit::Cache::Auxiliary::Class#ancestor is `nil` and content cannot be written.  ' \
+                       'If this is expected, set `auxiliary_ancestor_contents?: false` ' \
+                       'when using the :metasploit_cache_auxiliary_instance_auxiliary_class_ancestor_contents trait.'
                    )
             end
           end

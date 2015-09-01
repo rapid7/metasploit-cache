@@ -158,7 +158,7 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
 
       it { is_expected.to be_a Set }
 
-      it "contains all action names" do
+      it 'contains all action names' do
         expect(destination_attribute_set).to eq(Set.new [destination.actions.first.name])
       end
     end
