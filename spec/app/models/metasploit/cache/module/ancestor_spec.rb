@@ -230,9 +230,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
             expect {
               module_ancestor
             }.to raise_error ArgumentError,
-                             "Metasploit::Cache::Auxiliary::Ancestor#real_pathname is `nil` and " \
-                             "content cannot be written.  If this is expected, set `content?: false` " \
-                             "when using the :metasploit_cache_module_ancestor_contents trait."
+                             'Metasploit::Cache::Auxiliary::Ancestor#real_pathname is `nil` and ' \
+                             'content cannot be written.  If this is expected, set `content?: false` ' \
+                             'when using the :metasploit_cache_module_ancestor_contents trait.'
           }
         end
       end

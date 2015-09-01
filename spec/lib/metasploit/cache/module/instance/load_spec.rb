@@ -137,7 +137,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           end
         end.tap { |klass|
           actions = module_instance.actions.map { |action|
-            double("Metasploit Module Action", name: action.name)
+            double('Metasploit Module Action', name: action.name)
           }
 
           klass.send(:define_method, :actions) {
@@ -225,11 +225,11 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
       context 'with #metasploit_module_class_new_exception' do
         let(:metasploit_module_class_new_exception) {
-          Exception.new("error message").tap { |exception|
+          Exception.new('error message').tap { |exception|
             exception.set_backtrace(
                 [
-                    "line 1",
-                    "line 2"
+                    'line 1',
+                    'line 2'
                 ]
             )
           }
@@ -239,7 +239,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           expect(metasploit_module_class_new_errors).to include(
                                                                    "Exception error message:\n" \
                                                                    "line 1\n" \
-                                                                   "line 2"
+                                                                   'line 2'
                                                                )
         end
       end

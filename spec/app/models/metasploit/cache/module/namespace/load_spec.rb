@@ -40,7 +40,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
       end
     end
 
-    module_namespace.cache.real_path_sha1_hex_digest = Digest::SHA1.hexdigest("")
+    module_namespace.cache.real_path_sha1_hex_digest = Digest::SHA1.hexdigest('')
 
     module_namespace
   }
@@ -67,11 +67,11 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
 
       context 'with #module_ancestor_eval_exception' do
         let(:module_ancestor_eval_exception) {
-          Exception.new("error message").tap { |exception|
+          Exception.new('error message').tap { |exception|
             exception.set_backtrace(
                 [
-                    "line 1",
-                    "line 2"
+                    'line 1',
+                    'line 2'
                 ]
             )
           }
@@ -81,7 +81,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
           expect(module_ancestor_eval_errors).to include(
                                                      "Exception error message:\n" \
                                                      "line 1\n" \
-                                                     "line 2"
+                                                     'line 2'
                                                  )
         end
       end
@@ -174,12 +174,12 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         before(:each) do
           module_ancestor.real_pathname.open('w') do |f|
             f.puts "RequiredVersions = [#{minimum_core_version}, #{minimum_api_version}]"
-            f.puts ""
-            f.puts "module Metasploit4"
-            f.puts "  def self.is_usable"
-            f.puts "    true"
-            f.puts "  end"
-            f.puts "end"
+            f.puts ''
+            f.puts 'module Metasploit4'
+            f.puts '  def self.is_usable'
+            f.puts '    true'
+            f.puts '  end'
+            f.puts 'end'
           end
 
           module_namespace_load.module_ancestor_eval(module_ancestor)
