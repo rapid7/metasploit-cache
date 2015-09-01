@@ -11,7 +11,7 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
 
   # Framework that {#metasploit_module_class} `#initialize` can access Metasploit Framework world state.
   #
-  # @return metasploit_framework [#events]
+  # @return [#events]
   attr_accessor :metasploit_framework
 
   # The module instance being loaded.

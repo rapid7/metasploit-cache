@@ -103,10 +103,6 @@ module Metasploit::Cache::Reference::Ephemeral
     end
   end
 
-  # The `where` conditions used to look up the {Metasploit::Cache::Reference}s with the given `Set` of {attributes}.
-  #
-  # @retun
-
   # Maps {Metasploit::Cache::Reference#authority} {Metasploit::Cache::Authority#abbreviation} and
   # {Metasploit::Cache::Reference#designation} or {Metasploit::Cache::Reference#url} to existing
   # {Metasploit::Cache::Reference}.

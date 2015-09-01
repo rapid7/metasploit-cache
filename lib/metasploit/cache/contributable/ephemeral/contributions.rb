@@ -101,7 +101,7 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
 
   # The set of {Metasploit::Cache::Contribution} attributes currently persisted as `#contributions` on `destination`.
   #
-  # @param destination [Hash{Hash{author: Hash{name: String}, email_address: Hash{full: String}}, Hash{author: Hash{name: String}} => Metasploit::Cache::Contribution}]
+  # @param contribution_by_attributes [Hash{Hash{author: Hash{name: String}, email_address: Hash{full: String}}, Hash{author: Hash{name: String}} => Metasploit::Cache::Contribution}]
   # @return [Set<Hash{author: Hash{name: String}, email_address: Hash{full: String}}, Hash{author: Hash{name: String}}>]
   def self.destination_attributes_set(contribution_by_attributes)
     Set.new contribution_by_attributes.each_key
