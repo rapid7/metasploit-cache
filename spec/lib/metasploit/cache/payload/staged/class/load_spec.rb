@@ -580,6 +580,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
   end
 
   context '#valid?' do
+    include_context 'ActiveSupport::TaggedLogging'
+
     subject(:valid?) {
       payload_staged_class_load.valid?
     }
@@ -591,11 +593,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
     let(:payload_staged_class_load) {
       described_class.new(
           handler_module: Module.new,
-          logger: ActiveSupport::TaggedLogging.new(
-              Logger.new(StringIO.new)
-          ).tap { |logger|
-            logger.level = Logger::DEBUG
-          },
+          logger: logger,
           payload_stage_metasploit_module: Module.new,
           payload_staged_class: FactoryGirl.build(
               :metasploit_cache_payload_staged_class,

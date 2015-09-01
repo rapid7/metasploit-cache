@@ -444,6 +444,8 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
   end
 
   context 'synchronize' do
+    include_context 'ActiveSupport::TaggedLogging'
+
     subject(:synchronize) {
       described_class.synchronize(
           destination: destination,
@@ -455,16 +457,6 @@ RSpec.describe Metasploit::Cache::Actionable::Ephemeral::Actions do
     #
     # lets
     #
-
-    let(:logger) {
-      ActiveSupport::TaggedLogging.new(
-          Logger.new(log_string_io)
-      )
-    }
-
-    let(:log_string_io) {
-      StringIO.new
-    }
 
     let(:source) {
       double(

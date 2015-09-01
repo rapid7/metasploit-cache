@@ -119,6 +119,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
                 end
 
                 context 'with multiple elements in each association' do
+                  include_context 'ActiveSupport::TaggedLogging'
                   include_context 'Metasploit::Cache::Spec::Unload.unload'
 
                   subject(:full_metasploit_cache_payload_stager_instance) {
@@ -153,16 +154,6 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
 
                   let(:licensable_license_count) {
                     2
-                  }
-
-                  let(:logger) {
-                    ActiveSupport::TaggedLogging.new(
-                        Logger.new(log_string_io)
-                    )
-                  }
-
-                  let(:log_string_io) {
-                    StringIO.new
                   }
 
                   let(:metasploit_framework) {

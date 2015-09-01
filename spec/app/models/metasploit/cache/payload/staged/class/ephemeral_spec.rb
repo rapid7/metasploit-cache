@@ -133,6 +133,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral do
   end
 
   context '#persist' do
+    include_context 'ActiveSupport::TaggedLogging'
     include_context 'Metasploit::Cache::Spec::Unload.unload'
 
     subject(:persist) do
@@ -142,12 +143,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral do
     #
     # lets
     #
-
-    let(:logger) {
-      ActiveSupport::TaggedLogging.new(
-          Logger.new(string_io)
-      )
-    }
 
     let(:payload_staged_class_ephemeral) {
       described_class.new(
@@ -178,10 +173,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral do
 
     let(:payload_stager_instance_handler_load_pathname) {
       Metasploit::Model::Spec.temporary_pathname.join('lib')
-    }
-
-    let(:string_io) {
-      StringIO.new
     }
 
     #
@@ -261,7 +252,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral do
              'Metasploit::Cache::Payload::Stage::Class#ancestor Metasploit::Cache::Module::Ancestor#real_path' do
             persist
 
-            expect(string_io.string).to include("[#{payload_stage_ancestor.real_pathname.to_s}]")
+            expect(logger_string_io.string).to include("[#{payload_stage_ancestor.real_pathname.to_s}]")
           end
 
           it 'tags log with Metasploit::Cache::Payload::Staged::Class#payload_stager_instance ' \
@@ -269,7 +260,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral do
              'Metasploit::Cache::Payload::Stager::Class#ancestor Metasploit::Cache::Module::Ancestor#real_path' do
             persist
 
-            expect(string_io.string).to include("[#{payload_stager_ancestor.real_pathname.to_s}]")
+            expect(logger_string_io.string).to include("[#{payload_stager_ancestor.real_pathname.to_s}]")
           end
 
           it 'logs validation errors' do
@@ -285,7 +276,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral do
             full_error_messages = passed_payload_staged_class.errors.full_messages.to_sentence
 
             expect(full_error_messages).not_to be_blank
-            expect(string_io.string).to include("Could not be persisted to #{passed_payload_staged_class.class}: #{full_error_messages}")
+            expect(logger_string_io.string).to include("Could not be persisted to #{passed_payload_staged_class.class}: #{full_error_messages}")
           end
         end
 

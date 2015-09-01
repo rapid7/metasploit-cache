@@ -1,13 +1,5 @@
 RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms do
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(log_string_io)
-    )
-  }
-
-  let(:log_string_io) {
-    StringIO.new
-  }
+  include_context 'ActiveSupport::TaggedLogging'
 
   context 'build_added' do
     subject(:build_added) {
@@ -70,12 +62,13 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
         it 'logs error that fully_qualified_name was not seeded and how to seed it' do
           build_added
 
-          expect(log_string_io.string).to eq(
-                                              'No seeded Metasploit::Cache::Platform with fully_qualified_name ' \
-                                              '("Not Seeded"). If this is a typo, correct it; otherwise, add new ' \
-                                              'Metasploit::Cache::Platform by following the instruction for adding a ' \
-                                              "new seed: https://github.com/rapid7/metasploit-cache#seeds.\n"
-                                          )
+          expect(logger_string_io.string).to eq(
+                                                 'No seeded Metasploit::Cache::Platform with fully_qualified_name ' \
+                                                 '("Not Seeded"). If this is a typo, correct it; otherwise, add new ' \
+                                                 'Metasploit::Cache::Platform by following the instruction for ' \
+                                                 'adding a new seed: ' \
+                                                 "https://github.com/rapid7/metasploit-cache#seeds.\n"
+                                             )
         end
       end
     end
@@ -404,6 +397,8 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   end
 
   context 'synchronize' do
+    include_context 'ActiveSupport::TaggedLogging'
+
     subject(:synchronize) {
       described_class.synchronize(
                          destination: destination,
@@ -418,16 +413,6 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
 
     let(:destination) {
       Metasploit::Cache::Encoder::Instance.new
-    }
-
-    let(:logger) {
-      ActiveSupport::TaggedLogging.new(
-          Logger.new(log_string_io)
-      )
-    }
-
-    let(:log_string_io) {
-      StringIO.new
     }
 
     let(:source) {

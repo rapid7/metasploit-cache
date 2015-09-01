@@ -1,15 +1,6 @@
 RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
+  include_context 'ActiveSupport::TaggedLogging'
   include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(log_string_io)
-    )
-  }
-
-  let(:log_string_io) {
-    StringIO.new
-  }
 
   context 'validations' do
     let(:module_instance_load) {

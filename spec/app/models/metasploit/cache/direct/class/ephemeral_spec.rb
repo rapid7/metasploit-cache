@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
+  include_context 'ActiveSupport::TaggedLogging'
+
   subject(:direct_class_ephemeral) {
     described_class.new(
         direct_class_class: expected_direct_class.class,
@@ -26,12 +28,6 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
     FactoryGirl.generate :metasploit_cache_module_rank
   }
 
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(string_io)
-    )
-  }
-
   let(:metasploit_class) {
     Class.new.tap { |metasploit_class|
       metasploit_class.extend Metasploit::Cache::Cacheable
@@ -57,10 +53,6 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
 
   let(:real_path_sha1_hex_digest) {
     module_ancestor.real_path_sha1_hex_digest
-  }
-
-  let(:string_io) {
-    StringIO.new
   }
 
   #
@@ -153,19 +145,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
       context 'with #rank' do
         context 'batched save' do
           context 'failure' do
-            #
-            # lets
-            #
-
-            let(:logger) {
-              ActiveSupport::TaggedLogging.new(
-                  Logger.new(string_io)
-              )
-            }
-
-            let(:string_io) {
-              StringIO.new
-            }
+            include_context 'ActiveSupport::TaggedLogging'
 
             #
             # Callbacks
@@ -180,7 +160,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
             it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
               persist_direct_class
 
-              expect(string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
+              expect(logger_string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
             end
 
 
@@ -190,7 +170,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
               full_error_messages = expected_direct_class.errors.full_messages.to_sentence
 
               expect(full_error_messages).not_to be_blank
-              expect(string_io.string).to include("Could not be persisted to #{expected_direct_class.class}: #{full_error_messages}")
+              expect(logger_string_io.string).to include("Could not be persisted to #{expected_direct_class.class}: #{full_error_messages}")
             end
           end
 

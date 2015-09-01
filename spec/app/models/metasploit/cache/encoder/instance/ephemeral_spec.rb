@@ -59,6 +59,8 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
   end
 
   context '#persist' do
+    include_context 'ActiveSupport::TaggedLogging'
+
     subject(:persist) {
       encoder_instance_ephemeral.persist(*args)
     }
@@ -106,16 +108,6 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
 
         allow(instance).to receive(:platform).and_return(platform_list)
       }
-    }
-
-    let(:logger) {
-      ActiveSupport::TaggedLogging.new(
-          Logger.new(string_io)
-      )
-    }
-
-    let(:string_io) {
-      StringIO.new
     }
 
     context 'with :to' do
@@ -169,7 +161,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
           it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
             persist
 
-            expect(string_io.string).to include("[#{encoder_instance.encoder_class.ancestor.real_pathname.to_s}]")
+            expect(logger_string_io.string).to include("[#{encoder_instance.encoder_class.ancestor.real_pathname.to_s}]")
           end
 
           it 'logs validation errors' do
@@ -178,7 +170,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
             full_error_messages = encoder_instance.errors.full_messages.to_sentence
 
             expect(full_error_messages).not_to be_blank
-            expect(string_io.string).to include("Could not be persisted to #{encoder_instance.class}: #{full_error_messages}")
+            expect(logger_string_io.string).to include("Could not be persisted to #{encoder_instance.class}: #{full_error_messages}")
           end
         end
 

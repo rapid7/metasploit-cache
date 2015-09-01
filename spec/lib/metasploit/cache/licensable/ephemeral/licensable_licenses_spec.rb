@@ -281,6 +281,8 @@ RSpec.describe Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses do
   end
 
   context 'synchronize' do
+    include_context 'ActiveSupport::TaggedLogging'
+
     subject(:synchronize) {
       described_class.synchronize(
           destination: destination,
@@ -291,16 +293,6 @@ RSpec.describe Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses do
 
     let(:destination) {
       Metasploit::Cache::Auxiliary::Instance.new
-    }
-
-    let(:logger) {
-      ActiveSupport::TaggedLogging.new(
-          Logger.new(log_string_io)
-      )
-    }
-
-    let(:log_string_io) {
-      StringIO.new
     }
 
     let(:source) {

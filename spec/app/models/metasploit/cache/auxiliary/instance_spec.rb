@@ -77,6 +77,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
               end
 
               context 'with multiple elements in each association' do
+                include_context 'ActiveSupport::TaggedLogging'
                 include_context 'Metasploit::Cache::Spec::Unload.unload'
 
                 subject(:metasploit_cache_auxiliary_instance) {
@@ -107,16 +108,6 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
 
                 let(:licensable_license_count) {
                   2
-                }
-
-                let(:logger) {
-                  ActiveSupport::TaggedLogging.new(
-                      Logger.new(log_string_io)
-                  )
-                }
-
-                let(:log_string_io) {
-                  StringIO.new
                 }
 
                 let(:metasploit_framework) {
@@ -169,7 +160,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                          "#{metasploit_cache_auxiliary_instance.errors.full_messages.join("\n")}\n" \
                          "\n" \
                          "Log:\n" \
-                         "#{log_string_io.string}\n" \
+                         "#{logger_string_io.string}\n" \
                          "Expected #{module_instance_load.class} to be valid, but got errors:\n" \
                          "#{module_instance_load.errors.full_messages.join("\n")}"
                     # :nocov:

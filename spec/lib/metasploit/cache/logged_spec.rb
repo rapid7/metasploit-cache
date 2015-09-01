@@ -1,18 +1,12 @@
 RSpec.describe Metasploit::Cache::Logged do
+  include_context 'ActiveSupport::TaggedLogging'
+
   let(:original_logger) {
     double('Original Logger')
   }
 
   let(:logged) {
     OpenStruct.new(logger: original_logger)
-  }
-
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(Logger.new(log_string_io))
-  }
-
-  let(:log_string_io) {
-    StringIO.new
   }
 
   context 'with_logger' do
@@ -77,7 +71,7 @@ RSpec.describe Metasploit::Cache::Logged do
           logged.logger.error('Tagged Error')
         end
 
-        expect(log_string_io.string).to eq("[#{tag}] Tagged Error\n")
+        expect(logger_string_io.string).to eq("[#{tag}] Tagged Error\n")
       end
 
       it 'yields logger' do

@@ -73,6 +73,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
               end
 
               context 'with multiple elements in each association' do
+                include_context 'ActiveSupport::TaggedLogging'
                 include_context 'Metasploit::Cache::Spec::Unload.unload'
 
                 subject(:metasploit_cache_encoder_instance) {
@@ -104,16 +105,6 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
 
                 let(:licensable_license_count) {
                   2
-                }
-
-                let(:logger) {
-                  ActiveSupport::TaggedLogging.new(
-                      Logger.new(log_string_io)
-                  )
-                }
-
-                let(:log_string_io) {
-                  StringIO.new
                 }
 
                 let(:metasploit_framework) {

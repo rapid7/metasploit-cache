@@ -16,13 +16,8 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
       it { is_expected.to be_valid }
 
       context 'loading' do
+        include_context 'ActiveSupport::TaggedLogging'
         include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-        let(:logger) {
-          ActiveSupport::TaggedLogging.new(
-              Logger.new(string_io)
-          )
-        }
 
         let(:module_ancestor_load) {
           Metasploit::Cache::Module::Ancestor::Load.new(
@@ -30,10 +25,6 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
               maximum_version: 4,
               module_ancestor: metasploit_cache_auxiliary_class.ancestor
           )
-        }
-
-        let(:string_io) {
-          StringIO.new
         }
 
         before(:each) do

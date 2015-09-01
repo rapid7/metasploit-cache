@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Module::Namespace::Load do
+  include_context 'ActiveSupport::TaggedLogging'
+
   subject(:module_namespace_load) {
     described_class.new(
         logger: logger,
@@ -7,16 +9,6 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         maximum_version: maximum_version,
         module_namespace: module_namespace
     )
-  }
-
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(log_string_io)
-    )
-  }
-
-  let(:log_string_io) {
-    StringIO.new
   }
 
   let(:maximum_api_version) {
@@ -607,7 +599,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         it 'logs to #logger' do
           module_ancestor_eval
 
-          expect(log_string_io.string).not_to be_empty
+          expect(logger_string_io.string).not_to be_empty
         end
       end
     end
