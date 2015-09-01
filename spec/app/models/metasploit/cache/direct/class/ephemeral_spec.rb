@@ -163,7 +163,6 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
               expect(logger_string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
             end
 
-
             it 'logs validation errors' do
               persist_direct_class
 
@@ -173,7 +172,6 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
               expect(logger_string_io.string).to include("Could not be persisted to #{expected_direct_class.class}: #{full_error_messages}")
             end
           end
-
 
           context 'success' do
             specify {
