@@ -106,32 +106,6 @@ class Metasploit::Cache::Payload::Staged::Class::Load < Metasploit::Model::Base
                               "RealPathSha1HexDigest#{payload_stager_ancestor.real_path_sha1_hex_digest}"]
   end
 
-  # Sets name of anonymous ruby `Class`.
-  #
-  # @param metasploit_class [Class] anonymous ruby `Class` loaded by {#metasploit_class}.
-  # @param payload_staged_class [Metasploit::Cache::Payload::Staged::Class] Used to calculate name.
-  # @return [nil] There was no pre-existing constant with the same {metasploit_class_names}.
-  # @return [Object] The pre-existing constant with the same {metasploit_class_names} that was replaced.
-  def self.name_metasploit_class!(metasploit_class:, payload_staged_class:)
-    names = metasploit_class_names(payload_staged_class)
-    parent_names = names[0 ... -1]
-    relative_name = names[-1]
-
-    parent = Metasploit::Cache::Constant.current(parent_names)
-
-    if parent.nil?
-      parent = Metasploit::Cache::Constant.inject(parent_names) { |current_parent, current_relative_name|
-        current_parent.const_set(current_relative_name, Module.new)
-      }
-    end
-
-    Metasploit::Cache::Constant.swap_on_parent(
-        constant: metasploit_class,
-        parent: parent,
-        relative_name: relative_name
-    )
-  end
-
   #
   # Instance Methods
   #
@@ -172,9 +146,9 @@ class Metasploit::Cache::Payload::Staged::Class::Load < Metasploit::Model::Base
 
           if payload_staged_class.persisted?
             # Name class so that it can be looked up by name to prevent unnecessary reloading.
-            self.class.name_metasploit_class!(
-                metasploit_class: metasploit_class,
-                payload_staged_class: payload_staged_class
+            Metasploit::Cache::Constant.name(
+                constant: metasploit_class,
+                names: self.class.metasploit_class_names(payload_staged_class)
             )
             # The load only succeeded if the metadata was persisted, so @metasploit_class is `nil` otherwise.
             @metasploit_class = metasploit_class
