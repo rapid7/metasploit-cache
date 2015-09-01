@@ -58,9 +58,6 @@ RSpec.describe Metasploit::Cache::Derivation do
     end
 
     before(:each) do
-      # capture for class_eval scope
-      attributes = self.attributes
-
       base_class.class_eval do
         #
         # Attributes
