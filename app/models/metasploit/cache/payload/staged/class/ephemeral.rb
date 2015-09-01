@@ -26,66 +26,10 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   # @return [Metasploit::Cache::Direct::Class]
   resurrecting_attr_accessor :payload_staged_class do
     ActiveRecord::Base.connection_pool.with_connection {
-      stage_classes = Arel::Table.new(:stage_classes)
-      stage_ancestors = Arel::Table.new(:stage_ancestors)
-      stager_classes = Arel::Table.new(:stager_classes)
-      stager_ancestors = Arel::Table.new(:stager_ancestors)
-
-      query = Metasploit::Cache::Payload::Staged::Class.joins(
-          Metasploit::Cache::Payload::Staged::Class.arel_table.join(
-              Metasploit::Cache::Payload::Stage::Instance.arel_table, Arel::InnerJoin
-          ).on(
-              Metasploit::Cache::Payload::Stage::Instance.arel_table[:id].eq(
-                  Metasploit::Cache::Payload::Staged::Class.arel_table[:payload_stage_instance_id]
-              )
-          ).join(
-               # MUST be aliased because Metasploit::Cache::Payload::Stage::Class and
-               #   Metasploit::Cache::Payload::Stager::Class both use mc_direct_classes.
-              Metasploit::Cache::Payload::Stage::Class.arel_table.alias(:stage_classes), Arel::InnerJoin
-          ).on(
-              stage_classes[:id].eq(
-                  Metasploit::Cache::Payload::Stage::Instance.arel_table[:payload_stage_class_id]
-              )
-          ).join(
-              Metasploit::Cache::Module::Ancestor.arel_table.alias(:stage_ancestors), Arel::InnerJoin
-          ).on(
-              stage_ancestors[:id].eq(
-                  stage_classes[:ancestor_id]
-              )
-          ).join_sources
-      ).where(
-           stage_ancestors[:real_path_sha1_hex_digest].eq(
-               ancestor_real_path_sha1_hex_digest(:stage)
-           )
-      ).joins(
-           Metasploit::Cache::Payload::Staged::Class.arel_table.join(
-              Metasploit::Cache::Payload::Stager::Instance.arel_table, Arel::InnerJoin
-          ).on(
-              Metasploit::Cache::Payload::Stager::Instance.arel_table[:id].eq(
-                  Metasploit::Cache::Payload::Staged::Class.arel_table[:payload_stager_instance_id]
-              )
-          ).join(
-               # MUST be aliased because Metasploit::Cache::Payload::Stage::Class and
-               #   Metasploit::Cache::Payload::Stager::Class both use mc_direct_classes.
-              Metasploit::Cache::Payload::Stager::Class.arel_table.alias(:stager_classes), Arel::InnerJoin
-          ).on(
-              stager_classes[:id].eq(
-                  Metasploit::Cache::Payload::Stager::Instance.arel_table[:payload_stager_class_id]
-              )
-          ).join(
-              Metasploit::Cache::Module::Ancestor.arel_table.alias(:stager_ancestors), Arel::InnerJoin
-          ).on(
-              stager_ancestors[:id].eq(
-                  stager_classes[:ancestor_id]
-              )
-          ).join_sources
-      ).where(
-           stager_ancestors[:real_path_sha1_hex_digest].eq(
-               ancestor_real_path_sha1_hex_digest(:stager)
-           )
-      )
-
-      query.readonly(false).first
+      Metasploit::Cache::Payload::Staged::Class.where_ancestor_real_path_sha1_hex_digests(
+          stage: ancestor_real_path_sha1_hex_digest(:stage),
+          stager: ancestor_real_path_sha1_hex_digest(:stager)
+      ).readonly(false).first
     }
   end
 

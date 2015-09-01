@@ -30,6 +30,27 @@ class Metasploit::Cache::Payload::Staged::Instance < ActiveRecord::Base
             uniqueness: true
 
   #
+  # Class Methods
+  #
+
+  # Scope matching {Metasploit::Cache::Payload::Staged::Instance} where the ancestors have the given
+  # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest}.
+  #
+  # @param stage [String] {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} for
+  #   {Metasploit::Cache::Payload::Stage::Ancestor}.
+  # @param stager [String] {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} for
+  #   {Metasploit::Cache::Payload::Stage::Ancestor}.
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Staged::Class>]
+  def self.where_ancestor_real_path_sha1_hex_digests(stage:, stager:)
+    joins(:payload_staged_class).merge(
+        Metasploit::Cache::Payload::Staged::Class.where_ancestor_real_path_sha1_hex_digests(
+            stage: stage,
+            stager: stager
+        )
+    )
+  end
+
+  #
   # Instance Methods
   #
 
