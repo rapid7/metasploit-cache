@@ -99,6 +99,36 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
             presence: true
 
   #
+  # Class Methods
+  #
+
+  # Tags log with {Metasploit::Cache::Module::Ancestor#real_pathname} from both
+  #   {Metasploit::Cache::Payload::Staged::Class#payload_stage_instance}
+  #   {Metasploit::Cache::Payload::Stage::Instance#payload_stage_class}
+  #   {Metasploit::Cache::Payload::Stage::Class#ancestor} and
+  #   {Metasploit::Cache::Payload::Staged::Class#payload_stager_instance}
+  #   {Metasploit::Cache::Payload::Stager::Instance#payload_stager_class}
+  #   {Metasploit::Cache::Payload::Stager::Class#ancestor}.
+  #
+  # @param logger [ActiveSupport::TaggedLogging]
+  # @param payload_staged_class [Metasploit::Cache::Payload::Staged::Class]
+  # @yield [tagged_logger]
+  # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] `logger` with
+  #   {Metasploit::Cache::Module#Ancestor#real_pathname} tags.
+  # @yieldreturn [void]
+  # @return [void]
+  def self.with_payload_staged_class_tag(logger, payload_staged_class, &block)
+    tags = ActiveRecord::Base.connection_pool.with_connection {
+      [
+          payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_pathname.to_s,
+          payload_staged_class.payload_stager_instance.payload_stager_class.ancestor.real_pathname.to_s
+      ]
+    }
+
+    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, *tags, &block)
+  end
+
+  #
   # Instance Methods
   #
 
@@ -162,13 +192,6 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   # @yieldreturn [void]
   # @return [void]
   def with_payload_staged_class_tag(payload_staged_class, &block)
-    tags = ActiveRecord::Base.connection_pool.with_connection {
-      [
-          payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_pathname.to_s,
-          payload_staged_class.payload_stager_instance.payload_stager_class.ancestor.real_pathname.to_s
-      ]
-    }
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, *tags, &block)
+    self.class.with_payload_staged_class_tag(logger, payload_staged_class, &block)
   end
 end

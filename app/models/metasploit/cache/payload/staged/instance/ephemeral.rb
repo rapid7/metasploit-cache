@@ -184,15 +184,10 @@ class Metasploit::Cache::Payload::Staged::Instance::Ephemeral < Metasploit::Mode
   # @yieldreturn [void]
   # @return [void]
   def with_payload_staged_instance_tag(payload_staged_instance, &block)
-    payload_staged_class = payload_staged_instance.payload_staged_class
-
-    tags = ActiveRecord::Base.connection_pool.with_connection {
-      [
-          payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_pathname.to_s,
-          payload_staged_class.payload_stager_instance.payload_stager_class.ancestor.real_pathname.to_s
-      ]
-    }
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, *tags, &block)
+    Metasploit::Cache::Payload::Staged::Class::Ephemeral.with_payload_staged_class_tag(
+        logger,
+        payload_staged_instance.payload_staged_class,
+        &block
+    )
   end
 end
