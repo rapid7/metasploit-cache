@@ -333,6 +333,15 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
       )
     }
 
+    let(:expected_metasploit_class_name) {
+      'Msf::Payloads::' \
+      'RealPathSha1HexDigest' \
+      "#{payload_stage_instance.payload_stage_class.ancestor.real_path_sha1_hex_digest}" \
+      'StagedBy' \
+      'RealPathSha1HexDigest' \
+      "#{payload_stager_instance.payload_stager_class.ancestor.real_path_sha1_hex_digest}"
+    }
+
     let(:metasploit_class) {
       Class.new
     }
@@ -360,13 +369,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
       it 'defines constant to metasploit_class' do
         expect {
           name_metasploit_class!
-        }.to change(metasploit_class, :name).to(
-                 'Msf::Payloads::' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_stage_instance.payload_stage_class.ancestor.real_path_sha1_hex_digest}" \
-                 'StagedBy' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_stager_instance.payload_stager_class.ancestor.real_path_sha1_hex_digest}")
+        }.to change(metasploit_class, :name).to(expected_metasploit_class_name)
       end
     end
 
@@ -378,14 +381,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
       it 'defines constant to metasploit_class' do
         expect {
           name_metasploit_class!
-        }.to change(metasploit_class, :name).to(
-                 'Msf::Payloads::' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_stage_instance.payload_stage_class.ancestor.real_path_sha1_hex_digest}" \
-                 'StagedBy' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_stager_instance.payload_stager_class.ancestor.real_path_sha1_hex_digest}"
-             )
+        }.to change(metasploit_class, :name).to(expected_metasploit_class_name)
       end
     end
   end
