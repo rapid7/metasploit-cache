@@ -309,7 +309,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
     }
 
     it "starts with ['Msf', 'Payloads']" do
-      expect(metasploit_class_names[0,2]).to eq(['Msf', 'Payloads'])
+      expect(metasploit_class_names[0, 2]).to eq(['Msf', 'Payloads'])
     end
 
     it 'includes stage and stager SHA1' do

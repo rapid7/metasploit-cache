@@ -87,7 +87,7 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
       leaked_constants = described_class.to_enum(:each).to_a
 
       expect(leaked_constants).to include([Msf::Modules, :FirstNonPersistent])
-      expect(leaked_constants).to include([Msf::Payloads,:SecondNonPersistent])
+      expect(leaked_constants).to include([Msf::Payloads, :SecondNonPersistent])
     end
 
     it 'returns number of leaked constants' do
