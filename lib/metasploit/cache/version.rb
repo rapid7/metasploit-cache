@@ -12,8 +12,6 @@ module Metasploit
       MINOR = 75
       # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 0
-      # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'payload-staged-class-ephemeral-and-load'
 
       #
       # Module Methods
