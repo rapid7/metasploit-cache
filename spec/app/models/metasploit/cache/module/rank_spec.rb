@@ -104,8 +104,8 @@ RSpec.describe Metasploit::Cache::Module::Rank do
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:name).of_type(:string).with_options(:null => false) }
-      it { should have_db_column(:number).of_type(:integer).with_options(:null => false) }
+      it { should have_db_column(:name).of_type(:string).with_options(null: false) }
+      it { should have_db_column(:number).of_type(:integer).with_options(null: false) }
     end
 
     context 'indices' do
@@ -153,8 +153,8 @@ RSpec.describe Metasploit::Cache::Module::Rank do
     }
 
     context 'attributes' do
-      it_should_behave_like 'search_attribute', :name, :type => :string
-      it_should_behave_like 'search_attribute', :number, :type => :integer
+      it_should_behave_like 'search_attribute', :name, type: :string
+      it_should_behave_like 'search_attribute', :number, type: :integer
     end
   end
 

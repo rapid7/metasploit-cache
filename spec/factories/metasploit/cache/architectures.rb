@@ -6,7 +6,7 @@ FactoryGirl.define do
   sequence :metasploit_cache_architecture do |n|
     # use abbreviations since they are unique
     abbreviation = abbreviations[n % abbreviations.length]
-    architecture = Metasploit::Cache::Architecture.where(:abbreviation => abbreviation).first
+    architecture = Metasploit::Cache::Architecture.where(abbreviation: abbreviation).first
 
     architecture
   end

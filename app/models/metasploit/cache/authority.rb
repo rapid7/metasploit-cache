@@ -59,7 +59,7 @@ class Metasploit::Cache::Authority < ActiveRecord::Base
   # Search Attributes
   #
 
-  search_attribute :abbreviation, :type => :string
+  search_attribute :abbreviation, type: :string
 
   #
   # Validations

@@ -110,8 +110,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:real_path_modified_at).of_type(:datetime).with_options(:null => false) }
-      it { should have_db_column(:real_path_sha1_hex_digest).of_type(:string).with_options(:limit => 40, :null => false) }
+      it { should have_db_column(:real_path_modified_at).of_type(:datetime).with_options(null: false) }
+      it { should have_db_column(:real_path_sha1_hex_digest).of_type(:string).with_options(limit: 40, null: false) }
     end
 
     context 'indices' do
@@ -184,8 +184,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
     end
 
     context 'with real_path' do
-      it_should_behave_like 'derives', :real_path_modified_at, :validates => false
-      it_should_behave_like 'derives', :real_path_sha1_hex_digest, :validates => false
+      it_should_behave_like 'derives', :real_path_modified_at, validates: false
+      it_should_behave_like 'derives', :real_path_sha1_hex_digest, validates: false
     end
   end
 
@@ -429,7 +429,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
                 :metasploit_cache_encoder_ancestor,
                 # real_path_sha1_hex_digest is derived, but not validated (as it would take too long)
                 # so it can just be set directly
-                :real_path_sha1_hex_digest => original_ancestor.real_path_sha1_hex_digest
+                real_path_sha1_hex_digest: original_ancestor.real_path_sha1_hex_digest
             )
           end
 

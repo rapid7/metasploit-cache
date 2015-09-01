@@ -91,7 +91,7 @@ task :coverage do
     end
   end
 
-  SimpleCov::LastRun.write(:result => {:covered_percent => covered_percent})
+  SimpleCov::LastRun.write(result: {covered_percent: covered_percent})
 
   if exit_status != SimpleCov::ExitCodes::SUCCESS
     Kernel.exit exit_status

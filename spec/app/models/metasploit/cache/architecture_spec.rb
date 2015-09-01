@@ -186,46 +186,46 @@ RSpec.describe Metasploit::Cache::Architecture do
 
   context 'seeds' do
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'armbe',
-                          :bits => 32,
-                          :endianness => 'big',
-                          :family => 'arm',
-                          :summary => 'Little-endian ARM'
+                          abbreviation: 'armbe',
+                          bits: 32,
+                          endianness: 'big',
+                          family: 'arm',
+                          summary: 'Little-endian ARM'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'armle',
-                          :bits => 32,
-                          :endianness => 'little',
-                          :family => 'arm',
-                          :summary => 'Big-endian ARM'
+                          abbreviation: 'armle',
+                          bits: 32,
+                          endianness: 'little',
+                          family: 'arm',
+                          summary: 'Big-endian ARM'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'cbea',
-                          :bits => 32,
-                          :endianness => 'big',
-                          :family => 'cbea',
-                          :summary => '32-bit Cell Broadband Engine Architecture'
+                          abbreviation: 'cbea',
+                          bits: 32,
+                          endianness: 'big',
+                          family: 'cbea',
+                          summary: '32-bit Cell Broadband Engine Architecture'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'cbea64',
-                          :bits => 64,
-                          :endianness => 'big',
-                          :family => 'cbea',
-                          :summary => '64-bit Cell Broadband Engine Architecture'
+                          abbreviation: 'cbea64',
+                          bits: 64,
+                          endianness: 'big',
+                          family: 'cbea',
+                          summary: '64-bit Cell Broadband Engine Architecture'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'cmd',
-                          :bits => nil,
-                          :endianness => nil,
-                          :family => nil,
-                          :summary => 'Command Injection'
+                          abbreviation: 'cmd',
+                          bits: nil,
+                          endianness: nil,
+                          family: nil,
+                          summary: 'Command Injection'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'dalvik',
-                          :bits => nil,
-                          :endianness => nil,
-                          :family => nil,
-                          :summary => 'Dalvik process virtual machine used in Google Android'
+                          abbreviation: 'dalvik',
+                          bits: nil,
+                          endianness: nil,
+                          family: nil,
+                          summary: 'Dalvik process virtual machine used in Google Android'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
                           abbreviation: 'firefox',
@@ -235,95 +235,95 @@ RSpec.describe Metasploit::Cache::Architecture do
                           summary: "Firefox's privileged javascript API"
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'java',
-                          :bits => nil,
-                          :endianness => 'big',
-                          :family => nil,
-                          :summary => 'Java'
+                          abbreviation: 'java',
+                          bits: nil,
+                          endianness: 'big',
+                          family: nil,
+                          summary: 'Java'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'mipsbe',
-                          :bits => 32,
-                          :endianness => 'big',
-                          :family => 'mips',
-                          :summary => 'Big-endian MIPS'
+                          abbreviation: 'mipsbe',
+                          bits: 32,
+                          endianness: 'big',
+                          family: 'mips',
+                          summary: 'Big-endian MIPS'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'mipsle',
-                          :bits => 32,
-                          :endianness => 'little',
-                          :family => 'mips',
-                          :summary => 'Little-endian MIPS'
+                          abbreviation: 'mipsle',
+                          bits: 32,
+                          endianness: 'little',
+                          family: 'mips',
+                          summary: 'Little-endian MIPS'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'nodejs',
-                          :bits => nil,
-                          :endianness => nil,
-                          :family => 'javascript',
-                          :summary => 'NodeJS'
+                          abbreviation: 'nodejs',
+                          bits: nil,
+                          endianness: nil,
+                          family: 'javascript',
+                          summary: 'NodeJS'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'php',
-                          :bits => nil,
-                          :endianness => nil,
-                          :family => nil,
-                          :summary => 'PHP'
+                          abbreviation: 'php',
+                          bits: nil,
+                          endianness: nil,
+                          family: nil,
+                          summary: 'PHP'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'ppc',
-                          :bits => 32,
-                          :endianness => 'big',
-                          :family => 'ppc',
-                          :summary => '32-bit Peformance Optimization With Enhanced RISC - Performance Computing'
+                          abbreviation: 'ppc',
+                          bits: 32,
+                          endianness: 'big',
+                          family: 'ppc',
+                          summary: '32-bit Peformance Optimization With Enhanced RISC - Performance Computing'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'ppc64',
-                          :bits => 64,
-                          :endianness => 'big',
-                          :family => 'ppc',
-                          :summary => '64-bit Performance Optimization With Enhanced RISC - Performance Computing'
+                          abbreviation: 'ppc64',
+                          bits: 64,
+                          endianness: 'big',
+                          family: 'ppc',
+                          summary: '64-bit Performance Optimization With Enhanced RISC - Performance Computing'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'python',
-                          :bits => nil,
-                          :endianness => nil,
-                          :family => nil,
-                          :summary => 'Python'
+                          abbreviation: 'python',
+                          bits: nil,
+                          endianness: nil,
+                          family: nil,
+                          summary: 'Python'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'ruby',
-                          :bits => nil,
-                          :endianness => nil,
-                          :family => nil,
-                          :summary => 'Ruby'
+                          abbreviation: 'ruby',
+                          bits: nil,
+                          endianness: nil,
+                          family: nil,
+                          summary: 'Ruby'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'sparc',
-                          :bits => nil,
-                          :endianness => nil,
-                          :family => 'sparc',
-                          :summary => 'Scalable Processor ARChitecture'
+                          abbreviation: 'sparc',
+                          bits: nil,
+                          endianness: nil,
+                          family: 'sparc',
+                          summary: 'Scalable Processor ARChitecture'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'tty',
-                          :bits => nil,
-                          :endianness => nil,
-                          :family => nil,
-                          :summary => '*nix terminal'
+                          abbreviation: 'tty',
+                          bits: nil,
+                          endianness: nil,
+                          family: nil,
+                          summary: '*nix terminal'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'x86',
-                          :bits => 32,
-                          :endianness => 'little',
-                          :family => 'x86',
-                          :summary => '32-bit x86'
+                          abbreviation: 'x86',
+                          bits: 32,
+                          endianness: 'little',
+                          family: 'x86',
+                          summary: '32-bit x86'
 
     it_should_behave_like 'Metasploit::Cache::Architecture seed',
-                          :abbreviation => 'x86_64',
-                          :bits => 64,
-                          :endianness => 'little',
-                          :family => 'x86',
-                          :summary => '64-bit x86'
+                          abbreviation: 'x86_64',
+                          bits: 64,
+                          endianness: 'little',
+                          family: 'x86',
+                          summary: '64-bit x86'
   end
 
   context 'sequences' do

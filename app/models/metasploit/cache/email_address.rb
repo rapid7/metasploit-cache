@@ -52,17 +52,17 @@ class Metasploit::Cache::EmailAddress < ActiveRecord::Base
   # Derivations
   #
 
-  derives :domain, :validate => true
-  derives :full, :validate => true
-  derives :local, :validate => true
+  derives :domain, validate: true
+  derives :full, validate: true
+  derives :local, validate: true
 
   #
   # Search Attributes
   #
 
-  search_attribute :domain, :type => :string
-  search_attribute :full, :type => :string
-  search_attribute :local, :type => :string
+  search_attribute :domain, type: :string
+  search_attribute :full, type: :string
+  search_attribute :local, type: :string
 
   #
   # Validations

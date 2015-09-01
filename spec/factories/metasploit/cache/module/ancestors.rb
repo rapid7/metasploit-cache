@@ -37,7 +37,7 @@ FactoryGirl.define do
     # Associations
     #
 
-    association :parent_path, :factory => :metasploit_cache_module_path
+    association :parent_path, factory: :metasploit_cache_module_path
 
     #
     # Attributes

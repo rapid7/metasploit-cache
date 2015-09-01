@@ -11,8 +11,8 @@ RSpec.describe Metasploit::Cache::Reference do
     subject(:reference) do
       FactoryGirl.build(
           :metasploit_cache_reference,
-          :authority => authority,
-          :designation => designation
+          authority: authority,
+          designation: designation
       )
     end
 
@@ -37,7 +37,7 @@ RSpec.describe Metasploit::Cache::Reference do
             FactoryGirl.generate :metasploit_cache_reference_bid_designation
           end
 
-          it_should_behave_like 'derives', :url, :validates => false
+          it_should_behave_like 'derives', :url, validates: false
         end
 
         context 'CVE' do
@@ -49,7 +49,7 @@ RSpec.describe Metasploit::Cache::Reference do
             FactoryGirl.generate :metasploit_cache_reference_cve_designation
           end
 
-          it_should_behave_like 'derives', :url, :validates => false
+          it_should_behave_like 'derives', :url, validates: false
         end
 
         context 'CWE' do
@@ -89,7 +89,7 @@ RSpec.describe Metasploit::Cache::Reference do
             FactoryGirl.generate :metasploit_cache_reference_msb_designation
           end
 
-          it_should_behave_like 'derives', :url, :validates => false
+          it_should_behave_like 'derives', :url, validates: false
         end
 
         context 'OSVDB' do
@@ -101,7 +101,7 @@ RSpec.describe Metasploit::Cache::Reference do
             FactoryGirl.generate :metasploit_cache_reference_osvdb_designation
           end
 
-          it_should_behave_like 'derives', :url, :validates => false
+          it_should_behave_like 'derives', :url, validates: false
         end
 
         context 'PMASA' do
@@ -113,7 +113,7 @@ RSpec.describe Metasploit::Cache::Reference do
             FactoryGirl.generate :metasploit_cache_reference_pmasa_designation
           end
 
-          it_should_behave_like 'derives', :url, :validates => false
+          it_should_behave_like 'derives', :url, validates: false
         end
 
         context 'SECUNIA' do
@@ -125,7 +125,7 @@ RSpec.describe Metasploit::Cache::Reference do
             FactoryGirl.generate :metasploit_cache_reference_secunia_designation
           end
 
-          it_should_behave_like 'derives', :url, :validates => false
+          it_should_behave_like 'derives', :url, validates: false
         end
 
         context 'US-CERT-VU' do
@@ -137,7 +137,7 @@ RSpec.describe Metasploit::Cache::Reference do
             FactoryGirl.generate :metasploit_cache_reference_us_cert_vu_designation
           end
 
-          it_should_behave_like 'derives', :url, :validates => false
+          it_should_behave_like 'derives', :url, validates: false
         end
 
         context 'waraxe' do
@@ -149,7 +149,7 @@ RSpec.describe Metasploit::Cache::Reference do
             FactoryGirl.generate :metasploit_cache_reference_waraxe_designation
           end
 
-          it_should_behave_like 'derives', :url, :validates => false
+          it_should_behave_like 'derives', :url, validates: false
         end
 
         context 'WPVDB' do
@@ -249,8 +249,8 @@ RSpec.describe Metasploit::Cache::Reference do
     }
 
     context 'attributes' do
-      it_should_behave_like 'search_attribute', :designation, :type => :string
-      it_should_behave_like 'search_attribute', :url, :type => :string
+      it_should_behave_like 'search_attribute', :designation, type: :string
+      it_should_behave_like 'search_attribute', :url, type: :string
     end
   end
 
@@ -258,9 +258,9 @@ RSpec.describe Metasploit::Cache::Reference do
     subject(:reference) do
       FactoryGirl.build(
           :metasploit_cache_reference,
-          :authority => authority,
-          :designation => designation,
-          :url => url
+          authority: authority,
+          designation: designation,
+          url: url
       )
     end
 
@@ -399,8 +399,8 @@ RSpec.describe Metasploit::Cache::Reference do
     let(:reference) do
       FactoryGirl.build(
           :metasploit_cache_reference,
-          :authority => authority,
-          :designation => designation
+          authority: authority,
+          designation: designation
       )
     end
 
@@ -451,7 +451,7 @@ RSpec.describe Metasploit::Cache::Reference do
     let(:reference) do
       FactoryGirl.build(
           :metasploit_cache_reference,
-          :authority => authority
+          authority: authority
       )
     end
 

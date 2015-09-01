@@ -82,7 +82,7 @@ module Metasploit::Cache::Derivation
       self.validate_by_derived_attribute = validate_by_derived_attribute.merge(attribute => validate)
 
       if validate
-        validates attribute, :derivation => true
+        validates attribute, derivation: true
       end
     end
   end

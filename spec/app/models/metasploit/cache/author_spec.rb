@@ -6,7 +6,7 @@ RSpec.describe Metasploit::Cache::Author do
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:name).of_type(:string).with_options(:null => false) }
+      it { should have_db_column(:name).of_type(:string).with_options(null: false) }
     end
 
     context 'indices' do
@@ -30,7 +30,7 @@ RSpec.describe Metasploit::Cache::Author do
     }
 
     context 'attributes' do
-      it_should_behave_like 'search_attribute', :name, :type => :string
+      it_should_behave_like 'search_attribute', :name, type: :string
     end
   end
 

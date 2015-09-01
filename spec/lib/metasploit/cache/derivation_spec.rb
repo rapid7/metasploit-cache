@@ -134,7 +134,7 @@ RSpec.describe Metasploit::Cache::Derivation do
 
     context 'with :validate' do
       subject(:derives) do
-        base_class.derives attribute, :validate => validate
+        base_class.derives attribute, validate: validate
       end
 
       context 'false' do
@@ -152,7 +152,7 @@ RSpec.describe Metasploit::Cache::Derivation do
           expect(base_class).not_to receive(:validates).with(
               attribute,
               hash_including(
-                  :derivation => true
+                  derivation: true
               )
           )
 
@@ -175,7 +175,7 @@ RSpec.describe Metasploit::Cache::Derivation do
           expect(base_class).to receive(:validates).with(
               attribute,
               hash_including(
-                  :derivation => true
+                  derivation: true
               )
           )
 
