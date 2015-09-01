@@ -621,7 +621,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
             stage_name_set.sort.each do |stage_name|
 
-              context "with stage #{stage_name.inspect}" do
+              context "with stage #{stage_name.inspect}", :payload_stage do
                 #
                 # lets
                 #
@@ -680,7 +680,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                 stager_names = stager_names_by_stage_name.fetch(stage_name, [])
 
                 stager_name_set.sort.each do |stager_name|
-                  context "with stager #{stager_name.inspect}" do
+                  context "with stager #{stager_name.inspect}", :payload_stager do
                     #
                     #
                     # lets
@@ -781,7 +781,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                       description = 'does not load'
                     end
 
-                    it "#{description}" do
+                    it "#{description}", :payload_staged do
                       #
                       # Stage
                       #
@@ -854,7 +854,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
-                                'auxiliary' do
+                                'auxiliary',
+                                :auxiliary do
             let(:direct_class) {
               module_ancestor.build_auxiliary_class
             }
@@ -888,7 +889,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
-                                'encoders' do
+                                'encoders',
+                                :encoder do
             let(:direct_class) {
               module_ancestor.build_encoder_class
             }
@@ -923,6 +925,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
                                 'exploits',
+                                :exploit,
                                 pending_reason_by_display_path: {
                                     'firefox/local/exec_shellcode.rb' => 'Missing references',
                                     'linux/http/pandora_fms_exec.rb' => 'Missing references',
@@ -982,7 +985,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
-                                'nops' do
+                                'nops',
+                                :nop do
             let(:direct_class) {
               module_ancestor.build_nop_class
             }
@@ -1016,7 +1020,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
-                                'payloads/singles' do
+                                'payloads/singles',
+                                :payload_single do
             let(:direct_class) {
               module_ancestor.build_single_payload_class
             }
@@ -1407,6 +1412,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           it_should_behave_like 'Metasploit::Cache::*::Instance::Load from relative_path_prefix',
                                 module_path_real_pathname,
                                 'post',
+                                :post,
                                 pending_reason_by_display_path: {
                                     'firefox/gather/cookies.rb' => 'Missing platforms',
                                     'firefox/gather/history.rb' => 'Missing platforms',
