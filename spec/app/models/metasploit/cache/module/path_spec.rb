@@ -490,7 +490,6 @@ RSpec.describe Metasploit::Cache::Module::Path do
           end
         end
 
-
         it { is_expected.to eq(false) }
       end
 
