@@ -59,7 +59,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
     #
 
     let(:names) {
-      ['Grandparent', 'Parent', 'Child']
+      %w(Grandparent Parent Child)
     }
 
     #
@@ -272,7 +272,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
 
       context 'with Exception' do
         let(:exception) {
-          Exception.new("error message")
+          Exception.new('error message')
         }
 
         it 'raises exception' do
@@ -400,7 +400,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
 
       context 'with Exception' do
         let(:exception) {
-          Exception.new("error message")
+          Exception.new('error message')
         }
 
         it 'raises exception' do

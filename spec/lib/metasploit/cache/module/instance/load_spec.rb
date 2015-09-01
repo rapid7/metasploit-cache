@@ -294,7 +294,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
       context 'without Interrupt' do
         let(:exception) {
-          Exception.new("expected exception")
+          Exception.new('expected exception')
         }
 
         it 'does not raise exception' do
