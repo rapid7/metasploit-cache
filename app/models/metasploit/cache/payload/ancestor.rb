@@ -89,18 +89,6 @@ class Metasploit::Cache::Payload::Ancestor < Metasploit::Cache::Module::Ancestor
   # Instance Methods
   #
 
-  # The name used to forming the {Metasploit::Cache::Module::Class#reference_name} for payloads.
-  #
-  # @return [String] The {#reference_name} without the {#payload_type_directory}
-  # @return [nil] if {#relative_path} is `nil`.
-  def payload_name
-    relative_file_names = self.relative_file_names
-
-    if relative_file_names
-      relative_file_names.drop(2).join(REFERENCE_NAME_SEPARATOR)
-    end
-  end
-
   # The type of the payload.
   #
   # @return [String] value in {Metasploit::Cache::Module::Payload::Type::ALL}.
