@@ -13,6 +13,6 @@ module Metasploit::Cache::Direct::Class::Framework
 
   # Framework that `#initialize` can access Metasploit Framework world state.
   #
-  # @return metasploit_framework [#events]
+  # @return [#events]
   attr_accessor :framework
 end
