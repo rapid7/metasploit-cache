@@ -334,7 +334,8 @@ RSpec.describe Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
                                      hash_including(
                                          destination: destination,
                                          destination_attribute_set: destination_attribute_set,
-                                         source_attribute_set: source_attribute_set                                     )
+                                         source_attribute_set: source_attribute_set
+                                     )
                                  ).and_call_original
 
       reduce
