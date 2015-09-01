@@ -74,7 +74,9 @@ module Metasploit::Cache::Platform::Seed
               'SP0' => nil,
               'SP1' => nil
           },
-          '7' => nil
+          '7' => nil,
+          '8' => nil,
+          '10' => nil
       },
       'Unix' => nil
   }
