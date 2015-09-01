@@ -772,16 +772,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
 
     context 'with module_type' do
       context 'in known types' do
-        let(:module_ancestor_factory) {
-          {
-              'auxiliary' => :metasploit_cache_auxiliary_ancestor,
-              'encoder' => :metasploit_cache_encoder_ancestor,
-              'exploit' => :metasploit_cache_exploit_ancestor,
-              'nop' => :metasploit_cache_nop_ancestor,
-              'post' => :metasploit_cache_post_ancestor
-          }.fetch(module_type)
-        }
-
         let(:module_type) {
           FactoryGirl.generate :metasploit_cache_non_payload_module_type
         }
