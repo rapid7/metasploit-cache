@@ -51,7 +51,6 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
            source_type: 'Metasploit::Cache::Post::Instance',
            through: :referencable_references
 
-
   #
   # Attributes
   #
