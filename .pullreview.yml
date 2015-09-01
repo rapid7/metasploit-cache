@@ -1,2 +1,2 @@
 excludes:
-  - spec/dummy/db/schema.rb
+  - spec/dummy
