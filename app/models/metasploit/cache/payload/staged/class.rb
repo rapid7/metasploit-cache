@@ -88,7 +88,7 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   # @return [ActiveRecord::Relation] a new relation with values bound.
   def self.bind_renumbered_bind_params(relation, bind_values)
     bind_values.reduce(relation) { |bound_relation, bind_value|
-        bound_relation.bind(bind_value)
+      bound_relation.bind(bind_value)
     }
   end
 
@@ -171,22 +171,22 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
         :stage,
         stage
     ).where_ancestor_real_path_sha1_hex_digest(
-         :stager,
-         stager
+        :stager,
+        stager
     )
   end
 
   #
   # Instance Methods
   #
-  
+
   # @!method payload_stage_instance_id=(payload_stage_instance_id)
   #   Sets {#payload_stage_instance_id} and invalidates cached {#payload_stage_instance} so it is reloaded on next
   #   access.
   #
   #   @param payload_stage_instance_id [Integer]
   #   @return [void]
-  
+
   # @!method payload_stager_instance_id=(payload_stager_instance_id)
   #   Sets {#payload_stager_instance_id} and invalidates cached {#payload_stager_instance} so it is reloaded on next
   #   access.
