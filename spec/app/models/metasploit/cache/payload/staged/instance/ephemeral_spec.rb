@@ -1,7 +1,51 @@
 RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral do
+  shared_context 'metasploit_module_instance' do
+    let(:existing_payload_staged_instance) {
+      FactoryGirl.create(
+          :metasploit_cache_payload_staged_instance,
+          payload_staged_class_payload_stager_instance_handler_load_pathname: payload_staged_class_payload_stager_instance_handler_load_pathname
+      )
+    }
+
+    let(:metasploit_module_instance) {
+      double(
+          'payload staged Metasploit Module instance',
+          class: double(
+              'payload staged Metasploit Module class',
+              ancestor_by_source: {
+                  stage: double(
+                      'payload stage Metasploit Module module',
+                      ephemeral_cache_by_source: {}
+                  ).tap { |payload_stage_metasploit_module_module|
+                    payload_stage_metasploit_module_module.ephemeral_cache_by_source[:ancestor] = Metasploit::Cache::Module::Ancestor::Ephemeral.new(
+                        metasploit_module: payload_stage_metasploit_module_module,
+                        real_path_sha1_hex_digest: existing_payload_staged_instance.payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_path_sha1_hex_digest
+                    )
+                  },
+                  stager: double(
+                      'payload stager Metasploit Module module',
+                      ephemeral_cache_by_source: {}
+                  ).tap { |payload_stager_metasploit_module_module|
+                    payload_stager_metasploit_module_module.ephemeral_cache_by_source[:ancestor] = Metasploit::Cache::Module::Ancestor::Ephemeral.new(
+                        metasploit_module: payload_stager_metasploit_module_module,
+                        real_path_sha1_hex_digest: existing_payload_staged_instance.payload_staged_class.payload_stager_instance.payload_stager_class.ancestor.real_path_sha1_hex_digest
+                    )
+                  }
+              },
+              ephemeral_cache_by_source: {}
+          ).tap { |payload_staged_metasploit_module_class|
+            payload_staged_metasploit_module_class.ephemeral_cache_by_source[:class] = Metasploit::Cache::Payload::Staged::Class::Ephemeral.new(
+                payload_staged_metasploit_module_class: payload_staged_metasploit_module_class
+            )
+          }
+      )
+    }
+  end
+
   context 'resurrecting attributes' do
     context '#payload_staged_instance' do
       include_context 'Metasploit::Cache::Spec::Unload.unload'
+      include_context 'metasploit_module_instance'
 
       subject(:payload_staged_instance) {
         payload_staged_instance_ephemeral.payload_staged_instance
@@ -10,47 +54,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral do
       #
       # lets
       #
-
-      let(:existing_payload_staged_instance) {
-        FactoryGirl.create(
-            :metasploit_cache_payload_staged_instance,
-            payload_staged_class_payload_stager_instance_handler_load_pathname: payload_staged_class_payload_stager_instance_handler_load_pathname
-        )
-      }
-
-      let(:metasploit_module_instance) {
-        double(
-            'payload staged Metasploit Module instance',
-            class: double(
-                'payload staged Metasploit Module class',
-                ancestor_by_source: {
-                    stage: double(
-                        'payload stage Metasploit Module module',
-                        ephemeral_cache_by_source: {}
-                    ).tap { |payload_stage_metasploit_module_module|
-                      payload_stage_metasploit_module_module.ephemeral_cache_by_source[:ancestor] = Metasploit::Cache::Module::Ancestor::Ephemeral.new(
-                          metasploit_module: payload_stage_metasploit_module_module,
-                          real_path_sha1_hex_digest: existing_payload_staged_instance.payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_path_sha1_hex_digest
-                      )
-                    },
-                    stager: double(
-                        'payload stager Metasploit Module module',
-                        ephemeral_cache_by_source: {}
-                    ).tap { |payload_stager_metasploit_module_module|
-                      payload_stager_metasploit_module_module.ephemeral_cache_by_source[:ancestor] = Metasploit::Cache::Module::Ancestor::Ephemeral.new(
-                          metasploit_module: payload_stager_metasploit_module_module,
-                          real_path_sha1_hex_digest: existing_payload_staged_instance.payload_staged_class.payload_stager_instance.payload_stager_class.ancestor.real_path_sha1_hex_digest
-                      )
-                    }
-                },
-                ephemeral_cache_by_source: {}
-            ).tap { |payload_staged_metasploit_module_class|
-              payload_staged_metasploit_module_class.ephemeral_cache_by_source[:class] = Metasploit::Cache::Payload::Staged::Class::Ephemeral.new(
-                  payload_staged_metasploit_module_class: payload_staged_metasploit_module_class
-              )
-            }
-        )
-      }
 
       let(:payload_staged_class_payload_stager_instance_handler_load_pathname) {
         Metasploit::Model::Spec.temporary_pathname.join('lib')
@@ -304,6 +307,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral do
     end
 
     context 'without :to' do
+      include_context 'metasploit_module_instance'
+
       #
       # lets
       #
@@ -312,50 +317,13 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral do
         []
       }
 
-      let(:metasploit_module_instance) {
-        double(
-            'payload staged Metasploit Module instance',
-            class: double(
-                'payload staged Metasploit Module class',
-                ancestor_by_source: {
-                    stage: double(
-                        'payload stage Metasploit Module module',
-                        ephemeral_cache_by_source: {}
-                    ).tap { |payload_stage_metasploit_module_module|
-                      payload_stage_metasploit_module_module.ephemeral_cache_by_source[:ancestor] = Metasploit::Cache::Module::Ancestor::Ephemeral.new(
-                          metasploit_module: payload_stage_metasploit_module_module,
-                          real_path_sha1_hex_digest: existing_payload_staged_instance.payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_path_sha1_hex_digest
-                      )
-                    },
-                    stager: double(
-                        'payload stager Metasploit Module module',
-                        ephemeral_cache_by_source: {}
-                    ).tap { |payload_stager_metasploit_module_module|
-                      payload_stager_metasploit_module_module.ephemeral_cache_by_source[:ancestor] = Metasploit::Cache::Module::Ancestor::Ephemeral.new(
-                          metasploit_module: payload_stager_metasploit_module_module,
-                          real_path_sha1_hex_digest: existing_payload_staged_instance.payload_staged_class.payload_stager_instance.payload_stager_class.ancestor.real_path_sha1_hex_digest
-                      )
-                    }
-                },
-                ephemeral_cache_by_source: {}
-            ).tap { |payload_staged_metasploit_module_class|
-              payload_staged_metasploit_module_class.ephemeral_cache_by_source[:class] = Metasploit::Cache::Payload::Staged::Class::Ephemeral.new(
-                  payload_staged_metasploit_module_class: payload_staged_metasploit_module_class
-              )
-            }
-        )
-      }
-
       #
-      # let!s
+      # Callbacks
       #
 
-      let!(:existing_payload_staged_instance) {
-        FactoryGirl.create(
-            :metasploit_cache_payload_staged_instance,
-            payload_staged_class_payload_stager_instance_handler_load_pathname: payload_staged_class_payload_stager_instance_handler_load_pathname
-        )
-      }
+      before(:each) do
+        existing_payload_staged_instance
+      end
 
       it 'defaults to #payload_staged_instance' do
         expect(payload_staged_instance_ephemeral).to receive(:payload_staged_instance).and_call_original
