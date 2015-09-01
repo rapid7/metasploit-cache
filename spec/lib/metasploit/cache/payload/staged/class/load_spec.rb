@@ -444,17 +444,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
       }
 
       context 'with #logger' do
-        let(:logger) {
-          ActiveSupport::TaggedLogging.new(
-              Logger.new(logger_string_io)
-          ).tap { |logger|
-            logger.level = Logger::DEBUG
-          }
-        }
-
-        let(:logger_string_io) {
-          StringIO.new
-        }
+        include_context 'ActiveSupport::TaggedLogging'
 
         context 'with #payload_stage_metasploit_module' do
           let(:payload_stage_ancestor_load) {

@@ -16,6 +16,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
   context 'factories' do
     context 'metasploit_cache_payload_staged_instance' do
       context 'with :payload_staged_class_payload_stager_instance_handler_load_pathname' do
+        include_context 'ActiveSupport::TaggedLogging'
         include_context 'Metasploit::Cache::Spec::Unload.unload'
 
         subject(:metasploit_cache_payload_staged_instance) {
@@ -30,18 +31,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
         # lets
         #
         #
-
-        let(:logger) {
-          ActiveSupport::TaggedLogging.new(
-              Logger.new(logger_string_io)
-          ).tap { |logger|
-            logger.level = Logger::DEBUG
-          }
-        }
-
-        let(:logger_string_io) {
-          StringIO.new
-        }
 
         let(:metasploit_framework) {
           double('Metasploit Framework')
