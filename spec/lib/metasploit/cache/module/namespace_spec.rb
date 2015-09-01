@@ -8,7 +8,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
       it { is_expected.to be_frozen }
       it { is_expected.to include('extend Metasploit::Cache::Module::Namespace::Cacheable') }
       it { is_expected.to include('extend Metasploit::Cache::Module::Namespace::Loadable') }
-      it { is_expected.to include('def self.module_eval_with_lexical_scope')}
+      it { is_expected.to include('def self.module_eval_with_lexical_scope') }
     end
 
     context 'CONTENT_FILE' do

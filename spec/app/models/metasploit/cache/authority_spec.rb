@@ -6,7 +6,7 @@ RSpec.describe Metasploit::Cache::Authority do
   context 'databases' do
     context 'columns' do
       it { should have_db_column(:abbreviation).of_type(:string).with_options(:null => false) }
-      it { should have_db_column(:obsolete).of_type(:boolean).with_options(:default => false, :null => false)}
+      it { should have_db_column(:obsolete).of_type(:boolean).with_options(:default => false, :null => false) }
       it { should have_db_column(:summary).of_type(:string).with_options(:null => true) }
       it { should have_db_column(:url).of_type(:text).with_options(:null => true) }
     end
