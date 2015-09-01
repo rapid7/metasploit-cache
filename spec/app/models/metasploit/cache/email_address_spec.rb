@@ -215,7 +215,6 @@ RSpec.describe Metasploit::Cache::EmailAddress do
           "#{local}@#{domain}"
         end
 
-
         context 'with local before @' do
           it "should be portion after '@'" do
             expect(derived_domain).to eq(domain)
@@ -330,7 +329,6 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         let(:full) do
           "#{local}@#{domain}"
         end
-
 
         context "with domain after '@'" do
           it "should be portion before '@'" do

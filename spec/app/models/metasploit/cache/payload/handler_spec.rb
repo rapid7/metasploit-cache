@@ -26,7 +26,6 @@ RSpec.describe Metasploit::Cache::Payload::Handler do
         )
       }
 
-
       context 'with :load_pathname' do
         include_context 'Metasploit::Cache::Spec::Unload.unload'
 

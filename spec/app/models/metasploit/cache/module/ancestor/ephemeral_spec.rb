@@ -24,7 +24,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
         module_ancestor_ephemeral.module_ancestor
       }
 
-
       before(:each) do
         # have to stub because real_path_sha1_hex_digest is normally delegated to the namespace parent
         allow(module_ancestor_ephemeral).to receive(:real_path_sha1_hex_digest).and_return(expected_module_ancestor.real_path_sha1_hex_digest)

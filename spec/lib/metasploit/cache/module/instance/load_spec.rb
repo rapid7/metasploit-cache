@@ -1402,7 +1402,6 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                     }
                                 }
 
-
           # @note payloads/stages instances are loaded as part of
           #   spec/lib/metasploit/cache/payload/staged/class/load_spec.rb
 
