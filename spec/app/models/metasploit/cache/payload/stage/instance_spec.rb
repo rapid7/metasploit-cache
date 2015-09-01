@@ -6,7 +6,7 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
     it { is_expected.to have_many(:architecturable_architectures).autosave(true).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
     it { is_expected.to have_many(:contributions).autosave(true).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contributable) }
     it { is_expected.to have_many(:licensable_licenses).autosave(true).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:licensable) }
-    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License').through(:licensable_licenses) }
     it { is_expected.to belong_to(:payload_stage_class).class_name('Metasploit::Cache::Payload::Stage::Class').inverse_of(:payload_stage_instance).with_foreign_key(:payload_stage_class_id) }
     it { is_expected.to have_many(:payload_staged_classes).class_name('Metasploit::Cache::Payload::Staged::Class').dependent(:destroy).inverse_of(:payload_stage_instance) }
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
