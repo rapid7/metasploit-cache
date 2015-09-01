@@ -110,7 +110,6 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #   @return [true] privileged access is granted.
   #   @return [false] privileged access is NOT granted.
 
-
   #
   # Validations
   #

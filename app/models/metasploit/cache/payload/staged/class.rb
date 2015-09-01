@@ -267,6 +267,5 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
     ).project(subset_table[Arel.star])
   end
 
-
   Metasploit::Concern.run(self)
 end
