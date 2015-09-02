@@ -18,22 +18,14 @@
 module Metasploit::Cache::Module
   extend ActiveSupport::Autoload
 
-  autoload :Action
   autoload :Ancestor
   autoload :AncestorCell
-  autoload :Architecture
-  autoload :Author
-  autoload :Class
   autoload :Handler
   autoload :Instance
   autoload :Namespace
   autoload :Path
-  autoload :Platform
-  autoload :Relationship
   autoload :Rank
-  autoload :Reference
   autoload :Stance
-  autoload :Target
   autoload :Type
 
   #

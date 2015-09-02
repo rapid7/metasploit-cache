@@ -6,9 +6,6 @@ RSpec.describe Metasploit::Cache::EmailAddress do
   context 'associations' do
     it { is_expected.to have_many(:authors).class_name('Metasploit::Cache::Author').through(:contributions) }
     it { is_expected.to have_many(:contributions).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:email_address) }
-    it { is_expected.to have_many(:module_author_authors).class_name('Metasploit::Cache::Author').through(:module_authors) }
-    it { should have_many(:module_authors).class_name('Metasploit::Cache::Module::Author').dependent(:destroy) }
-    it { should have_many(:module_instances).class_name('Metasploit::Cache::Module::Instance').through(:module_authors) }
   end
 
   context 'database' do

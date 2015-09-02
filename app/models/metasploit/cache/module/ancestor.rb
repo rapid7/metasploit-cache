@@ -14,7 +14,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
 
   autoload :Ephemeral
   autoload :Load
-  autoload :Spec
 
   #
   # CONSTANTS
@@ -48,19 +47,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Associations
   #
   #
-
-  # Relates this {Metasploit::Cache::Module::Ancestor} to the
-  # {Metasploit::Cache::Module::Class Metasploit::Cache::Module::Classes} that
-  # {Metasploit::Cache::Module::Relationship#descendant descend} from the {Metasploit::Cache::Module::Ancestor}.
-  has_many :relationships, class_name: 'Metasploit::Cache::Module::Relationship', dependent: :destroy, inverse_of: :ancestor
-
-  #
-  # through: :relationships
-  #
-
-  # {Metasploit::Cache::Module::Class Classes} that either subclass the ruby Class in {#real_pathname} or include the
-  # ruby Module in {#real_pathname}.
-  has_many :descendants, class_name: 'Metasploit::Cache::Module::Class', through: :relationships
 
   #
   # Attributes

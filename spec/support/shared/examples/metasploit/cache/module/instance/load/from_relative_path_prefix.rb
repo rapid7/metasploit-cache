@@ -1,7 +1,7 @@
 # Only covered when run with content tag
 # :nocov:
-shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_prefix' do |module_path_real_pathname, relative_path_prefix, pending_reason_by_display_path: {}|
-  context relative_path_prefix do
+shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_prefix' do |module_path_real_pathname, relative_path_prefix, tag, pending_reason_by_display_path: {}|
+  context relative_path_prefix, tag do
     real_prefix_pathname = module_path_real_pathname.join(relative_path_prefix)
 
     rule = File::Find.new(

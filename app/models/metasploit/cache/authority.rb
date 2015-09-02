@@ -31,20 +31,6 @@ class Metasploit::Cache::Authority < ActiveRecord::Base
   has_many :references, class_name: 'Metasploit::Cache::Reference', dependent: :destroy, inverse_of: :authority
 
   #
-  # through: :references
-  #
-
-  # Joins {#references} to {#module_instances}.
-  has_many :module_references, class_name: 'Metasploit::Cache::Module::Reference', through: :references
-
-  #
-  # through: :module_references
-  #
-
-  # {Metasploit::Cache::Module::Instance Modules} that have a reference with this authority.
-  has_many :module_instances, class_name: 'Metasploit::Cache::Module::Instance', through: :module_references
-
-  #
   # Attributes
   #
 

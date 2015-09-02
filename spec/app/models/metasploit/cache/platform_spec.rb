@@ -7,13 +7,11 @@ RSpec.describe Metasploit::Cache::Platform do
     it { is_expected.to have_many(:encoder_instances).class_name('Metasploit::Cache::Encoder::Instance').source(:platformable).through(:platformable_platforms) }
     it { is_expected.to have_many(:exploit_targets).class_name('Metasploit::Cache::Exploit::Target').source(:platformable).through(:platformable_platforms) }
     it { should have_many(:module_instances).class_name('Metasploit::Cache::Module::Instance').through(:module_platforms) }
-    it { should have_many(:module_platforms).class_name('Metasploit::Cache::Module::Platform').dependent(:destroy) }
     it { is_expected.to have_many(:nop_instances).class_name('Metasploit::Cache::Nop::Instance').source(:platformable).through(:platformable_platforms) }
     it { is_expected.to have_many(:payload_single_instances).class_name('Metasploit::Cache::Payload::Single::Instance').source(:platformable).through(:platformable_platforms) }
     it { is_expected.to have_many(:payload_stage_instances).class_name('Metasploit::Cache::Payload::Stage::Instance').source(:platformable).through(:platformable_platforms) }
     it { is_expected.to have_many(:payload_stager_instances).class_name('Metasploit::Cache::Payload::Stager::Instance').source(:platformable).through(:platformable_platforms) }
     it { is_expected.to have_many(:platformable_platforms).class_name('Metasploit::Cache::Platformable::Platform').dependent(:destroy).inverse_of(:platform) }
-    it { should have_many(:target_platforms).class_name('Metasploit::Cache::Module::Target::Platform').dependent(:destroy) }
   end
 
   context 'database' do

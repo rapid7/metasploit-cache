@@ -3,7 +3,6 @@ module Metasploit::Cache::Spec
   extend ActiveSupport::Autoload
 
   autoload :Matcher
-  autoload :Template
   autoload :Unload
 
   #

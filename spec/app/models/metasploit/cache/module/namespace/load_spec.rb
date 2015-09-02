@@ -120,11 +120,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         #
 
         let(:module_ancestor) {
-          FactoryGirl.build(module_ancestor_factory)
-        }
-
-        let(:module_ancestor_factory) {
-          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+          FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
         }
 
         #
@@ -168,11 +164,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         }
 
         let(:module_ancestor) {
-          FactoryGirl.build(module_ancestor_factory)
-        }
-
-        let(:module_ancestor_factory) {
-          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+          FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
         }
 
         #
@@ -246,11 +238,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         }
 
         let(:module_ancestor) {
-          FactoryGirl.build(module_ancestor_factory)
-        }
-
-        let(:module_ancestor_factory) {
-          FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+          FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
         }
 
         #
@@ -309,11 +297,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
 
     context 'after #module_ancestor_eval' do
       let(:module_ancestor) {
-        FactoryGirl.build(module_ancestor_factory)
-      }
-
-      let(:module_ancestor_factory) {
-        FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+        FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
       }
 
       context 'with constant matching Metasploit<n>' do
@@ -554,11 +538,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
     }
 
     let(:module_ancestor) {
-      FactoryGirl.build(module_ancestor_factory)
-    }
-
-    let(:module_ancestor_factory) {
-      FactoryGirl.generate :metasploit_cache_module_ancestor_factory
+      FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
     }
 
     context 'with Interrupt' do

@@ -3,8 +3,6 @@ RSpec.describe Metasploit::Cache::Reference do
     it { is_expected.to have_many(:auxiliary_instances).class_name('Metasploit::Cache::Auxiliary::Instance').source(:referencable).through(:referencable_references) }
     it { is_expected.to belong_to(:authority).class_name('Metasploit::Cache::Authority').inverse_of(:references) }
     it { is_expected.to have_many(:exploit_instances).class_name('Metasploit::Cache::Exploit::Instance').source(:referencable).through(:referencable_references) }
-    it { is_expected.to have_many(:module_instances).class_name('Metasploit::Cache::Module::Instance').through(:module_references) }
-    it { is_expected.to have_many(:module_references).class_name('Metasploit::Cache::Module::Reference').dependent(:destroy).inverse_of(:references).with_foreign_key(:reference_id) }
     it { is_expected.to have_many(:post_instances).class_name('Metasploit::Cache::Post::Instance').source(:referencable).through(:referencable_references) }
     it { is_expected.to have_many(:referencable_references).class_name('Metasploit::Cache::Referencable::Reference').dependent(:destroy).inverse_of(:references).with_foreign_key(:reference_id) }
   end

@@ -21,9 +21,6 @@ class Metasploit::Cache::Author < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :author
 
-  # Joins this to {#email_addresses} and {#module_instances}.
-  has_many :module_authors, class_name: 'Metasploit::Cache::Module::Author', dependent: :destroy, inverse_of: :author
-
   #
   # through: :contributions
   #
@@ -32,18 +29,6 @@ class Metasploit::Cache::Author < ActiveRecord::Base
   has_many :email_addresses,
            class_name: 'Metasploit::Cache::EmailAddress',
            through: :contributions
-
-  #
-  # through: :module_authors
-  #
-
-  # Email addresses used by this author across all {#module_instances}.
-  has_many :module_author_email_addresses,
-           class_name: 'Metasploit::Cache::EmailAddress',
-           through: :module_authors
-
-  # Modules written by this author.
-  has_many :module_instances, class_name: 'Metasploit::Cache::Module::Instance', through: :module_authors
 
   #
   # Attributes

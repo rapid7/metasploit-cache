@@ -16,7 +16,6 @@ require 'metasploit/model'
 require "metasploit/cache/version"
 
 autoload :DerivationValidator, 'derivation_validator'
-autoload :DynamicLengthValidator, 'dynamic_length_validator'
 
 # Namespace shared between gems in the Metasploit ecosystem.
 module Metasploit
@@ -30,11 +29,9 @@ module Metasploit
     autoload :Ancestry
     autoload :Architecture
     autoload :Architecturable
-    autoload :Association
     autoload :Author
     autoload :Authority
     autoload :Auxiliary
-    autoload :Base
     autoload :Batch
     autoload :Cacheable
     autoload :Constant
@@ -47,8 +44,6 @@ module Metasploit
     autoload :Ephemeral
     autoload :Error
     autoload :Exploit
-    autoload :File
-    autoload :Invalid
     autoload :Licensable
     autoload :License
     autoload :Logged
@@ -61,13 +56,11 @@ module Metasploit
     autoload :Platform
     autoload :Platformable
     autoload :Post
-    autoload :ProxiedValidation
     autoload :RealPathname
     autoload :Realm
     autoload :Referencable
     autoload :Reference
     autoload :ResurrectingAttribute
-    autoload :Search
     autoload :Spec
     autoload :Translation
     autoload :Visitation

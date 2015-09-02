@@ -21,13 +21,6 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
              class_name: 'Metasploit::Cache::Authority',
              inverse_of: :references
 
-  # Joins this {Metasploit::Cache::Reference} to {#module_instances}.
-  has_many :module_references,
-           class_name: 'Metasploit::Cache::Module::Reference',
-           dependent: :destroy,
-           foreign_key: :reference_id,
-           inverse_of: :references
-
   # Joins this {Metasploit::Cache::Reference} to {#auxiliary_instances}, {#exploit_instances}, and {#post_instances}.
   has_many :referencable_references,
            as: :referencable,
@@ -35,14 +28,6 @@ class Metasploit::Cache::Reference < ActiveRecord::Base
            dependent: :destroy,
            foreign_key: :reference_id,
            inverse_of: :references
-
-  #
-  # through: :module_references
-  #
-
-  # {Metasploit::Cache::Module::Instance Modules} that exploit this reference or describe a proof-of-concept (PoC) code
-  # that the module is based on.
-  has_many :module_instances, class_name: 'Metasploit::Cache::Module::Instance', through: :module_references
 
   #
   # through: :referencable_references
