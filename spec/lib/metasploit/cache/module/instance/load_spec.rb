@@ -1014,7 +1014,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                 'payloads/singles',
                                 :payload_single do
             let(:direct_class) {
-              module_ancestor.build_single_payload_class
+              module_ancestor.build_payload_single_unhandled_class
             }
 
             let(:module_ancestors) {
