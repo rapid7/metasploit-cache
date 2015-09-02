@@ -1,5 +1,5 @@
 # Class-level metadata for a stage payload Metasploit Module.
-class Metasploit::Cache::Payload::Stage::Class < Metasploit::Cache::Payload::Direct::Class
+class Metasploit::Cache::Payload::Stage::Class < Metasploit::Cache::Payload::Unhandled::Class
   #
   # Associations
   #

@@ -1,10 +1,10 @@
-RSpec.describe Metasploit::Cache::Payload::Direct::Class do
+RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
   it 'is a subclass of Metasploit::Cache::Direct::Class' do
     expect(described_class).to be < Metasploit::Cache::Direct::Class
   end
 
   context 'traits' do
-    context ':metasploit_cache_payload_direct_class_ancestor_contents' do
+    context ':metasploit_cache_payload_unhandled_class_ancestor_contents' do
       context 'with ancestor_contents?' do
         context 'without #ancestor' do
           subject(:direct_class) {
@@ -21,7 +21,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class do
             }.to raise_error ArgumentError,
                              "Metasploit::Cache::Payload::Single::Class#ancestor is `nil` and " \
                              "content cannot be written.  If this is expected, set `ancestor_contents?: false` " \
-                             "when using the :metasploit_cache_payload_direct_class_ancestor_contents trait."
+                             "when using the :metasploit_cache_payload_unhandled_class_ancestor_contents trait."
           }
         end
 
@@ -72,7 +72,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class do
               }.to raise_error ArgumentError,
                                "Metasploit::Cache::Payload::Single::Ancestor#real_pathname is `nil` and " \
                                "content cannot be written.  If this is expected, set `ancestor_contents?: false` " \
-                               "when using the :metasploit_cache_payload_direct_class_ancestor_contents trait."
+                               "when using the :metasploit_cache_payload_unhandled_class_ancestor_contents trait."
             }
           end
         end

@@ -1,23 +1,23 @@
-RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
+RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Load do
   include_context 'ActiveSupport::TaggedLogging'
   include_context 'Metasploit::Cache::Spec::Unload.unload'
 
-  subject(:payload_direct_class_load) {
+  subject(:payload_unhandled_class_load) {
     described_class.new(
         logger: logger,
         metasploit_module: metasploit_module,
-        payload_direct_class: payload_direct_class,
+        payload_unhandled_class: payload_unhandled_class,
         payload_superclass: Metasploit::Cache::Direct::Class::Superclass
     )
   }
 
-  let(:payload_direct_class) {
+  let(:payload_unhandled_class) {
     FactoryGirl.build(
         :metasploit_cache_payload_single_class,
         rank: module_rank
-    ).tap { |payload_direct_class|
+    ).tap { |payload_unhandled_class|
       # Set to nil after build so that template contains a rank, but it's not yet in the record
-      payload_direct_class.rank = nil
+      payload_unhandled_class.rank = nil
     }
   }
 
@@ -37,24 +37,24 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
     }
 
     it 'validates presence of logger' do
-      payload_direct_class_load.logger = nil
+      payload_unhandled_class_load.logger = nil
 
-      expect(payload_direct_class_load).not_to be_valid
-      expect(payload_direct_class_load.errors[:logger]).to include(error)
+      expect(payload_unhandled_class_load).not_to be_valid
+      expect(payload_unhandled_class_load.errors[:logger]).to include(error)
     end
 
     it 'validates presence of metasploit_module' do
-      payload_direct_class_load.metasploit_module = nil
+      payload_unhandled_class_load.metasploit_module = nil
 
-      expect(payload_direct_class_load).not_to be_valid
-      expect(payload_direct_class_load.errors[:metasploit_module]).to include(error)
+      expect(payload_unhandled_class_load).not_to be_valid
+      expect(payload_unhandled_class_load.errors[:metasploit_module]).to include(error)
     end
 
-    it 'validates presence of payload_direct_class' do
-      payload_direct_class_load.payload_direct_class = nil
+    it 'validates presence of payload_unhandled_class' do
+      payload_unhandled_class_load.payload_unhandled_class = nil
 
-      expect(payload_direct_class_load).not_to be_valid
-      expect(payload_direct_class_load.errors[:payload_direct_class]).to include(error)
+      expect(payload_unhandled_class_load).not_to be_valid
+      expect(payload_unhandled_class_load.errors[:payload_unhandled_class]).to include(error)
     end
 
     context 'on #metasploit_class' do
@@ -64,10 +64,10 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
         #
 
         before(:each) do
-          allow(payload_direct_class_load).to receive(:metasploit_class).and_return(metasploit_class)
+          allow(payload_unhandled_class_load).to receive(:metasploit_class).and_return(metasploit_class)
 
-          # for #payload_direct_class_valid
-          payload_direct_class_load.valid?(validation_context)
+          # for #payload_unhandled_class_valid
+          payload_unhandled_class_load.valid?(validation_context)
         end
 
         context 'with :loading validation context' do
@@ -81,7 +81,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
             }
 
             it 'adds error on :metasploit_class' do
-              expect(payload_direct_class_load.errors[:metasploit_class]).not_to include(error)
+              expect(payload_unhandled_class_load.errors[:metasploit_class]).not_to include(error)
             end
           end
 
@@ -91,7 +91,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
             }
 
             it 'does not add error on :metasploit_class' do
-              expect(payload_direct_class_load.errors[:metasploit_class]).not_to include(error)
+              expect(payload_unhandled_class_load.errors[:metasploit_class]).not_to include(error)
             end
           end
         end
@@ -107,7 +107,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
             }
 
             it 'adds error on :metasploit_class' do
-              expect(payload_direct_class_load.errors[:metasploit_class]).to include(error)
+              expect(payload_unhandled_class_load.errors[:metasploit_class]).to include(error)
             end
           end
 
@@ -121,7 +121,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
             }
 
             it 'does not add error on :metasploit_class' do
-              expect(payload_direct_class_load.errors[:metasploit_class]).not_to include(error)
+              expect(payload_unhandled_class_load.errors[:metasploit_class]).not_to include(error)
             end
           end
         end
@@ -131,37 +131,37 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
 
   context '#loading_context?' do
     subject(:loading_context?) do
-      payload_direct_class_load.send(:loading_context?)
+      payload_unhandled_class_load.send(:loading_context?)
     end
 
     context 'with :loading validation_context' do
       it 'should be true' do
-        expect(payload_direct_class_load).to receive(:run_validations!) do
+        expect(payload_unhandled_class_load).to receive(:run_validations!) do
           expect(loading_context?).to eq(true)
         end
 
-        payload_direct_class_load.valid?(:loading)
+        payload_unhandled_class_load.valid?(:loading)
       end
     end
 
     context 'without validation_context' do
       it 'should be false' do
-        expect(payload_direct_class_load).to receive(:run_validations!) do
+        expect(payload_unhandled_class_load).to receive(:run_validations!) do
           expect(loading_context?).to eq(false)
         end
 
-        payload_direct_class_load.valid?
+        payload_unhandled_class_load.valid?
       end
     end
   end
 
   context '#metasploit_class' do
     subject(:metasploit_class) {
-      payload_direct_class_load.metasploit_class
+      payload_unhandled_class_load.metasploit_class
     }
 
     context 'with #logger' do
-      context 'with #payload_direct_class' do
+      context 'with #payload_unhandled_class' do
         context 'with #metasploit_module' do
           it 'does not set metasploit_module.ephemeral_cache_by_source[:class]' do
             expect {
@@ -185,13 +185,13 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
             specify {
               expect {
                 metasploit_class
-              }.to change(Metasploit::Cache::Payload::Direct::Class, :count).by(1)
+              }.to change(Metasploit::Cache::Payload::Unhandled::Class, :count).by(1)
             }
           end
 
           context 'without persisted' do
             before(:each) do
-              expect(payload_direct_class).to receive(:persisted?).and_return(false)
+              expect(payload_unhandled_class).to receive(:persisted?).and_return(false)
             end
 
             it { is_expected.to be_nil }
@@ -207,8 +207,8 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
         end
       end
 
-      context 'without #payload_direct_class' do
-        let(:payload_direct_class) {
+      context 'without #payload_unhandled_class' do
+        let(:payload_unhandled_class) {
           nil
         }
 
@@ -231,7 +231,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
         nil
       }
 
-      context 'with #payload_direct_class' do
+      context 'with #payload_unhandled_class' do
         context 'with #metasploit_module' do
           it { is_expected.to be_nil }
         end
@@ -245,8 +245,8 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
         end
       end
 
-      context 'without #payload_direct_class' do
-        let(:payload_direct_class) {
+      context 'without #payload_unhandled_class' do
+        let(:payload_unhandled_class) {
           nil
         }
 
@@ -267,7 +267,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
 
   context '#metasploit_class_usable' do
     subject(:metasploit_class_usable) do
-      payload_direct_class_load.send(:metasploit_class_usable)
+      payload_unhandled_class_load.send(:metasploit_class_usable)
     end
 
     let(:error) do
@@ -275,7 +275,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
     end
 
     before(:each) do
-      allow(payload_direct_class_load).to receive(:metasploit_class).and_return(metasploit_class)
+      allow(payload_unhandled_class_load).to receive(:metasploit_class).and_return(metasploit_class)
     end
 
     context 'with #metasploit_class' do
@@ -294,7 +294,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
         it 'should not add error on :metasploit_class' do
           metasploit_class_usable
 
-          expect(payload_direct_class_load.errors[:metasploit_class]).not_to include(error)
+          expect(payload_unhandled_class_load.errors[:metasploit_class]).not_to include(error)
         end
       end
 
@@ -306,7 +306,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
         it 'should not add error on :metasploit_class' do
           metasploit_class_usable
 
-          expect(payload_direct_class_load.errors[:metasploit_class]).to include(error)
+          expect(payload_unhandled_class_load.errors[:metasploit_class]).to include(error)
         end
       end
     end
@@ -319,20 +319,20 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
       it 'should not add error on :metasploit_class' do
         metasploit_class_usable
 
-        expect(payload_direct_class_load.errors[:metasploit_class]).not_to include(error)
+        expect(payload_unhandled_class_load.errors[:metasploit_class]).not_to include(error)
       end
     end
   end
 
   context '#valid?' do
     subject(:valid?) {
-      payload_direct_class_load.valid?
+      payload_unhandled_class_load.valid?
     }
 
     it 'causes #metasploit_class to be defined' do
       expect {
         valid?
-      }.to change { payload_direct_class_load.instance_variable_defined? :@metasploit_class }.to(true)
+      }.to change { payload_unhandled_class_load.instance_variable_defined? :@metasploit_class }.to(true)
     end
   end
 

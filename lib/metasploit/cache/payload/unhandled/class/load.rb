@@ -1,11 +1,11 @@
-# Loads a {Metasploit::Cache::Payload::Direct::Class}.
-class Metasploit::Cache::Payload::Direct::Class::Load < Metasploit::Model::Base
+# Loads a {Metasploit::Cache::Payload::Unhandled::Class}.
+class Metasploit::Cache::Payload::Unhandled::Class::Load < Metasploit::Model::Base
   #
   # CONSTANTS
   #
 
   # The base namespace name under which {metasploit_class_names} are generated.
-  METASPLOIT_CLASS_NAMES = ['Msf', 'Payloads']
+  METASPLOIT_CLASS_NAMES = ['Msf', 'Payloads', 'Unhandled']
 
   #
   # Attributes
@@ -21,15 +21,15 @@ class Metasploit::Cache::Payload::Direct::Class::Load < Metasploit::Model::Base
   # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `ephemeral_cache_by_source[:ancestor]`.
   attr_accessor :metasploit_module
 
-  # The direct payload class being loaded.
-  #
-  # @return [Metasploit::Cache::Payload::Direct::Class]
-  attr_accessor :payload_direct_class
-
   # The superclass to subclass and include {#metasploit_module} into.
   #
   # @return [Class, #rank, #is_usable]
   attr_accessor :payload_superclass
+
+  # The payload class with a handler being loaded.
+  #
+  # @return [Metasploit::Cache::Payload::Unhandled::Class]
+  attr_accessor :payload_unhandled_class
 
   #
   #
@@ -41,7 +41,7 @@ class Metasploit::Cache::Payload::Direct::Class::Load < Metasploit::Model::Base
   # Method Validations
   #
 
-  validate :payload_direct_class_valid,
+  validate :payload_unhandled_class_valid,
            unless: :loading_context?
   validate :metasploit_class_usable,
            unless: :loading_context?
@@ -58,9 +58,9 @@ class Metasploit::Cache::Payload::Direct::Class::Load < Metasploit::Model::Base
             }
   validates :metasploit_module,
             presence: true
-  validates :payload_direct_class,
-            presence: true
   validates :payload_superclass,
+            presence: true
+  validates :payload_unhandled_class,
             presence: true
 
   #
@@ -79,10 +79,10 @@ class Metasploit::Cache::Payload::Direct::Class::Load < Metasploit::Model::Base
         metasploit_class.extend Metasploit::Cache::Cacheable
         metasploit_class.include metasploit_module
 
-        # There is no specialized Metasploit::Cache::Payload::Direct::Class::Ephemeral because metadata is the same
-        # for Metasploit::Cache::Payload::Direct::Class once the metasploit_class is mixed.
+        # There is no specialized Metasploit::Cache::Payload::Unhandled::Class::Ephemeral because metadata is the same
+        # for Metasploit::Cache::Payload::Unhandled::Class once the metasploit_class is mixed.
         ephemeral_cache = Metasploit::Cache::Direct::Class::Ephemeral.new(
-            direct_class_class: payload_direct_class.class,
+            direct_class_class: payload_unhandled_class.class,
             logger: logger,
             metasploit_class: metasploit_class
         )
@@ -90,13 +90,13 @@ class Metasploit::Cache::Payload::Direct::Class::Load < Metasploit::Model::Base
         metasploit_class.ephemeral_cache_by_source[:class] = ephemeral_cache
 
         if ephemeral_cache.valid?
-          ephemeral_cache.persist_direct_class(to: payload_direct_class)
+          ephemeral_cache.persist_direct_class(to: payload_unhandled_class)
 
-          if payload_direct_class.persisted?
+          if payload_unhandled_class.persisted?
             # Name class so that it can be looked up by name to prevent unnecessary reloading.
             Metasploit::Cache::Constant.name(
                 constant: metasploit_class,
-                names: self.class.metasploit_class_names(payload_direct_class)
+                names: self.class.metasploit_class_names(payload_unhandled_class)
             )
             # The load only succeeded if the metadata was persisted, so @metasploit_class is `nil` otherwise.
             @metasploit_class = metasploit_class
@@ -110,21 +110,21 @@ class Metasploit::Cache::Payload::Direct::Class::Load < Metasploit::Model::Base
 
   # Returns names for the {#metasploit_class} and its namespaces.
   #
-  # @param payload_direct_class [Metasploit::Cache::Payload::Direct::Class] Whose names to calculate
+  # @param payload_unhandled_class [Metasploit::Cache::Payload::Unhandled::Class] Whose names to calculate
   # @return [Array<String>]
-  def self.metasploit_class_names(payload_direct_class)
-    METASPLOIT_CLASS_NAMES + ["RealPathSha1HexDigest#{payload_direct_class.ancestor.real_path_sha1_hex_digest}"]
+  def self.metasploit_class_names(payload_unhandled_class)
+    METASPLOIT_CLASS_NAMES + ["RealPathSha1HexDigest#{payload_unhandled_class.ancestor.real_path_sha1_hex_digest}"]
   end
 
   private
 
-  # Validates that {#payload_direct_class} is valid, but only if {#payload_direct_class} is not `nil`.
+  # Validates that {#payload_unhandled_class} is valid, but only if {#payload_unhandled_class} is not `nil`.
   #
   # @return [void]
-  def payload_direct_class_valid
+  def payload_unhandled_class_valid
     # allow the presence validation to handle it being nil
-    if payload_direct_class && payload_direct_class.invalid?
-      errors.add(:payload_direct_class, :invalid)
+    if payload_unhandled_class && payload_unhandled_class.invalid?
+      errors.add(:payload_unhandled_class, :invalid)
     end
   end
 

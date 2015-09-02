@@ -190,7 +190,7 @@ en:
               metasploit_class:
                 unusable: "is unusable on this local host"
 
-          metasploit/cache/payload/direct/class/load:
+          metasploit/cache/payload/unhandled/class/load:
             attributes:
               metasploit_class:
                 unusable: "is unusable on this local host"

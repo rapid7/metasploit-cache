@@ -36,7 +36,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Class, type: :model do
         #
 
         before(:each) do
-          # To prove Payload::Direct::Class::Load is setting rank
+          # To prove Payload::Unhandled::Class::Load is setting rank
           metasploit_cache_payload_stager_class.rank = nil
         end
 
@@ -48,12 +48,12 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Class, type: :model do
           it { is_expected.to be_valid }
         end
 
-        context 'Metasploit::Cache::Payload::Direct::Class::Load' do
-          subject(:payload_direct_class_load) {
-            Metasploit::Cache::Payload::Direct::Class::Load.new(
+        context 'Metasploit::Cache::Payload::Unhandled::Class::Load' do
+          subject(:payload_unhandled_class_load) {
+            Metasploit::Cache::Payload::Unhandled::Class::Load.new(
                 logger: logger,
                 metasploit_module: module_ancestor_load.metasploit_module,
-                payload_direct_class: metasploit_cache_payload_stager_class,
+                payload_unhandled_class: metasploit_cache_payload_stager_class,
                 payload_superclass: Metasploit::Cache::Direct::Class::Superclass
             )
           }
@@ -66,7 +66,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Class, type: :model do
 
           specify {
             expect {
-              payload_direct_class_load.valid?
+              payload_unhandled_class_load.valid?
             }.to change(described_class, :count).from(0).to(1)
           }
         end

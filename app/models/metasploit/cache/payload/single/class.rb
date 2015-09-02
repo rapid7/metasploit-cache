@@ -1,5 +1,5 @@
-# Class-level metadata for an single payload Metasploit Module.
-class Metasploit::Cache::Payload::Single::Class < Metasploit::Cache::Payload::Direct::Class
+# Class-level metadata for a single payload Metasploit Module with the handler mixed in.
+class Metasploit::Cache::Payload::Single::Class < Metasploit::Cache::Payload::Unhandled::Class
   #
   # Associations
   #

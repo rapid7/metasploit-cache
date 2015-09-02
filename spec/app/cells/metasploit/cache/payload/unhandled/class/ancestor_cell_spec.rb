@@ -1,10 +1,10 @@
-RSpec.describe Metasploit::Cache::Payload::Direct::Class::AncestorCell, type: :cell do
-  subject(:payload_direct_class_ancestor_cell) {
-    described_class.(payload_direct_class)
+RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::AncestorCell, type: :cell do
+  subject(:payload_unhandled_class_ancestor_cell) {
+    described_class.(payload_unhandled_class)
   }
 
-  let(:payload_direct_class) {
-    FactoryGirl.create(payload_direct_class_factory)
+  let(:payload_unhandled_class) {
+    FactoryGirl.create(payload_unhandled_class_factory)
   }
 
   let(:metasploit_module_relative_name) {
@@ -14,7 +14,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::AncestorCell, type: :c
   context 'cell rendering' do
     context 'rendering template' do
       subject(:template) {
-        payload_direct_class_ancestor_cell.(
+        payload_unhandled_class_ancestor_cell.(
             :show,
             metasploit_module_relative_name: metasploit_module_relative_name
         )
@@ -22,7 +22,7 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::AncestorCell, type: :c
 
       context 'Metasploit::Cache::Payload::Ancestor#payload_type' do
         context 'with single' do
-          let(:payload_direct_class_factory) {
+          let(:payload_unhandled_class_factory) {
             :metasploit_cache_payload_single_class
           }
 
@@ -31,13 +31,13 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::AncestorCell, type: :c
                                <<-EOS.strip_heredoc.strip
                                # Module Type: payload
                                # Payload Type: single
-                               # Reference Name: #{payload_direct_class.ancestor.reference_name}
+                               # Reference Name: #{payload_unhandled_class.ancestor.reference_name}
                                module #{metasploit_module_relative_name}
                                  #
                                  # CONSTANTS
                                  #
 
-                                 Rank = #{payload_direct_class.rank.number}
+                                 Rank = #{payload_unhandled_class.rank.number}
                                end
                                EOS
                            )

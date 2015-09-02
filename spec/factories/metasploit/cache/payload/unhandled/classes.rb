@@ -3,18 +3,18 @@ FactoryGirl.define do
   # Sequences
   #
 
-  sequence :metasploit_cache_payload_direct_class_factory,
-           Metasploit::Cache::Payload::Direct::Class::Spec.random_factory
+  sequence :metasploit_cache_payload_unhandled_class_factory,
+           Metasploit::Cache::Payload::Unhandled::Class::Spec.random_factory
 
   #
   # Traits
   #
 
-  trait :metasploit_cache_payload_direct_class do
+  trait :metasploit_cache_payload_unhandled_class do
     metasploit_cache_direct_class
   end
 
-  trait :metasploit_cache_payload_direct_class_ancestor_contents do
+  trait :metasploit_cache_payload_unhandled_class_ancestor_contents do
     transient do
       ancestor_contents? { true }
       ancestor_metasploit_class_relative_name { generate :metasploit_cache_module_ancestor_metasploit_module_relative_name }
@@ -34,7 +34,7 @@ FactoryGirl.define do
           raise ArgumentError,
                 "#{direct_class.class}#ancestor is `nil` and content cannot be written.  " \
                 "If this is expected, set `ancestor_contents?: false` " \
-                "when using the :metasploit_cache_payload_direct_class_ancestor_contents trait."
+                "when using the :metasploit_cache_payload_unhandled_class_ancestor_contents trait."
         end
 
         real_pathname = module_ancestor.real_pathname
@@ -43,10 +43,10 @@ FactoryGirl.define do
           raise ArgumentError,
                 "#{module_ancestor.class}#real_pathname is `nil` and content cannot be written.  " \
                 "If this is expected, set `ancestor_contents?: false` " \
-                "when using the :metasploit_cache_payload_direct_class_ancestor_contents trait."
+                "when using the :metasploit_cache_payload_unhandled_class_ancestor_contents trait."
         end
 
-        cell = Metasploit::Cache::Payload::Direct::Class::AncestorCell.(direct_class)
+        cell = Metasploit::Cache::Payload::Unhandled::Class::AncestorCell.(direct_class)
 
         # make directory
         real_pathname.parent.mkpath

@@ -58,10 +58,10 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
         }
 
         let(:payload_stage_class_load) {
-          Metasploit::Cache::Payload::Direct::Class::Load.new(
+          Metasploit::Cache::Payload::Unhandled::Class::Load.new(
               logger: logger,
               metasploit_module: payload_stage_ancestor_load.metasploit_module,
-              payload_direct_class: payload_stage_class,
+              payload_unhandled_class: payload_stage_class,
               payload_superclass: Metasploit::Cache::Direct::Class::Superclass
           )
         }
@@ -135,10 +135,10 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
         }
 
         let(:payload_stager_class_load) {
-          Metasploit::Cache::Payload::Direct::Class::Load.new(
+          Metasploit::Cache::Payload::Unhandled::Class::Load.new(
               logger: logger,
               metasploit_module: payload_stager_ancestor_load.metasploit_module,
-              payload_direct_class: payload_stager_class,
+              payload_unhandled_class: payload_stager_class,
               payload_superclass: Metasploit::Cache::Direct::Class::Superclass
           )
         }
