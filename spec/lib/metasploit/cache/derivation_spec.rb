@@ -38,13 +38,6 @@ RSpec.describe Metasploit::Cache::Derivation do
       base_instance.send(:derive)
     end
 
-    let(:attributes) do
-      [
-          :derivation,
-          :formula
-      ]
-    end
-
     let(:base_instance) do
       base_class.new
     end
