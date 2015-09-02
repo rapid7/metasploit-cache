@@ -69,7 +69,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
           handler_load_pathname.mkpath
 
           FactoryGirl.create(
-              :full_metasploit_cache_payload_single_instance,
+              :full_metasploit_cache_payload_single_unhandled_instance,
               handler_load_pathname: handler_load_pathname
           )
         end

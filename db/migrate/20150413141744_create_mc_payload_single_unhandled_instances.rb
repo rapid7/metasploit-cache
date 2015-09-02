@@ -1,9 +1,9 @@
-class CreateMcPayloadSingleInstances < ActiveRecord::Migration
+class CreateMcPayloadSingleUnhandledInstances < ActiveRecord::Migration
   #
   # CONSTANTS
   #
   # Name of the table being created
-  TABLE_NAME = :mc_payload_single_instances
+  TABLE_NAME = :mc_payload_single_unhandled_instances
 
   #
   # Instance Methods
@@ -42,7 +42,7 @@ class CreateMcPayloadSingleInstances < ActiveRecord::Migration
       t.index :handler_id,
               unique: false
       t.index :payload_single_unhandled_class_id,
-              name: :unique_mc_payload_single_instances,
+              name: :unique_mc_payload_single_unhandled_instances,
               unique: true
     end
   end

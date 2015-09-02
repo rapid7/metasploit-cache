@@ -1,19 +1,19 @@
-RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
+RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral do
   context 'resurrecting attributes' do
-    context '#payload_single_instance' do
+    context '#payload_single_unhandled_instance' do
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
-      subject(:payload_single_instance) {
-        payload_single_instance_ephemeral.payload_single_instance
+      subject(:payload_single_unhandled_instance) {
+        payload_single_unhandled_instance_ephemeral.payload_single_unhandled_instance
       }
 
       #
       # lets
       #
 
-      let(:existing_payload_single_instance) {
+      let(:existing_payload_single_unhandled_instance) {
         FactoryGirl.create(
-            :full_metasploit_cache_payload_single_instance,
+            :full_metasploit_cache_payload_single_unhandled_instance,
             handler_load_pathname: handler_load_pathname
         )
       }
@@ -22,7 +22,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         Metasploit::Model::Spec.temporary_pathname.join('lib')
       }
 
-      let(:payload_single_instance_ephemeral) {
+      let(:payload_single_unhandled_instance_ephemeral) {
         described_class.new(
             metasploit_module_instance: metasploit_module_instance
         )
@@ -32,7 +32,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         double(
             'payload single Metasploit Module class',
             ephemeral_cache_by_source: {},
-            real_path_sha1_hex_digest: existing_payload_single_instance.payload_single_unhandled_class.ancestor.real_path_sha1_hex_digest
+            real_path_sha1_hex_digest: existing_payload_single_unhandled_instance.payload_single_unhandled_class.ancestor.real_path_sha1_hex_digest
         )
       }
 
@@ -62,15 +62,15 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         $LOAD_PATH.unshift handler_load_pathname.to_path
 
         # create now that load path is setup
-        existing_payload_single_instance
+        existing_payload_single_unhandled_instance
 
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
-      it { is_expected.to be_a Metasploit::Cache::Payload::Single::Instance }
+      it { is_expected.to be_a Metasploit::Cache::Payload::Single::Unhandled::Instance }
 
       it 'has #payload_single_unhandled_class matching pre-existing Metasploit::Cache::Payload::Single::Unhandled::Class' do
-        expect(payload_single_instance.payload_single_unhandled_class).to eq(existing_payload_single_instance.payload_single_unhandled_class)
+        expect(payload_single_unhandled_instance.payload_single_unhandled_class).to eq(existing_payload_single_unhandled_instance.payload_single_unhandled_class)
       end
     end
   end
@@ -84,10 +84,10 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
     include_context 'ActiveSupport::TaggedLogging'
 
     subject(:persist) {
-      payload_single_instance_ephemeral.persist(*args)
+      payload_single_unhandled_instance_ephemeral.persist(*args)
     }
 
-    let(:payload_single_instance_ephemeral) {
+    let(:payload_single_unhandled_instance_ephemeral) {
       described_class.new(
           logger: logger,
           metasploit_module_instance: metasploit_module_instance
@@ -108,13 +108,13 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
               )
           ],
           class: metasploit_class,
-          description: FactoryGirl.generate(:metasploit_cache_payload_single_instance_description),
+          description: FactoryGirl.generate(:metasploit_cache_payload_single_unhandled_instance_description),
           disclosure_date: Date.today,
           handler_klass: double(
               'payload Metasploit Module handler',
               FactoryGirl.attributes_for(:metasploit_cache_payload_handler)
           ),
-          name: FactoryGirl.generate(:metasploit_cache_payload_single_instance_name),
+          name: FactoryGirl.generate(:metasploit_cache_payload_single_unhandled_instance_name),
           license: FactoryGirl.generate(:metasploit_cache_license_abbreviation),
           platform: double(
               'Platform List',
@@ -130,7 +130,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
       let(:args) {
         [
             {
-                to: payload_single_instance
+                to: payload_single_unhandled_instance
             }
         ]
       }
@@ -139,8 +139,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         FactoryGirl.create(:metasploit_cache_payload_single_unhandled_class)
       }
 
-      let(:payload_single_instance) {
-        payload_single_unhandled_class.build_payload_single_instance
+      let(:payload_single_unhandled_instance) {
+        payload_single_unhandled_class.build_payload_single_unhandled_instance
       }
 
       let(:metasploit_class) {
@@ -150,14 +150,14 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         )
       }
 
-      it 'does not access default #payload_single_instance' do
-        expect(payload_single_instance_ephemeral).not_to receive(:payload_single_instance)
+      it 'does not access default #payload_single_unhandled_instance' do
+        expect(payload_single_unhandled_instance_ephemeral).not_to receive(:payload_single_unhandled_instance)
 
         persist
       end
 
       it 'uses :to' do
-        expect(payload_single_instance).to receive(:batched_save).and_call_original
+        expect(payload_single_unhandled_instance).to receive(:batched_save).and_call_original
 
         persist
       end
@@ -165,24 +165,24 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
       context 'batched save' do
         context 'failure' do
           before(:each) do
-            payload_single_instance.valid?
+            payload_single_unhandled_instance.valid?
 
-            expect(payload_single_instance).to receive(:batched_save).and_return(false)
+            expect(payload_single_unhandled_instance).to receive(:batched_save).and_return(false)
           end
 
           it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
             persist
 
-            expect(logger_string_io.string).to include("[#{payload_single_instance.payload_single_unhandled_class.ancestor.real_pathname.to_s}]")
+            expect(logger_string_io.string).to include("[#{payload_single_unhandled_instance.payload_single_unhandled_class.ancestor.real_pathname.to_s}]")
           end
 
           it 'logs validation errors' do
             persist
 
-            full_error_messages = payload_single_instance.errors.full_messages.to_sentence
+            full_error_messages = payload_single_unhandled_instance.errors.full_messages.to_sentence
 
             expect(full_error_messages).not_to be_blank
-            expect(logger_string_io.string).to include("Could not be persisted to #{payload_single_instance.class}: #{full_error_messages}")
+            expect(logger_string_io.string).to include("Could not be persisted to #{payload_single_unhandled_instance.class}: #{full_error_messages}")
           end
         end
 
@@ -190,7 +190,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
           specify {
             expect {
               persist
-            }.to change(Metasploit::Cache::Payload::Single::Instance, :count).by(1)
+            }.to change(Metasploit::Cache::Payload::Single::Unhandled::Instance, :count).by(1)
           }
         end
       end
@@ -207,9 +207,9 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         []
       }
 
-      let(:existing_payload_single_instance) {
+      let(:existing_payload_single_unhandled_instance) {
         FactoryGirl.create(
-            :full_metasploit_cache_payload_single_instance,
+            :full_metasploit_cache_payload_single_unhandled_instance,
             handler_load_pathname: handler_load_pathname
         )
       }
@@ -222,7 +222,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         double(
             'payload single Metasploit Module class',
             ephemeral_cache_by_source: {},
-            real_path_sha1_hex_digest: existing_payload_single_instance.payload_single_unhandled_class.ancestor.real_path_sha1_hex_digest
+            real_path_sha1_hex_digest: existing_payload_single_unhandled_instance.payload_single_unhandled_class.ancestor.real_path_sha1_hex_digest
         )
       }
 
@@ -246,19 +246,19 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         $LOAD_PATH.unshift handler_load_pathname.to_path
 
         # create now that load path is setup
-        existing_payload_single_instance
+        existing_payload_single_unhandled_instance
 
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
-      it 'defaults to #payload_single_instance' do
-        expect(payload_single_instance_ephemeral).to receive(:payload_single_instance).and_call_original
+      it 'defaults to #payload_single_unhandled_instance' do
+        expect(payload_single_unhandled_instance_ephemeral).to receive(:payload_single_unhandled_instance).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(payload_single_instance_ephemeral.payload_single_instance).to receive(:batched_save).and_call_original
+        expect(payload_single_unhandled_instance_ephemeral.payload_single_unhandled_instance).to receive(:batched_save).and_call_original
 
         persist
       end

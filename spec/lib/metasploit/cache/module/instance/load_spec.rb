@@ -1022,12 +1022,12 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
             }
 
             let(:module_instance) {
-              direct_class.build_payload_single_instance
+              direct_class.build_payload_single_unhandled_instance
             }
 
             let(:module_instance_load) {
               described_class.new(
-                  ephemeral_class: Metasploit::Cache::Payload::Single::Instance::Ephemeral,
+                  ephemeral_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral,
                   logger: logger,
                   metasploit_framework: metasploit_framework,
                   metasploit_module_class: direct_class_load.metasploit_class,

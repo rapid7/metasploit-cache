@@ -6,7 +6,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
 
     context 'with new reccord' do
       let(:destination) {
-        Metasploit::Cache::Payload::Single::Instance.new
+        Metasploit::Cache::Payload::Single::Unhandled::Instance.new
       }
 
       it { is_expected.to eq({}) }
@@ -21,7 +21,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
 
       let(:destination) {
         FactoryGirl.create(
-            :full_metasploit_cache_payload_single_instance,
+            :full_metasploit_cache_payload_single_unhandled_instance,
             handler_load_pathname: handler_load_pathname
         )
       }
@@ -106,7 +106,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
 
       let(:destination) {
         FactoryGirl.create(
-            :full_metasploit_cache_payload_single_instance,
+            :full_metasploit_cache_payload_single_unhandled_instance,
             handler_load_pathname: handler_load_pathname
         )
       }
@@ -158,7 +158,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
 
     context 'without same attributes' do
       let(:destination) {
-        Metasploit::Cache::Payload::Single::Instance.new
+        Metasploit::Cache::Payload::Single::Unhandled::Instance.new
       }
 
       let(:general_handler_type) {

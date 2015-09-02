@@ -10,8 +10,8 @@ class Metasploit::Cache::Payload::Single::Unhandled::Class < Metasploit::Cache::
              inverse_of: :payload_single_unhandled_class
 
   # Instance-level metadata for this single payload Metasploit Module.
-  has_one :payload_single_instance,
-          class_name: 'Metasploit::Cache::Payload::Single::Instance',
+  has_one :payload_single_unhandled_instance,
+          class_name: 'Metasploit::Cache::Payload::Single::Unhandled::Instance',
           dependent: :destroy,
           foreign_key: :payload_single_unhandled_class_id,
           inverse_of: :payload_single_unhandled_class

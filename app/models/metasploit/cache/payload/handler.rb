@@ -1,4 +1,5 @@
-# Handles the local connection for a {Metasploit::Cache::Payload::Single::Instance single payload Metasploit Module} or
+# Handles the local connection for a
+# {Metasploit::Cache::Payload::Single::Unhandled::Instance single payload Metasploit Module} or
 # {Metasploit::Cache::Payload::Stager::Instance stager payload Metasploit Module}.
 class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
   extend ActiveSupport::Autoload
@@ -14,8 +15,8 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
   #
 
   # Single payload Metasploit Modules whose connections are handled by this handler.
-  has_many :payload_single_instances,
-           class_name: 'Metasploit::Cache::Payload::Single::Instance',
+  has_many :payload_single_unhandled_instances,
+           class_name: 'Metasploit::Cache::Payload::Single::Unhandled::Instance',
            dependent: :destroy,
            inverse_of: :handler
 

@@ -25,14 +25,14 @@ module Metasploit::Cache::Payload::Handable::Ephemeral::Handler
   end
 
   # Synchronizes the `#handler_klass` from single or stager payload Metasploit Module instance `source` to persisted
-  # {Metasploit::Cache::Payload::Single::Instance#handler} or {Metasploit::Cache::Payload::Stager::Instance#handler} on
+  # {Metasploit::Cache::Payload::Single::Unhandled::Instance#handler} or {Metasploit::Cache::Payload::Stager::Instance#handler} on
   # `destination`.
   #
-  # @param destination [Metasploit::Cache::Payload::Single::Instance, Metasploit::Cache::Payload::Stager::Instance, #handler]
+  # @param destination [Metasploit::Cache::Payload::Single::Unhandled::Instance, Metasploit::Cache::Payload::Stager::Instance, #handler]
   # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
   #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
   # @param source [#handler_klass]
-  # @return [Metasploit::Cache::Payload::Single::Instance, Metasploit::Cache::Payload::Stager::Instance, #handler]
+  # @return [Metasploit::Cache::Payload::Single::Unhandled::Instance, Metasploit::Cache::Payload::Stager::Instance, #handler]
   #   `destination`
   def self.synchronize(destination:, logger:, source:)
     Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {

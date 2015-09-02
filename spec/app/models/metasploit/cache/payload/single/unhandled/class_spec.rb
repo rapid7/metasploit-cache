@@ -3,7 +3,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Class, type: :mode
 
   context 'associations' do
     it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Payload::Single::Ancestor') }
-    it { is_expected.to have_one(:payload_single_instance).class_name('Metasploit::Cache::Payload::Single::Instance').dependent(:destroy).inverse_of(:payload_single_unhandled_class).with_foreign_key(:payload_single_unhandled_class_id) }
+    it { is_expected.to have_one(:payload_single_unhandled_instance).class_name('Metasploit::Cache::Payload::Single::Unhandled::Instance').dependent(:destroy).inverse_of(:payload_single_unhandled_class).with_foreign_key(:payload_single_unhandled_class_id) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 

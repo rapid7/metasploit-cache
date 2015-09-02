@@ -204,7 +204,7 @@ ActiveRecord::Schema.define(version: 20150716152805) do
   add_index "mc_payload_handlers", ["handler_type"], name: "index_mc_payload_handlers_on_handler_type", unique: true, using: :btree
   add_index "mc_payload_handlers", ["name"], name: "index_mc_payload_handlers_on_name", unique: true, using: :btree
 
-  create_table "mc_payload_single_instances", force: true do |t|
+  create_table "mc_payload_single_unhandled_instances", force: true do |t|
     t.text    "description",                       null: false
     t.string  "name",                              null: false
     t.boolean "privileged",                        null: false
@@ -212,8 +212,8 @@ ActiveRecord::Schema.define(version: 20150716152805) do
     t.integer "payload_single_unhandled_class_id", null: false
   end
 
-  add_index "mc_payload_single_instances", ["handler_id"], name: "index_mc_payload_single_instances_on_handler_id", using: :btree
-  add_index "mc_payload_single_instances", ["payload_single_unhandled_class_id"], name: "unique_mc_payload_single_instances", unique: true, using: :btree
+  add_index "mc_payload_single_unhandled_instances", ["handler_id"], name: "index_mc_payload_single_unhandled_instances_on_handler_id", using: :btree
+  add_index "mc_payload_single_unhandled_instances", ["payload_single_unhandled_class_id"], name: "unique_mc_payload_single_unhandled_instances", unique: true, using: :btree
 
   create_table "mc_payload_stage_instances", force: true do |t|
     t.text    "description",            null: false

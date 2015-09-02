@@ -1,5 +1,5 @@
 # Instance-level metadata for single payload Metasploit Modules
-class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
+class Metasploit::Cache::Payload::Single::Unhandled::Instance < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
   include Metasploit::Cache::Batch::Root
@@ -32,7 +32,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   # The connection handler
   belongs_to :handler,
              class_name: 'Metasploit::Cache::Payload::Handler',
-             inverse_of: :payload_single_instances,
+             inverse_of: :payload_single_unhandled_instances,
              validate: true
 
   # Joins {#licenses} to this auxiliary Metasploit Module.
@@ -47,7 +47,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   belongs_to :payload_single_unhandled_class,
              class_name: 'Metasploit::Cache::Payload::Single::Unhandled::Class',
              foreign_key: :payload_single_unhandled_class_id,
-             inverse_of: :payload_single_instance
+             inverse_of: :payload_single_unhandled_instance
 
   # Joins {#platforms} to this single payload Metasploit Module.
   has_many :platformable_platforms,
