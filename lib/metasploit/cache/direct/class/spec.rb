@@ -12,7 +12,7 @@ module Metasploit::Cache::Direct::Class::Spec
       :metasploit_cache_encoder_class,
       :metasploit_cache_exploit_class,
       :metasploit_cache_nop_class,
-      :metasploit_cache_payload_single_class,
+      :metasploit_cache_payload_single_unhandled_class,
       :metasploit_cache_post_class
   ]
 

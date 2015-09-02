@@ -32,7 +32,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         double(
             'payload single Metasploit Module class',
             ephemeral_cache_by_source: {},
-            real_path_sha1_hex_digest: existing_payload_single_instance.payload_single_class.ancestor.real_path_sha1_hex_digest
+            real_path_sha1_hex_digest: existing_payload_single_instance.payload_single_unhandled_class.ancestor.real_path_sha1_hex_digest
         )
       }
 
@@ -69,8 +69,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
 
       it { is_expected.to be_a Metasploit::Cache::Payload::Single::Instance }
 
-      it 'has #payload_single_class matching pre-existing Metasploit::Cache::Payload::Single::Class' do
-        expect(payload_single_instance.payload_single_class).to eq(existing_payload_single_instance.payload_single_class)
+      it 'has #payload_single_unhandled_class matching pre-existing Metasploit::Cache::Payload::Single::Unhandled::Class' do
+        expect(payload_single_instance.payload_single_unhandled_class).to eq(existing_payload_single_instance.payload_single_unhandled_class)
       end
     end
   end
@@ -135,12 +135,12 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         ]
       }
 
-      let(:payload_single_class) {
-        FactoryGirl.create(:metasploit_cache_payload_single_class)
+      let(:payload_single_unhandled_class) {
+        FactoryGirl.create(:metasploit_cache_payload_single_unhandled_class)
       }
 
       let(:payload_single_instance) {
-        payload_single_class.build_payload_single_instance
+        payload_single_unhandled_class.build_payload_single_instance
       }
 
       let(:metasploit_class) {
@@ -173,7 +173,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
           it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
             persist
 
-            expect(logger_string_io.string).to include("[#{payload_single_instance.payload_single_class.ancestor.real_pathname.to_s}]")
+            expect(logger_string_io.string).to include("[#{payload_single_instance.payload_single_unhandled_class.ancestor.real_pathname.to_s}]")
           end
 
           it 'logs validation errors' do
@@ -222,7 +222,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance::Ephemeral do
         double(
             'payload single Metasploit Module class',
             ephemeral_cache_by_source: {},
-            real_path_sha1_hex_digest: existing_payload_single_instance.payload_single_class.ancestor.real_path_sha1_hex_digest
+            real_path_sha1_hex_digest: existing_payload_single_instance.payload_single_unhandled_class.ancestor.real_path_sha1_hex_digest
         )
       }
 

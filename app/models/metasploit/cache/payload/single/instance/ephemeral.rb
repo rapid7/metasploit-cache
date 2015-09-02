@@ -26,7 +26,7 @@ class Metasploit::Cache::Payload::Single::Instance::Ephemeral < Metasploit::Mode
   resurrecting_attr_accessor(:payload_single_instance) {
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Payload::Single::Instance.joins(
-          payload_single_class: :ancestor
+          payload_single_unhandled_class: :ancestor
       ).where(
            Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
       ).readonly(false).first
@@ -101,8 +101,8 @@ class Metasploit::Cache::Payload::Single::Instance::Ephemeral < Metasploit::Mode
     metasploit_module_instance.class.ephemeral_cache_by_source[:ancestor].real_path_sha1_hex_digest
   end
   
-  # Tags log with {Metasploit::Cache::Payload::Single::Instance#payload_single_class}
-  # {Metasploit::Cache::Payload::Single::Class#ancestor} {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  # Tags log with {Metasploit::Cache::Payload::Single::Instance#payload_single_unhandled_class}
+  # {Metasploit::Cache::Payload::Single::Unhandled::Class#ancestor} {Metasploit::Cache::Module::Ancestor#real_pathname}.
   #
   # @param payload_single_instance [Metasploit::Cache::Payload::Single::Instance]
   # @yield [tagged_logger]
@@ -112,7 +112,7 @@ class Metasploit::Cache::Payload::Single::Instance::Ephemeral < Metasploit::Mode
   # @return [void]
   def with_payload_single_instance_tag(payload_single_instance, &block)
     real_path = ActiveRecord::Base.connection_pool.with_connection {
-      payload_single_instance.payload_single_class.ancestor.real_pathname.to_s
+      payload_single_instance.payload_single_unhandled_class.ancestor.real_pathname.to_s
     }
 
     Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)

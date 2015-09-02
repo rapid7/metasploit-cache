@@ -8,7 +8,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
     it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_single_instances).validate(true) }
     it { is_expected.to have_many(:licensable_licenses).autosave(true).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:licensable) }
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License').through(:licensable_licenses) }
-    it { is_expected.to belong_to(:payload_single_class).class_name('Metasploit::Cache::Payload::Single::Class').inverse_of(:payload_single_instance).with_foreign_key(:payload_single_class_id) }
+    it { is_expected.to belong_to(:payload_single_unhandled_class).class_name('Metasploit::Cache::Payload::Single::Unhandled::Class').inverse_of(:payload_single_instance).with_foreign_key(:payload_single_unhandled_class_id) }
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
     it { is_expected.to have_many(:platformable_platforms).autosave(true).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
   end
@@ -18,13 +18,13 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
       it { is_expected.to have_db_column(:handler_id).of_type(:integer).with_options(null: false) }
       it { is_expected.to have_db_column(:name).of_type(:string).with_options(null: false) }
-      it { is_expected.to have_db_column(:payload_single_class_id).of_type(:integer).with_options(null: false) }
+      it { is_expected.to have_db_column(:payload_single_unhandled_class_id).of_type(:integer).with_options(null: false) }
       it { is_expected.to have_db_column(:privileged).of_type(:boolean).with_options(null: false) }
     end
 
     context 'indices' do
       it { is_expected.to have_db_index(:handler_id).unique(false) }
-      it { is_expected.to have_db_index(:payload_single_class_id).unique(true) }
+      it { is_expected.to have_db_index(:payload_single_unhandled_class_id).unique(true) }
     end
   end
 
@@ -74,19 +74,19 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
 
         it { is_expected.to be_valid }
 
-        context 'metasploit_cache_payload_single_instance_payload_single_class_ancestor_contents trait' do
+        context 'metasploit_cache_payload_single_instance_payload_single_unhandled_class_ancestor_contents trait' do
           subject(:full_metasploit_cache_payload_single_instance) {
             FactoryGirl.build(
                 :full_metasploit_cache_payload_single_instance,
                 handler_load_pathname: handler_load_pathname,
-                payload_single_class: payload_single_class
+                payload_single_unhandled_class: payload_single_unhandled_class
             )
           }
 
-          context 'with #payload_single_class' do
-            let(:payload_single_class) {
+          context 'with #payload_single_unhandled_class' do
+            let(:payload_single_unhandled_class) {
               FactoryGirl.build(
-                  :metasploit_cache_payload_single_class,
+                  :metasploit_cache_payload_single_unhandled_class,
                   ancestor: payload_single_ancestor,
                   ancestor_contents?: false
               )
@@ -128,12 +128,12 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
                         :metasploit_cache_licensable_licensable_licenses,
                         :metasploit_cache_platformable_platformable_platforms,
                         :metasploit_cache_payload_handable_handler,
-                        :metasploit_cache_payload_single_instance_payload_single_class_ancestor_contents,
+                        :metasploit_cache_payload_single_instance_payload_single_unhandled_class_ancestor_contents,
                         architecturable_architecture_count: architecturable_architecture_count,
                         contribution_count: contribution_count,
                         handler_load_pathname: handler_load_pathname,
                         licensable_license_count: licensable_license_count,
-                        payload_single_class: payload_single_class,
+                        payload_single_unhandled_class: payload_single_unhandled_class,
                         platformable_platform_count: platformable_platform_count
                     )
                   }
@@ -181,7 +181,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
                     Metasploit::Cache::Payload::Unhandled::Class::Load.new(
                         logger: logger,
                         metasploit_module: module_ancestor_load.metasploit_module,
-                        payload_unhandled_class: payload_single_class,
+                        payload_unhandled_class: payload_single_unhandled_class,
                         payload_superclass: Metasploit::Cache::Direct::Class::Superclass
                     )
                   }
@@ -209,7 +209,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
                     expect(module_ancestor_load).to load_metasploit_module
 
                     expect(payload_unhandled_class_load).to be_valid
-                    expect(payload_single_class).to be_persisted
+                    expect(payload_single_unhandled_class).to be_persisted
 
                     expect(module_instance_load).to be_valid(:loading)
 
@@ -266,14 +266,14 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
                   full_metasploit_cache_payload_single_instance
                 }.to raise_error(
                          ArgumentError,
-                         'Metasploit::Cache::Payload::Single::Class#ancestor is `nil` and content cannot be written.'
+                         'Metasploit::Cache::Payload::Single::Unhandled::Class#ancestor is `nil` and content cannot be written.'
                      )
               end
             end
           end
 
-          context 'without #payload_single_class' do
-            let(:payload_single_class) {
+          context 'without #payload_single_unhandled_class' do
+            let(:payload_single_unhandled_class) {
               nil
             }
 
@@ -282,7 +282,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
                 full_metasploit_cache_payload_single_instance
               }.to raise_error(
                        ArgumentError,
-                       "Metasploit::Cache::Payload::Single::Instance#payload_single_class is `nil` and it can't be " \
+                       "Metasploit::Cache::Payload::Single::Instance#payload_single_unhandled_class is `nil` and it can't be " \
                      'used to look up Metasploit::Cache::Direct::Class#ancestor to write content.'
                    )
             end
@@ -320,7 +320,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :handler }
     it { is_expected.to validate_presence_of :name }
-    it { is_expected.to validate_presence_of :payload_single_class }
+    it { is_expected.to validate_presence_of :payload_single_unhandled_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }
 
     it_should_behave_like 'validates at least one in association',
@@ -381,7 +381,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
         )
       end
 
-      it { is_expected.to validate_uniqueness_of :payload_single_class_id }
+      it { is_expected.to validate_uniqueness_of :payload_single_unhandled_class_id }
     end
   end
 end

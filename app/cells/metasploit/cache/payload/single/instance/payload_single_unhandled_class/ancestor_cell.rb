@@ -1,4 +1,4 @@
-# Cell for rendering {Metasploit::Cache::Payload::Single::Instance#payload_single_class}
+# Cell for rendering {Metasploit::Cache::Payload::Single::Instance#payload_single_unhandled_class}
 # {Metasploit::Cache::Direct::Class#ancestor} {Metasploit::Cache::Module::Ancestor#contents}.
 #
 # In addition to content from {Metasploit::Cache::Module::AncestorCell} and
@@ -12,7 +12,7 @@
 # {Metasploit::Cache::Payload::Single::Instance#platformable_platforms}
 # {Metasploit::Cache::Platformable::Platform#platform}s, and `#privileged` for
 # {Metasploit::Cache::Payload::Single::Instance#privileged}.
-class Metasploit::Cache::Payload::Single::Instance::PayloadSingleClass::AncestorCell < Cell::ViewModel
+class Metasploit::Cache::Payload::Single::Instance::PayloadSingleUnhandledClass::AncestorCell < Cell::ViewModel
   include Metasploit::Cache::AncestorCell
 
   #
@@ -20,12 +20,12 @@ class Metasploit::Cache::Payload::Single::Instance::PayloadSingleClass::Ancestor
   #
 
   property :architecturable_architectures
-  property :payload_single_class
   property :contributions
   property :description
   property :handler
   property :licensable_licenses
   property :name
+  property :payload_single_unhandled_class
   property :platformable_platforms
   property :privileged
 

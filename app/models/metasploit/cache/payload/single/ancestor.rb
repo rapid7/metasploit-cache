@@ -20,8 +20,8 @@ class Metasploit::Cache::Payload::Single::Ancestor < Metasploit::Cache::Payload:
              inverse_of: :single_payload_ancestors
 
   # Class defined by this single payload ancestor.
-  has_one :single_payload_class,
-          class_name: 'Metasploit::Cache::Payload::Single::Class',
+  has_one :payload_single_unhandled_class,
+          class_name: 'Metasploit::Cache::Payload::Single::Unhandled::Class',
           foreign_key: :ancestor_id,
           inverse_of: :ancestor
 

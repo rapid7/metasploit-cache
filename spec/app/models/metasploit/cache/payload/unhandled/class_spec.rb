@@ -9,7 +9,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
         context 'without #ancestor' do
           subject(:direct_class) {
             FactoryGirl.build(
-                :metasploit_cache_payload_single_class,
+                :metasploit_cache_payload_single_unhandled_class,
                 ancestor: nil,
                 ancestor_contents?: true
             )
@@ -19,7 +19,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
             expect {
               direct_class
             }.to raise_error ArgumentError,
-                             "Metasploit::Cache::Payload::Single::Class#ancestor is `nil` and " \
+                             "Metasploit::Cache::Payload::Single::Unhandled::Class#ancestor is `nil` and " \
                              "content cannot be written.  If this is expected, set `ancestor_contents?: false` " \
                              "when using the :metasploit_cache_payload_unhandled_class_ancestor_contents trait."
           }
@@ -29,7 +29,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
           context 'with Metasploit::Cache::Module::Ancestor#real_pathname' do
             subject(:direct_class) {
               FactoryGirl.build(
-                  :metasploit_cache_payload_single_class,
+                  :metasploit_cache_payload_single_unhandled_class,
                   ancestor: module_ancestor,
                   ancestor_contents?: true
               )
@@ -52,7 +52,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
           context 'without Metasploit::Cache::Module::Ancestor#real_pathname' do
             subject(:direct_class) {
               FactoryGirl.build(
-                  :metasploit_cache_payload_single_class,
+                  :metasploit_cache_payload_single_unhandled_class,
                   ancestor_contents?: true,
                   ancestor: module_ancestor
               )
@@ -82,7 +82,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
         context 'without #ancestor' do
           subject(:direct_class) {
             FactoryGirl.build(
-                :metasploit_cache_payload_single_class,
+                :metasploit_cache_payload_single_unhandled_class,
                 ancestor: false,
                 ancestor_contents?: false
             )
@@ -99,7 +99,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
           context 'with Metasploit::Cache::Module::Ancestor#real_pathname' do
             subject(:direct_class) {
               FactoryGirl.build(
-                  :metasploit_cache_payload_single_class,
+                  :metasploit_cache_payload_single_unhandled_class,
                   ancestor_contents?: false
               )
             }
@@ -114,7 +114,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
           context 'without Metasploit::Cache::Module::Ancestor#real_pathname' do
             subject(:direct_class) {
               FactoryGirl.build(
-                  :metasploit_cache_payload_single_class,
+                  :metasploit_cache_payload_single_unhandled_class,
                   ancestor: module_ancestor,
                   ancestor_contents?: false
               )

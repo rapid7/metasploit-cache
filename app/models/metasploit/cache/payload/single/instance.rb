@@ -5,7 +5,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   include Metasploit::Cache::Batch::Root
 
   autoload :Ephemeral
-  autoload :PayloadSingleClass
+  autoload :PayloadSingleUnhandledClass
 
   #
   #
@@ -44,9 +44,9 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
            inverse_of: :licensable
 
   # The class-level metadata for this single payload Metasploit Module.
-  belongs_to :payload_single_class,
-             class_name: 'Metasploit::Cache::Payload::Single::Class',
-             foreign_key: :payload_single_class_id,
+  belongs_to :payload_single_unhandled_class,
+             class_name: 'Metasploit::Cache::Payload::Single::Unhandled::Class',
+             foreign_key: :payload_single_unhandled_class_id,
              inverse_of: :payload_single_instance
 
   # Joins {#platforms} to this single payload Metasploit Module.
@@ -99,8 +99,8 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #
   #   @return [String]
 
-  # @!attribute payload_single_class_id
-  #   The foreign key for the {#payload_single_class} association.
+  # @!attribute payload_single_unhandled_class_id
+  #   The foreign key for the {#payload_single_unhandled_class} association.
   #
   #   @return [Integer]
 
@@ -138,10 +138,10 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   validates :name,
             presence: true
 
-  validates :payload_single_class,
+  validates :payload_single_unhandled_class,
             presence: true
 
-  validates :payload_single_class_id,
+  validates :payload_single_unhandled_class_id,
             uniqueness: true
 
   validates :platformable_platforms,

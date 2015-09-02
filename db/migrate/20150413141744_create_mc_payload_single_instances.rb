@@ -34,14 +34,15 @@ class CreateMcPayloadSingleInstances < ActiveRecord::Migration
 
       t.references :handler,
                    null: false
-      t.references :payload_single_class,
+      t.references :payload_single_unhandled_class,
                    null: false
     end
 
     change_table TABLE_NAME do |t|
       t.index :handler_id,
               unique: false
-      t.index :payload_single_class_id,
+      t.index :payload_single_unhandled_class_id,
+              name: :unique_mc_payload_single_instances,
               unique: true
     end
   end

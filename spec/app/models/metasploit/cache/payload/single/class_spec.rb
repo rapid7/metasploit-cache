@@ -1,16 +1,16 @@
-RSpec.describe Metasploit::Cache::Payload::Single::Class, type: :model do
+RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Class, type: :model do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
     it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Payload::Single::Ancestor') }
-    it { is_expected.to have_one(:payload_single_instance).class_name('Metasploit::Cache::Payload::Single::Instance').dependent(:destroy).inverse_of(:payload_single_class).with_foreign_key(:payload_single_class_id) }
+    it { is_expected.to have_one(:payload_single_instance).class_name('Metasploit::Cache::Payload::Single::Instance').dependent(:destroy).inverse_of(:payload_single_unhandled_class).with_foreign_key(:payload_single_unhandled_class_id) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do
-    context 'metasploit_cache_payload_single_class' do
-      subject(:metasploit_cache_payload_single_class) {
-        FactoryGirl.build(:metasploit_cache_payload_single_class)
+    context 'metasploit_cache_payload_single_unhandled_class' do
+      subject(:metasploit_cache_payload_single_unhandled_class) {
+        FactoryGirl.build(:metasploit_cache_payload_single_unhandled_class)
       }
 
       it { is_expected.to be_valid }
@@ -27,7 +27,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Class, type: :model do
           Metasploit::Cache::Module::Ancestor::Load.new(
               logger: logger,
               maximum_version: 4,
-              module_ancestor: metasploit_cache_payload_single_class.ancestor
+              module_ancestor: metasploit_cache_payload_single_unhandled_class.ancestor
           )
         }
 
@@ -37,7 +37,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Class, type: :model do
 
         before(:each) do
           # To prove Payload::Unhandled::Class::Load is setting rank
-          metasploit_cache_payload_single_class.rank = nil
+          metasploit_cache_payload_single_unhandled_class.rank = nil
         end
 
         context 'Metasploit::Cache::Module::Ancestor::Load' do
@@ -53,7 +53,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Class, type: :model do
             Metasploit::Cache::Payload::Unhandled::Class::Load.new(
                 logger: logger,
                 metasploit_module: module_ancestor_load.metasploit_module,
-                payload_unhandled_class: metasploit_cache_payload_single_class,
+                payload_unhandled_class: metasploit_cache_payload_single_unhandled_class,
                 payload_superclass: Metasploit::Cache::Direct::Class::Superclass
             )
           }

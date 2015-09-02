@@ -13,7 +13,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Load do
 
   let(:payload_unhandled_class) {
     FactoryGirl.build(
-        :metasploit_cache_payload_single_class,
+        :metasploit_cache_payload_single_unhandled_class,
         rank: module_rank
     ).tap { |payload_unhandled_class|
       # Set to nil after build so that template contains a rank, but it's not yet in the record
