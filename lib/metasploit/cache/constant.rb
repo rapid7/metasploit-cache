@@ -31,6 +31,30 @@ module Metasploit::Cache::Constant
     }
   end
 
+  # Set name of constant.
+  #
+  # @param constant [Module]
+  # @return [nil] There was no pre-existing constant with the same `names`.
+  # @return [Object] The pre-existing constant with the same `names` that was replaced.
+  def self.name(constant:, names:)
+    parent_names = names[0 ... -1]
+    relative_name = names[-1]
+
+    parent = current(parent_names)
+
+    if parent.nil?
+      parent = inject(parent_names) { |current_parent, current_relative_name|
+        current_parent.const_set(current_relative_name, Module.new)
+      }
+    end
+
+    Metasploit::Cache::Constant.swap_on_parent(
+        constant: constant,
+        parent: parent,
+        relative_name: relative_name
+    )
+  end
+
   # Remove the constant with `names` from its parent if it exists.
   #
   # @param names (see current)

@@ -82,6 +82,7 @@ RSpec.describe Metasploit::Cache::Post::Instance do
               end
 
               context 'with multiple elements in each association' do
+                include_context 'ActiveSupport::TaggedLogging'
                 include_context 'Metasploit::Cache::Spec::Unload.unload'
 
                 subject(:full_metasploit_cache_post_instance) {
@@ -130,16 +131,6 @@ RSpec.describe Metasploit::Cache::Post::Instance do
 
                 let(:licensable_license_count) {
                   2
-                }
-
-                let(:logger) {
-                  ActiveSupport::TaggedLogging.new(
-                      Logger.new(log_string_io)
-                  )
-                }
-
-                let(:log_string_io) {
-                  StringIO.new
                 }
 
                 let(:metasploit_framework) {
@@ -236,9 +227,9 @@ RSpec.describe Metasploit::Cache::Post::Instance do
                   full_metasploit_cache_post_instance
                 }.to raise_error(
                          ArgumentError,
-                         "Metasploit::Cache::Post::Ancestor#real_pathname is `nil` and content cannot be " \
-                         "written.  If this is expected, set `post_class_ancestor_contents?: false` " \
-                         "when using the :metasploit_cache_post_instance_post_class_ancestor_contents trait."
+                         'Metasploit::Cache::Post::Ancestor#real_pathname is `nil` and content cannot be ' \
+                         'written.  If this is expected, set `post_class_ancestor_contents?: false` ' \
+                         'when using the :metasploit_cache_post_instance_post_class_ancestor_contents trait.'
                      )
               end
             end
@@ -254,9 +245,9 @@ RSpec.describe Metasploit::Cache::Post::Instance do
                 full_metasploit_cache_post_instance
               }.to raise_error(
                        ArgumentError,
-                       "Metasploit::Cache::Post::Class#ancestor is `nil` and content cannot be written.  " \
-                       "If this is expected, set `post_ancestor_contents?: false` " \
-                       "when using the :metasploit_cache_post_instance_post_class_ancestor_contents trait."
+                       'Metasploit::Cache::Post::Class#ancestor is `nil` and content cannot be written.  ' \
+                       'If this is expected, set `post_ancestor_contents?: false` ' \
+                       'when using the :metasploit_cache_post_instance_post_class_ancestor_contents trait.'
                    )
             end
           end

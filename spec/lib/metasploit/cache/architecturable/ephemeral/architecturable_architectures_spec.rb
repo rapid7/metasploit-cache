@@ -1,13 +1,5 @@
 RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures do
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(log_string_io)
-    )
-  }
-
-  let(:log_string_io) {
-    StringIO.new
-  }
+  include_context 'ActiveSupport::TaggedLogging'
 
   context 'CONSTANTS' do
     context 'CANONICAL_ABBREVATIONS_BY_SOURCE_ABBREVATION' do
@@ -309,7 +301,7 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
       it "logs warn instructing user to add 'Arch' => 'x86'" do
         present_source_attribute_set
 
-        expect(log_string_io.string).to include(
+        expect(logger_string_io.string).to include(
                                             "Has no 'Arch', so assuming 'x86'.  You should add 'Arch' => 'x86' to " \
                                             'the module info Hash'
                                         )
@@ -370,7 +362,8 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
                                      hash_including(
                                          destination: destination,
                                          destination_attribute_set: destination_attribute_set,
-                                         source_attribute_set: source_attribute_set                                     )
+                                         source_attribute_set: source_attribute_set
+                                     )
                                  ).and_call_original
 
       reduce
@@ -410,7 +403,7 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
         it 'logs warning that abbreviation is deprecated' do
           source_attribute_set
 
-          expect(log_string_io.string).to include(
+          expect(logger_string_io.string).to include(
                                               'Deprecated, non-canonical architecture abbreviation ("mips") ' \
                                               'converted to canonical abbreviations (["mipsbe", "mipsle"])'
                                           )
@@ -431,7 +424,7 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
         it 'logs warning that abbreviation is deprecated' do
           source_attribute_set
 
-          expect(log_string_io.string).to include(
+          expect(logger_string_io.string).to include(
                                               'Deprecated, non-canonical architecture abbreviation ("x64") converted ' \
                                               'to canonical abbreviations (["x86_64"])'
                                           )
@@ -461,6 +454,8 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
   end
 
   context 'synchronize' do
+    include_context 'ActiveSupport::TaggedLogging'
+
     subject(:synchronize) {
       described_class.synchronize(
                          destination: destination,
@@ -475,16 +470,6 @@ RSpec.describe Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArc
 
     let(:destination) {
       Metasploit::Cache::Encoder::Instance.new
-    }
-
-    let(:logger) {
-      ActiveSupport::TaggedLogging.new(
-          Logger.new(log_string_io)
-      )
-    }
-
-    let(:log_string_io) {
-      StringIO.new
     }
 
     let(:source) {

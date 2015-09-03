@@ -64,7 +64,7 @@ class Metasploit::Cache::Payload::Ancestor < Metasploit::Cache::Module::Ancestor
               "Cannot directly instantiate a Metasploit::Cache::Payload::Ancestor.  Create one of the subclasses:\n" \
               "* Metasploit::Cache::Payload::Single::Ancestor\n" \
               "* Metasploit::Cache::Payload::Stage::Ancestor\n" \
-              "* Metasploit::Cache::Payload::Stager::Ancestor"
+              '* Metasploit::Cache::Payload::Stager::Ancestor'
       end
 
       super

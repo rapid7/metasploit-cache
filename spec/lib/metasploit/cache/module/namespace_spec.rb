@@ -8,7 +8,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
       it { is_expected.to be_frozen }
       it { is_expected.to include('extend Metasploit::Cache::Module::Namespace::Cacheable') }
       it { is_expected.to include('extend Metasploit::Cache::Module::Namespace::Loadable') }
-      it { is_expected.to include('def self.module_eval_with_lexical_scope')}
+      it { is_expected.to include('def self.module_eval_with_lexical_scope') }
     end
 
     context 'CONTENT_FILE' do
@@ -59,7 +59,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
     #
 
     let(:names) {
-      ['Grandparent', 'Parent', 'Child']
+      %w(Grandparent Parent Child)
     }
 
     #
@@ -272,7 +272,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
 
       context 'with Exception' do
         let(:exception) {
-          Exception.new("error message")
+          Exception.new('error message')
         }
 
         it 'raises exception' do
@@ -400,7 +400,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace do
 
       context 'with Exception' do
         let(:exception) {
-          Exception.new("error message")
+          Exception.new('error message')
         }
 
         it 'raises exception' do

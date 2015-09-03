@@ -16,13 +16,12 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Class, type: :model do
       it { is_expected.to be_valid }
 
       context 'loading' do
+        include_context 'ActiveSupport::TaggedLogging'
         include_context 'Metasploit::Cache::Spec::Unload.unload'
 
-        let(:logger) {
-          ActiveSupport::TaggedLogging.new(
-              Logger.new(string_io)
-          )
-        }
+        #
+        # lets
+        #
 
         let(:module_ancestor_load) {
           Metasploit::Cache::Module::Ancestor::Load.new(
@@ -32,9 +31,9 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Class, type: :model do
           )
         }
 
-        let(:string_io) {
-          StringIO.new
-        }
+        #
+        # Callbacks
+        #
 
         before(:each) do
           # To prove Payload::Direct::Class::Load is setting rank

@@ -2,22 +2,14 @@ RSpec.shared_examples_for 'Metasploit::Cache::Module::Ancestor factory loading' 
   include_context 'Metasploit::Cache::Spec::Unload.unload'
 
   context 'Metasploit::Cache::Module::Ancestor::Load' do
+    include_context 'ActiveSupport::TaggedLogging'
+
     subject(:module_ancestor_load) {
       Metasploit::Cache::Module::Ancestor::Load.new(
           logger: logger,
           maximum_version: 4,
           module_ancestor: module_ancestor
       )
-    }
-
-    let(:logger) {
-      ActiveSupport::TaggedLogging.new(
-          Logger.new(string_io)
-      )
-    }
-
-    let(:string_io) {
-      StringIO.new
     }
 
     it { is_expected.to be_valid }

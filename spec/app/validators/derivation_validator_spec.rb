@@ -1,7 +1,7 @@
 RSpec.describe DerivationValidator do
   subject(:derivation_validator) do
     described_class.new(
-        :attributes => attributes
+        attributes: attributes
     )
   end
 
@@ -32,7 +32,7 @@ RSpec.describe DerivationValidator do
         include ActiveModel::Validations
 
         validates attribute,
-                  :derivation => true
+                  derivation: true
       end
     end
 

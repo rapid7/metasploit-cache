@@ -56,7 +56,7 @@ class Metasploit::Cache::Module::Rank < ActiveRecord::Base
            class_name: 'Metasploit::Cache::Nop::Class',
            dependent: :destroy,
            inverse_of: :rank
-  
+
   # {Metasploit::Cache::Post::Class Post classes} assigned this rank.
   has_many :post_classes,
            class_name: 'Metasploit::Cache::Post::Class',

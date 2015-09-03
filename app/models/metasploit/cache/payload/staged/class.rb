@@ -88,7 +88,7 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   # @return [ActiveRecord::Relation] a new relation with values bound.
   def self.bind_renumbered_bind_params(relation, bind_values)
     bind_values.reduce(relation) { |bound_relation, bind_value|
-        bound_relation.bind(bind_value)
+      bound_relation.bind(bind_value)
     }
   end
 
@@ -111,17 +111,82 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
     index
   end
 
+  # Scope matching {Metasploit::Cache::Payload::Staged::Class} where the `type` ancestor has the given
+  # `real_path_sha1_hex_digest`.
+  #
+  # @param type [:stage, :stager] The type of ancestor.
+  # @param real_path_sha1_hex_digest [String] the {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest}.
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Staged::Class>]
+  def self.where_ancestor_real_path_sha1_hex_digest(type, real_path_sha1_hex_digest)
+    type_namespace = "Metasploit::Cache::Payload::#{type.to_s.camelize}".constantize
+    type_instances = type_namespace::Instance.arel_table
+
+    type_classes = type_namespace::Class.arel_table
+    type_classes_alias_name = "#{type}_classes".to_sym
+    type_classes_alias = Arel::Table.new(type_classes_alias_name)
+
+    type_ancestors = type_namespace::Ancestor.arel_table
+    type_ancestors_alias_name = "#{type}_ancestors".to_sym
+    type_ancestors_alias = Arel::Table.new(type_ancestors_alias_name)
+
+    joins(
+        arel_table.join(
+            type_instances, Arel::InnerJoin
+        ).on(
+            type_instances[:id].eq(
+                arel_table[:"payload_#{type}_instance_id"]
+            )
+        ).join(
+            # MUST be aliased because Metasploit::Cache::Payload::Stage::Class and
+            #   Metasploit::Cache::Payload::Stager::Class both use mc_direct_classes.
+            type_classes.alias(type_classes_alias_name), Arel::InnerJoin
+        ).on(
+            type_classes_alias[:id].eq(
+                type_instances[:"payload_#{type}_class_id"]
+            )
+        ).join(
+            type_ancestors.alias(type_ancestors_alias_name), Arel::InnerJoin
+        ).on(
+            type_ancestors_alias[:id].eq(
+                type_classes_alias[:ancestor_id]
+            )
+        ).join_sources
+    ).where(
+        type_ancestors_alias[:real_path_sha1_hex_digest].eq(
+            real_path_sha1_hex_digest
+        )
+    )
+  end
+
+  # Scope matching {Metasploit::Cache::Payload::Staged::Class} where the ancestors have the given
+  # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest}.
+  #
+  # @param stage [String] {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} for
+  #   {Metasploit::Cache::Payload::Stage::Ancestor}.
+  # @param stager [String] {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} for
+  #   {Metasploit::Cache::Payload::Stage::Ancestor}.
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Staged::Class>]
+  def self.where_ancestor_real_path_sha1_hex_digests(stage:, stager:)
+    where_ancestor_real_path_sha1_hex_digest(
+        :stage,
+        stage
+    ).where_ancestor_real_path_sha1_hex_digest(
+        :stager,
+        stager
+    )
+  end
+
   #
   # Instance Methods
   #
-  
+
   # @!method payload_stage_instance_id=(payload_stage_instance_id)
   #   Sets {#payload_stage_instance_id} and invalidates cached {#payload_stage_instance} so it is reloaded on next
   #   access.
   #
   #   @param payload_stage_instance_id [Integer]
   #   @return [void]
-  
+
   # @!method payload_stager_instance_id=(payload_stager_instance_id)
   #   Sets {#payload_stager_instance_id} and invalidates cached {#payload_stager_instance} so it is reloaded on next
   #   access.
@@ -266,7 +331,6 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
         )
     ).project(subset_table[Arel.star])
   end
-
 
   Metasploit::Concern.run(self)
 end

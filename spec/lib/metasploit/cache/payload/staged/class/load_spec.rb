@@ -309,7 +309,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
     }
 
     it "starts with ['Msf', 'Payloads']" do
-      expect(metasploit_class_names[0,2]).to eq(['Msf', 'Payloads'])
+      expect(metasploit_class_names[0, 2]).to eq(['Msf', 'Payloads'])
     end
 
     it 'includes stage and stager SHA1' do
@@ -320,73 +320,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
                                             'RealPathSha1HexDigest' \
                                             "#{payload_stager_instance.payload_stager_class.ancestor.real_path_sha1_hex_digest}"
                                         )
-    end
-  end
-
-  context '.name_metasploit_class' do
-    include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-    subject(:name_metasploit_class!) {
-      described_class.name_metasploit_class!(
-                         metasploit_class: metasploit_class,
-                         payload_staged_class: payload_staged_class
-      )
-    }
-
-    let(:metasploit_class) {
-      Class.new
-    }
-
-    let(:payload_stage_instance) {
-      FactoryGirl.build(:metasploit_cache_payload_stage_instance)
-    }
-
-    let(:payload_stager_instance) {
-      FactoryGirl.build(:metasploit_cache_payload_stager_instance)
-    }
-
-    let(:payload_staged_class) {
-      Metasploit::Cache::Payload::Staged::Class.new(
-          payload_stage_instance: payload_stage_instance,
-          payload_stager_instance: payload_stager_instance
-      )
-    }
-
-    context 'with pre-existing' do
-      before(:each) do
-        stub_const('Msf::Payloads', Module.new)
-      end
-
-      it 'defines constant to metasploit_class' do
-        expect {
-          name_metasploit_class!
-        }.to change(metasploit_class, :name).to(
-                 'Msf::Payloads::' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_stage_instance.payload_stage_class.ancestor.real_path_sha1_hex_digest}" \
-                 'StagedBy' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_stager_instance.payload_stager_class.ancestor.real_path_sha1_hex_digest}")
-      end
-    end
-
-    context 'without pre-existing' do
-      before(:each) do
-        hide_const('Msf::Payloads')
-      end
-
-      it 'defines constant to metasploit_class' do
-        expect {
-          name_metasploit_class!
-        }.to change(metasploit_class, :name).to(
-                 'Msf::Payloads::' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_stage_instance.payload_stage_class.ancestor.real_path_sha1_hex_digest}" \
-                 'StagedBy' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_stager_instance.payload_stager_class.ancestor.real_path_sha1_hex_digest}"
-             )
-      end
     end
   end
 
@@ -444,17 +377,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
       }
 
       context 'with #logger' do
-        let(:logger) {
-          ActiveSupport::TaggedLogging.new(
-              Logger.new(logger_string_io)
-          ).tap { |logger|
-            logger.level = Logger::DEBUG
-          }
-        }
-
-        let(:logger_string_io) {
-          StringIO.new
-        }
+        include_context 'ActiveSupport::TaggedLogging'
 
         context 'with #payload_stage_metasploit_module' do
           let(:payload_stage_ancestor_load) {
@@ -590,6 +513,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
   end
 
   context '#valid?' do
+    include_context 'ActiveSupport::TaggedLogging'
+
     subject(:valid?) {
       payload_staged_class_load.valid?
     }
@@ -601,11 +526,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
     let(:payload_staged_class_load) {
       described_class.new(
           handler_module: Module.new,
-          logger: ActiveSupport::TaggedLogging.new(
-              Logger.new(StringIO.new)
-          ).tap { |logger|
-            logger.level = Logger::DEBUG
-          },
+          logger: logger,
           payload_stage_metasploit_module: Module.new,
           payload_staged_class: FactoryGirl.build(
               :metasploit_cache_payload_staged_class,

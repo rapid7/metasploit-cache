@@ -1,13 +1,5 @@
 RSpec.describe Metasploit::Cache::Reference::Ephemeral do
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(log_string_io)
-    )
-  }
-
-  let(:log_string_io) {
-    StringIO.new
-  }
+  include_context 'ActiveSupport::TaggedLogging'
 
   context 'attributes' do
     subject(:attributes) {

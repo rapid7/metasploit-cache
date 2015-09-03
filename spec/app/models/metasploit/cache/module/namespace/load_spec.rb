@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Module::Namespace::Load do
+  include_context 'ActiveSupport::TaggedLogging'
+
   subject(:module_namespace_load) {
     described_class.new(
         logger: logger,
@@ -7,16 +9,6 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         maximum_version: maximum_version,
         module_namespace: module_namespace
     )
-  }
-
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(log_string_io)
-    )
-  }
-
-  let(:log_string_io) {
-    StringIO.new
   }
 
   let(:maximum_api_version) {
@@ -40,7 +32,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
       end
     end
 
-    module_namespace.cache.real_path_sha1_hex_digest = Digest::SHA1.hexdigest("")
+    module_namespace.cache.real_path_sha1_hex_digest = Digest::SHA1.hexdigest('')
 
     module_namespace
   }
@@ -67,11 +59,11 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
 
       context 'with #module_ancestor_eval_exception' do
         let(:module_ancestor_eval_exception) {
-          Exception.new("error message").tap { |exception|
+          Exception.new('error message').tap { |exception|
             exception.set_backtrace(
                 [
-                    "line 1",
-                    "line 2"
+                    'line 1',
+                    'line 2'
                 ]
             )
           }
@@ -81,7 +73,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
           expect(module_ancestor_eval_errors).to include(
                                                      "Exception error message:\n" \
                                                      "line 1\n" \
-                                                     "line 2"
+                                                     'line 2'
                                                  )
         end
       end
@@ -99,6 +91,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
 
     context 'on #metasploit_module' do
       let(:error) {
+        # noinspection RailsI18nInspection
         I18n.translate('errors.messages.blank')
       }
 
@@ -174,12 +167,12 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         before(:each) do
           module_ancestor.real_pathname.open('w') do |f|
             f.puts "RequiredVersions = [#{minimum_core_version}, #{minimum_api_version}]"
-            f.puts ""
-            f.puts "module Metasploit4"
-            f.puts "  def self.is_usable"
-            f.puts "    true"
-            f.puts "  end"
-            f.puts "end"
+            f.puts ''
+            f.puts 'module Metasploit4'
+            f.puts '  def self.is_usable'
+            f.puts '    true'
+            f.puts '  end'
+            f.puts 'end'
           end
 
           module_namespace_load.module_ancestor_eval(module_ancestor)
@@ -248,12 +241,12 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         before(:each) do
           module_ancestor.real_pathname.open('w') do |f|
             f.puts "RequiredVersions = [#{minimum_core_version}, #{minimum_api_version}]"
-            f.puts ""
-            f.puts "module Metasploit4"
-            f.puts "  def self.is_usable"
-            f.puts "    true"
-            f.puts "  end"
-            f.puts "end"
+            f.puts ''
+            f.puts 'module Metasploit4'
+            f.puts '  def self.is_usable'
+            f.puts '    true'
+            f.puts '  end'
+            f.puts 'end'
           end
 
           module_namespace_load.module_ancestor_eval(module_ancestor)
@@ -347,7 +340,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
           before(:each) do
             module_ancestor.real_pathname.open('w') do |f|
               f.puts "module Metasploit#{n}"
-              f.puts "end"
+              f.puts 'end'
             end
 
             module_namespace_load.module_ancestor_eval(module_ancestor)
@@ -402,7 +395,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
           before(:each) do
             module_ancestor.real_pathname.open('w') do |f|
               f.puts "class Metasploit#{n}"
-              f.puts "end"
+              f.puts 'end'
             end
 
             module_namespace_load.module_ancestor_eval(module_ancestor)
@@ -457,7 +450,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
       context 'without constant matching Metasploit<n>' do
         before(:each) do
           module_ancestor.real_pathname.open('w') do |f|
-            f.puts "# This space intentionally left blank"
+            f.puts '# This space intentionally left blank'
           end
 
           module_namespace_load.module_ancestor_eval(module_ancestor)
@@ -559,7 +552,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
       #
 
       let(:exception) {
-        Exception.new("error message")
+        Exception.new('error message')
       }
 
       #
@@ -606,7 +599,7 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         it 'logs to #logger' do
           module_ancestor_eval
 
-          expect(log_string_io.string).not_to be_empty
+          expect(logger_string_io.string).not_to be_empty
         end
       end
     end

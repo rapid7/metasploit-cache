@@ -6,8 +6,8 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
     it { is_expected.to have_many(:architecturable_architectures).autosave(true).class_name('Metasploit::Cache::Architecturable::Architecture').dependent(:destroy).inverse_of(:architecturable) }
     it { is_expected.to have_many(:contributions).autosave(true).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contributable) }
     it { is_expected.to belong_to(:encoder_class).class_name('Metasploit::Cache::Encoder::Class').inverse_of(:encoder_instance) }
-    it { is_expected.to have_many(:licensable_licenses).autosave(true).class_name('Metasploit::Cache::Licensable::License')}
-    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
+    it { is_expected.to have_many(:licensable_licenses).autosave(true).class_name('Metasploit::Cache::Licensable::License') }
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License').through(:licensable_licenses) }
     it { is_expected.to have_many(:platformable_platforms).autosave(true).class_name('Metasploit::Cache::Platformable::Platform').dependent(:destroy).inverse_of(:platformable) }
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform').through(:platformable_platforms) }
   end
@@ -73,6 +73,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
               end
 
               context 'with multiple elements in each association' do
+                include_context 'ActiveSupport::TaggedLogging'
                 include_context 'Metasploit::Cache::Spec::Unload.unload'
 
                 subject(:metasploit_cache_encoder_instance) {
@@ -104,16 +105,6 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
 
                 let(:licensable_license_count) {
                   2
-                }
-
-                let(:logger) {
-                  ActiveSupport::TaggedLogging.new(
-                      Logger.new(log_string_io)
-                  )
-                }
-
-                let(:log_string_io) {
-                  StringIO.new
                 }
 
                 let(:metasploit_framework) {
@@ -198,9 +189,9 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
                   metasploit_cache_encoder_instance
                 }.to raise_error(
                          ArgumentError,
-                         "Metasploit::Cache::Encoder::Ancestor#real_pathname is `nil` and content cannot be " \
-                         "written.  If this is expected, set `encoder_class_ancestor_contents?: false` " \
-                         "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
+                         'Metasploit::Cache::Encoder::Ancestor#real_pathname is `nil` and content cannot be ' \
+                         'written.  If this is expected, set `encoder_class_ancestor_contents?: false` ' \
+                         'when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait.'
                      )
               end
             end
@@ -216,9 +207,9 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
                 metasploit_cache_encoder_instance
               }.to raise_error(
                        ArgumentError,
-                       "Metasploit::Cache::Encoder::Class#ancestor is `nil` and content cannot be written.  " \
-                       "If this is expected, set `encoder_ancestor_contents?: false` " \
-                       "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
+                       'Metasploit::Cache::Encoder::Class#ancestor is `nil` and content cannot be written.  ' \
+                       'If this is expected, set `encoder_ancestor_contents?: false` ' \
+                       'when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait.'
                    )
             end
           end
@@ -235,9 +226,9 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
             }.to raise_error(
                      ArgumentError,
                      "Metasploit::Cache::Encoder::Instance#encoder_class is `nil` and it can't be used to look " \
-                     "up Metasploit::Cache::Direct::Class#ancestor to write content. " \
-                     "If this is expected, set `encoder_class_ancestor_contents?: false` " \
-                     "when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait."
+                     'up Metasploit::Cache::Direct::Class#ancestor to write content. ' \
+                     'If this is expected, set `encoder_class_ancestor_contents?: false` ' \
+                     'when using the :metasploit_cache_encoder_instance_encoder_class_ancestor_contents trait.'
                  )
           end
         end

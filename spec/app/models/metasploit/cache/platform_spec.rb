@@ -57,7 +57,7 @@ RSpec.describe Metasploit::Cache::Platform do
       }
     end
 
-    it_should_behave_like 'derives', :fully_qualified_name, :validates => true
+    it_should_behave_like 'derives', :fully_qualified_name, validates: true
   end
 
   context 'search' do

@@ -138,14 +138,14 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   #
 
   validates :name,
-            :uniqueness => {
-                :allow_nil => true,
-                :scope => :gem,
-                :unless => :add_context?
+            uniqueness: {
+                allow_nil: true,
+                scope: :gem,
+                unless: :add_context?
             }
   validates :real_path,
-            :uniqueness => {
-                :unless => :add_context?
+            uniqueness: {
+                unless: :add_context?
             }
 
   #
@@ -178,7 +178,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
 
     # Don't query database if gem and name are `nil` since all unnamed paths will match.
     if named?
-      collision = self.class.where(:gem => gem, :name => name).first
+      collision = self.class.where(gem: gem, name: name).first
     end
 
     collision
@@ -205,7 +205,7 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
   # @return [Metasploit::Cache::Module::Path] if there is a {Metasploit::Cache::Module::Path} with the same {#real_path} as this path.
   # @return [nil] if there is not match.
   def real_path_collision
-    self.class.where(:real_path => real_path).first
+    self.class.where(real_path: real_path).first
   end
 
   # Returns whether was a named path.  This is the equivalent of {#named?}, but checks the old, pre-change

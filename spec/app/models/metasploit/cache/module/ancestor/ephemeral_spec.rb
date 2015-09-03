@@ -24,7 +24,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
         module_ancestor_ephemeral.module_ancestor
       }
 
-
       before(:each) do
         # have to stub because real_path_sha1_hex_digest is normally delegated to the namespace parent
         allow(module_ancestor_ephemeral).to receive(:real_path_sha1_hex_digest).and_return(expected_module_ancestor.real_path_sha1_hex_digest)
@@ -78,24 +77,16 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
         end
 
         context 'failure' do
+          include_context 'ActiveSupport::TaggedLogging'
+
           #
           # lets
           #
-
-          let(:logger) {
-            ActiveSupport::TaggedLogging.new(
-                Logger.new(string_io)
-            )
-          }
 
           let(:module_ancestor) {
             super().tap { |module_ancestor|
               module_ancestor.relative_path = File.join('does', 'not', 'exist.rb')
             }
-          }
-
-          let(:string_io) {
-            StringIO.new
           }
 
           let(:success) {
@@ -114,7 +105,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
           it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
             persist_module_ancestor
 
-            expect(string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
+            expect(logger_string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
           end
 
           it 'logs validation errors' do
@@ -123,7 +114,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
             full_error_messages = module_ancestor.errors.full_messages.to_sentence
 
             expect(full_error_messages).not_to be_blank
-            expect(string_io.string).to include("Could not be persisted: #{full_error_messages}")
+            expect(logger_string_io.string).to include("Could not be persisted: #{full_error_messages}")
           end
         end
 

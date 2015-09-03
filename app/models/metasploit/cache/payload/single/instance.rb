@@ -103,13 +103,12 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
   #   The foreign key for the {#payload_single_class} association.
   #
   #   @return [Integer]
-  
+
   # @!attribute privileged
   #   Whether this payload requires privileged access to the remote machine.
   #
   #   @return [true] privileged access is granted.
   #   @return [false] privileged access is NOT granted.
-
 
   #
   # Validations
@@ -119,12 +118,12 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
             length: {
                 minimum: 1
             }
- 
+
   validates :contributions,
             length: {
                 minimum: 1
             }
- 
+
   validates :description,
             presence: true
 
@@ -133,7 +132,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
 
   validates :licensable_licenses,
             length: {
-              minimum: 1
+                minimum: 1
             }
 
   validates :name,
@@ -144,7 +143,7 @@ class Metasploit::Cache::Payload::Single::Instance < ActiveRecord::Base
 
   validates :payload_single_class_id,
             uniqueness: true
-  
+
   validates :platformable_platforms,
             length: {
                 minimum: 1

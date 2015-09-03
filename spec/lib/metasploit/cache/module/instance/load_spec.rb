@@ -1,15 +1,6 @@
 RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
+  include_context 'ActiveSupport::TaggedLogging'
   include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(log_string_io)
-    )
-  }
-
-  let(:log_string_io) {
-    StringIO.new
-  }
 
   context 'validations' do
     let(:module_instance_load) {
@@ -137,7 +128,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           end
         end.tap { |klass|
           actions = module_instance.actions.map { |action|
-            double("Metasploit Module Action", name: action.name)
+            double('Metasploit Module Action', name: action.name)
           }
 
           klass.send(:define_method, :actions) {
@@ -225,11 +216,11 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
       context 'with #metasploit_module_class_new_exception' do
         let(:metasploit_module_class_new_exception) {
-          Exception.new("error message").tap { |exception|
+          Exception.new('error message').tap { |exception|
             exception.set_backtrace(
                 [
-                    "line 1",
-                    "line 2"
+                    'line 1',
+                    'line 2'
                 ]
             )
           }
@@ -239,7 +230,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           expect(metasploit_module_class_new_errors).to include(
                                                                    "Exception error message:\n" \
                                                                    "line 1\n" \
-                                                                   "line 2"
+                                                                   'line 2'
                                                                )
         end
       end
@@ -294,7 +285,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
       context 'without Interrupt' do
         let(:exception) {
-          Exception.new("expected exception")
+          Exception.new('expected exception')
         }
 
         it 'does not raise exception' do
@@ -1054,18 +1045,81 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
             }
           end
 
+          android_stagers = %w{
+              android/reverse_http
+              android/reverse_https
+              android/reverse_tcp
+          }
+          java_stagers = %w{
+              java/bind_tcp
+              java/reverse_http
+              java/reverse_https
+              java/reverse_tcp
+          }
+          linux_x86_stagers = %w{
+              linux/x86/bind_ipv6_tcp
+              linux/x86/bind_ipv6_tcp_uuid
+              linux/x86/bind_nonx_tcp
+              linux/x86/bind_tcp
+              linux/x86/bind_tcp_uuid
+              linux/x86/find_tag
+              linux/x86/reverse_ipv6_tcp
+              linux/x86/reverse_nonx_tcp
+              linux/x86/reverse_tcp
+              linux/x86/reverse_tcp_uuid
+          }
+          osx_armle_stagers = %w{
+              osx/armle/bind_tcp
+              osx/armle/reverse_tcp
+          }
+          osx_x86_stagers = %w{
+              osx/x86/bind_tcp
+              osx/x86/reverse_tcp
+          }
+          windows_x86_stagers = %w{
+              windows/bind_hidden_ipknock_tcp
+              windows/bind_hidden_tcp
+              windows/bind_ipv6_tcp
+              windows/bind_ipv6_tcp_uuid
+              windows/bind_nonx_tcp
+              windows/bind_tcp
+              windows/bind_tcp_rc4
+              windows/bind_tcp_uuid
+              windows/findtag_ord
+              windows/reverse_hop_http
+              windows/reverse_http
+              windows/reverse_http_proxy_pstore
+              windows/reverse_https
+              windows/reverse_https_proxy
+              windows/reverse_ipv6_tcp
+              windows/reverse_nonx_tcp
+              windows/reverse_ord_tcp
+              windows/reverse_tcp
+              windows/reverse_tcp_allports
+              windows/reverse_tcp_dns
+              windows/reverse_tcp_rc4
+              windows/reverse_tcp_rc4_dns
+              windows/reverse_tcp_uuid
+              windows/reverse_winhttp
+              windows/reverse_winhttps
+          }
+          windows_x86_64_stagers = %w{
+              windows/x64/bind_ipv6_tcp
+              windows/x64/bind_ipv6_tcp_uuid
+              windows/x64/bind_tcp
+              windows/x64/bind_tcp_uuid
+              windows/x64/reverse_http
+              windows/x64/reverse_https
+              windows/x64/reverse_tcp
+              windows/x64/reverse_tcp_uuid
+              windows/x64/reverse_winhttp
+              windows/x64/reverse_winhttps
+          }
+
           it_should_behave_like 'loads only these stage and stager combinations',
                                 {
-                                    'android/meterpreter' => %w{
-                                        android/reverse_http
-                                        android/reverse_https
-                                        android/reverse_tcp
-                                    },
-                                    'android/shell' => %w{
-                                        android/reverse_http
-                                        android/reverse_https
-                                        android/reverse_tcp
-                                    },
+                                    'android/meterpreter' => android_stagers,
+                                    'android/shell' => android_stagers,
                                     'bsdi/x86/shell' => %w{
                                         bsdi/x86/bind_tcp
                                         bsdi/x86/reverse_tcp
@@ -1077,18 +1131,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                         bsd/x86/reverse_ipv6_tcp
                                         bsd/x86/reverse_tcp
                                     },
-                                    'java/meterpreter' => %w{
-                                        java/bind_tcp
-                                        java/reverse_http
-                                        java/reverse_https
-                                        java/reverse_tcp
-                                    },
-                                    'java/shell' => %w{
-                                        java/bind_tcp
-                                        java/reverse_http
-                                        java/reverse_https
-                                        java/reverse_tcp
-                                    },
+                                    'java/meterpreter' => java_stagers,
+                                    'java/shell' => java_stagers,
                                     'linux/armle/shell' => %w{
                                         linux/armle/bind_tcp
                                         linux/armle/reverse_tcp
@@ -1103,41 +1147,13 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                         linux/x64/bind_tcp
                                         linux/x64/reverse_tcp
                                     },
-                                    'linux/x86/meterpreter' => %w{
-                                        linux/x86/bind_ipv6_tcp
-                                        linux/x86/bind_ipv6_tcp_uuid
-                                        linux/x86/bind_nonx_tcp
-                                        linux/x86/bind_tcp
-                                        linux/x86/bind_tcp_uuid
-                                        linux/x86/find_tag
-                                        linux/x86/reverse_ipv6_tcp
-                                        linux/x86/reverse_nonx_tcp
-                                        linux/x86/reverse_tcp
-                                        linux/x86/reverse_tcp_uuid
-                                    },
-                                    'linux/x86/shell' => %w{
-                                        linux/x86/bind_ipv6_tcp
-                                        linux/x86/bind_ipv6_tcp_uuid
-                                        linux/x86/bind_nonx_tcp
-                                        linux/x86/bind_tcp
-                                        linux/x86/bind_tcp_uuid
-                                        linux/x86/find_tag
-                                        linux/x86/reverse_ipv6_tcp
-                                        linux/x86/reverse_nonx_tcp
-                                        linux/x86/reverse_tcp
-                                        linux/x86/reverse_tcp_uuid
-                                    },
+                                    'linux/x86/meterpreter' => linux_x86_stagers,
+                                    'linux/x86/shell' => linux_x86_stagers,
                                     'netware/shell' => %w{
                                         netware/reverse_tcp
                                     },
-                                    'osx/armle/execute' => %w{
-                                        osx/armle/bind_tcp
-                                        osx/armle/reverse_tcp
-                                    },
-                                    'osx/armle/shell' => %w{
-                                        osx/armle/bind_tcp
-                                        osx/armle/reverse_tcp
-                                    },
+                                    'osx/armle/execute' => osx_armle_stagers,
+                                    'osx/armle/shell' => osx_armle_stagers,
                                     'osx/ppc/shell' => %w{
                                         osx/ppc/bind_tcp
                                         osx/ppc/find_tag
@@ -1147,18 +1163,9 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                         osx/x64/bind_tcp
                                         osx/x64/reverse_tcp
                                     },
-                                    'osx/x86/bundleinject' => %w{
-                                        osx/x86/bind_tcp
-                                        osx/x86/reverse_tcp
-                                    },
-                                    'osx/x86/isight' => %w{
-                                        osx/x86/bind_tcp
-                                        osx/x86/reverse_tcp
-                                    },
-                                    'osx/x86/vforkshell' => %w{
-                                        osx/x86/bind_tcp
-                                        osx/x86/reverse_tcp
-                                    },
+                                    'osx/x86/bundleinject' => osx_x86_stagers,
+                                    'osx/x86/isight' => osx_x86_stagers,
+                                    'osx/x86/vforkshell' => osx_x86_stagers,
                                     'php/meterpreter' => %w{
                                         php/bind_tcp
                                         php/bind_tcp_ipv6
@@ -1175,233 +1182,17 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                                         python/reverse_tcp
                                         python/reverse_tcp_uuid
                                     },
-                                    'windows/dllinject' => %w{
-                                        windows/bind_hidden_ipknock_tcp
-                                        windows/bind_hidden_tcp
-                                        windows/bind_ipv6_tcp
-                                        windows/bind_ipv6_tcp_uuid
-                                        windows/bind_nonx_tcp
-                                        windows/bind_tcp
-                                        windows/bind_tcp_rc4
-                                        windows/bind_tcp_uuid
-                                        windows/findtag_ord
-                                        windows/reverse_hop_http
-                                        windows/reverse_http
-                                        windows/reverse_http_proxy_pstore
-                                        windows/reverse_https
-                                        windows/reverse_https_proxy
-                                        windows/reverse_ipv6_tcp
-                                        windows/reverse_nonx_tcp
-                                        windows/reverse_ord_tcp
-                                        windows/reverse_tcp
-                                        windows/reverse_tcp_allports
-                                        windows/reverse_tcp_dns
-                                        windows/reverse_tcp_rc4
-                                        windows/reverse_tcp_rc4_dns
-                                        windows/reverse_tcp_uuid
-                                        windows/reverse_winhttp
-                                        windows/reverse_winhttps
-                                    },
-                                    'windows/meterpreter' => %w{
-                                        windows/bind_hidden_ipknock_tcp
-                                        windows/bind_hidden_tcp
-                                        windows/bind_ipv6_tcp
-                                        windows/bind_ipv6_tcp_uuid
-                                        windows/bind_nonx_tcp
-                                        windows/bind_tcp
-                                        windows/bind_tcp_rc4
-                                        windows/bind_tcp_uuid
-                                        windows/findtag_ord
-                                        windows/reverse_hop_http
-                                        windows/reverse_http
-                                        windows/reverse_http_proxy_pstore
-                                        windows/reverse_https
-                                        windows/reverse_https_proxy
-                                        windows/reverse_ipv6_tcp
-                                        windows/reverse_nonx_tcp
-                                        windows/reverse_ord_tcp
-                                        windows/reverse_tcp
-                                        windows/reverse_tcp_allports
-                                        windows/reverse_tcp_dns
-                                        windows/reverse_tcp_rc4
-                                        windows/reverse_tcp_rc4_dns
-                                        windows/reverse_tcp_uuid
-                                        windows/reverse_winhttp
-                                        windows/reverse_winhttps
-                                    },
-                                    'windows/patchupdllinject' => %w{
-                                        windows/bind_hidden_ipknock_tcp
-                                        windows/bind_hidden_tcp
-                                        windows/bind_ipv6_tcp
-                                        windows/bind_ipv6_tcp_uuid
-                                        windows/bind_nonx_tcp
-                                        windows/bind_tcp
-                                        windows/bind_tcp_rc4
-                                        windows/bind_tcp_uuid
-                                        windows/findtag_ord
-                                        windows/reverse_hop_http
-                                        windows/reverse_http
-                                        windows/reverse_http_proxy_pstore
-                                        windows/reverse_https
-                                        windows/reverse_https_proxy
-                                        windows/reverse_ipv6_tcp
-                                        windows/reverse_nonx_tcp
-                                        windows/reverse_ord_tcp
-                                        windows/reverse_tcp
-                                        windows/reverse_tcp_allports
-                                        windows/reverse_tcp_dns
-                                        windows/reverse_tcp_rc4
-                                        windows/reverse_tcp_rc4_dns
-                                        windows/reverse_tcp_uuid
-                                        windows/reverse_winhttp
-                                        windows/reverse_winhttps
-                                    },
-                                    'windows/patchupmeterpreter' => %w{
-                                        windows/bind_hidden_ipknock_tcp
-                                        windows/bind_hidden_tcp
-                                        windows/bind_ipv6_tcp
-                                        windows/bind_ipv6_tcp_uuid
-                                        windows/bind_nonx_tcp
-                                        windows/bind_tcp
-                                        windows/bind_tcp_rc4
-                                        windows/bind_tcp_uuid
-                                        windows/findtag_ord
-                                        windows/reverse_hop_http
-                                        windows/reverse_http
-                                        windows/reverse_http_proxy_pstore
-                                        windows/reverse_https
-                                        windows/reverse_https_proxy
-                                        windows/reverse_ipv6_tcp
-                                        windows/reverse_nonx_tcp
-                                        windows/reverse_ord_tcp
-                                        windows/reverse_tcp
-                                        windows/reverse_tcp_allports
-                                        windows/reverse_tcp_dns
-                                        windows/reverse_tcp_rc4
-                                        windows/reverse_tcp_rc4_dns
-                                        windows/reverse_tcp_uuid
-                                        windows/reverse_winhttp
-                                        windows/reverse_winhttps
-                                    },
-                                    'windows/shell' => %w{
-                                        windows/bind_hidden_ipknock_tcp
-                                        windows/bind_hidden_tcp
-                                        windows/bind_ipv6_tcp
-                                        windows/bind_ipv6_tcp_uuid
-                                        windows/bind_nonx_tcp
-                                        windows/bind_tcp
-                                        windows/bind_tcp_rc4
-                                        windows/bind_tcp_uuid
-                                        windows/findtag_ord
-                                        windows/reverse_hop_http
-                                        windows/reverse_http
-                                        windows/reverse_http_proxy_pstore
-                                        windows/reverse_https
-                                        windows/reverse_https_proxy
-                                        windows/reverse_ipv6_tcp
-                                        windows/reverse_nonx_tcp
-                                        windows/reverse_ord_tcp
-                                        windows/reverse_tcp
-                                        windows/reverse_tcp_allports
-                                        windows/reverse_tcp_dns
-                                        windows/reverse_tcp_rc4
-                                        windows/reverse_tcp_rc4_dns
-                                        windows/reverse_tcp_uuid
-                                        windows/reverse_winhttp
-                                        windows/reverse_winhttps
-                                    },
-                                    'windows/upexec' => %w{
-                                        windows/bind_hidden_ipknock_tcp
-                                        windows/bind_hidden_tcp
-                                        windows/bind_ipv6_tcp
-                                        windows/bind_ipv6_tcp_uuid
-                                        windows/bind_nonx_tcp
-                                        windows/bind_tcp
-                                        windows/bind_tcp_rc4
-                                        windows/bind_tcp_uuid
-                                        windows/findtag_ord
-                                        windows/reverse_hop_http
-                                        windows/reverse_http
-                                        windows/reverse_http_proxy_pstore
-                                        windows/reverse_https
-                                        windows/reverse_https_proxy
-                                        windows/reverse_ipv6_tcp
-                                        windows/reverse_nonx_tcp
-                                        windows/reverse_ord_tcp
-                                        windows/reverse_tcp
-                                        windows/reverse_tcp_allports
-                                        windows/reverse_tcp_dns
-                                        windows/reverse_tcp_rc4
-                                        windows/reverse_tcp_rc4_dns
-                                        windows/reverse_tcp_uuid
-                                        windows/reverse_winhttp
-                                        windows/reverse_winhttps
-                                    },
-                                    'windows/vncinject' => %w{
-                                        windows/bind_hidden_ipknock_tcp
-                                        windows/bind_hidden_tcp
-                                        windows/bind_ipv6_tcp
-                                        windows/bind_ipv6_tcp_uuid
-                                        windows/bind_nonx_tcp
-                                        windows/bind_tcp
-                                        windows/bind_tcp_rc4
-                                        windows/bind_tcp_uuid
-                                        windows/findtag_ord
-                                        windows/reverse_hop_http
-                                        windows/reverse_http
-                                        windows/reverse_http_proxy_pstore
-                                        windows/reverse_https
-                                        windows/reverse_https_proxy
-                                        windows/reverse_ipv6_tcp
-                                        windows/reverse_nonx_tcp
-                                        windows/reverse_ord_tcp
-                                        windows/reverse_tcp
-                                        windows/reverse_tcp_allports
-                                        windows/reverse_tcp_dns
-                                        windows/reverse_tcp_rc4
-                                        windows/reverse_tcp_rc4_dns
-                                        windows/reverse_tcp_uuid
-                                        windows/reverse_winhttp
-                                        windows/reverse_winhttps
-                                    },
-                                    'windows/x64/meterpreter' => %w{
-                                        windows/x64/bind_ipv6_tcp
-                                        windows/x64/bind_ipv6_tcp_uuid
-                                        windows/x64/bind_tcp
-                                        windows/x64/bind_tcp_uuid
-                                        windows/x64/reverse_http
-                                        windows/x64/reverse_https
-                                        windows/x64/reverse_tcp
-                                        windows/x64/reverse_tcp_uuid
-                                        windows/x64/reverse_winhttp
-                                        windows/x64/reverse_winhttps
-                                    },
-                                    'windows/x64/shell' => %w{
-                                        windows/x64/bind_ipv6_tcp
-                                        windows/x64/bind_ipv6_tcp_uuid
-                                        windows/x64/bind_tcp
-                                        windows/x64/bind_tcp_uuid
-                                        windows/x64/reverse_http
-                                        windows/x64/reverse_https
-                                        windows/x64/reverse_tcp
-                                        windows/x64/reverse_tcp_uuid
-                                        windows/x64/reverse_winhttp
-                                        windows/x64/reverse_winhttps
-                                    },
-                                    'windows/x64/vncinject' => %w{
-                                        windows/x64/bind_ipv6_tcp
-                                        windows/x64/bind_ipv6_tcp_uuid
-                                        windows/x64/bind_tcp
-                                        windows/x64/bind_tcp_uuid
-                                        windows/x64/reverse_http
-                                        windows/x64/reverse_https
-                                        windows/x64/reverse_tcp
-                                        windows/x64/reverse_tcp_uuid
-                                        windows/x64/reverse_winhttp
-                                        windows/x64/reverse_winhttps
-                                    }
+                                    'windows/dllinject' => windows_x86_stagers,
+                                    'windows/meterpreter' => windows_x86_stagers,
+                                    'windows/patchupdllinject' => windows_x86_stagers,
+                                    'windows/patchupmeterpreter' => windows_x86_stagers,
+                                    'windows/shell' => windows_x86_stagers,
+                                    'windows/upexec' => windows_x86_stagers,
+                                    'windows/vncinject' => windows_x86_stagers,
+                                    'windows/x64/meterpreter' => windows_x86_64_stagers,
+                                    'windows/x64/shell' => windows_x86_64_stagers,
+                                    'windows/x64/vncinject' => windows_x86_64_stagers
                                 }
-
 
           # @note payloads/stages instances are loaded as part of
           #   spec/lib/metasploit/cache/payload/staged/class/load_spec.rb

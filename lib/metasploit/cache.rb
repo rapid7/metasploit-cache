@@ -13,7 +13,7 @@ require 'metasploit/model'
 # Project
 #
 
-require "metasploit/cache/version"
+require 'metasploit/cache/version'
 
 autoload :DerivationValidator, 'derivation_validator'
 

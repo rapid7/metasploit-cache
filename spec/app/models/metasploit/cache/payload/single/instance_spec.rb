@@ -7,7 +7,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
     it { is_expected.to have_many(:contributions).autosave(true).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:contributable) }
     it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_single_instances).validate(true) }
     it { is_expected.to have_many(:licensable_licenses).autosave(true).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:licensable) }
-    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License')}
+    it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License').through(:licensable_licenses) }
     it { is_expected.to belong_to(:payload_single_class).class_name('Metasploit::Cache::Payload::Single::Class').inverse_of(:payload_single_instance).with_foreign_key(:payload_single_class_id) }
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
     it { is_expected.to have_many(:platformable_platforms).autosave(true).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }
@@ -117,6 +117,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
                 end
 
                 context 'with multiple elements in each association' do
+                  include_context 'ActiveSupport::TaggedLogging'
                   include_context 'Metasploit::Cache::Spec::Unload.unload'
 
                   subject(:full_metasploit_cache_payload_single_instance) {
@@ -151,16 +152,6 @@ RSpec.describe Metasploit::Cache::Payload::Single::Instance do
 
                   let(:licensable_license_count) {
                     2
-                  }
-
-                  let(:logger) {
-                    ActiveSupport::TaggedLogging.new(
-                        Logger.new(log_string_io)
-                    )
-                  }
-
-                  let(:log_string_io) {
-                    StringIO.new
                   }
 
                   let(:metasploit_framework) {

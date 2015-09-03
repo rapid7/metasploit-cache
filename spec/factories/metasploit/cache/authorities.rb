@@ -22,7 +22,7 @@ FactoryGirl.define do
   sequence :seeded_metasploit_cache_authority do |n|
     abbreviation = seeded_abbreviations[n % seeded_abbreviation_count]
 
-    authority = Metasploit::Cache::Authority.where(:abbreviation => abbreviation).first
+    authority = Metasploit::Cache::Authority.where(abbreviation: abbreviation).first
 
     unless authority
       raise ArgumentError,

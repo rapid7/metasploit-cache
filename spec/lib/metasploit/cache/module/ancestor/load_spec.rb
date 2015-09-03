@@ -1,6 +1,7 @@
 require 'file/find'
 
 RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
+  include_context 'ActiveSupport::TaggedLogging'
   include_context 'Metasploit::Cache::Spec::Unload.unload'
 
   subject(:module_ancestor_load) do
@@ -11,18 +12,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
         logger: logger
     )
   end
-
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(logger_string_io)
-    ).tap { |logger|
-      logger.level = Logger::DEBUG
-    }
-  }
-
-  let(:logger_string_io) {
-    StringIO.new
-  }
 
   let(:module_ancestor) do
     FactoryGirl.create(:metasploit_cache_auxiliary_ancestor)

@@ -64,8 +64,8 @@ RSpec.describe Metasploit::Cache::Module::Path do
         let(:path) do
           FactoryGirl.build(
               :metasploit_cache_module_path,
-              :gem => '',
-              :name => ''
+              gem: '',
+              name: ''
           )
         end
 
@@ -102,7 +102,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
         let(:path) do
           FactoryGirl.build(
               :metasploit_cache_module_path,
-              :real_path => symlink_pathname.to_path
+              real_path: symlink_pathname.to_path
           )
         end
 
@@ -145,9 +145,9 @@ RSpec.describe Metasploit::Cache::Module::Path do
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:gem).of_type(:string).with_options(:null => true) }
-      it { should have_db_column(:name).of_type(:string).with_options(:null => true) }
-      it { should have_db_column(:real_path).of_type(:text).with_options(:null => false) }
+      it { should have_db_column(:gem).of_type(:string).with_options(null: true) }
+      it { should have_db_column(:name).of_type(:string).with_options(null: true) }
+      it { should have_db_column(:real_path).of_type(:text).with_options(null: false) }
     end
 
     context 'indices' do
@@ -207,7 +207,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
       let(:path) do
         FactoryGirl.build(
             :metasploit_cache_module_path,
-            :real_path => real_path
+            real_path: real_path
         )
       end
 
@@ -288,8 +288,8 @@ RSpec.describe Metasploit::Cache::Module::Path do
       subject(:path) do
         FactoryGirl.build(
             :metasploit_cache_module_path,
-            :gem => gem,
-            :name => name
+            gem: gem,
+            name: name
         )
       end
 
@@ -375,8 +375,8 @@ RSpec.describe Metasploit::Cache::Module::Path do
         let(:duplicate) do
           FactoryGirl.build(
               :named_metasploit_cache_module_path,
-              :gem => original.gem,
-              :name => original.name
+              gem: original.gem,
+              name: original.name
           )
         end
 
@@ -458,7 +458,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
     let(:path) do
       FactoryGirl.build(
           :metasploit_cache_module_path,
-          :real_path => real_path
+          real_path: real_path
       )
     end
 
@@ -490,7 +490,6 @@ RSpec.describe Metasploit::Cache::Module::Path do
           end
         end
 
-
         it { is_expected.to eq(false) }
       end
 
@@ -520,8 +519,8 @@ RSpec.describe Metasploit::Cache::Module::Path do
     let(:path) do
       FactoryGirl.build(
           :metasploit_cache_module_path,
-          :gem => gem,
-          :name => name
+          gem: gem,
+          name: name
       )
     end
 
@@ -596,8 +595,8 @@ RSpec.describe Metasploit::Cache::Module::Path do
         let(:path) do
           FactoryGirl.build(
               :named_metasploit_cache_module_path,
-              :gem => collision.gem,
-              :name => collision.name
+              gem: collision.gem,
+              name: collision.name
           )
         end
 
@@ -635,7 +634,7 @@ RSpec.describe Metasploit::Cache::Module::Path do
 
     context 'with same real_path' do
       let(:path) do
-        FactoryGirl.build(:metasploit_cache_module_path, :real_path => collision.real_path)
+        FactoryGirl.build(:metasploit_cache_module_path, real_path: collision.real_path)
       end
 
       it 'should return collision' do

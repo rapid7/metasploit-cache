@@ -1,4 +1,5 @@
 RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
+  include_context 'ActiveSupport::TaggedLogging'
   include_context 'Metasploit::Cache::Spec::Unload.unload'
 
   subject(:payload_direct_class_load) {
@@ -22,18 +23,6 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
 
   let(:module_rank) {
     FactoryGirl.generate :metasploit_cache_module_rank
-  }
-
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(logger_string_io)
-    ).tap { |logger|
-      logger.level = Logger::DEBUG
-    }
-  }
-
-  let(:logger_string_io) {
-    StringIO.new
   }
 
   let(:metasploit_module) {
@@ -136,53 +125,6 @@ RSpec.describe Metasploit::Cache::Payload::Direct::Class::Load do
             end
           end
         end
-      end
-    end
-  end
-
-  context '.name_metasploit_class' do
-    include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-    subject(:name_metasploit_class!) {
-      described_class.name_metasploit_class!(
-                         metasploit_class: metasploit_class,
-                         payload_direct_class: payload_direct_class
-      )
-    }
-
-    let(:metasploit_class) {
-      Class.new
-    }
-
-    context 'with pre-existing' do
-      before(:each) do
-        stub_const('Msf::Payloads', Module.new)
-      end
-
-      it 'defines constant to metasploit_class' do
-        expect {
-          name_metasploit_class!
-        }.to change(metasploit_class, :name).to(
-                 'Msf::Payloads::' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_direct_class.ancestor.real_path_sha1_hex_digest}"
-             )
-      end
-    end
-
-    context 'without pre-existing' do
-      before(:each) do
-        hide_const('Msf::Payloads')
-      end
-
-      it 'defines constant to metasploit_class' do
-        expect {
-          name_metasploit_class!
-        }.to change(metasploit_class, :name).to(
-                 'Msf::Payloads::' \
-                 'RealPathSha1HexDigest' \
-                 "#{payload_direct_class.ancestor.real_path_sha1_hex_digest}"
-             )
       end
     end
   end

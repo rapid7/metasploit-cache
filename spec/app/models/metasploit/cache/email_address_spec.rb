@@ -10,8 +10,8 @@ RSpec.describe Metasploit::Cache::EmailAddress do
 
   context 'database' do
     context 'columns' do
-      it { should have_db_column(:domain).of_type(:string).with_options(:null => false) }
-      it { should have_db_column(:local).of_type(:string).with_options(:null => false) }
+      it { should have_db_column(:domain).of_type(:string).with_options(null: false) }
+      it { should have_db_column(:local).of_type(:string).with_options(null: false) }
     end
 
     context 'indices' do
@@ -33,11 +33,11 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         email_address.full = email_address.derived_full
       end
 
-      it_should_behave_like 'derives', :domain, :validates => true
-      it_should_behave_like 'derives', :local, :validates => true
+      it_should_behave_like 'derives', :domain, validates: true
+      it_should_behave_like 'derives', :local, validates: true
     end
 
-    it_should_behave_like 'derives', :full, :validates => true
+    it_should_behave_like 'derives', :full, validates: true
   end
 
   context 'factories' do
@@ -56,9 +56,9 @@ RSpec.describe Metasploit::Cache::EmailAddress do
     }
 
     context 'attributes' do
-      it_should_behave_like 'search_attribute', :domain, :type => :string
-      it_should_behave_like 'search_attribute', :full, :type => :string
-      it_should_behave_like 'search_attribute', :local, :type => :string
+      it_should_behave_like 'search_attribute', :domain, type: :string
+      it_should_behave_like 'search_attribute', :full, type: :string
+      it_should_behave_like 'search_attribute', :local, type: :string
     end
   end
 
@@ -86,8 +86,8 @@ RSpec.describe Metasploit::Cache::EmailAddress do
     let!(:existing_email_address) do
       FactoryGirl.create(
           :metasploit_cache_email_address,
-          :domain => existing_domain,
-          :local => existing_local
+          domain: existing_domain,
+          local: existing_local
       )
     end
 
@@ -141,8 +141,8 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         subject(:new_email_address) do
           FactoryGirl.build(
               :metasploit_cache_email_address,
-              :domain => existing_domain,
-              :local => existing_local
+              domain: existing_domain,
+              local: existing_local
           )
         end
 
@@ -176,8 +176,8 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         subject(:new_email_address) do
           FactoryGirl.build(
               :metasploit_cache_email_address,
-              :domain => new_domain,
-              :local => existing_local
+              domain: new_domain,
+              local: existing_local
           )
         end
 
@@ -214,7 +214,6 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         let(:full) do
           "#{local}@#{domain}"
         end
-
 
         context 'with local before @' do
           it "should be portion after '@'" do
@@ -330,7 +329,6 @@ RSpec.describe Metasploit::Cache::EmailAddress do
         let(:full) do
           "#{local}@#{domain}"
         end
-
 
         context "with domain after '@'" do
           it "should be portion before '@'" do

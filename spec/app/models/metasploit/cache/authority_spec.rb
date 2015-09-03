@@ -5,10 +5,10 @@ RSpec.describe Metasploit::Cache::Authority do
 
   context 'databases' do
     context 'columns' do
-      it { should have_db_column(:abbreviation).of_type(:string).with_options(:null => false) }
-      it { should have_db_column(:obsolete).of_type(:boolean).with_options(:default => false, :null => false)}
-      it { should have_db_column(:summary).of_type(:string).with_options(:null => true) }
-      it { should have_db_column(:url).of_type(:text).with_options(:null => true) }
+      it { should have_db_column(:abbreviation).of_type(:string).with_options(null: false) }
+      it { should have_db_column(:obsolete).of_type(:boolean).with_options(default: false, null: false) }
+      it { should have_db_column(:summary).of_type(:string).with_options(null: true) }
+      it { should have_db_column(:url).of_type(:text).with_options(null: true) }
     end
 
     context 'indices' do
@@ -95,24 +95,24 @@ RSpec.describe Metasploit::Cache::Authority do
     }
 
     context 'attributes' do
-      it_should_behave_like 'search_attribute', :abbreviation, :type => :string
+      it_should_behave_like 'search_attribute', :abbreviation, type: :string
     end
   end
 
   context 'seeds' do
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'BID',
-                          :extension_name => 'Metasploit::Cache::Authority::Bid',
-                          :obsolete => false,
-                          :summary => 'BuqTraq ID',
-                          :url => 'http://www.securityfocus.com/bid'
+                          abbreviation: 'BID',
+                          extension_name: 'Metasploit::Cache::Authority::Bid',
+                          obsolete: false,
+                          summary: 'BuqTraq ID',
+                          url: 'http://www.securityfocus.com/bid'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'CVE',
-                          :extension_name => 'Metasploit::Cache::Authority::Cve',
-                          :obsolete => false,
-                          :summary => 'Common Vulnerabilities and Exposures',
-                          :url => 'http://cvedetails.com'
+                          abbreviation: 'CVE',
+                          extension_name: 'Metasploit::Cache::Authority::Cve',
+                          obsolete: false,
+                          summary: 'Common Vulnerabilities and Exposures',
+                          url: 'http://cvedetails.com'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
                           abbreviation: 'CWE',
@@ -129,60 +129,60 @@ RSpec.describe Metasploit::Cache::Authority do
                           url: 'https://www.exploit-db.com'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'MIL',
-                          :extension_name => nil,
-                          :obsolete => true,
-                          :summary => 'milw0rm',
-                          :url => 'https://en.wikipedia.org/wiki/Milw0rm'
+                          abbreviation: 'MIL',
+                          extension_name: nil,
+                          obsolete: true,
+                          summary: 'milw0rm',
+                          url: 'https://en.wikipedia.org/wiki/Milw0rm'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'MSB',
-                          :extension_name => 'Metasploit::Cache::Authority::Msb',
-                          :obsolete => false,
-                          :summary => 'Microsoft Security Bulletin',
-                          :url => 'http://www.microsoft.com/technet/security/bulletin'
+                          abbreviation: 'MSB',
+                          extension_name: 'Metasploit::Cache::Authority::Msb',
+                          obsolete: false,
+                          summary: 'Microsoft Security Bulletin',
+                          url: 'http://www.microsoft.com/technet/security/bulletin'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'OSVDB',
-                          :extension_name => 'Metasploit::Cache::Authority::Osvdb',
-                          :obsolete => false,
-                          :summary => 'Open Sourced Vulnerability Database',
-                          :url => 'http://osvdb.org'
+                          abbreviation: 'OSVDB',
+                          extension_name: 'Metasploit::Cache::Authority::Osvdb',
+                          obsolete: false,
+                          summary: 'Open Sourced Vulnerability Database',
+                          url: 'http://osvdb.org'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'PMASA',
-                          :extension_name => 'Metasploit::Cache::Authority::Pmasa',
-                          :obsolete => false,
-                          :summary => 'phpMyAdmin Security Announcement',
-                          :url => 'http://www.phpmyadmin.net/home_page/security/'
+                          abbreviation: 'PMASA',
+                          extension_name: 'Metasploit::Cache::Authority::Pmasa',
+                          obsolete: false,
+                          summary: 'phpMyAdmin Security Announcement',
+                          url: 'http://www.phpmyadmin.net/home_page/security/'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'SECUNIA',
-                          :extension_name => 'Metasploit::Cache::Authority::Secunia',
-                          :obsolete => false,
-                          :summary => 'Secunia',
-                          :url => 'https://secunia.com/advisories'
+                          abbreviation: 'SECUNIA',
+                          extension_name: 'Metasploit::Cache::Authority::Secunia',
+                          obsolete: false,
+                          summary: 'Secunia',
+                          url: 'https://secunia.com/advisories'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'US-CERT-VU',
-                          :extension_name => 'Metasploit::Cache::Authority::UsCertVu',
-                          :obsolete => false,
-                          :summary => 'United States Computer Emergency Readiness Team Vulnerability Notes Database',
-                          :url => 'http://www.kb.cert.org/vuls'
+                          abbreviation: 'US-CERT-VU',
+                          extension_name: 'Metasploit::Cache::Authority::UsCertVu',
+                          obsolete: false,
+                          summary: 'United States Computer Emergency Readiness Team Vulnerability Notes Database',
+                          url: 'http://www.kb.cert.org/vuls'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'waraxe',
-                          :extension_name => 'Metasploit::Cache::Authority::Waraxe',
-                          :obsolete => false,
-                          :summary => 'Waraxe Advisories',
-                          :url => 'http://www.waraxe.us/content-cat-1.html'
+                          abbreviation: 'waraxe',
+                          extension_name: 'Metasploit::Cache::Authority::Waraxe',
+                          obsolete: false,
+                          summary: 'Waraxe Advisories',
+                          url: 'http://www.waraxe.us/content-cat-1.html'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
-                          :abbreviation => 'WPVDB',
-                          :extension_name => 'Metasploit::Cache::Authority::Wpvdb',
-                          :obsolete => false,
-                          :summary => 'WPScan Vulnerability Database',
-                          :url => 'https://wpvulndb.com'
+                          abbreviation: 'WPVDB',
+                          extension_name: 'Metasploit::Cache::Authority::Wpvdb',
+                          obsolete: false,
+                          summary: 'WPScan Vulnerability Database',
+                          url: 'https://wpvulndb.com'
 
     it_should_behave_like 'Metasploit::Cache::Authority seed',
                           abbreviation: 'ZDI',

@@ -1,4 +1,5 @@
 RSpec.describe Metasploit::Cache::Direct::Class::Load do
+  include_context 'ActiveSupport::TaggedLogging'
   include_context 'Metasploit::Cache::Spec::Unload.unload'
 
   subject(:direct_class_load) {
@@ -21,18 +22,6 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
 
   let(:module_rank) {
     FactoryGirl.generate :metasploit_cache_module_rank
-  }
-
-  let(:logger) {
-    ActiveSupport::TaggedLogging.new(
-        Logger.new(logger_string_io)
-    ).tap { |logger|
-      logger.level = Logger::DEBUG
-    }
-  }
-
-  let(:logger_string_io) {
-    StringIO.new
   }
 
   let(:metasploit_module) {

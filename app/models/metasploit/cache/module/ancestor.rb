@@ -83,8 +83,8 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   #
 
   # Don't validate attributes that require accessing file system to derive value
-  derives :real_path_modified_at, :validate => false
-  derives :real_path_sha1_hex_digest, :validate => false
+  derives :real_path_modified_at, validate: false
+  derives :real_path_sha1_hex_digest, validate: false
 
   #
   # Validations

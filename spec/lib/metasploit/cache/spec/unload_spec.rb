@@ -87,7 +87,7 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
       leaked_constants = described_class.to_enum(:each).to_a
 
       expect(leaked_constants).to include([Msf::Modules, :FirstNonPersistent])
-      expect(leaked_constants).to include([Msf::Payloads,:SecondNonPersistent])
+      expect(leaked_constants).to include([Msf::Payloads, :SecondNonPersistent])
     end
 
     it 'returns number of leaked constants' do
@@ -105,6 +105,12 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
   end
 
   context 'each_parent_constant' do
+    def does_not_load(parent, child_name)
+      expect {
+        described_class.to_enum(:each_parent_constant).to_a
+      }.not_to change { parent.const_defined? child_name }
+    end
+
     context 'with Metasploit::Cache::Payload::Handler::Namespace defined' do
       before(:each) do
         stub_const('Metasploit::Cache::Payload::Handler::Namespace', Module.new)
@@ -139,9 +145,7 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
           end
 
           it 'does not load Msf::Payloads' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Msf::Payloads }
+            does_not_load(Msf, :Payloads)
           end
         end
       end
@@ -163,9 +167,7 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
           end
 
           it 'does not load Msf::Modules' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Msf::Modules }
+            does_not_load(Msf, :Modules)
           end
         end
 
@@ -181,15 +183,11 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
           end
 
           it 'does not load Msf::Modules' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Msf::Modules }
+            does_not_load(Msf, :Modules)
           end
 
           it 'does not load Msf::Payloads' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Msf::Payloads }
+            does_not_load(Msf, :Payloads)
           end
         end
       end
@@ -201,6 +199,10 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
       end
 
       context 'with Msf::Modules defined' do
+        #
+        # Callbacks
+        #
+
         before(:each) do
           stub_const('Msf::Modules', Module.new)
         end
@@ -217,9 +219,7 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
           end
 
           it 'does not load Metasploit::Cache::Payload::Handler::Namespace' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Metasploit::Cache::Payload::Handler::Namespace }
+            does_not_load(Metasploit::Cache::Payload::Handler, :Namespace)
           end
         end
 
@@ -235,15 +235,11 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
           end
 
           it 'does not load Metasploit::Cache::Payload::Handler::Namespace' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Metasploit::Cache::Payload::Handler::Namespace }
+            does_not_load(Metasploit::Cache::Payload::Handler, :Namespace)
           end
 
           it 'does not load Msf::Payloads' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Msf::Payloads }
+            does_not_load(Msf, :Payloads)
           end
         end
       end
@@ -265,15 +261,11 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
           end
 
           it 'does not load Metasploit::Cache::Payload::Handler::Namespace' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Metasploit::Cache::Payload::Handler::Namespace }
+            does_not_load(Metasploit::Cache::Payload::Handler, :Namespace)
           end
 
           it 'does not load Msf::Modules' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Msf::Modules }
+            does_not_load(Msf, :Modules)
           end
         end
 
@@ -289,21 +281,15 @@ RSpec.describe Metasploit::Cache::Spec::Unload do
           end
 
           it 'does not load Metasploit::Cache::Payload::Handler::Namespace' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Metasploit::Cache::Payload::Handler::Namespace }
+            does_not_load(Metasploit::Cache::Payload::Handler, :Namespace)
           end
 
           it 'does not load Msf::Modules' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Msf::Modules }
+            does_not_load(Msf, :Modules)
           end
 
           it 'does not load Msf::Payloads' do
-            expect {
-              described_class.to_enum(:each_parent_constant).to_a
-            }.not_to change { defined? Msf::Payloads }
+            does_not_load(Msf, :Payloads)
           end
         end
       end

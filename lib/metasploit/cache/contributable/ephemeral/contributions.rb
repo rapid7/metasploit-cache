@@ -6,7 +6,7 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
 
   # Extracts the set of {Metasploit::Cache::Author#name}s from `added_attributes_set`.
   #
-  # @param added_attributes_set [Set<Hash{:author => Hash{:name => String}}>] Attributes for contributions to be added.
+  # @param added_attributes_set [Set<Hash{author: Hash{name: String}}>] Attributes for contributions to be added.
   # @return [Set<String>]
   def self.added_author_name_set(added_attributes_set:)
     added_attributes_set.each_with_object(Set.new) do |added_attributes, set|
@@ -16,7 +16,7 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
 
   # Extracts the set of {Metasploit::Cache::EmailAddress#full}s from `added_attributes_set`.
   #
-  # @param added_attributes_set [Set<Hash{:email_address => Hash{:full => String}}>] Attributes for contributions to be
+  # @param added_attributes_set [Set<Hash{email_address: Hash{full: String}}>] Attributes for contributions to be
   #   added.
   # @return [Set<String>]
   def self.added_email_address_full_set(added_attributes_set:)
