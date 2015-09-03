@@ -6,6 +6,7 @@ class Metasploit::Cache::Payload::Single::Handled::Class < ActiveRecord::Base
   include Metasploit::Cache::Batch::Root
 
   autoload :Ephemeral
+  autoload :Load
 
   #
   # Associations
