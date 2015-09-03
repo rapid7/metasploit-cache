@@ -4,4 +4,5 @@ module Metasploit::Cache::Payload::Unhandled
   extend ActiveSupport::Autoload
 
   autoload :Class
+  autoload :Instance
 end
