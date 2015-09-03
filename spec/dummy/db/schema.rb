@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150716152805) do
+ActiveRecord::Schema.define(version: 20150903132545) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,6 +203,12 @@ ActiveRecord::Schema.define(version: 20150716152805) do
 
   add_index "mc_payload_handlers", ["handler_type"], name: "index_mc_payload_handlers_on_handler_type", unique: true, using: :btree
   add_index "mc_payload_handlers", ["name"], name: "index_mc_payload_handlers_on_name", unique: true, using: :btree
+
+  create_table "mc_payload_single_handled_classes", force: true do |t|
+    t.integer "payload_single_unhandled_instance_id", null: false
+  end
+
+  add_index "mc_payload_single_handled_classes", ["payload_single_unhandled_instance_id"], name: "unique_mc_payload_single_handled_classes", unique: true, using: :btree
 
   create_table "mc_payload_single_unhandled_instances", force: true do |t|
     t.text    "description",                       null: false

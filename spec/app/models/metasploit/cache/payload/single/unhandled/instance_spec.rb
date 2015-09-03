@@ -8,6 +8,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance do
     it { is_expected.to belong_to(:handler).class_name('Metasploit::Cache::Payload::Handler').inverse_of(:payload_single_unhandled_instances).validate(true) }
     it { is_expected.to have_many(:licensable_licenses).autosave(true).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:licensable) }
     it { is_expected.to have_many(:licenses).class_name('Metasploit::Cache::License').through(:licensable_licenses) }
+    it { is_expected.to have_one(:payload_single_handled_class).class_name('Metasploit::Cache::Payload::Single::Handled::Class').inverse_of(:payload_single_unhandled_instance).with_foreign_key(:payload_single_unhandled_instance_id) }
     it { is_expected.to belong_to(:payload_single_unhandled_class).class_name('Metasploit::Cache::Payload::Single::Unhandled::Class').inverse_of(:payload_single_unhandled_instance).with_foreign_key(:payload_single_unhandled_class_id) }
     it { is_expected.to have_many(:platforms).class_name('Metasploit::Cache::Platform') }
     it { is_expected.to have_many(:platformable_platforms).autosave(true).class_name('Metasploit::Cache::Platformable::Platform').inverse_of(:platformable) }

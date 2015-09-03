@@ -5,6 +5,7 @@ module Metasploit::Cache::Payload::Single
   extend ActiveSupport::Autoload
 
   autoload :Ancestor
+  autoload :Handled
   autoload :Unhandled
 
   #

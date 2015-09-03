@@ -43,6 +43,12 @@ class Metasploit::Cache::Payload::Single::Unhandled::Instance < ActiveRecord::Ba
            dependent: :destroy,
            inverse_of: :licensable
 
+  # The class created by mixing the ancestor for this instance and the {#handler} module.
+  has_one :payload_single_handled_class,
+          class_name: 'Metasploit::Cache::Payload::Single::Handled::Class',
+          foreign_key: :payload_single_unhandled_instance_id,
+          inverse_of: :payload_single_unhandled_instance
+
   # The class-level metadata for this single payload Metasploit Module.
   belongs_to :payload_single_unhandled_class,
              class_name: 'Metasploit::Cache::Payload::Single::Unhandled::Class',
