@@ -32,43 +32,19 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance do
     context 'full_metasploit_cache_payload_single_unhandled_instance' do
       context 'with :handler_load_pathname' do
         include_context 'Metasploit::Cache::Spec::Unload.unload'
+        include_context ':metasploit_cache_payload_handler_module'
 
         subject(:full_metasploit_cache_payload_single_unhandled_instance) {
           FactoryGirl.build(
               :full_metasploit_cache_payload_single_unhandled_instance,
-              handler_load_pathname: handler_load_pathname
+              handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
           )
         }
 
-        #
-        # lets
-        #
-
-        let(:handler_load_pathname) {
-          Metasploit::Model::Spec.temporary_pathname.join('lib')
-        }
-        #
-        # Callbacks
-        #
-
-        around(:each) do |example|
-          load_path_before = $LOAD_PATH.dup
-
-          begin
-            example.run
-          ensure
-            $LOAD_PATH.replace(load_path_before)
-          end
-        end
-
         before(:each) do
-          $LOAD_PATH.unshift handler_load_pathname.to_path
-
-          handler_load_pathname.mkpath
-
           FactoryGirl.create(
               :full_metasploit_cache_payload_single_unhandled_instance,
-              handler_load_pathname: handler_load_pathname
+              handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
           )
         end
 
@@ -78,7 +54,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance do
           subject(:full_metasploit_cache_payload_single_unhandled_instance) {
             FactoryGirl.build(
                 :full_metasploit_cache_payload_single_unhandled_instance,
-                handler_load_pathname: handler_load_pathname,
+                handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname,
                 payload_single_unhandled_class: payload_single_unhandled_class
             )
           }
@@ -131,7 +107,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance do
                         :metasploit_cache_payload_single_unhandled_instance_payload_single_unhandled_class_ancestor_contents,
                         architecturable_architecture_count: architecturable_architecture_count,
                         contribution_count: contribution_count,
-                        handler_load_pathname: handler_load_pathname,
+                        handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname,
                         licensable_license_count: licensable_license_count,
                         payload_single_unhandled_class: payload_single_unhandled_class,
                         platformable_platform_count: platformable_platform_count
@@ -346,38 +322,17 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance do
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-      #
-      # lets
-      #
-
-      let(:handler_load_pathname) {
-        Metasploit::Model::Spec.temporary_pathname.join('lib')
-      }
 
       #
       # Callbacks
       #
 
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
       before(:each) do
-        $LOAD_PATH.unshift handler_load_pathname.to_path
-
-        handler_load_pathname.mkpath
-
         FactoryGirl.create(
             :full_metasploit_cache_payload_single_unhandled_instance,
-            handler_load_pathname: handler_load_pathname
+            handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
       end
 

@@ -13,6 +13,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
     end
 
     context 'with persisted record' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
       #
@@ -22,33 +23,9 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
       let(:destination) {
         FactoryGirl.create(
             :full_metasploit_cache_payload_single_unhandled_instance,
-            handler_load_pathname: handler_load_pathname
+            handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
       }
-
-      let(:handler_load_pathname) {
-        Metasploit::Model::Spec.temporary_pathname.join('lib')
-      }
-
-      #
-      # Callbacks
-      #
-
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
-      before(:each) do
-        handler_load_pathname.mkpath
-
-        $LOAD_PATH.unshift handler_load_pathname.to_path
-      end
 
       it 'maps Metasploit::Cache::Payload::Handler#general_handler_type to :general_handler_type' do
         expect(destination_attributes[:general_handler_type]).to eq(destination.handler.general_handler_type)
@@ -98,6 +75,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
     }
 
     context 'with same attributes' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
       #
@@ -107,33 +85,9 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
       let(:destination) {
         FactoryGirl.create(
             :full_metasploit_cache_payload_single_unhandled_instance,
-            handler_load_pathname: handler_load_pathname
+            handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
       }
-
-      let(:handler_load_pathname) {
-        Metasploit::Model::Spec.temporary_pathname.join('lib')
-      }
-
-      #
-      # Callbacks
-      #
-
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
-      before(:each) do
-        handler_load_pathname.mkpath
-
-        $LOAD_PATH.unshift handler_load_pathname.to_path
-      end
 
       let(:source) {
         handler = destination.handler

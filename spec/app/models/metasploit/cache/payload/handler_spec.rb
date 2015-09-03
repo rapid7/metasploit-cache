@@ -27,6 +27,7 @@ RSpec.describe Metasploit::Cache::Payload::Handler do
       }
 
       context 'with :load_pathname' do
+        include_context ':metasploit_cache_payload_handler_module'
         include_context 'Metasploit::Cache::Spec::Unload.unload'
 
         #
@@ -38,28 +39,8 @@ RSpec.describe Metasploit::Cache::Payload::Handler do
         }
 
         let(:load_pathname) {
-          Metasploit::Model::Spec.temporary_pathname.join('lib')
+          metasploit_cache_payload_handler_module_load_pathname
         }
-
-        #
-        # Callbacks
-        #
-
-        around(:each) do |example|
-          load_path_before = $LOAD_PATH.dup
-
-          begin
-            example.run
-          ensure
-            $LOAD_PATH.replace(load_path_before)
-          end
-        end
-
-        before(:each) do
-          $LOAD_PATH.unshift load_pathname.to_path
-
-          load_pathname.mkpath
-        end
 
         it { is_expected.to be_valid }
 

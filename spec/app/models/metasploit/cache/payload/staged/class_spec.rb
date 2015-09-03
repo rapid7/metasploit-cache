@@ -24,6 +24,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
     context 'metasploit_cache_payload_staged_class' do
       context 'with :payload_stager_instance_handler_load_pathname' do
         include_context 'ActiveSupport::TaggedLogging'
+        include_context ':metasploit_cache_payload_handler_module'
         include_context 'Metasploit::Cache::Spec::Unload.unload'
 
         subject(:metasploit_cache_payload_staged_class) {
@@ -136,26 +137,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
           )
         }
 
-        #
-        # Callbacks
-        #
-
-        around(:each) do |example|
-          load_path_before = $LOAD_PATH.dup
-
-          begin
-            example.run
-          ensure
-            $LOAD_PATH.replace(load_path_before)
-          end
-        end
-
-        before(:each) do
-          $LOAD_PATH.unshift payload_stager_instance_handler_load_pathname.to_path
-
-          payload_stager_instance_handler_load_pathname.mkpath
-        end
-
         it { is_expected.to be_valid }
 
         it 'is loadable' do
@@ -224,6 +205,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
     it { is_expected.to validate_presence_of :payload_stager_instance }
 
     context 'validates compatible architectures' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
       subject(:base_errors) {
@@ -268,7 +250,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
             :metasploit_cache_licensable_licensable_licenses,
             :metasploit_cache_payload_handable_handler,
             :metasploit_cache_platformable_platformable_platforms,
-            handler_load_pathname: payload_stager_instance_handler_load_pathname
+            handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         ).tap { |payload_stager_instance|
           payload_stager_instance.architecturable_architectures << Metasploit::Cache::Architecturable::Architecture.new(
               architecturable: payload_stager_instance,
@@ -280,30 +262,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
           )
         }
       }
-
-      let(:payload_stager_instance_handler_load_pathname) {
-        Metasploit::Model::Spec.temporary_pathname.join('lib')
-      }
-
-      #
-      # Callbacks
-      #
-
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
-      before(:each) do
-        $LOAD_PATH.unshift payload_stager_instance_handler_load_pathname.to_path
-
-        payload_stager_instance_handler_load_pathname.mkpath
-      end
 
       context 'with intersecting architectures' do
         #
@@ -377,6 +335,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
     end
 
     context 'validates compatible platforms' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
       subject(:base_errors) {
@@ -428,26 +387,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
       let(:payload_stager_instance_handler_load_pathname) {
         Metasploit::Model::Spec.temporary_pathname.join('lib')
       }
-
-      #
-      # Callbacks
-      #
-
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
-      before(:each) do
-        $LOAD_PATH.unshift payload_stager_instance_handler_load_pathname.to_path
-
-        payload_stager_instance_handler_load_pathname.mkpath
-      end
 
       context 'with same platform' do
         #
@@ -547,6 +486,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
     end
 
     context 'existing record' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
       #
@@ -561,21 +501,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
       # Callbacks
       #
 
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
       before(:each) do
-        $LOAD_PATH.unshift payload_stager_instance_handler_load_pathname.to_path
-
-        payload_stager_instance_handler_load_pathname.mkpath
-
         FactoryGirl.create(
             :metasploit_cache_payload_staged_class,
             payload_stager_instance_handler_load_pathname: payload_stager_instance_handler_load_pathname

@@ -1,6 +1,7 @@
 RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral do
   context 'resurrecting attributes' do
     context '#payload_single_unhandled_instance' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
       subject(:payload_single_unhandled_instance) {
@@ -14,12 +15,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemera
       let(:existing_payload_single_unhandled_instance) {
         FactoryGirl.create(
             :full_metasploit_cache_payload_single_unhandled_instance,
-            handler_load_pathname: handler_load_pathname
+            handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
-      }
-
-      let(:handler_load_pathname) {
-        Metasploit::Model::Spec.temporary_pathname.join('lib')
       }
 
       let(:payload_single_unhandled_instance_ephemeral) {
@@ -46,22 +43,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemera
       # Callbacks
       #
 
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
       before(:each) do
-        handler_load_pathname.mkpath
-
-        $LOAD_PATH.unshift handler_load_pathname.to_path
-
-        # create now that load path is setup
         existing_payload_single_unhandled_instance
 
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
@@ -197,6 +179,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemera
     end
 
     context 'without :to' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
       #
@@ -210,12 +193,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemera
       let(:existing_payload_single_unhandled_instance) {
         FactoryGirl.create(
             :full_metasploit_cache_payload_single_unhandled_instance,
-            handler_load_pathname: handler_load_pathname
+            handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
-      }
-
-      let(:handler_load_pathname) {
-        Metasploit::Model::Spec.temporary_pathname.join('lib')
       }
 
       let(:metasploit_class) {
@@ -230,22 +209,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemera
       # Callbacks
       #
 
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
       before(:each) do
-        handler_load_pathname.mkpath
-
-        $LOAD_PATH.unshift handler_load_pathname.to_path
-
-        # create now that load path is setup
         existing_payload_single_unhandled_instance
 
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
