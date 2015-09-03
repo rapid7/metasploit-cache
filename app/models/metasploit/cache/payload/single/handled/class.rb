@@ -1,7 +1,11 @@
 # A payload single handled Metasploit Module has both the payoad single Metasploit Module ruby Module and the handler
 # module mixed into a subclass of the payload base class.
 class Metasploit::Cache::Payload::Single::Handled::Class < ActiveRecord::Base
+  extend ActiveSupport::Autoload
+
   include Metasploit::Cache::Batch::Root
+
+  autoload :Ephemeral
 
   #
   # Associations
