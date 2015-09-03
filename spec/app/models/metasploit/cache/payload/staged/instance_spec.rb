@@ -188,6 +188,16 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
             expect(payload_staged_class_load).to be_valid
           end
 
+          it 'has 2 licenses' do
+            payload_staged_class_load.valid?
+
+            expect(
+                payload_stage_instance.licenses.map(&:abbreviation)
+            ).not_to match_array(
+                         payload_stager_instance.licenses.map(&:abbreviation)
+                     )
+          end
+
           context 'Metasploit::Cache::Payload::Staged::Class#payload_stage_instance' do
             it 'is loadable' do
               expect(payload_stage_instance_load).to be_valid
