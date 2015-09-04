@@ -405,4 +405,128 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class::Load, type: :
       }.to change { payload_single_handled_class_load.instance_variable_defined? :@metasploit_class }.to(true)
     end
   end
+
+
+  # :nocov:
+  # Can't just use the tag on the context because the below code will still run even if tag is filtered out
+  unless Bundler.settings.without.include? 'content'
+    context 'metasploit-framework', :content do
+      module_path_real_paths = Metasploit::Framework::Engine.paths['modules'].existent_directories
+
+      module_path_real_paths.each do |module_path_real_path|
+        module_path_real_pathname = Pathname.new(module_path_real_path)
+        module_path_relative_pathname = module_path_real_pathname.relative_path_from(Metasploit::Framework::Engine.root)
+
+        # use relative pathname so that context name is not dependent on build directory
+        context module_path_relative_pathname.to_s do
+          relative_path_prefix = 'payloads/singles'
+
+          context relative_path_prefix, :payload_single do
+            real_prefix_pathname = module_path_real_pathname.join(relative_path_prefix)
+
+            rule = File::Find.new(
+                ftype: 'file',
+                pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}",
+                path: real_prefix_pathname.to_path
+            )
+
+            rule.find do |real_path|
+              real_pathname = Pathname.new(real_path)
+              display_path = real_pathname.relative_path_from(real_prefix_pathname).to_s
+              relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
+
+              context display_path do
+                include_context 'ActiveSupport::TaggedLogging'
+                include_context 'Metasploit::Cache::Spec::Unload.unload'
+
+                let(:metasploit_framework) {
+                  double('Metasploit Framework')
+                }
+
+                let(:module_path) do
+                  FactoryGirl.create(
+                      :metasploit_cache_module_path,
+                      gem: 'metasploit-framework',
+                      name: 'modules',
+                      real_path: module_path_real_path
+                  )
+                end
+
+                let(:payload_single_ancestor) {
+                  module_path.single_payload_ancestors.build(
+                      relative_path: relative_pathname.to_path
+                  )
+                }
+
+                let(:payload_single_ancestor_load) {
+                  Metasploit::Cache::Module::Ancestor::Load.new(
+                      logger: logger,
+                      # This should match the major version number of metasploit-framework
+                      maximum_version: 4,
+                      module_ancestor: payload_single_ancestor
+                  )
+                }
+
+                let(:payload_single_handled_class) {
+                  payload_single_unhandled_instance.build_payload_single_handled_class
+                }
+
+                let(:payload_single_handled_class_load) {
+                  Metasploit::Cache::Payload::Single::Handled::Class::Load.new(
+                      handler_module: payload_single_unhandled_instance_load.metasploit_module_instance.handler_klass,
+                      logger: logger,
+                      metasploit_module: payload_single_ancestor_load.metasploit_module,
+                      payload_single_handled_class: payload_single_handled_class,
+                      payload_superclass: Msf::Payload
+                  )
+                }
+
+                let(:payload_single_unhandled_class) {
+                  payload_single_ancestor.build_payload_single_unhandled_class
+                }
+
+                let(:payload_single_unhandled_class_load) {
+                  Metasploit::Cache::Payload::Unhandled::Class::Load.new(
+                      logger: logger,
+                      metasploit_module: payload_single_ancestor_load.metasploit_module,
+                      payload_unhandled_class: payload_single_unhandled_class,
+                      payload_superclass: Msf::Payload
+                  )
+                }
+
+                let(:payload_single_unhandled_instance) {
+                  payload_single_unhandled_class.build_payload_single_unhandled_instance
+                }
+
+                let(:payload_single_unhandled_instance_load) {
+                  Metasploit::Cache::Module::Instance::Load.new(
+                      ephemeral_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral,
+                      logger: logger,
+                      metasploit_framework: metasploit_framework,
+                      metasploit_module_class: payload_single_unhandled_class_load.metasploit_class,
+                      module_instance: payload_single_unhandled_instance
+                  )
+                }
+
+                it 'loads Metasploit::Cache::Payload::Single::Handled::Class' do
+                  expect(payload_single_ancestor_load).to be_valid
+                  expect(payload_single_ancestor).to be_persisted
+
+                  expect(payload_single_unhandled_class_load).to be_valid
+                  expect(payload_single_unhandled_class).to be_persisted
+
+                  expect(payload_single_unhandled_instance_load).to be_valid
+                  expect(payload_single_unhandled_instance).to be_persisted
+
+                  expect(payload_single_handled_class_load).to be_valid
+                  expect(payload_single_handled_class).to be_persisted
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  # :nocov:
 end
