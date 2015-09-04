@@ -12,6 +12,12 @@ class Metasploit::Cache::Payload::Single::Handled::Class < ActiveRecord::Base
   # Associations
   #
 
+  # Instance of this payload single Metasploit Module with the handler mixed in.
+  has_one :payload_single_handled_instance,
+          class_name: 'Metasploit::Cache::Payload::Single::Handled::Instance',
+          foreign_key: :payload_single_handled_class_id,
+          inverse_of: :payload_single_handled_class
+
   # Payload single Metasploit Module without the handler mixed in, but does supply the handler module.
   belongs_to :payload_single_unhandled_instance,
              class_name: 'Metasploit::Cache::Payload::Single::Unhandled::Instance',

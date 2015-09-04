@@ -5,6 +5,7 @@ module Metasploit::Cache::Payload::Single::Handled
   extend ActiveSupport::Autoload
 
   autoload :Class
+  autoload :Instance
 
   #
   # Module Methods

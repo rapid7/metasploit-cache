@@ -2,6 +2,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'assocations' do
+    it { is_expected.to have_one(:payload_single_handled_instance).class_name('Metasploit::Cache::Payload::Single::Handled::Instance').inverse_of(:payload_single_handled_class).with_foreign_key(:payload_single_handled_class_id) }
     it { is_expected.to belong_to(:payload_single_unhandled_instance).class_name('Metasploit::Cache::Payload::Single::Unhandled::Instance').inverse_of(:payload_single_handled_class) }
   end
 
