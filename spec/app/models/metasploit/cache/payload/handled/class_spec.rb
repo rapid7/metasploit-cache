@@ -20,105 +20,125 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class do
       include_context 'ActiveSupport::TaggedLogging'
       include_context ':metasploit_cache_payload_handler_module'
 
-      subject(:metasploit_cache_payload_single_handled_class) {
-        FactoryGirl.build(
-            :metasploit_cache_payload_single_handled_class,
-            payload_single_unhandled_instance_handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
-        )
-      }
-
-      it { is_expected.to be_valid }
-
-      context 'loading' do
-        include_context 'ActiveSupport::TaggedLogging'
-        include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-        #
-        # lets
-        #
-
-        let(:metasploit_framework) {
-          double('Metasploit Framework')
-        }
-
-        let(:payload_single_ancestor) {
-          payload_single_unhandled_class.ancestor
-        }
-
-
-        let(:payload_single_ancestor_load) {
-          Metasploit::Cache::Module::Ancestor::Load.new(
-              logger: logger,
-              maximum_version: 4,
-              module_ancestor: payload_single_ancestor
+      context 'with :payload_single_unhandled_instance_handler_load_pathname' do
+        subject(:metasploit_cache_payload_single_handled_class) {
+          FactoryGirl.build(
+              :metasploit_cache_payload_single_handled_class,
+              payload_single_unhandled_instance_handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
           )
         }
 
-        let(:payload_single_handled_class_load) {
-          Metasploit::Cache::Payload::Single::Handled::Class::Load.new(
-              handler_module: payload_single_unhandled_instance_load.metasploit_module_instance.handler_klass,
-              logger: logger,
-              metasploit_module: payload_single_ancestor_load.metasploit_module,
-              payload_single_handled_class: metasploit_cache_payload_single_handled_class,
-              payload_superclass: payload_superclass
-          )
-        }
+        it { is_expected.to be_valid }
 
-        let(:payload_single_unhandled_class) {
-          payload_single_unhandled_instance.payload_single_unhandled_class
-        }
+        context 'loading' do
+          include_context 'ActiveSupport::TaggedLogging'
+          include_context 'Metasploit::Cache::Spec::Unload.unload'
 
-        let(:payload_single_unhandled_class_load) {
-          Metasploit::Cache::Payload::Unhandled::Class::Load.new(
-              logger: logger,
-              metasploit_module: payload_single_ancestor_load.metasploit_module,
-              payload_unhandled_class: payload_single_unhandled_class,
-              payload_superclass: payload_superclass
-          )
-        }
+          #
+          # lets
+          #
 
-        let(:payload_single_unhandled_instance) {
-          metasploit_cache_payload_single_handled_class.payload_single_unhandled_instance
-        }
+          let(:metasploit_framework) {
+            double('Metasploit Framework')
+          }
 
-        let(:payload_single_unhandled_instance_load) {
-          Metasploit::Cache::Module::Instance::Load.new(
-              ephemeral_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral,
-              logger: logger,
-              metasploit_framework: metasploit_framework,
-              metasploit_module_class: payload_single_unhandled_class_load.metasploit_class,
-              module_instance: payload_single_unhandled_instance
-          )
-        }
+          let(:payload_single_ancestor) {
+            payload_single_unhandled_class.ancestor
+          }
 
-        let(:payload_superclass) {
-          Metasploit::Cache::Direct::Class::Superclass
-        }
 
-        it 'is loadable' do
-          expect(payload_single_handled_class_load).to be_valid
-          expect(metasploit_cache_payload_single_handled_class).to be_persisted
-        end
+          let(:payload_single_ancestor_load) {
+            Metasploit::Cache::Module::Ancestor::Load.new(
+                logger: logger,
+                maximum_version: 4,
+                module_ancestor: payload_single_ancestor
+            )
+          }
 
-        context 'Metasploit::Cache::Payload::Single::Handled::Class#payload_single_unhandled_instance' do
+          let(:payload_single_handled_class_load) {
+            Metasploit::Cache::Payload::Single::Handled::Class::Load.new(
+                handler_module: payload_single_unhandled_instance_load.metasploit_module_instance.handler_klass,
+                logger: logger,
+                metasploit_module: payload_single_ancestor_load.metasploit_module,
+                payload_single_handled_class: metasploit_cache_payload_single_handled_class,
+                payload_superclass: payload_superclass
+            )
+          }
+
+          let(:payload_single_unhandled_class) {
+            payload_single_unhandled_instance.payload_single_unhandled_class
+          }
+
+          let(:payload_single_unhandled_class_load) {
+            Metasploit::Cache::Payload::Unhandled::Class::Load.new(
+                logger: logger,
+                metasploit_module: payload_single_ancestor_load.metasploit_module,
+                payload_unhandled_class: payload_single_unhandled_class,
+                payload_superclass: payload_superclass
+            )
+          }
+
+          let(:payload_single_unhandled_instance) {
+            metasploit_cache_payload_single_handled_class.payload_single_unhandled_instance
+          }
+
+          let(:payload_single_unhandled_instance_load) {
+            Metasploit::Cache::Module::Instance::Load.new(
+                ephemeral_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral,
+                logger: logger,
+                metasploit_framework: metasploit_framework,
+                metasploit_module_class: payload_single_unhandled_class_load.metasploit_class,
+                module_instance: payload_single_unhandled_instance
+            )
+          }
+
+          let(:payload_superclass) {
+            Metasploit::Cache::Direct::Class::Superclass
+          }
+
           it 'is loadable' do
-            expect(payload_single_unhandled_instance_load).to be_valid
-            expect(payload_single_unhandled_instance).to be_persisted
+            expect(payload_single_handled_class_load).to be_valid
+            expect(metasploit_cache_payload_single_handled_class).to be_persisted
           end
 
-          context 'Metasploit::Cache::Payload::Single::Unhandled::Instance#payload_single_unhandled_class' do
+          context 'Metasploit::Cache::Payload::Single::Handled::Class#payload_single_unhandled_instance' do
             it 'is loadable' do
-              expect(payload_single_unhandled_class_load).to be_valid
-              expect(payload_single_unhandled_class).to be_persisted
+              expect(payload_single_unhandled_instance_load).to be_valid
+              expect(payload_single_unhandled_instance).to be_persisted
             end
 
-            context 'Metasploit::Cache::Payload::Single::Unhandled::Class#ancestor' do
+            context 'Metasploit::Cache::Payload::Single::Unhandled::Instance#payload_single_unhandled_class' do
               it 'is loadable' do
-                expect(payload_single_ancestor_load).to be_valid
-                expect(payload_single_ancestor).to be_persisted
+                expect(payload_single_unhandled_class_load).to be_valid
+                expect(payload_single_unhandled_class).to be_persisted
+              end
+
+              context 'Metasploit::Cache::Payload::Single::Unhandled::Class#ancestor' do
+                it 'is loadable' do
+                  expect(payload_single_ancestor_load).to be_valid
+                  expect(payload_single_ancestor).to be_persisted
+                end
               end
             end
           end
+        end
+      end
+
+      context 'without :payload_single_unhandled_instance_handler_load_pathname' do
+        subject(:metasploit_cache_payload_single_handled_class) {
+          FactoryGirl.build(:metasploit_cache_payload_single_handled_class)
+        }
+
+        it 'raises ArgumentError' do
+          expect {
+            metasploit_cache_payload_single_handled_class
+          }.to raise_error(
+                   ArgumentError,
+                   ':payload_single_unhandled_instance_handler_load_path must be set for ' \
+                   ':metasploit_cache_payload_single_handled_class so it can :handler_load_pathname for ' \
+                   ':metasploit_cache_payload_handable_handler trait so it can set :load_pathname for ' \
+                   ':metasploit_cache_payload_handler_module trait'
+               )
         end
       end
     end
