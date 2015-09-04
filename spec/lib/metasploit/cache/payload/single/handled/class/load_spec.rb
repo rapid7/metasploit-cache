@@ -136,7 +136,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class::Load, type: :
           #
 
           before(:each) do
-            payload_single_handled_class.valid?
+            payload_single_handled_class_load.valid?
           end
 
           context 'with valid' do
@@ -149,6 +149,16 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class::Load, type: :
 
             it 'does not add error on :payload_single_handled_class' do
               expect(payload_single_handled_class_load.errors[:payload_single_handled_class]).not_to include(error)
+            end
+          end
+
+          context 'without valid' do
+            let(:payload_single_handled_class) {
+              Metasploit::Cache::Payload::Single::Handled::Class.new
+            }
+
+            it 'adds error on :payload_single_handled_class' do
+              expect(payload_single_handled_class_load.errors[:payload_single_handled_class]).to include(error)
             end
           end
         end
