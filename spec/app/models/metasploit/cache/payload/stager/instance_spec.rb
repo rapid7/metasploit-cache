@@ -33,44 +33,24 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
   context 'factories' do
     context 'full_metasploit_cache_payload_stager_instance' do
       context 'with :handler_load_pathname' do
+        include_context ':metasploit_cache_payload_handler_module'
         include_context 'Metasploit::Cache::Spec::Unload.unload'
 
         subject(:full_metasploit_cache_payload_stager_instance) {
           FactoryGirl.build(
               :full_metasploit_cache_payload_stager_instance,
-              handler_load_pathname: handler_load_pathname
+              handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
           )
         }
 
         #
-        # lets
-        #
-
-        let(:handler_load_pathname) {
-          Metasploit::Model::Spec.temporary_pathname.join('lib')
-        }
-        #
         # Callbacks
         #
 
-        around(:each) do |example|
-          load_path_before = $LOAD_PATH.dup
-
-          begin
-            example.run
-          ensure
-            $LOAD_PATH.replace(load_path_before)
-          end
-        end
-
         before(:each) do
-          $LOAD_PATH.unshift handler_load_pathname.to_path
-
-          handler_load_pathname.mkpath
-
           FactoryGirl.create(
-              :full_metasploit_cache_payload_single_instance,
-              handler_load_pathname: handler_load_pathname
+              :full_metasploit_cache_payload_single_unhandled_instance,
+              handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
           )
         end
 
@@ -80,7 +60,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
           subject(:full_metasploit_cache_payload_stager_instance) {
             FactoryGirl.build(
                 :full_metasploit_cache_payload_stager_instance,
-                handler_load_pathname: handler_load_pathname,
+                handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname,
                 payload_stager_class: payload_stager_class
             )
           }
@@ -133,7 +113,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
                         :metasploit_cache_payload_stager_instance_payload_stager_class_ancestor_contents,
                         architecturable_architecture_count: architecturable_architecture_count,
                         contribution_count: contribution_count,
-                        handler_load_pathname: handler_load_pathname,
+                        handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname,
                         licensable_license_count: licensable_license_count,
                         payload_stager_class: payload_stager_class,
                         platformable_platform_count: platformable_platform_count
@@ -174,16 +154,16 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
                         ephemeral_class: Metasploit::Cache::Payload::Stager::Instance::Ephemeral,
                         logger: logger,
                         metasploit_framework: metasploit_framework,
-                        metasploit_module_class: payload_direct_class_load.metasploit_class,
+                        metasploit_module_class: payload_unhandled_class_load.metasploit_class,
                         module_instance: full_metasploit_cache_payload_stager_instance
                     )
                   }
 
-                  let(:payload_direct_class_load) {
-                    Metasploit::Cache::Payload::Direct::Class::Load.new(
+                  let(:payload_unhandled_class_load) {
+                    Metasploit::Cache::Payload::Unhandled::Class::Load.new(
                         logger: logger,
                         metasploit_module: module_ancestor_load.metasploit_module,
-                        payload_direct_class: payload_stager_class,
+                        payload_unhandled_class: payload_stager_class,
                         payload_superclass: Metasploit::Cache::Direct::Class::Superclass
                     )
                   }
@@ -210,7 +190,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
                   it 'is loadable' do
                     expect(module_ancestor_load).to load_metasploit_module
 
-                    expect(payload_direct_class_load).to be_valid
+                    expect(payload_unhandled_class_load).to be_valid
                     expect(payload_stager_class).to be_persisted
 
                     expect(module_instance_load).to be_valid(:loading)
@@ -349,38 +329,17 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance do
     # validate_uniqueness_of needs a pre-existing record of the same class to work correctly when the `null: false`
     # constraints exist for other fields.
     context 'with existing record' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-      #
-      # lets
-      #
-
-      let(:handler_load_pathname) {
-        Metasploit::Model::Spec.temporary_pathname.join('lib')
-      }
 
       #
       # Callbacks
       #
 
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
       before(:each) do
-        handler_load_pathname.mkpath
-
-        $LOAD_PATH.unshift handler_load_pathname.to_path
-
         FactoryGirl.create(
             :full_metasploit_cache_payload_stager_instance,
-            handler_load_pathname: handler_load_pathname
+            handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
       end
 

@@ -3,7 +3,7 @@
 # * {Metasploit::Cache::Exploit::Instance}
 # * {Metasploit::Cache::Encoder::Instance}
 # * {Metasploit::Cache::Nop::Instance}
-# * {Metasploit::Cache::Payload::Single::Instance}
+# * {Metasploit::Cache::Payload::Single::Unhandled::Instance}
 # * {Metasploit::Cache::Payload::Stage::Instance}
 # * {Metasploit::Cache::Payload::Staged::Instance}
 # * {Metasploit::Cache::Payload::Stager::Instance}

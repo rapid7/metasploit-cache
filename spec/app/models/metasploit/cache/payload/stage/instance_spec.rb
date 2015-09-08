@@ -129,16 +129,16 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
                       ephemeral_class: Metasploit::Cache::Payload::Stage::Instance::Ephemeral,
                       logger: logger,
                       metasploit_framework: metasploit_framework,
-                      metasploit_module_class: payload_direct_class_load.metasploit_class,
+                      metasploit_module_class: payload_unhandled_class_load.metasploit_class,
                       module_instance: full_metasploit_cache_payload_stage_instance
                   )
                 }
 
-                let(:payload_direct_class_load) {
-                  Metasploit::Cache::Payload::Direct::Class::Load.new(
+                let(:payload_unhandled_class_load) {
+                  Metasploit::Cache::Payload::Unhandled::Class::Load.new(
                       logger: logger,
                       metasploit_module: module_ancestor_load.metasploit_module,
-                      payload_direct_class: payload_stage_class,
+                      payload_unhandled_class: payload_stage_class,
                       payload_superclass: Metasploit::Cache::Direct::Class::Superclass
                   )
                 }
@@ -165,7 +165,7 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance do
                 it 'is loadable' do
                   expect(module_ancestor_load).to load_metasploit_module
 
-                  expect(payload_direct_class_load).to be_valid
+                  expect(payload_unhandled_class_load).to be_valid
                   expect(payload_stage_class).to be_persisted
 
                   expect(module_instance_load).to be_valid(:loading)

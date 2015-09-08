@@ -132,8 +132,8 @@ class Metasploit::Cache::Payload::Staged::Class::Load < Metasploit::Model::Base
         self.class.include_ancestor(metasploit_class, :stager, payload_stager_metasploit_module)
         self.class.include_ancestor(metasploit_class, :stage, payload_stage_metasploit_module)
 
-        # There is no specialized Metasploit::Cache::Payload::Direct::Class::Ephemeral because metadata is the same
-        # for Metasploit::Cache::Payload::Direct::Class once the metasploit_class is mixed.
+        # There is no specialized Metasploit::Cache::Payload::Unhandled::Class::Ephemeral because metadata is the same
+        # for Metasploit::Cache::Payload::Unhandled::Class once the metasploit_class is mixed.
         ephemeral_cache = Metasploit::Cache::Payload::Staged::Class::Ephemeral.new(
             logger: logger,
             payload_staged_metasploit_module_class: metasploit_class

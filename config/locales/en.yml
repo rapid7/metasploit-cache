@@ -50,7 +50,7 @@ en:
               too_short: "has too few licensable licenses (minimum is %{count} licensable license)"
             platformable_platforms:
               too_short: "has too few platformable platforms (minimum is %{count} platformable platform)"
-        metasploit/cache/payload/single/instance:
+        metasploit/cache/payload/single/unhandled/instance:
           attributes:
             architecturable_architectures:
               too_short: "has too few architecturable architectures (minimum is %{count} architecturable architecture)"
@@ -190,7 +190,7 @@ en:
               metasploit_class:
                 unusable: "is unusable on this local host"
 
-          metasploit/cache/payload/direct/class/load:
+          metasploit/cache/payload/unhandled/class/load:
             attributes:
               metasploit_class:
                 unusable: "is unusable on this local host"

@@ -27,7 +27,7 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
   has_many :module_platforms, class_name: 'Metasploit::Cache::Module::Platform', dependent: :destroy, inverse_of: :platform
 
   # Joins this {Metasploit::cache::Platform} to Metasploit::Cache::Encoder::Instance encoder},
-  # {Metasploit::Cache::Nop::Instance nop}, {Metasploit::Cache::Payload::Single::Instance single payload},
+  # {Metasploit::Cache::Nop::Instance nop}, {Metasploit::Cache::Payload::Single::Unhandled::Instance single payload},
   # {Metasploit::Cache::Payload::Stage::Instance stage payload},
   # {Metasploit::Cache::Payload::Stager::Instance stager payload}, or {Metasploit::Cache::Post::Instance post}) Metasploit
   # Modules or {Metasploit::Cache::Exploit::Target exploit Metasploit Module targets}.
@@ -72,9 +72,9 @@ class Metasploit::Cache::Platform < ActiveRecord::Base
            through: :platformable_platforms
 
   # Single payload Metasploit Modules that can run on this platform.
-  has_many :payload_single_instances,
+  has_many :payload_single_unhandled_instances,
            source: :platformable,
-           source_type: 'Metasploit::Cache::Payload::Single::Instance',
+           source_type: 'Metasploit::Cache::Payload::Single::Unhandled::Instance',
            through: :platformable_platforms
 
   # Stage payload Metasploit Modules that can run on this platform.

@@ -17,12 +17,13 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
     context 'metasploit_cache_payload_staged_instance' do
       context 'with :payload_staged_class_payload_stager_instance_handler_load_pathname' do
         include_context 'ActiveSupport::TaggedLogging'
+        include_context ':metasploit_cache_payload_handler_module'
         include_context 'Metasploit::Cache::Spec::Unload.unload'
 
         subject(:metasploit_cache_payload_staged_instance) {
           FactoryGirl.build(
               :metasploit_cache_payload_staged_instance,
-              payload_staged_class_payload_stager_instance_handler_load_pathname: payload_staged_class_payload_stager_instance_handler_load_pathname
+              payload_staged_class_payload_stager_instance_handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
           )
         }
 
@@ -58,10 +59,10 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
         }
 
         let(:payload_stage_class_load) {
-          Metasploit::Cache::Payload::Direct::Class::Load.new(
+          Metasploit::Cache::Payload::Unhandled::Class::Load.new(
               logger: logger,
               metasploit_module: payload_stage_ancestor_load.metasploit_module,
-              payload_direct_class: payload_stage_class,
+              payload_unhandled_class: payload_stage_class,
               payload_superclass: Metasploit::Cache::Direct::Class::Superclass
           )
         }
@@ -99,10 +100,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
           )
         }
 
-        let(:payload_staged_class_payload_stager_instance_handler_load_pathname) {
-          Metasploit::Model::Spec.temporary_pathname.join('lib')
-        }
-
         let(:payload_staged_instance_load) {
           Metasploit::Cache::Module::Instance::Load.new(
               ephemeral_class: Metasploit::Cache::Payload::Staged::Instance::Ephemeral,
@@ -135,10 +132,10 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
         }
 
         let(:payload_stager_class_load) {
-          Metasploit::Cache::Payload::Direct::Class::Load.new(
+          Metasploit::Cache::Payload::Unhandled::Class::Load.new(
               logger: logger,
               metasploit_module: payload_stager_ancestor_load.metasploit_module,
-              payload_direct_class: payload_stager_class,
+              payload_unhandled_class: payload_stager_class,
               payload_superclass: Metasploit::Cache::Direct::Class::Superclass
           )
         }
@@ -156,26 +153,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
               module_instance: payload_stager_instance
           )
         }
-
-        #
-        # Callbacks
-        #
-
-        around(:each) do |example|
-          load_path_before = $LOAD_PATH.dup
-
-          begin
-            example.run
-          ensure
-            $LOAD_PATH.replace(load_path_before)
-          end
-        end
-
-        before(:each) do
-          $LOAD_PATH.unshift payload_staged_class_payload_stager_instance_handler_load_pathname.to_path
-
-          payload_staged_class_payload_stager_instance_handler_load_pathname.mkpath
-        end
 
         it { is_expected.to be_valid }
 
@@ -261,38 +238,17 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
     it { is_expected.to validate_presence_of :payload_staged_class }
 
     context 'with existing record' do
+      include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-      #
-      # lets
-      #
-
-      let(:payload_staged_class_payload_stager_instance_handler_load_pathname) {
-        Metasploit::Model::Spec.temporary_pathname.join('lib')
-      }
 
       #
       # Callbacks
       #
 
-      around(:each) do |example|
-        load_path_before = $LOAD_PATH.dup
-
-        begin
-          example.run
-        ensure
-          $LOAD_PATH.replace(load_path_before)
-        end
-      end
-
       before(:each) do
-        $LOAD_PATH.unshift payload_staged_class_payload_stager_instance_handler_load_pathname.to_path
-
-        payload_staged_class_payload_stager_instance_handler_load_pathname.mkpath
-
         FactoryGirl.create(
             :metasploit_cache_payload_staged_instance,
-            payload_staged_class_payload_stager_instance_handler_load_pathname: payload_staged_class_payload_stager_instance_handler_load_pathname
+            payload_staged_class_payload_stager_instance_handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
       end
 

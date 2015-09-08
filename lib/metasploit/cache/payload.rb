@@ -5,7 +5,6 @@ module Metasploit::Cache::Payload
 
   autoload :Ancestor
   autoload :AncestorCell
-  autoload :Direct
   autoload :Handable
   autoload :Handler
   autoload :HandlerCell
@@ -13,6 +12,7 @@ module Metasploit::Cache::Payload
   autoload :Stage
   autoload :Staged
   autoload :Stager
+  autoload :Unhandled
 
   #
   # Module Methods
