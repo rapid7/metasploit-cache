@@ -49,6 +49,25 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   # Class Methods
   #
 
+  # Tags log with {Metasploit::Cache::Payload::Single::Handled::Class#payload_single_unhandled_instance}
+  # {Metasploit::Cache::Payload::Single::Unhandled::Instance#payload_single_unhandled_class}
+  # {Metasploit::Cache::Payload::Single::Unhandled::Class#ancestor} {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  #
+  # @param logger [ActiveSupport::TaggedLoggin]
+  # @param payload_single_handled_class [Metasploit::Cache::Payload::Single::Unhandled::Class]
+  # @yield [tagged_logger]
+  # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] {#logger} with
+  #   {Metasploit::Cache::Module#Ancestor#real_pathname} tags.
+  # @yieldreturn [void]
+  # @return [void]
+  def self.with_payload_single_handled_class_tag(logger, payload_single_handled_class, &block)
+    tag = ActiveRecord::Base.connection_pool.with_connection {
+      payload_single_handled_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor.real_pathname.to_s
+    }
+
+    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, tag, &block)
+  end
+
   #
   # Instance Methods
   #
@@ -94,7 +113,6 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   # {Metasploit::Cache::Payload::Single::Unhandled::Instance#payload_single_unhandled_class}
   # {Metasploit::Cache::Payload::Single::Unhandled::Class#ancestor} {Metasploit::Cache::Module::Ancestor#real_pathname}.
   #
-  # @param logger [ActiveSupport::TaggedLogging]
   # @param payload_single_handled_class [Metasploit::Cache::Payload::Single::Unhandled::Class]
   # @yield [tagged_logger]
   # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] {#logger} with
@@ -102,10 +120,6 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   # @yieldreturn [void]
   # @return [void]
   def with_payload_single_handled_class_tag(payload_single_handled_class, &block)
-    tag = ActiveRecord::Base.connection_pool.with_connection {
-      payload_single_handled_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor.real_pathname.to_s
-    }
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, tag, &block)
+    self.class.with_payload_single_handled_class_tag(logger, payload_single_handled_class, &block)
   end
 end
