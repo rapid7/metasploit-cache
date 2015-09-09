@@ -51,7 +51,7 @@ RSpec.describe Metasploit::Cache::Post::Instance do
         context 'with #post_class' do
           let(:post_class) {
             FactoryGirl.build(
-                :metasploit_cache_post_class,
+                :full_metasploit_cache_post_class,
                 ancestor: post_ancestor,
                 ancestor_contents?: false
             )
