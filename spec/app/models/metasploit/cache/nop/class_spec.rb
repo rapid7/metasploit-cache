@@ -1,8 +1,14 @@
 RSpec.describe Metasploit::Cache::Nop::Class do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  it_should_behave_like 'Metasploit::Cache::Module::Descendant',
+                        ancestor: {
+                            class_name: 'Metasploit::Cache::Nop::Ancestor',
+                            inverse_of: :nop_class
+                        },
+                        factory: :metasploit_cache_nop_class
+
   context 'associations' do
-    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Nop::Ancestor') }
     it { is_expected.to have_one(:nop_instance).class_name('Metasploit::Cache::Nop::Instance').dependent(:destroy).inverse_of(:nop_class).with_foreign_key(:nop_class_id) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end

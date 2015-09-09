@@ -1,8 +1,14 @@
 RSpec.describe Metasploit::Cache::Post::Class do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  it_should_behave_like 'Metasploit::Cache::Module::Descendant',
+                        ancestor: {
+                            class_name: 'Metasploit::Cache::Post::Ancestor',
+                            inverse_of: :post_class
+                        },
+                        factory: :metasploit_cache_post_class
+
   context 'associations' do
-    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Post::Ancestor') }
     it { is_expected.to have_one(:post_instance).class_name('Metasploit::Cache::Post::Instance').dependent(:destroy).inverse_of(:post_class).with_foreign_key(:post_class_id) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end

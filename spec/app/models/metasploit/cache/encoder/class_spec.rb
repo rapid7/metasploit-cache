@@ -1,8 +1,15 @@
 RSpec.describe Metasploit::Cache::Encoder::Class do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  it_should_behave_like 'Metasploit::Cache::Module::Descendant',
+                        ancestor: {
+                            class_name: 'Metasploit::Cache::Encoder::Ancestor',
+                            inverse_of: :encoder_class
+                        },
+                        factory: :metasploit_cache_encoder_class
+
+
   context 'associations' do
-    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Encoder::Ancestor') }
     it { is_expected.to have_one(:encoder_instance).class_name('Metasploit::Cache::Encoder::Instance').dependent(:destroy).inverse_of(:encoder_class) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end

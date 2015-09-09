@@ -1,8 +1,14 @@
 RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Class, type: :model do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  it_should_behave_like 'Metasploit::Cache::Module::Descendant',
+                        ancestor: {
+                            class_name: 'Metasploit::Cache::Payload::Single::Ancestor',
+                            inverse_of: :payload_single_unhandled_class
+                        },
+                        factory: :metasploit_cache_payload_single_unhandled_class
+
   context 'associations' do
-    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Payload::Single::Ancestor') }
     it { is_expected.to have_one(:payload_single_unhandled_instance).class_name('Metasploit::Cache::Payload::Single::Unhandled::Instance').dependent(:destroy).inverse_of(:payload_single_unhandled_class).with_foreign_key(:payload_single_unhandled_class_id) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end

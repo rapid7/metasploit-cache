@@ -1,8 +1,15 @@
 RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
   it_should_behave_like 'Metasploit::Concern.run'
 
+  it_should_behave_like 'Metasploit::Cache::Module::Descendant',
+                        ancestor: {
+                            class_name: 'Metasploit::Cache::Auxiliary::Ancestor',
+                            inverse_of: :auxiliary_class
+                        },
+                        factory: :metasploit_cache_auxiliary_class
+
+
   context 'associations' do
-    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Auxiliary::Ancestor') }
     it { is_expected.to have_one(:auxiliary_instance).class_name('Metasploit::Cache::Auxiliary::Instance').inverse_of(:auxiliary_class) }
     it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
