@@ -263,6 +263,13 @@ ActiveRecord::Schema.define(version: 20150904202802) do
   add_index "mc_payload_stager_instances", ["handler_id"], name: "index_mc_payload_stager_instances_on_handler_id", using: :btree
   add_index "mc_payload_stager_instances", ["payload_stager_class_id"], name: "index_mc_payload_stager_instances_on_payload_stager_class_id", unique: true, using: :btree
 
+  create_table "mc_payload_unhandled_classes", force: true do |t|
+    t.integer "ancestor_id", null: false
+    t.integer "rank_id",     null: false
+  end
+
+  add_index "mc_payload_unhandled_classes", ["ancestor_id"], name: "unique_mc_payoad_unhandled_classes", unique: true, using: :btree
+
   create_table "mc_platformable_platforms", force: true do |t|
     t.integer "platformable_id",   null: false
     t.string  "platformable_type", null: false

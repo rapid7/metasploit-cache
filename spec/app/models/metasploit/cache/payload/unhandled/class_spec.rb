@@ -1,6 +1,6 @@
 RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
-  it 'is a subclass of Metasploit::Cache::Direct::Class' do
-    expect(described_class).to be < Metasploit::Cache::Direct::Class
+  it 'is not a subclass of Metasploit::Cache::Direct::Class' do
+    expect(described_class).not_to be < Metasploit::Cache::Direct::Class
   end
 
   context 'traits' do
