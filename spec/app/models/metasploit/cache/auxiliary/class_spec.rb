@@ -18,9 +18,9 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
   end
 
   context 'factories' do
-    context 'metasploit_cache_auxiliary_class' do
-      subject(:metasploit_cache_auxiliary_class) {
-        FactoryGirl.build(:metasploit_cache_auxiliary_class)
+    context 'full_metasploit_cache_auxiliary_class' do
+      subject(:full_metasploit_cache_auxiliary_class) {
+        FactoryGirl.build(:full_metasploit_cache_auxiliary_class)
       }
 
       it { is_expected.to be_valid }
@@ -33,13 +33,13 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
           Metasploit::Cache::Module::Ancestor::Load.new(
               logger: logger,
               maximum_version: 4,
-              module_ancestor: metasploit_cache_auxiliary_class.ancestor
+              module_ancestor: full_metasploit_cache_auxiliary_class.ancestor
           )
         }
 
         before(:each) do
           # To prove Direct::Class::Load is set rank
-          metasploit_cache_auxiliary_class.rank = nil
+          full_metasploit_cache_auxiliary_class.rank = nil
         end
 
         context 'Metasploit::Cache::Module::Ancestor::Load' do
@@ -53,7 +53,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
         context 'Metasploit::Cache::Direct::Class::Load' do
           subject(:direct_class_load) {
             Metasploit::Cache::Direct::Class::Load.new(
-                direct_class: metasploit_cache_auxiliary_class,
+                direct_class: full_metasploit_cache_auxiliary_class,
                 logger: logger,
                 metasploit_module: module_ancestor_load.metasploit_module
             )
@@ -72,6 +72,14 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
           }
         end
       end
+    end
+
+    context 'metasploit_cache_auxiliary_class' do
+      subject(:metasploit_cache_auxiliary_class) {
+        FactoryGirl.build(:metasploit_cache_auxiliary_class)
+      }
+
+      it { is_expected.to be_valid }
     end
   end
 end

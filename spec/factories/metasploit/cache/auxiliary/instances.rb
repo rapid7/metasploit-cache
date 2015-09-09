@@ -20,7 +20,7 @@ FactoryGirl.define do
     # Associations
     #
 
-    association :auxiliary_class, factory: :metasploit_cache_auxiliary_class
+    association :auxiliary_class, factory: :full_metasploit_cache_auxiliary_class
   end
 
   #
