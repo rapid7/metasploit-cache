@@ -8,9 +8,13 @@ RSpec.describe Metasploit::Cache::Post::Class do
                         },
                         factory: :metasploit_cache_post_class
 
+  it_should_behave_like 'Metasploit::Cache::Module::Rankable',
+                        rank: {
+                            inverse_of: :post_classes
+                        }
+
   context 'associations' do
     it { is_expected.to have_one(:post_instance).class_name('Metasploit::Cache::Post::Instance').dependent(:destroy).inverse_of(:post_class).with_foreign_key(:post_class_id) }
-    it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do

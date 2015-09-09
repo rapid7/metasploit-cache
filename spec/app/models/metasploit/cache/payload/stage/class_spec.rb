@@ -8,10 +8,13 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Class, type: :model do
                         },
                         factory: :metasploit_cache_payload_stage_class
 
+  it_should_behave_like 'Metasploit::Cache::Module::Rankable',
+                        rank: {
+                            inverse_of: :stage_payload_classes
+                        }
+
   context 'associations' do
-    it { is_expected.to belong_to(:ancestor).class_name('Metasploit::Cache::Payload::Stage::Ancestor') }
     it { is_expected.to have_one(:payload_stage_instance).class_name('Metasploit::Cache::Payload::Stage::Instance').dependent(:destroy).inverse_of(:payload_stage_class).with_foreign_key(:payload_stage_class_id) }
-    it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do

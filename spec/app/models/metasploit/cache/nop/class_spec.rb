@@ -8,9 +8,13 @@ RSpec.describe Metasploit::Cache::Nop::Class do
                         },
                         factory: :metasploit_cache_nop_class
 
+  it_should_behave_like 'Metasploit::Cache::Module::Rankable',
+                        rank: {
+                            inverse_of: :nop_classes
+                        }
+
   context 'associations' do
     it { is_expected.to have_one(:nop_instance).class_name('Metasploit::Cache::Nop::Instance').dependent(:destroy).inverse_of(:nop_class).with_foreign_key(:nop_class_id) }
-    it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do

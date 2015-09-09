@@ -8,10 +8,13 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
                         },
                         factory: :metasploit_cache_auxiliary_class
 
+  it_should_behave_like 'Metasploit::Cache::Module::Rankable',
+                        rank: {
+                            inverse_of: :auxiliary_classes
+                        }
 
   context 'associations' do
     it { is_expected.to have_one(:auxiliary_instance).class_name('Metasploit::Cache::Auxiliary::Instance').inverse_of(:auxiliary_class) }
-    it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do

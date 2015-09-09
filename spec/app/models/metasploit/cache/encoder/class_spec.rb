@@ -8,10 +8,13 @@ RSpec.describe Metasploit::Cache::Encoder::Class do
                         },
                         factory: :metasploit_cache_encoder_class
 
+  it_should_behave_like 'Metasploit::Cache::Module::Rankable',
+                        rank: {
+                            inverse_of: :encoder_classes
+                        }
 
   context 'associations' do
     it { is_expected.to have_one(:encoder_instance).class_name('Metasploit::Cache::Encoder::Instance').dependent(:destroy).inverse_of(:encoder_class) }
-    it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do

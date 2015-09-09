@@ -8,9 +8,13 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Class, type: :model do
                         },
                         factory: :metasploit_cache_payload_stager_class
 
+  it_should_behave_like 'Metasploit::Cache::Module::Rankable',
+                        rank: {
+                            inverse_of: :stager_payload_classes
+                        }
+
   context 'associations' do
     it { is_expected.to have_one(:payload_stager_instance).class_name('Metasploit::Cache::Payload::Stager::Instance').dependent(:destroy).inverse_of(:payload_stager_class).with_foreign_key(:payload_stager_class_id) }
-    it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do

@@ -8,9 +8,13 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Class, type: :mode
                         },
                         factory: :metasploit_cache_payload_single_unhandled_class
 
+  it_should_behave_like 'Metasploit::Cache::Module::Rankable',
+                        rank: {
+                            inverse_of: :payload_single_unhandled_classes
+                        }
+
   context 'associations' do
     it { is_expected.to have_one(:payload_single_unhandled_instance).class_name('Metasploit::Cache::Payload::Single::Unhandled::Instance').dependent(:destroy).inverse_of(:payload_single_unhandled_class).with_foreign_key(:payload_single_unhandled_class_id) }
-    it { is_expected.to belong_to(:rank).class_name('Metasploit::Cache::Module::Rank') }
   end
 
   context 'factories' do
