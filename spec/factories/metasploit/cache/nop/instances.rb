@@ -8,7 +8,7 @@ FactoryGirl.define do
     # Associations
     #
 
-    association :nop_class, factory: :metasploit_cache_nop_class
+    association :nop_class, factory: :full_metasploit_cache_nop_class
 
     factory :full_metasploit_cache_nop_instance,
             traits: [

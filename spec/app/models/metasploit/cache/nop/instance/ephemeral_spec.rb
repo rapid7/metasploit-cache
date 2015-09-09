@@ -136,7 +136,7 @@ RSpec.describe Metasploit::Cache::Nop::Instance::Ephemeral do
       }
 
       let(:nop_class) {
-        FactoryGirl.create(:metasploit_cache_nop_class)
+        FactoryGirl.create(:full_metasploit_cache_nop_class)
       }
 
       let(:nop_instance) {

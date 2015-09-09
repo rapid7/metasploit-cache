@@ -11,7 +11,7 @@ module Metasploit::Cache::Direct::Class::Spec
       :full_metasploit_cache_auxiliary_class,
       :full_metasploit_cache_encoder_class,
       :full_metasploit_cache_exploit_class,
-      :metasploit_cache_nop_class,
+      :full_metasploit_cache_nop_class,
       :metasploit_cache_post_class
   ]
 
