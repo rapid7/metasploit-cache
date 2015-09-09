@@ -68,7 +68,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
 
         context 'with exploit' do
           let(:direct_class_factory) {
-            :metasploit_cache_exploit_class
+            :full_metasploit_cache_exploit_class
           }
 
           it {
