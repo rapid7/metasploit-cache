@@ -46,7 +46,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
 
         context 'with encoder' do
           let(:direct_class_factory) {
-            :metasploit_cache_encoder_class
+            :full_metasploit_cache_encoder_class
           }
 
           it {

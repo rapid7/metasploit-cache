@@ -42,7 +42,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
         context 'with #encoder_class' do
           let(:encoder_class) {
             FactoryGirl.build(
-                :metasploit_cache_encoder_class,
+                :full_metasploit_cache_encoder_class,
                 ancestor: encoder_ancestor,
                 ancestor_contents?: false
             )

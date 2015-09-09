@@ -20,7 +20,7 @@ FactoryGirl.define do
     # Associations
     #
 
-    association :encoder_class, factory: :metasploit_cache_encoder_class
+    association :encoder_class, factory: :full_metasploit_cache_encoder_class
   end
 
   #
