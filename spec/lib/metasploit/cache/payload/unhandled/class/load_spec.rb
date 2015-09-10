@@ -172,7 +172,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Load do
           it 'sets metasploit_class.ephemeral_cache_by_source[:class]' do
             class_ephemeral_cache = metasploit_class.ephemeral_cache_by_source[:class]
 
-            expect(class_ephemeral_cache).to be_a Metasploit::Cache::Direct::Class::Ephemeral
+            expect(class_ephemeral_cache).to be_a Metasploit::Cache::Payload::Unhandled::Class::Ephemeral
             expect(class_ephemeral_cache.metasploit_class).to eq(metasploit_class)
             expect(class_ephemeral_cache.metasploit_class).not_to eq(metasploit_module)
           end
