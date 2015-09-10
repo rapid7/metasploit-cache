@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Nop::Class do
+  it_should_behave_like 'Metasploit::Cache::Module::Class::Namable'
+
   it_should_behave_like 'Metasploit::Cache::Module::Descendant',
                         ancestor: {
                             class_name: 'Metasploit::Cache::Nop::Ancestor',
@@ -87,7 +89,15 @@ RSpec.describe Metasploit::Cache::Nop::Class do
         FactoryGirl.build(:metasploit_cache_nop_class)
       }
 
-      it { is_expected.to be_valid }
+      it { is_expected.not_to be_valid }
+
+      context 'Metasploit::Cache::Nop::Class#name' do
+        subject(:name) {
+          metasploit_cache_nop_class.name
+        }
+
+        it { is_expected.to be_nil }
+      end
     end
   end
 end

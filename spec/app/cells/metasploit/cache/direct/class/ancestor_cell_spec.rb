@@ -24,7 +24,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
       context 'Metasploit::Cache::Module::Ancestor#module_type' do
         context 'with auxiliary' do
           let(:direct_class_factory) {
-            :metasploit_cache_auxiliary_class
+            :full_metasploit_cache_auxiliary_class
           }
 
           it {

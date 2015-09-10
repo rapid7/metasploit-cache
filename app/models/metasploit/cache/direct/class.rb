@@ -4,6 +4,7 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
 
   include Metasploit::Cache::Batch::Descendant
   include Metasploit::Cache::Batch::Root
+  include Metasploit::Cache::Module::Class::Namable
   include Metasploit::Cache::Module::Descendant
   include Metasploit::Cache::Module::Rankable
 
@@ -15,4 +16,18 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   autoload :Spec
   autoload :Superclass
   autoload :Usability
+  
+  #
+  # Instance Methods
+  #
+
+  # Derives references name for Metasploit Module from {Metasploit::Cache::Module::Ancestor#relative_path}.
+  #
+  # @return [nil] if {#ancestor} is `nil` of {#ancestor}'s {Metasploit::Cache::Module::Ancestor#reference_name} is `nil`
+  # @return [String] Relative path with type directory and file extension removed.
+  def reference_name
+    if ancestor
+      ancestor.reference_name
+    end
+  end
 end

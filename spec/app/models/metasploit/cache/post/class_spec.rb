@@ -1,17 +1,19 @@
 RSpec.describe Metasploit::Cache::Post::Class do
-  it_should_behave_like 'Metasploit::Concern.run'
+  it_should_behave_like 'Metasploit::Cache::Module::Class::Namable'
 
   it_should_behave_like 'Metasploit::Cache::Module::Descendant',
                         ancestor: {
                             class_name: 'Metasploit::Cache::Post::Ancestor',
                             inverse_of: :post_class
                         },
-                        factory: :metasploit_cache_post_class
+                        factory: :full_metasploit_cache_post_class
 
   it_should_behave_like 'Metasploit::Cache::Module::Rankable',
                         rank: {
                             inverse_of: :post_classes
                         }
+
+  it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
     it { is_expected.to have_one(:post_instance).class_name('Metasploit::Cache::Post::Instance').dependent(:destroy).inverse_of(:post_class).with_foreign_key(:post_class_id) }
@@ -87,7 +89,15 @@ RSpec.describe Metasploit::Cache::Post::Class do
         FactoryGirl.build(:metasploit_cache_post_class)
       }
 
-      it { is_expected.to be_valid }
+      it { is_expected.not_to be_valid }
+
+      context 'Metasploit::Cache::Post::Class#name' do
+        subject(:name) {
+          metasploit_cache_post_class.name
+        }
+
+        it { is_expected.to be_nil }
+      end
     end
   end
 end

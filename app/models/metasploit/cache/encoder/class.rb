@@ -1,6 +1,13 @@
 # Class-level metadata for an encoder  Metasploit Module.
 class Metasploit::Cache::Encoder::Class < Metasploit::Cache::Direct::Class
   #
+  # CONSTANTS
+  #
+
+  # The {Metasploit::Cache::Module::Class::Name#module_type}
+  MODULE_TYPE = Metasploit::Cache::Module::Type::ENCODER
+
+  #
   # Associations
   #
 

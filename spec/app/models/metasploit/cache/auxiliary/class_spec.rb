@@ -1,17 +1,19 @@
 RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
-  it_should_behave_like 'Metasploit::Concern.run'
+  it_should_behave_like 'Metasploit::Cache::Module::Class::Namable'
 
   it_should_behave_like 'Metasploit::Cache::Module::Descendant',
                         ancestor: {
                             class_name: 'Metasploit::Cache::Auxiliary::Ancestor',
                             inverse_of: :auxiliary_class
                         },
-                        factory: :metasploit_cache_auxiliary_class
+                        factory: :full_metasploit_cache_auxiliary_class
 
   it_should_behave_like 'Metasploit::Cache::Module::Rankable',
                         rank: {
                             inverse_of: :auxiliary_classes
                         }
+
+  it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
     it { is_expected.to have_one(:auxiliary_instance).class_name('Metasploit::Cache::Auxiliary::Instance').inverse_of(:auxiliary_class) }
@@ -79,7 +81,15 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
         FactoryGirl.build(:metasploit_cache_auxiliary_class)
       }
 
-      it { is_expected.to be_valid }
+      it { is_expected.not_to be_valid }
+
+      context 'Metasploit::Cache::Auxiliary::Class#name' do
+        subject(:name) {
+          metasploit_cache_auxiliary_class.name
+        }
+
+        it { is_expected.to be_nil }
+      end
     end
   end
 end

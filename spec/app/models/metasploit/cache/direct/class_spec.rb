@@ -21,12 +21,13 @@ RSpec.describe Metasploit::Cache::Direct::Class do
 
     it { is_expected.to validate_presence_of(:ancestor) }
     it { is_expected.to validate_uniqueness_of(:ancestor_id) }
+    it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:rank) }
 
     context 'is expected to validation uniqueness of #ancestor_id' do
       subject(:new_direct_class) {
         FactoryGirl.build(
-            :metasploit_cache_auxiliary_class,
+            :full_metasploit_cache_auxiliary_class,
             ancestor: existing_ancestor
         )
       }
@@ -50,7 +51,7 @@ RSpec.describe Metasploit::Cache::Direct::Class do
 
       let!(:existing_direct_class) {
         FactoryGirl.create(
-            :metasploit_cache_auxiliary_class,
+            :full_metasploit_cache_auxiliary_class,
             ancestor: existing_ancestor
         )
       }
@@ -215,6 +216,37 @@ RSpec.describe Metasploit::Cache::Direct::Class do
           end
         end
       end
+    end
+  end
+
+  context '#reference_name' do
+    subject(:reference_name) {
+      direct_class.reference_name
+    }
+
+    let(:direct_class) {
+      Metasploit::Cache::Auxiliary::Class.new(
+          ancestor: ancestor
+      )
+    }
+
+    context 'with #ancestor' do
+      let(:ancestor) {
+        FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
+      }
+
+      it 'is Metasploit::Cache::Module::Ancestor#reference_name' do
+        expect(reference_name).not_to be_nil
+        expect(reference_name).to eq(ancestor.reference_name)
+      end
+    end
+
+    context 'without #ancestor' do
+      let(:ancestor) {
+        nil
+      }
+
+      it { is_expected.to be_nil }
     end
   end
 end

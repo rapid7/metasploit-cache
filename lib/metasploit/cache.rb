@@ -61,6 +61,7 @@ module Metasploit
     autoload :Referencable
     autoload :Reference
     autoload :ResurrectingAttribute
+    autoload :SingleTablePolymorphic
     autoload :Spec
     autoload :Translation
     autoload :Visitation

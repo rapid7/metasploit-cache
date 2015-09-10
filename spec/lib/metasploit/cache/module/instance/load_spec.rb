@@ -481,7 +481,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
           #
 
           let!(:direct_class) {
-            FactoryGirl.create(:metasploit_cache_auxiliary_class)
+            FactoryGirl.create(:full_metasploit_cache_auxiliary_class)
           }
 
           it { is_expected.to be_nil }

@@ -1,6 +1,13 @@
 # Class-level metadata for an nop Metasploit Module.
 class Metasploit::Cache::Nop::Class < Metasploit::Cache::Direct::Class
   #
+  # CONSTANTS
+  #
+
+  # The {Metasploit::Cache::Module::Class::Name#module_type}
+  MODULE_TYPE = Metasploit::Cache::Module::Type::NOP
+
+  #
   # Associations
   #
 

@@ -46,9 +46,9 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
         context 'with #auxiliary_class' do
           let(:auxiliary_class) {
             FactoryGirl.build(
-                :full_metasploit_cache_auxiliary_class,
-                ancestor: auxiliary_ancestor,
-                ancestor_contents?: false
+                :metasploit_cache_auxiliary_class,
+                :metasploit_cache_auxiliary_class_name,
+                ancestor: auxiliary_ancestor
             )
           }
 

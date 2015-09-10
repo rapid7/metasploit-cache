@@ -21,6 +21,7 @@ module Metasploit::Cache::Module
   autoload :Ancestor
   autoload :AncestorCell
   autoload :Descendant
+  autoload :Class
   autoload :Handler
   autoload :Instance
   autoload :Namespace

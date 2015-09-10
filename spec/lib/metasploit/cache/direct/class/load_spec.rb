@@ -12,7 +12,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
 
   let(:direct_class) {
     FactoryGirl.build(
-        :metasploit_cache_auxiliary_class,
+        :full_metasploit_cache_auxiliary_class,
         rank: module_rank
     ).tap { |direct_class|
       # Set to nil after build so that template contains a rank, but it's not yet in the record

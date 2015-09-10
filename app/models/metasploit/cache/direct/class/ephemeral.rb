@@ -60,6 +60,7 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # @param to [Metasploit::Cache::Direct::Class] Save cacheable data to {Metasploit::Cache::Direct::Class}.
   # @return [Metasploit::Cache::Direct::Class] `#persisted?` will be `false` if saving fails.
   def persist_direct_class(to: direct_class)
+    name!(direct_class: to)
     # set directly on `to` so that caller can see `nil` value.
     to.rank =  metasploit_class_module_rank(direct_class: to)
 
@@ -127,6 +128,18 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
     end
 
     module_rank
+  end
+
+  # Builds `#name` for `direct_class`.
+  #
+  # @param direct_class [Metasploit::Cache::Direct::Class, #reference_name, #class] Used to log errors if
+  #   `direct_class`.
+  # @return [void]
+  def name!(direct_class:)
+    direct_class.build_name(
+        module_type: direct_class.class::MODULE_TYPE,
+        reference: direct_class.reference_name
+    )
   end
 
   # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} used to resurrect {#direct_class}.
