@@ -184,14 +184,14 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
       end
 
       context 'without #rank' do
-        it 'does not attempt to save' do
+        it 'does attempt to save' do
           expect(direct_class_ephemeral).to receive(:metasploit_class_module_rank).with(
                                                 hash_including(
                                                     direct_class: expected_direct_class
                                                 )
                                             ).and_return(nil)
 
-          expect(expected_direct_class).not_to receive(:batched_save)
+          expect(expected_direct_class).to receive(:batched_save)
 
           persist_direct_class
         end
@@ -236,14 +236,14 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
       end
 
       context 'without #rank' do
-        it 'does not attempt to save' do
+        it 'does attempt to save' do
           expect(direct_class_ephemeral).to receive(:metasploit_class_module_rank).with(
                                                 hash_including(
                                                     direct_class: direct_class_ephemeral.direct_class
                                                 )
                                             ).and_return(nil)
 
-          expect(direct_class_ephemeral.direct_class).not_to receive(:batched_save)
+          expect(direct_class_ephemeral.direct_class).to receive(:batched_save)
 
           persist_direct_class
         end

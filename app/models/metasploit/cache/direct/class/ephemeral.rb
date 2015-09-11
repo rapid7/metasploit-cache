@@ -64,18 +64,15 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
     # set directly on `to` so that caller can see `nil` value.
     to.rank =  metasploit_class_module_rank(direct_class: to)
 
-    # if rank couldn't be retrieved, there's no point attempting to save, which avoid another trip to the database.
-    if to.rank
-      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
-      saved = ActiveRecord::Base.connection_pool.with_connection {
-        to.batched_save
-      }
+    # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
+    saved = ActiveRecord::Base.connection_pool.with_connection {
+      to.batched_save
+    }
 
-      unless saved
-        log_error(to) {
-          "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
-        }
-      end
+    unless saved
+      log_error(to) {
+        "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
+      }
     end
 
     to
