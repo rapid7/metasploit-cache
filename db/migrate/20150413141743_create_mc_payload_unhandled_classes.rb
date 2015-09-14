@@ -22,6 +22,16 @@ class CreateMcPayloadUnhandledClasses < ActiveRecord::Migration
   # @return [void]
   def up
     create_table TABLE_NAME do |t|
+      #
+      # STI columns
+      #
+
+      t.string :type, null: false
+
+      #
+      # Foreign Keys
+      #
+
       t.references :ancestor, null: false
       t.references :rank, null: false
     end

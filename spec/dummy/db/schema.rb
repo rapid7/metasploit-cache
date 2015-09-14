@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 20150905153101) do
   add_index "mc_contributions", ["email_address_id"], name: "index_mc_contributions_on_email_address_id", using: :btree
 
   create_table "mc_direct_classes", force: true do |t|
+    t.string  "type",        null: false
     t.integer "ancestor_id", null: false
     t.integer "rank_id",     null: false
   end
@@ -274,6 +275,7 @@ ActiveRecord::Schema.define(version: 20150905153101) do
   add_index "mc_payload_stager_instances", ["payload_stager_class_id"], name: "index_mc_payload_stager_instances_on_payload_stager_class_id", unique: true, using: :btree
 
   create_table "mc_payload_unhandled_classes", force: true do |t|
+    t.string  "type",        null: false
     t.integer "ancestor_id", null: false
     t.integer "rank_id",     null: false
   end
