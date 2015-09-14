@@ -117,6 +117,21 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
       module_rank = ActiveRecord::Base.connection_pool.with_connection {
         Metasploit::Cache::Module::Rank.where(number: rank_number).first
       }
+
+      if module_rank.nil?
+        name = Metasploit::Cache::Module::Rank::NAME_BY_NUMBER[rank_number]
+
+        if name.nil?
+          log_error(direct_class) {
+            "Metasploit::Cache::Module::Rank with #number (#{rank_number}) is not in list of allowed #numbers " \
+            "(#{Metasploit::Cache::Module::Rank::NAME_BY_NUMBER.keys.sort.to_sentence})"
+          }
+        else
+          log_error(direct_class) {
+            "Metasploit::Cache::Module::Rank with #number (#{rank_number}) is not seeded"
+          }
+        end
+      end
     else
       log_error(direct_class) {
         "#{metasploit_class} does not respond to rank. " \

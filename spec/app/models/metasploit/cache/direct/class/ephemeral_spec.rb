@@ -100,8 +100,59 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
     end
 
     context 'with #metasploit_class responds to #rank' do
-      it 'returns Metasploit::Cache::Module::Rank with #number equal to metasploit_class.rank' do
-        expect(metasploit_class_module_rank).to eq(expected_module_rank)
+      context 'with Metasploit::Cache::Module::Rank seeded' do
+        it 'returns Metasploit::Cache::Module::Rank with #number equal to metasploit_class.rank' do
+          expect(metasploit_class_module_rank).to eq(expected_module_rank)
+        end
+      end
+
+      context 'without Metasploit::Cache::Module:Rank seeded' do
+
+        #
+        # Callbacks
+        #
+
+        before(:each) do
+          # cache before deleting
+          expected_module_rank
+
+          Metasploit::Cache::Module::Rank.delete_all
+        end
+
+        context 'with Metasploit::Cache::Module::Rank#number in Metasploit::Cache::Module::Rank::NAME_BY_NUMBER' do
+          #
+          # lets
+          #
+
+          let(:expected_module_rank) {
+            Metasploit::Cache::Module::Rank.where(number: 100).first!
+          }
+
+          it 'logs error saying Metasploit::Cache::Module::Rank was not seeded' do
+            metasploit_class_module_rank
+
+            expect(logger_string_io.string).to include('Metasploit::Cache::Module::Rank with #number (100) is not seeded')
+          end
+        end
+
+        context 'without Metasploit::Cache::Module::Rank#number in Metasploit::Cache::Module::Rank::NAME_BY_NUMBER' do
+          #
+          # lets
+          #
+
+          let(:expected_module_rank) {
+            Metasploit::Cache::Module::Rank.new(number: 150)
+          }
+
+          it 'logs an error saying Metasploit::Cache::Module::Rank#number is not valid' do
+            metasploit_class_module_rank
+
+            expect(logger_string_io.string).to include(
+                                                   'Metasploit::Cache::Module::Rank with #number (150) is not in ' \
+                                                   'list of allowed #numbers (0, 100, 200, 300, 400, 500, and 600)'
+                                               )
+          end
+        end
       end
     end
 
