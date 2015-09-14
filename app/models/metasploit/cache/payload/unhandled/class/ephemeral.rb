@@ -61,18 +61,17 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
   #   {Metasploit::Cache::Payload::Unhandled::Class}.
   # @return [Metasploit::Cache::Payload::Unhandled::Class] `#persisted?` will be `false` if saving fails.
   def persist(to: payload_unhandled_class)
-    # set directly on `to` so that caller can see `nil` value.
-    to.rank =  metasploit_class_module_rank(payload_unhandled_class: to)
+    with_payload_unhandled_class_tag(to) do |tagged|
+      # set directly on `to` so that caller can see `nil` value.
+      to.rank =  metasploit_class_module_rank(logger: tagged)
 
-    # if rank couldn't be retrieved, there's no point attempting to save, which avoid another trip to the database.
-    if to.rank
       # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
       saved = ActiveRecord::Base.connection_pool.with_connection {
         to.batched_save
       }
 
       unless saved
-        log_error(to) {
+        tagged.error {
           "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
         }
       end
@@ -83,34 +82,14 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
 
   private
 
-  # Logs error to {#logger} tagged with `payload_handled_class`'s
-  # {Metasploit::Cache::Payload::Unhandled::Class#ancestor}'s {Metasploit::Cache::Module::Ancestor#real_pathname}
-  #
-  # @yield Block called when logger severity is error or worse.
-  # @yieldreturn [String] Message to print to log as error if logger severity leel allows for print of ERROR messages.
-  # @return [void]
-  def log_error(payload_unhandled_class, &block)
-    if logger.error?
-      real_path = ActiveRecord::Base.connection_pool.with_connection {
-        # accessing ancestor could trigger database connection
-        # accessing ancestor.real_pathname could trigger access to {Metasploit::Cache::Module::Ancestor#real_pathname}.
-        payload_unhandled_class.ancestor.real_pathname.to_s
-      }
-
-      logger.tagged(real_path) do |tagged|
-        tagged.error(&block)
-      end
-    end
-  end
-
   # Persisted form of {#metasploit_class}'s `rank`.
   #
-  # @param payload_unhandled_class [Metasploit::Cache::Payload::Unhandled::Class] Used to log errors if
-  #   {#metasploit_class} does not respond to `rank`.
+  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
+  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
   # @return [Metasploit::Cache::Module::Rank] persisted rank corresponding to {#metasploit_class}'s rank.'
   # @return [nil] if {#metasploit_class} does not respond to `rank`
   # @return [nil] if {#metasploit_class}'s `rank` is not a seeded {Metasploit::Cache::Module::Rank#number}.
-  def metasploit_class_module_rank(payload_unhandled_class:)
+  def metasploit_class_module_rank(logger:)
     module_rank = nil
 
     if metasploit_class.respond_to? :rank
@@ -120,8 +99,23 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
       module_rank = ActiveRecord::Base.connection_pool.with_connection {
         Metasploit::Cache::Module::Rank.where(number: rank_number).first
       }
+
+      if module_rank.nil?
+        name = Metasploit::Cache::Module::Rank::NAME_BY_NUMBER[rank_number]
+
+        if name.nil?
+          logger.error {
+            "Metasploit::Cache::Module::Rank with #number (#{rank_number}) is not in list of allowed #numbers " \
+            "(#{Metasploit::Cache::Module::Rank::NAME_BY_NUMBER.keys.sort.to_sentence})"
+          }
+        else
+          logger.error {
+            "Metasploit::Cache::Module::Rank with #number (#{rank_number}) is not seeded"
+          }
+        end
+      end
     else
-      log_error(payload_unhandled_class) {
+      logger.error {
         "#{metasploit_class} does not respond to rank. " \
         "It should return the `Metasploit::Cache::Module::Rank#number`."
       }
@@ -135,5 +129,22 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
   # @return [String]
   def real_path_sha1_hex_digest
     metasploit_class.ephemeral_cache_by_source[:ancestor].real_path_sha1_hex_digest
+  end
+
+  # Tags log with {Metasploit::Cache::Payload::Unhandled::Class#ancestor}
+  # {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  #
+  # @param payload_unhandled_class [Metasploit::Cache::Payload::Unhandled::Class, #ancestor]
+  # @yield [tagged_logger]
+  # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] {#logger} with
+  #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
+  # @yieldreturn [void]
+  # @return [void]
+  def with_payload_unhandled_class_tag(payload_unhandled_class, &block)
+    real_path = ActiveRecord::Base.connection_pool.with_connection {
+      payload_unhandled_class.ancestor.real_pathname.to_s
+    }
+
+    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
   end
 end

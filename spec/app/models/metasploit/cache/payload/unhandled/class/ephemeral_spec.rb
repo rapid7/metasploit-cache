@@ -92,7 +92,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral do
 
   context '#metasploit_class_module_rank' do
     subject(:metasploit_class_module_rank) do
-      payload_unhandled_class_ephemeral.send(:metasploit_class_module_rank, payload_unhandled_class: expected_payload_unhandled_class)
+      payload_unhandled_class_ephemeral.send(:metasploit_class_module_rank, logger: logger)
     end
 
     context 'with #metasploit_class responds to #rank' do
@@ -180,14 +180,10 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral do
       end
 
       context 'without #rank' do
-        it 'does not attempt to save' do
-          expect(payload_unhandled_class_ephemeral).to receive(:metasploit_class_module_rank).with(
-                                                hash_including(
-                                                    payload_unhandled_class: expected_payload_unhandled_class
-                                                )
-                                            ).and_return(nil)
+        it 'does attempt to save' do
+          expect(payload_unhandled_class_ephemeral).to receive(:metasploit_class_module_rank).and_return(nil)
 
-          expect(expected_payload_unhandled_class).not_to receive(:batched_save)
+          expect(expected_payload_unhandled_class).to receive(:batched_save)
 
           persist
         end
@@ -213,11 +209,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral do
       end
 
       it 'defaults to #payload_unhandled_class' do
-        expect(payload_unhandled_class_ephemeral).to receive(:metasploit_class_module_rank).with(
-                                              hash_including(
-                                                  payload_unhandled_class: payload_unhandled_class_ephemeral.payload_unhandled_class
-                                              )
-                                          ).and_call_original
+        expect(payload_unhandled_class_ephemeral).to receive(:metasploit_class_module_rank).and_call_original
         expect(payload_unhandled_class_ephemeral).to receive(:payload_unhandled_class).and_call_original
 
         persist
@@ -232,14 +224,10 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral do
       end
 
       context 'without #rank' do
-        it 'does not attempt to save' do
-          expect(payload_unhandled_class_ephemeral).to receive(:metasploit_class_module_rank).with(
-                                                hash_including(
-                                                    payload_unhandled_class: payload_unhandled_class_ephemeral.payload_unhandled_class
-                                                )
-                                            ).and_return(nil)
+        it 'does attempt to save' do
+          expect(payload_unhandled_class_ephemeral).to receive(:metasploit_class_module_rank).and_return(nil)
 
-          expect(payload_unhandled_class_ephemeral.payload_unhandled_class).not_to receive(:batched_save)
+          expect(payload_unhandled_class_ephemeral.payload_unhandled_class).to receive(:batched_save)
 
           persist
         end
