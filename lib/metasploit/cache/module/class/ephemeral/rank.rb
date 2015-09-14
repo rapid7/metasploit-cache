@@ -13,7 +13,7 @@ module Metasploit::Cache::Module::Class::Ephemeral::Rank
   # @param source [#rank] Metasploit Module class
   # @return [#rank] `destination`
   def self.synchronize(destination:, logger:, source:)
-    Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
+    destination.class.connection_pool.with_connection {
       # assume nil so that `destination.rank` is reset to `nil` if Metasploit Module changed and it lost its rank
       module_rank = nil
 

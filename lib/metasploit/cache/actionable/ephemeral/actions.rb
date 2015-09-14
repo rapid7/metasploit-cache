@@ -88,7 +88,7 @@ module Metasploit::Cache::Actionable::Ephemeral::Actions
   # @param source [#actions] Metasploit Module instance
   # @return [#actions] `destination`
   def self.synchronize(destination:, logger:, source:)
-    Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
+    destination.class.connection_pool.with_connection {
       cached_destination_attribute_set = destination_attribute_set(destination)
       cached_source_attribute_set = source_attribute_set(source)
 

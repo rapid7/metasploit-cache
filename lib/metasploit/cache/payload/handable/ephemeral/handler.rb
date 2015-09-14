@@ -35,7 +35,7 @@ module Metasploit::Cache::Payload::Handable::Ephemeral::Handler
   # @return [Metasploit::Cache::Payload::Single::Unhandled::Instance, Metasploit::Cache::Payload::Stager::Instance, #handler]
   #   `destination`
   def self.synchronize(destination:, logger:, source:)
-    Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
+    destination.class.connection_pool.with_connection {
       cached_destination_attributes = destination_attributes(destination)
       cached_source_attributes = source_attributes(source)
 

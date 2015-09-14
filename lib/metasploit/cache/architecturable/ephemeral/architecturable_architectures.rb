@@ -170,7 +170,7 @@ module Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectur
   # @param source [#arch] a Metasploit Module instance
   # @return [#architecturable_architectures] `destination`
   def self.synchronize(destination:, logger:, source:)
-    Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
+    destination.class.connection_pool.with_connection {
       reduce(
           destination: destination,
           destination_attribute_set: destination_attribute_set(destination),
