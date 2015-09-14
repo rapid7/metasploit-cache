@@ -21,7 +21,6 @@ FactoryGirl.define do
             ]
   end
 
-
   #
   # Traits
   #
