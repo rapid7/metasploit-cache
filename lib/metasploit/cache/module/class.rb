@@ -2,6 +2,7 @@
 module Metasploit::Cache::Module::Class
   extend ActiveSupport::Autoload
 
+  autoload :Ephemeral
   autoload :Namable
   autoload :Name
 

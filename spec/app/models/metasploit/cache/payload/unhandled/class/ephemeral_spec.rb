@@ -90,28 +90,6 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral do
     it { is_expected.to validate_presence_of(:metasploit_class) }
   end
 
-  context '#metasploit_class_module_rank' do
-    subject(:metasploit_class_module_rank) do
-      payload_unhandled_class_ephemeral.send(:metasploit_class_module_rank, logger: logger)
-    end
-
-    context 'with #metasploit_class responds to #rank' do
-      it 'returns Metasploit::Cache::Module::Rank with #number equal to metasploit_class.rank' do
-        expect(metasploit_class_module_rank).to eq(expected_module_rank)
-      end
-    end
-
-    context 'without #metasploit_class responds to #rank' do
-      let(:metasploit_class) {
-        Class.new.tap { |metasploit_class|
-          metasploit_class.extend Metasploit::Cache::Cacheable
-        }
-      }
-
-      it { is_expected.to be_nil }
-    end
-  end
-
   context '#persist' do
     subject(:persist) do
       payload_unhandled_class_ephemeral.persist(*args)
@@ -181,8 +159,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral do
 
       context 'without #rank' do
         it 'does attempt to save' do
-          expect(payload_unhandled_class_ephemeral).to receive(:metasploit_class_module_rank).and_return(nil)
-
+          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize)
           expect(expected_payload_unhandled_class).to receive(:batched_save)
 
           persist
@@ -209,7 +186,6 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral do
       end
 
       it 'defaults to #payload_unhandled_class' do
-        expect(payload_unhandled_class_ephemeral).to receive(:metasploit_class_module_rank).and_call_original
         expect(payload_unhandled_class_ephemeral).to receive(:payload_unhandled_class).and_call_original
 
         persist
@@ -225,8 +201,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral do
 
       context 'without #rank' do
         it 'does attempt to save' do
-          expect(payload_unhandled_class_ephemeral).to receive(:metasploit_class_module_rank).and_return(nil)
-
+          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize)
           expect(payload_unhandled_class_ephemeral.payload_unhandled_class).to receive(:batched_save)
 
           persist

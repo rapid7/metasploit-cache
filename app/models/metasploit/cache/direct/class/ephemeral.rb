@@ -62,8 +62,12 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   def persist_direct_class(to: direct_class)
     with_direct_class_tag(to) do |tagged|
       name!(direct_class: to)
-      # set directly on `to` so that caller can see `nil` value.
-      to.rank =  metasploit_class_module_rank(logger: tagged)
+
+      Metasploit::Cache::Module::Class::Ephemeral::Rank.synchronize(
+          destination: to,
+          logger: tagged,
+          source: metasploit_class
+      )
 
       # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
       saved = ActiveRecord::Base.connection_pool.with_connection {
@@ -81,48 +85,6 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   end
 
   private
-
-  # Persisted form of {#metasploit_class}'s `rank`.
-  #
-  # @param logger [ActiveSupport::TaggedLogger] logger already tagged with
-  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
-  # @return [Metasploit::Cache::Module::Rank] persisted rank corresponding to {#metasploit_class}'s rank.'
-  # @return [nil] if {#metasploit_class} does not respond to `rank`
-  # @return [nil] if {#metasploit_class}'s `rank` is not a seeded {Metasploit::Cache::Module::Rank#number}.
-  def metasploit_class_module_rank(logger:)
-    module_rank = nil
-
-    if metasploit_class.respond_to? :rank
-      rank_number = metasploit_class.rank
-
-      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
-      module_rank = ActiveRecord::Base.connection_pool.with_connection {
-        Metasploit::Cache::Module::Rank.where(number: rank_number).first
-      }
-
-      if module_rank.nil?
-        name = Metasploit::Cache::Module::Rank::NAME_BY_NUMBER[rank_number]
-
-        if name.nil?
-          logger.error {
-            "Metasploit::Cache::Module::Rank with #number (#{rank_number}) is not in list of allowed #numbers " \
-            "(#{Metasploit::Cache::Module::Rank::NAME_BY_NUMBER.keys.sort.to_sentence})"
-          }
-        else
-          logger.error {
-            "Metasploit::Cache::Module::Rank with #number (#{rank_number}) is not seeded"
-          }
-        end
-      end
-    else
-      logger.error {
-        "#{metasploit_class} does not respond to rank. " \
-        "It should return the `Metasploit::Cache::Module::Rank#number`."
-      }
-    end
-
-    module_rank
-  end
 
   # Builds `#name` for `direct_class`.
   #
