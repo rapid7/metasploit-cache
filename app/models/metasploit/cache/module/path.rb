@@ -149,6 +149,86 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
             }
 
   #
+  # Class Methods
+  #
+
+  # Whether `gem` and `name` are a valid name tuple.
+  #
+  # @return [true] if `gem` and `name` are preesent.
+  # @return [false] otherwise
+  def self.named?(gem:, name:)
+    gem.present? and name.present?
+  end
+
+  # Returns path with the same `gem` and `name`.
+  #
+  # @param gem [String, nil] {#gem} of new {Metasploit::Cache::Module::Path}.
+  # @param name [String, nil] {#name} of new {Metasploit::Cache::Module::Path}.
+  # @return [Metasploit::Cache::Module::Path] if there is a {Metasploit::Cache::Module::Path} with the same {#gem} and
+  #   {#name} as `gem` and `name`.
+  # @return [nil] unless `gem` and `name` are present.
+  # @return [nil] if there is no match.
+  def self.name_collision(gem:, name:)
+    collision = nil
+
+    if named?(gem: gem, name: name)
+      collision = where(gem: gem, name: name).first
+    end
+
+    collision
+  end
+
+  # Returns path with teh same `real_path`.
+  #
+  # @param real_path [String] {#real_path} of new {Metasploit::Cache::Module::Path}.
+  # @return [Metasploit::Cache::Module::Path] if there is a {Metasploit::Cache::Module::Path} with the same
+  #   {#real_path} as `real_path`.
+  # @return [nil] if there is no match.
+  def self.real_path_collision(real_path)
+    where(real_path: real_path).first
+  end
+
+  # Resolves conflicts with pre-existing {Metasploit::Cache::Module::Path}s.
+  #
+  # @return [Metasploit::Cache::Module::Path] new or updated path.
+  def self.resolve_collisions(gem:, name:, real_path:)
+    name_collision = name_collision(gem: gem, name: name)
+    real_path_collision = real_path_collision(real_path)
+
+    if name_collision and real_path_collision
+      if name_collision != real_path_collision
+        raise ActiveRecord::RecordNotUnique,
+              "Collision against two pre-existing #{name.pluralize}: (1) on gem (#{name_collision.gem}) and name " \
+              "(#{name_collision.name}) and (2) on real_path (#{real_path_collision.real_path})."
+      end
+
+      # collision is already path
+      resolved = name_collision
+    elsif name_collision
+      # Update (real_path) as newer path is preferred.
+      name_collision.real_path = real_path
+      name_collision.save!
+
+      resolved = name_collision
+    elsif real_path_collision
+      # prevent a named real_path_collision being replaced by an unnamed
+      # new path as it is better for a real_path to have a (gem, name).
+      if named?(gem: gem, name: name)
+        real_path_collision.gem = gem
+        real_path_collision.name = name
+        real_path_collision.save!
+      end
+
+      resolved = real_path_collision
+    else
+      # New (gem, name) and real_path
+      resolved = create!(gem: gem, name: name, real_path: real_path)
+    end
+
+    resolved
+  end
+
+  #
   # Instance Methods
   #
 
@@ -166,24 +246,6 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
     directory
   end
 
-  # @note This path should be validated before calling {#name_collision} so that {#gem} and {#name} is normalized.
-  #
-  # Returns path with the same {#gem} and {#name}.
-  #
-  # @return [Metasploit::Cache::Module::Path] if there is a {Metasploit::Cache::Module::Path} with the same {#gem} and {#name} as this path.
-  # @return [nil] if #named? is `false`.
-  # @return [nil] if there is not match.
-  def name_collision
-    collision = nil
-
-    # Don't query database if gem and name are `nil` since all unnamed paths will match.
-    if named?
-      collision = self.class.where(gem: gem, name: name).first
-    end
-
-    collision
-  end
-
   # Returns whether is a named path.
   #
   # @return [false] if gem is blank or name is blank.
@@ -196,16 +258,6 @@ class Metasploit::Cache::Module::Path < ActiveRecord::Base
     end
 
     named
-  end
-
-  # @note This path should be validated before calling {#real_path_collision} so that {#real_path} is normalized.
-  #
-  # Returns path with the same {#real_path}.
-  #
-  # @return [Metasploit::Cache::Module::Path] if there is a {Metasploit::Cache::Module::Path} with the same {#real_path} as this path.
-  # @return [nil] if there is not match.
-  def real_path_collision
-    self.class.where(real_path: real_path).first
   end
 
   # Returns whether was a named path.  This is the equivalent of {#named?}, but checks the old, pre-change
