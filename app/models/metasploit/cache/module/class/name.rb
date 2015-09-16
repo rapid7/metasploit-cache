@@ -33,6 +33,11 @@ class Metasploit::Cache::Module::Class::Name < ActiveRecord::Base
   #
   #   @return [String]
 
+  # @!attribute module_class_id
+  #   The foreign key for {#module_class}.
+  #
+  #   @return [Integer]
+
   #
   # Validations
   #

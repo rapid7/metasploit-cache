@@ -136,6 +136,10 @@ class Metasploit::Cache::CLI < Thor
          desc: 'The name of the module path scoped to GEM.  GEM and NAME uniquely identify this path so that ' \
                'if MODULE_PATH changes, the entire cache does not need to be invalidated because the change in ' \
                'MODULE_PATH will still be tied to the same (GEM, NAME) tuple.'
+  # Loads metadata about the Metasploit Module instances from the given load path into the database.
+  #
+  # @param path [String]
+  # @return [void]
   def load(path)
     gem = options['gem']
     name = options['name']
@@ -212,6 +216,9 @@ class Metasploit::Cache::CLI < Thor
 
   desc 'seed',
        'Seed database with architectures, authorities, platforms, and ranks (run automatically as part of load)'
+  # Seed database with architectures, authorities, platforms, and ranks (run automatically as part of load).
+  #
+  # @return [void]
   def seed
     establish_connection(
         database_yaml_path: options.fetch('database_yaml'),
@@ -225,6 +232,12 @@ class Metasploit::Cache::CLI < Thor
        'Simulate `use FULL_NAME` by loading the Metasploit Module class with the given FULL_NAME using ' \
        'Metasploit::Cache::Module::Class::Name look-up and then try to initiate the Metasploit Module class into a ' \
        'Metasploit Module instance'
+  # Simulate `use FULL_NAME` by loading the Metasploit Module class with the given FULL_NAME using
+  # {Metasploit::Cache::Module::Class::Name} look-up and then try to initiate the Metasploit Module class into a
+  # Metasploit Module instance.
+  #
+  # @param full_name [String] a Metasploit Module full name composed of `<module_type>/<reference_name>`.
+  # @return [void]
   def use(full_name)
     include_load_paths(options.fetch('include'))
     require_libraries(options.fetch('require'))
@@ -385,12 +398,23 @@ class Metasploit::Cache::CLI < Thor
 
   private
 
+  # Establishes an `ActiveRecord::Base` connection by looking up configuration for `environment` in
+  # `database_yaml_path`, which is preprocessed with ERB before loading as YAML.
+  #
+  # @param database_yaml_path [String] path to `database.yml`.
+  # @param environment [String] environment name in `database.yml`.
+  # @return [void]
   def establish_connection(database_yaml_path:, environment:)
     erb_template = File.read(database_yaml_path)
     configuration = YAML.load(ERB.new(erb_template).result)
     ActiveRecord::Base.establish_connection(configuration.fetch(environment))
   end
 
+  # Filters {TYPE_DIRECTORIES} based on `--only-type-directories` arguments.
+  #
+  # @return [Array<String>] {TYPE_DIRECTORIES} if `--only-type-directories` is not given, otherwise Array of type
+  #   directories passed to `--only-type-directories`.
+  # @raise [ArgumentError] if argument to `--only-type-directories` is not in {TYPE_DIRECTORIES}.
   def filtered_type_directories
     only_type_directries = options['only_type_directories']
 
@@ -412,6 +436,10 @@ class Metasploit::Cache::CLI < Thor
     type_directories
   end
 
+  # Adds `load_paths` to front of `$LOAD_PATH` if the load path isn't already in `$LOAD_PATH`.
+  #
+  # @param load_paths [Array<String>] Array of file paths.
+  # @return [void]
   def include_load_paths(load_paths)
     load_paths.each do |load_path|
       expanded_load_path = File.expand_path(load_path)
@@ -431,10 +459,17 @@ class Metasploit::Cache::CLI < Thor
     Kernel.load File.expand_path("../../../../db/seeds.rb", __FILE__)
   end
 
+  # Returns a fake `Msf::Simple::Framework` with enough of the API to load Metasploit Modules into the cache.
+  #
+  # @return [Metasploit::Cache::CLI::Framework, <Hash>#datastore]
   def metasploit_framework_double
     Metasploit::Cache::CLI::Framework.new
   end
 
+  # Requires the libraries.
+  #
+  # @param libraries [Array<String>] Array of library names to `require`
+  # @return [void]
   def require_libraries(libraries)
     libraries.each do |library|
       require library
