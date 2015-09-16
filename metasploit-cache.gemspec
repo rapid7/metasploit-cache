@@ -35,4 +35,6 @@ Gem::Specification.new do |spec|
   # Allow patching of Metasploit::Cache models.
   spec.add_runtime_dependency 'metasploit-concern', '~> 1.0'
   spec.add_runtime_dependency 'metasploit-model', '~> 1.0'
+  spec.add_runtime_dependency 'ruby-progressbar', '~> 1.7'
+  spec.add_runtime_dependency 'thor', '~> 0.19.1'
 end

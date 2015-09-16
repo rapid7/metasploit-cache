@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'metasploit/cache'
+
+Metasploit::Cache::CLI.start(ARGV)
