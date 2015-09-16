@@ -134,6 +134,52 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
         end
       end
     end
+
+    context '#namespace_module' do
+      context 'Metasploit::Cache::Module::Namespace::Load#module_ancestor_eval' do
+        #
+        # Methods
+        #
+
+        def any_namespace_module_errors?
+          module_ancestor_load.errors.keys.any? { |key|
+            key.to_s.start_with? 'namespace_module.'
+          }
+        end
+
+        context 'returns true' do
+          #
+          # Callbacks
+          #
+
+          before(:each) do
+            module_ancestor_load.valid?
+          end
+
+          it 'has no errors on namespace_module.*' do
+            expect(any_namespace_module_errors?).to eq false
+          end
+        end
+
+        context 'returns false' do
+          #
+          # Callbacks
+          #
+
+          before(:each) do
+            module_ancestor.real_pathname.open('wb') do |f|
+              f.write "fail 'Exception in ancestor'"
+            end
+
+            module_ancestor_load.valid?
+          end
+
+          it 'has errors on namespace_module.*' do
+            expect(any_namespace_module_errors?).to eq true
+          end
+        end
+      end
+    end
   end
 
   context '#loading_context?' do
@@ -404,34 +450,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
         expect(module_ancestor_load).to receive(:namespace_module)
 
         namespace_module_load_errors
-      end
-
-      context '#namespace_module' do
-        before(:each) do
-          allow(module_ancestor_load).to receive(:namespace_module).and_return(namespace_module)
-        end
-
-        context 'with nil' do
-          let(:namespace_module) do
-            nil
-          end
-
-          it { should be_nil }
-        end
-
-        context 'without nil' do
-          let(:errors) do
-            double('Errors')
-          end
-
-          let(:namespace_module) do
-            double('Namespace Module', errors: errors)
-          end
-
-          it 'should return namespace_modules.errors' do
-            expect(namespace_module_load_errors).to eq(errors)
-          end
-        end
       end
     end
   end
