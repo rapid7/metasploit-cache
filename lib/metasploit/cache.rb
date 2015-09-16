@@ -8,6 +8,7 @@ require 'active_support/core_ext/module/delegation'
 require 'awesome_nested_set'
 require 'metasploit/concern'
 require 'metasploit/model'
+require 'thor'
 
 #
 # Project
@@ -34,6 +35,7 @@ module Metasploit
     autoload :Auxiliary
     autoload :Batch
     autoload :Cacheable
+    autoload :CLI
     autoload :Constant
     autoload :Contributable
     autoload :Contribution
@@ -61,7 +63,6 @@ module Metasploit
     autoload :Referencable
     autoload :Reference
     autoload :ResurrectingAttribute
-    autoload :SingleTablePolymorphic
     autoload :Spec
     autoload :Translation
     autoload :Visitation

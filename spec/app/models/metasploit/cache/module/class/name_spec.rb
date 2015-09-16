@@ -133,7 +133,7 @@ RSpec.describe Metasploit::Cache::Module::Class::Name do
 
         context 'with same module_class_type' do
           let(:module_class_type) {
-            existing_module_class.class.name
+            existing_module_class.name.module_class_type
           }
 
           context 'with same module_class_id' do

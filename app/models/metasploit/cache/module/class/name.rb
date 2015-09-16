@@ -19,8 +19,6 @@ class Metasploit::Cache::Module::Class::Name < ActiveRecord::Base
              inverse_of: :name,
              polymorphic: true
 
-  Metasploit::Cache::SingleTablePolymorphic.use(self)
-
   #
   # Attributes
   #
