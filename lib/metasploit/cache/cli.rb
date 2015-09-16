@@ -98,11 +98,9 @@ class Metasploit::Cache::CLI < Thor
                desc: 'Specify $LOAD_PATH directory',
                type: :array
   class_option :database_yaml,
-               desc: 'Path to database.yml contain configuration to establish ActiveRecord::Base connection',
-               required: true
+               desc: 'Path to database.yml contain configuration to establish ActiveRecord::Base connection'
   class_option :environment,
-               desc: 'Environment to use from DATABASE_YAML',
-               required: true
+               desc: 'Environment to use from DATABASE_YAML'
   class_option :logger_severity,
                default: 'DEBUG',
                desc: 'The log level (from least to most severe: DEBUG, INFO, WARN, ERROR, FATAL)'
