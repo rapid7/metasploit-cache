@@ -3,6 +3,9 @@
 /output
 /src
 
+# bundle binstubs
+/bin
+
 # bundler configuration
 /.bundle/
 # Rubymine project configuration
