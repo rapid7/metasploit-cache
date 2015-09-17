@@ -18,8 +18,10 @@ RSpec.describe Metasploit::Cache::Author::Ephemeral do
       }
 
       context 'with existing Metasploit::Cache::Author#name' do
-        it "still returns a new Metasploit::Cache::Author because #name wasn't in :existing_name_set" do
-          expect(by_name[existing_not_in_name_set.name]).to be_new_record
+        it 'raises ActiveRecord::Invalid due to name collision' do
+          expect {
+            by_name[existing_not_in_name_set.name]
+          }.to raise_error ActiveRecord::RecordInvalid
         end
       end
 
@@ -28,8 +30,8 @@ RSpec.describe Metasploit::Cache::Author::Ephemeral do
           FactoryGirl.generate :metasploit_cache_author_name
         }
 
-        it 'returns a new Metasploit::Cache::Author' do
-          expect(by_name[name]).to be_new_record
+        it 'returns a newly created Metasploit::Cache::Author' do
+          expect(by_name[name]).to be_persisted
         end
       end
     end
@@ -59,8 +61,10 @@ RSpec.describe Metasploit::Cache::Author::Ephemeral do
         end
 
         context 'not in :existing_name_set' do
-          it "still returns a new Metasploit::Cache::Author because #name wasn't in :existing_name_set" do
-            expect(by_name[existing_not_in_name_set.name]).to be_new_record
+          it 'raises ActiveRecord::RecordInvalid due to name collision' do
+            expect {
+              by_name[existing_not_in_name_set.name]
+            }.to raise_error ActiveRecord::RecordInvalid
           end
         end
       end
@@ -70,10 +74,39 @@ RSpec.describe Metasploit::Cache::Author::Ephemeral do
           FactoryGirl.generate :metasploit_cache_author_name
         }
 
-        it 'returns a new Metasploit::Cache::Author' do
-          expect(by_name[name]).to be_new_record
+        it 'returns a newly created Metasploit::Cache::Author' do
+          expect(by_name[name]).to be_persisted
         end
       end
+    end
+  end
+
+  context 'create_by_name_proc' do
+    subject(:create_by_name_proc) {
+      described_class.create_by_name_proc.call(hash, name)
+    }
+
+    let(:name) {
+      FactoryGirl.generate :metasploit_cache_author_name
+    }
+
+    let(:hash) {
+      {}
+    }
+
+    it 'returns newly created Metasploit::Cache::Author' do
+      expect(create_by_name_proc).to be_a Metasploit::Cache::Author
+      expect(create_by_name_proc).to be_persisted
+    end
+
+    it 'set Metasploit::CacheAuthor#name' do
+      expect(create_by_name_proc.name).to eq(name)
+    end
+
+    it 'caches newly created Metasploit::Cache::Author in hash' do
+      returned = create_by_name_proc
+
+      expect(hash[name]).to eq(returned)
     end
   end
 
@@ -152,35 +185,6 @@ RSpec.describe Metasploit::Cache::Author::Ephemeral do
           expect(existing_by_name[name]).to be_nil
         end
       end
-    end
-  end
-
-  context 'new_by_name_proc' do
-    subject(:new_by_name_proc) {
-      described_class.new_by_name_proc.call(hash, name)
-    }
-
-    let(:name) {
-      FactoryGirl.generate :metasploit_cache_author_name
-    }
-
-    let(:hash) {
-      {}
-    }
-
-    it 'returns new Metasploit::Cache::Author' do
-      expect(new_by_name_proc).to be_a Metasploit::Cache::Author
-      expect(new_by_name_proc).to be_new_record
-    end
-
-    it 'set Metasploit::CacheAuthor#name' do
-      expect(new_by_name_proc.name).to eq(name)
-    end
-
-    it 'caches new Metasploit::Cache::Author in hash' do
-      returned = new_by_name_proc
-
-      expect(hash[name]).to eq(returned)
     end
   end
 end
