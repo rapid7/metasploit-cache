@@ -1,5 +1,11 @@
 # Changes format to `[<date_time>][<severity>] <message>\n`
 class Metasploit::Cache::CLI::LoggerFormatter < Logger::Formatter
+  extend ActiveSupport::Autoload
+
+  autoload :TaggedBacktrace
+
+  extend Metasploit::Cache::CLI::LoggerFormatter::TaggedBacktrace
+
   #
   # CONSTANTS
   #
@@ -13,13 +19,5 @@ class Metasploit::Cache::CLI::LoggerFormatter < Logger::Formatter
 
   def initialize
     self.datetime_format = DATETIME_FORMAT
-  end
-
-  #
-  # Instant Methods
-  #
-
-  def call(severity, date_time, _progname, message)
-    "[#{format_datetime(date_time)}][#{severity}]#{msg2str(message)}\n"
   end
 end

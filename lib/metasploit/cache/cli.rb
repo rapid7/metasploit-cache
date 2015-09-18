@@ -87,6 +87,10 @@ class Metasploit::Cache::CLI < Thor
     logger.formatter = Metasploit::Cache::CLI::LoggerFormatter.new
 
     ActiveSupport::TaggedLogging.new(logger)
+
+    logger.formatter.extend Metasploit::Cache::CLI::LoggerFormatter::TaggedBacktrace
+
+    logger
   end
 
   #
