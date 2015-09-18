@@ -152,6 +152,7 @@ class Metasploit::Cache::CLI < Thor
     require_libraries(options.fetch('require'))
 
     tagged_logger = self.class.tagged_logger(options.fetch('logger_severity'))
+    configure_i18n
     ActiveRecord::Base.logger = tagged_logger
 
     establish_connection(
@@ -241,6 +242,7 @@ class Metasploit::Cache::CLI < Thor
     require_libraries(options.fetch('require'))
 
     tagged_logger = self.class.tagged_logger(options.fetch('logger_severity'))
+    configure_i18n
     ActiveRecord::Base.logger = tagged_logger
 
     establish_connection(
@@ -396,6 +398,13 @@ class Metasploit::Cache::CLI < Thor
 
   private
 
+  # Adds metasploit-cache's i18n files to `I18n.load_path`
+  #
+  # @return [void]
+  def configure_i18n
+    I18n.load_path += Dir[self.class.root_pathname.join('config', 'locales', '*.{rb,yml}')]
+  end
+
   # Establishes an `ActiveRecord::Base` connection by looking up configuration for `environment` in
   # `database_yaml_path`, which is preprocessed with ERB before loading as YAML.
   #
@@ -448,13 +457,20 @@ class Metasploit::Cache::CLI < Thor
     end
   end
 
+  # Root directory for metasploit-cache.
+  #
+  # @return [Pathname]
+  def self.root_pathname
+    @root_pathname ||= Pathname.new("../../../..").expand_path(__FILE__)
+  end
+
   # @note Connection must be established first
   #
   # Loads architecture, authority, platform, and rank seeds.
   #
   # @return [void]
   def load_seeds
-    Kernel.load File.expand_path("../../../../db/seeds.rb", __FILE__)
+    Kernel.load self.class.root_pathname.join("db/seeds.rb").to_path
   end
 
   # Returns a fake `Msf::Simple::Framework` with enough of the API to load Metasploit Modules into the cache.
