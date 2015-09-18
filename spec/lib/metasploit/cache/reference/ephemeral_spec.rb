@@ -485,13 +485,12 @@ RSpec.describe Metasploit::Cache::Reference::Ephemeral do
         }
 
         it 'maps attributes to Metasploit::Cache::Reference with #authority and #designation' do
-        new_by_attributes_proc.call(hash, attributes)
-        reference = hash[attributes]
+          new_by_attributes_proc.call(hash, attributes)
+          reference = hash[attributes]
 
-        expect(reference).to be_a Metasploit::Cache::Reference
-        expect(reference.authority).to eq authority
-        expect(reference.designation).to eq designation
-        expect(reference.url).to be_nil
+          expect(reference).to be_a Metasploit::Cache::Reference
+          expect(reference.authority).to eq authority
+          expect(reference.designation).to eq designation
         end
       end
 

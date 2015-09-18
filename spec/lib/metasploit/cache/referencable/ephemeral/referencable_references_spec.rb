@@ -217,8 +217,8 @@ RSpec.describe Metasploit::Cache::Referencable::Ephemeral::ReferencableReference
                 build_added
               end
 
-              it 'is a new record' do
-                expect(built_reference).to be_new_record
+              it 'is a newly created record' do
+                expect(built_reference).to be_persisted
               end
 
               it 'set Metasploit::Cache::Reference#designation' do
@@ -355,8 +355,8 @@ RSpec.describe Metasploit::Cache::Referencable::Ephemeral::ReferencableReference
               build_added
             end
 
-            it 'is new record' do
-              expect(built_reference).to be_new_record
+            it 'is newly created record' do
+              expect(built_reference).to be_persisted
             end
 
             it 'sets #url' do

@@ -7,7 +7,10 @@ module Metasploit::Cache::EmailAddress::Ephemeral
   # @return [Hash{String => Metasploit::Cache::EmailAddress}]
   def self.by_full(existing_full_set:)
     existing_by_full(full_set: existing_full_set).tap { |hash|
-      hash.default_proc = new_by_full_proc
+      hash.default_proc = Metasploit::Cache::Ephemeral.create_unique_proc(
+          Metasploit::Cache::EmailAddress,
+          :full
+      )
     }
   end
 
@@ -26,14 +29,5 @@ module Metasploit::Cache::EmailAddress::Ephemeral
         email_address_by_full[email_address.full] = email_address
       }
     end
-  end
-
-  # Maps {Metasploit::Cache::EmailAddress#full} to new {Metasploit::Cache::EmailAddress}.
-  #
-  # @return [Proc<Hash, String>]
-  def self.new_by_full_proc
-    ->(hash, full) {
-      hash[full] = Metasploit::Cache::EmailAddress.new(full: full)
-    }
   end
 end

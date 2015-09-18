@@ -7,22 +7,10 @@ module Metasploit::Cache::Author::Ephemeral
   # @return [Hash{String => Metasploit::Cache::Author}]
   def self.by_name(existing_name_set:)
     existing_by_name(name_set: existing_name_set).tap { |hash|
-      hash.default_proc = create_by_name_proc
-    }
-  end
-
-  # Maps {Metasploit::Cache::Author#name} to newly created {Metasploit::Cache::Author}.
-  #
-  # @return [Proc<Hash, String>]
-  def self.create_by_name_proc
-    ->(hash, name) {
-      # create! to prevent race condition when two threads, such as auxiliary and exploit are creating instances
-      # with the same author.  Race condition manifests as errors like
-      #
-      #     PG::UniqueViolation: ERROR:  duplicate key value violates unique constraint "index_mc_authors_on_name"
-      #     DETAIL:  Key (name)=(hdm) already exists.
-      #     : INSERT INTO "mc_authors" ("name") VALUES ($1) RETURNING "id"
-      hash[name] = Metasploit::Cache::Author.create!(name: name)
+      hash.default_proc = Metasploit::Cache::Ephemeral.create_unique_proc(
+          Metasploit::Cache::Author,
+          :name
+      )
     }
   end
 

@@ -66,10 +66,12 @@ RSpec.describe Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses do
           }.to change(destination.licensable_licenses, :length).by(1)
         end
 
-        it 'builds new Metasploit::Cache::License' do
-          build_added
+        it 'creates new Metasploit::Cache::License' do
+          expect {
+            build_added
+          }.to change(Metasploit::Cache::License, :count).by(1)
 
-          expect(destination.licensable_licenses.first.license).to be_new_record
+          expect(destination.licensable_licenses.first.license).to be_persisted
         end
 
         it 'returns destination' do
