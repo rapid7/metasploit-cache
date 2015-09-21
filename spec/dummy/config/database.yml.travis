@@ -14,6 +14,10 @@ postgresql: &postgresql
   timeout: 5
   username: postgres
 
+postgresql_content: &postgresql_content
+  <<: *postgresql
+  database: metasploit_cache_content
+
 postgresql_development: &postgresql_development
   <<: *postgresql
   database: metasploit_cache_development
@@ -26,6 +30,10 @@ sqlite3: &sqlite3
   adapter: sqlite3
   pool: 5
   timeout: 5
+
+sqlite3_content: &sqlite3_content
+  <<: *sqlite3
+  database: db/content.sqlite3
 
 sqlite3_development: &sqlite3_development
   <<: *sqlite3
@@ -62,6 +70,8 @@ elsif !['postgresql', 'sqlite3'].include? database_adapter
         "The DATABASE_ADAPTER environment variable must be set to 'postgresql' or 'sqlite3', but is #{database_adapter.inspect}"
 end
 %>
+
+content: <%= "*#{database_adapter}_content" %>
 
 development: <%= "*#{database_adapter}_development" %>
 
