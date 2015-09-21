@@ -10,7 +10,7 @@
 # @see http://about.travis-ci.org/docs/user/database-setup/#PostgreSQL
 postgresql: &postgresql
   adapter: postgresql
-  pool: 5
+  pool: 10
   timeout: 5
   username: postgres
 
@@ -28,7 +28,8 @@ postgresql_test: &postgresql_test
 
 sqlite3: &sqlite3
   adapter: sqlite3
-  pool: 5
+  encoding: utf8
+  pool: 10
   timeout: 5
 
 sqlite3_content: &sqlite3_content
@@ -60,7 +61,7 @@ if database_adapter.blank?
     database_adapter = with_adapters.first
   elsif with_adapter_count > 1
     raise ArgumentError,
-          "The DATABASE_ADAPTER environment variable must be set to choose the installed adapter ('postges' or 'sqlite3') to use"
+          "The DATABASE_ADAPTER environment variable must be set to choose the installed adapter ('postgresql' or 'sqlite3') to use"
   else
     raise ArgumentError,
           "Neither 'postgresql' nor 'sqlite3' database adapter is installed"
