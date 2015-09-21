@@ -2,7 +2,7 @@ before_install:
 - ${BEFORE_INSTALL}
 before_script:
 - cp spec/dummy/config/database.yml.travis spec/dummy/config/database.yml
-- bundle exec rake db:setup
+- bundle exec rake db:create:all db:setup
 bundler_args: --without $BUNDLER_INSTALL_WITHOUT
 cache: bundler
 env:
