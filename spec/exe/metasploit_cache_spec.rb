@@ -76,7 +76,11 @@ RSpec.describe 'metasploit-cache', :content do
       end
     end
 
-    expect(metasploit_cache_load.exit_code).to eq(0)
+    expect(metasploit_cache_load.exit_code).to eq(0),
+                                               ->(){
+                                                 @metasploit_cache_load_out.rewind
+                                                 @metasploit_cache_load_out.read
+                                               }
   end
 
   after(:all) {
