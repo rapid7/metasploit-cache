@@ -8,16 +8,16 @@ RSpec.describe 'metasploit-cache', :content do
 
   def db_content_load_schema
     begin
-      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['content'])
+      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations.fetch('content'))
       ActiveRecord::Schema.verbose = false
       db_schema_load
     ensure
-      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['test'])
+      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations.fetch('test'))
     end
   end
 
   def db_content_purge
-    ActiveRecord::Tasks::DatabaseTasks.purge ActiveRecord::Base.configurations['content']
+    ActiveRecord::Tasks::DatabaseTasks.purge ActiveRecord::Base.configurations.fetch('content')
   end
 
   def db_schema_load
