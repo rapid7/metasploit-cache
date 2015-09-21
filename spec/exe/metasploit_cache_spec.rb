@@ -48,7 +48,7 @@ RSpec.describe 'metasploit-cache', :content do
         'exec',
         'metasploit-cache',
         'load',
-        '--database-yaml', 'spec/dummy/config/database.yml',
+        '--database-yaml', 'config/database.yml',
         '--environment', 'content',
         '--include', metasploit_framework_root.to_path,
                      metasploit_framework_root.join('app', 'validators').to_path,
@@ -64,6 +64,7 @@ RSpec.describe 'metasploit-cache', :content do
     @metasploit_cache_load_out = Tempfile.new(['metasploit-cache-load', '.log'])
     @metasploit_cache_load_out.sync = true
 
+    metasploit_cache_load.cwd = Metasploit::Cache::Engine.root.join('spec', 'dummy').to_path
     metasploit_cache_load.io.stdout = @metasploit_cache_load_out
 
     require 'benchmark'
@@ -139,7 +140,7 @@ RSpec.describe 'metasploit-cache', :content do
                                                            'exec',
                                                            'metasploit-cache',
                                                            'use',
-                                                           '--database-yaml', 'spec/dummy/config/database.yml',
+                                                           '--database-yaml', 'config/database.yml',
                                                            '--environment', 'content',
                                                            '--include', metasploit_framework_root.to_path,
                                                                         metasploit_framework_root.join('app', 'validators').to_path,
@@ -154,6 +155,7 @@ RSpec.describe 'metasploit-cache', :content do
                     metasploit_cache_use_out = Tempfile.new(['metasploit-cache-use', '.log'])
                     metasploit_cache_use_out.sync = true
 
+                    metasploit_cache_use.cwd = Metasploit::Cache::Engine.root.join('spec', 'dummy').to_path
                     metasploit_cache_use.io.stdout = metasploit_cache_use_out
                     metasploit_cache_use.start
                     metasploit_cache_use.wait
