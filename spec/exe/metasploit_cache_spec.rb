@@ -8,16 +8,18 @@ RSpec.describe 'metasploit-cache', :content do
 
   def db_content_load_schema
     begin
-      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['content'])
+      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations.fetch('content'))
       ActiveRecord::Schema.verbose = false
       db_schema_load
     ensure
-      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['test'])
+      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations.fetch('test'))
     end
   end
 
   def db_content_purge
-    ActiveRecord::Tasks::DatabaseTasks.purge ActiveRecord::Base.configurations['content']
+    ActiveRecord::Tasks::DatabaseTasks.root = Metasploit::Cache::Engine.root
+
+    ActiveRecord::Tasks::DatabaseTasks.purge ActiveRecord::Base.configurations.fetch('content')
   end
 
   def db_schema_load
@@ -46,7 +48,7 @@ RSpec.describe 'metasploit-cache', :content do
         'exec',
         'metasploit-cache',
         'load',
-        '--database-yaml', 'spec/dummy/config/database.yml',
+        '--database-yaml', 'config/database.yml',
         '--environment', 'content',
         '--include', metasploit_framework_root.to_path,
                      metasploit_framework_root.join('app', 'validators').to_path,
@@ -62,6 +64,7 @@ RSpec.describe 'metasploit-cache', :content do
     @metasploit_cache_load_out = Tempfile.new(['metasploit-cache-load', '.log'])
     @metasploit_cache_load_out.sync = true
 
+    metasploit_cache_load.cwd = Metasploit::Cache::Engine.root.join('spec', 'dummy').to_path
     metasploit_cache_load.io.stdout = @metasploit_cache_load_out
 
     require 'benchmark'
@@ -73,7 +76,11 @@ RSpec.describe 'metasploit-cache', :content do
       end
     end
 
-    expect(metasploit_cache_load.exit_code).to eq(0)
+    expect(metasploit_cache_load.exit_code).to eq(0),
+                                               ->(){
+                                                 @metasploit_cache_load_out.rewind
+                                                 @metasploit_cache_load_out.read
+                                               }
   end
 
   after(:all) {
@@ -137,7 +144,7 @@ RSpec.describe 'metasploit-cache', :content do
                                                            'exec',
                                                            'metasploit-cache',
                                                            'use',
-                                                           '--database-yaml', 'spec/dummy/config/database.yml',
+                                                           '--database-yaml', 'config/database.yml',
                                                            '--environment', 'content',
                                                            '--include', metasploit_framework_root.to_path,
                                                                         metasploit_framework_root.join('app', 'validators').to_path,
@@ -152,6 +159,7 @@ RSpec.describe 'metasploit-cache', :content do
                     metasploit_cache_use_out = Tempfile.new(['metasploit-cache-use', '.log'])
                     metasploit_cache_use_out.sync = true
 
+                    metasploit_cache_use.cwd = Metasploit::Cache::Engine.root.join('spec', 'dummy').to_path
                     metasploit_cache_use.io.stdout = metasploit_cache_use_out
                     metasploit_cache_use.start
                     metasploit_cache_use.wait
