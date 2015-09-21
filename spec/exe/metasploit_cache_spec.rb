@@ -17,6 +17,8 @@ RSpec.describe 'metasploit-cache', :content do
   end
 
   def db_content_purge
+    ActiveRecord::Tasks::DatabaseTasks.root = Metasploit::Cache::Engine.root
+
     ActiveRecord::Tasks::DatabaseTasks.purge ActiveRecord::Base.configurations.fetch('content')
   end
 
