@@ -41,6 +41,14 @@ FactoryGirl.define do
       module_type 'nop'
     end
 
+    factory :metasploit_cache_payload_single_handled_class_name do
+      association :module_class,
+                  factory: :metasploit_cache_payload_single_handled_class,
+                  strategry: :build
+
+      module_type 'payload'
+    end
+
     factory :metasploit_cache_post_class_name do
       association :module_class,
                   factory: :metasploit_cache_post_class,

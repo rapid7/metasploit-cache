@@ -85,6 +85,8 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   # @return [Metasploit::Cache::Payload::Single::Handled::Class] `#persisted?` will be `false` if saving fails.
   def persist(to: payload_single_handled_class)
     with_payload_single_handled_class_tag(to) do |tagged|
+      name!(payload_single_handled_class: to)
+
       # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
       saved = ActiveRecord::Base.connection_pool.with_connection {
         to.batched_save
@@ -101,6 +103,18 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   end
 
   private
+
+  # Builds `#name` for `payload_single_handled_class`.
+  #
+  # @param payload_single_handled_class [Metasploit::Cache::Payload::Single::Handled::Class, #build_name, #class, #reference_name]
+  #
+  # @return [void]
+  def name!(payload_single_handled_class:)
+    payload_single_handled_class.build_name(
+        module_type: 'payload',
+        reference: payload_single_handled_class.reference_name
+    )
+  end
 
   # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} used to resurrect {#payload_single_handled_class}.
   #
