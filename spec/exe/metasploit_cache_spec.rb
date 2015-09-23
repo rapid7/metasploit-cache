@@ -48,6 +48,7 @@ RSpec.describe 'metasploit-cache', :content do
         'exec',
         'metasploit-cache',
         'load',
+        metasploit_framework_root.join('modules').to_path,
         '--database-yaml', 'config/database.yml',
         '--environment', 'content',
         '--include', metasploit_framework_root.to_path,
@@ -58,7 +59,6 @@ RSpec.describe 'metasploit-cache', :content do
         '--gem', 'metasploit-framewor',
         '--logger-severity', 'ERROR',
         '--name', 'modules',
-        metasploit_framework_root.join('modules').to_path
     )
 
     @metasploit_cache_load_out = Tempfile.new(['metasploit-cache-load', '.log'])
@@ -144,6 +144,7 @@ RSpec.describe 'metasploit-cache', :content do
                                                            'exec',
                                                            'metasploit-cache',
                                                            'use',
+                                                           full_name,
                                                            '--database-yaml', 'config/database.yml',
                                                            '--environment', 'content',
                                                            '--include', metasploit_framework_root.to_path,
@@ -152,8 +153,7 @@ RSpec.describe 'metasploit-cache', :content do
                                                                         'metasploit/framework/executable_path_validator',
                                                                         'metasploit/framework/file_path_validator',
                                                            '--logger-severity', 'ERROR',
-                                                           '--only-type-directories', 'encoders', 'nops',
-                                                           full_name
+                                                           '--only-type-directories', 'encoders', 'nops'
                     )
 
                     metasploit_cache_use_out = Tempfile.new(['metasploit-cache-use', '.log'])
