@@ -58,8 +58,7 @@ RSpec.describe 'metasploit-cache', :content do
                      'metasploit/framework/file_path_validator',
         '--gem', 'metasploit-framewor',
         '--logger-severity', 'ERROR',
-        '--name', 'modules',
-        '--only-type-directories', 'encoders', 'nops'
+        '--name', 'modules'
     )
 
     @metasploit_cache_load_out = Tempfile.new(['metasploit-cache-load', '.log'])
@@ -110,16 +109,8 @@ RSpec.describe 'metasploit-cache', :content do
           # Shared Examples
           #
 
-          shared_examples_for 'can use full names' do |module_type, skip: nil|
-            context_options = {}
-
-            if skip
-              context_options = {
-                  skip: skip
-              }
-            end
-
-            context module_type, context_options do
+          shared_examples_for 'can use full names' do |module_type, max_run_count: nil|
+            context module_type do
               type_directory = Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE.fetch(module_type)
               real_type_pathname = module_path_real_pathname.join(type_directory)
 
@@ -129,12 +120,25 @@ RSpec.describe 'metasploit-cache', :content do
                   path: real_type_pathname.to_path
               )
 
+              run_count = 0
+
               rule.find do |real_path|
                 real_pathname = Pathname.new(real_path)
                 reference_path = real_pathname.relative_path_from(real_type_pathname).to_s
                 reference_name = reference_path.chomp(File.extname(reference_path))
 
                 context reference_name do
+                  if max_run_count
+                    before(:each) do
+                      run_count += 1
+
+                      if run_count > max_run_count
+                        skip "Skipping because #{max_run_count} #{module_type} Metasploit Modules have been tested " \
+                             "already and testing them all takes too long"
+                      end
+                    end
+                  end
+
                   full_name = "#{module_type}/#{reference_name}"
 
                   it "can be `use`d" do
@@ -177,27 +181,21 @@ RSpec.describe 'metasploit-cache', :content do
 
           include_examples 'can use full names',
                            'auxiliary',
-                           skip: "require 'metasploit/framework' takes ~3 seconds, so each test is ~5 seconds, which " \
-                                 'means testing all auxiliary Metasploit Modules would take > 1 hour.  Skip until ' \
-                                 'metasploit-framework loads faster. Add auxiliary to --only-type-directories when ' \
-                                 'removing this skip.'
+                           max_run_count: 5
 
-          include_examples 'can use full names', 'encoder'
+          include_examples 'can use full names',
+                           'encoder',
+                           max_run_count: 5
 
           include_examples 'can use full names',
                            'exploit',
-                           skip: "require 'metasploit/framework' takes ~3 seconds, so each test is ~5 seconds, which " \
-                                 'means testing all exploit Metasploit Modules would take > 3 hours.  Skip until ' \
-                                 'metasploit-framework loads faster.  Add exploits to --only-type-directories when ' \
-                                 'removing this skip.'
+                           max_run_count: 5
 
           include_examples 'can use full names', 'nop'
 
           include_examples 'can use full names',
                            'post',
-                           skip: "require 'metasploit/framework' takes ~3 seconds, so each test is ~5 seconds, which" \
-                           'means testing all posts takes > 8 minutes.  Skip until metasploit-framework loads ' \
-                           'faster. Add post to --only-type-directories when removing this skip.'
+                           max_run_count: 5
         end
       end
     end
