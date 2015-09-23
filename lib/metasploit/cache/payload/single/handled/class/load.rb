@@ -48,7 +48,8 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Load < Metasploit::Mod
   # Method Validations
   #
 
-  validate :payload_single_handled_class_valid
+  validate :payload_single_handled_class_valid,
+           unless: :loading_context?
 
   #
   # Attribute Validations
