@@ -420,21 +420,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     end
   end
 
-  # The path relative to the {#module_type_directory} under the {Metasploit::Cache::Module::Path
-  # parent_path.real_path}, including the file {EXTENSION extension}.
-  #
-  # @return [String] {#reference_name} + {EXTENSION}
-  # @return [nil] if {#reference_name} is `nil`.
-  def reference_path
-    path = nil
-
-    if reference_name
-      path = "#{reference_name}#{EXTENSION}"
-    end
-
-    path
-  end
-
   private
 
   # Whether this ancestor is being validated for loading.
