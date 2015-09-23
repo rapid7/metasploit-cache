@@ -63,6 +63,12 @@ class Metasploit::Cache::CLI < Thor
           build_instance: :build_nop_instance,
           instance_ephemeral_class: Metasploit::Cache::Nop::Instance::Ephemeral
       },
+      'payloads/singles' => {
+          ancestors: :single_payload_ancestors,
+          build_class: :build_payload_single_unhandled_class,
+          build_instance: :build_payload_single_unhandled_instance,
+          instance_ephemeral_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral
+      },
       'post' => {
         ancestors: :post_ancestors,
         build_class: :build_post_class,
@@ -72,7 +78,7 @@ class Metasploit::Cache::CLI < Thor
   }
 
   # Supported directories from which to loaded Metasploit Modules into cache.
-  TYPE_DIRECTORIES = %w{auxiliary encoders exploits nops post}
+  TYPE_DIRECTORIES = %w{auxiliary encoders exploits nops payloads/singles post}
 
   #
   # Class Methods
@@ -132,7 +138,8 @@ class Metasploit::Cache::CLI < Thor
                'as a namespace for NAME so that projects using metasploit-framework do not need to worry about ' \
                'collisions on NAME which could disrupt the cache behavior.'
   option :only_type_directories,
-         desc: "Only load the given type directories ('auxiliary', 'encoders', 'exploits', 'nops', 'post')",
+         desc: "Only load the given type directories ('auxiliary', 'encoders', 'exploits', 'nops', " \
+               "'payloads/singles', 'post')",
          type: :array
   option :name,
          desc: 'The name of the module path scoped to GEM.  GEM and NAME uniquely identify this path so that ' \
@@ -214,7 +221,7 @@ class Metasploit::Cache::CLI < Thor
       end
     end
 
-    return status
+    exit(status)
   end
 
   desc 'seed',
@@ -268,7 +275,12 @@ class Metasploit::Cache::CLI < Thor
     end
 
     module_class = module_class_name.module_class
-    module_ancestor = module_class.ancestor
+
+    if module_class.respond_to? :ancestor
+      module_ancestor = module_class.ancestor
+    else
+      module_ancestor = module_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor
+    end
 
     module_ancestor_load = Metasploit::Cache::Module::Ancestor::Load.new(
         logger: tagged_logger,
@@ -281,43 +293,83 @@ class Metasploit::Cache::CLI < Thor
         "#{module_ancestor_load.class} is invalid: #{module_ancestor_load.errors.full_messages.to_sentence}"
       }
 
-      exit(1)
+      exit(2)
     end
 
-    direct_class = module_class
+    if module_class.is_a? Metasploit::Cache::Direct::Class
+      direct_class = module_class
 
-    direct_class_load = Metasploit::Cache::Direct::Class::Load.new(
-        direct_class: direct_class,
-        logger: tagged_logger,
-        metasploit_module: module_ancestor_load.metasploit_module
-    )
+      direct_class_load = Metasploit::Cache::Direct::Class::Load.new(
+          direct_class: direct_class,
+          logger: tagged_logger,
+          metasploit_module: module_ancestor_load.metasploit_module
+      )
 
-    unless direct_class_load.valid?
-      tagged_logger.error {
-        "#{direct_class_load.class} is invalid: #{direct_class_load.errors.full_messages.to_sentence}"
-      }
+      unless direct_class_load.valid?
+        tagged_logger.error {
+          "#{direct_class_load.class} is invalid: #{direct_class_load.errors.full_messages.to_sentence}"
+        }
 
-      exit(1)
+        exit(3)
+      end
+
+      config = CONFIG_BY_MODULE_TYPE.fetch(module_type)
+      module_instance = direct_class.public_send(config.fetch(:instance))
+
+      module_instance_load = Metasploit::Cache::Module::Instance::Load.new(
+          ephemeral_class: config.fetch(:instance_ephemeral_class),
+          logger: tagged_logger,
+          metasploit_framework: metasploit_framework_double,
+          metasploit_module_class: direct_class_load.metasploit_class,
+          module_instance: module_instance
+      )
+
+      unless module_instance_load.valid?
+        tagged_logger.error {
+          "#{module_instance_load.class} is invalid: #{module_instance_load.errors.full_messages.to_sentence}"
+        }
+
+        exit(4)
+      end
+    else
+      payload_single_handled_class = module_class
+
+      payload_single_handled_class_load = Metasploit::Cache::Payload::Single::Handled::Class::Load.new(
+          handler_module: payload_single_handled_class.payload_single_unhandled_instance.handler.name.constantize,
+          logger: tagged_logger,
+          metasploit_module: module_ancestor_load.metasploit_module,
+          payload_single_handled_class: payload_single_handled_class,
+          payload_superclass: Msf::Payload
+      )
+
+      unless payload_single_handled_class_load.valid?
+        tagged_logger.error {
+          "#{payload_single_handled_class_load.class} is invalid: #{payload_single_handled_class_load.errors.full_messages.to_sentence}"
+        }
+
+        exit(3)
+      end
+
+      payload_single_handled_instance_load = Metasploit::Cache::Module::Instance::Load.new(
+          ephemeral_class: Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral,
+          logger: tagged_logger,
+          metasploit_framework: metasploit_framework_double,
+          metasploit_module_class: payload_single_handled_class_load.metasploit_class,
+          module_instance: payload_single_handled_class.payload_single_unhandled_instance
+      )
+
+      unless payload_single_handled_instance_load.valid?
+        tagged_logger.error {
+          "#{payload_single_handled_instance_load} is invalid: #{payload_single_handled_instance_load.errors.full_messages.to_sentence}"
+        }
+
+        exit(4)
+      end
     end
 
-    config = CONFIG_BY_MODULE_TYPE.fetch(module_type)
-    module_instance = direct_class.public_send(config.fetch(:instance))
-
-    module_instance_load = Metasploit::Cache::Module::Instance::Load.new(
-        ephemeral_class: config.fetch(:instance_ephemeral_class),
-        logger: tagged_logger,
-        metasploit_framework: metasploit_framework_double,
-        metasploit_module_class: direct_class_load.metasploit_class,
-        module_instance: module_instance
-    )
-
-    unless module_instance_load.valid?
-      tagged_logger.error {
-        "#{module_instance_load.class} is invalid: #{module_instance_load.errors.full_messages.to_sentence}"
-      }
-
-      exit(1)
-    end
+    tagged_logger.info {
+      "#{full_name} is usable"
+    }
   end
 
   #
@@ -363,29 +415,38 @@ class Metasploit::Cache::CLI < Thor
           next
         end
 
-        direct_class = module_ancestor.public_send(config.fetch(:build_class))
+        module_class = module_ancestor.public_send(config.fetch(:build_class))
 
-        direct_class_load = Metasploit::Cache::Direct::Class::Load.new(
-            direct_class: direct_class,
-            logger: logger,
-            metasploit_module: module_ancestor_load.metasploit_module
-        )
-
-        unless direct_class_load.valid?
+        if module_class.is_a? Metasploit::Cache::Payload::Unhandled::Class
+          module_class_load = Metasploit::Cache::Payload::Unhandled::Class::Load.new(
+              logger: logger,
+              metasploit_module: module_ancestor_load.metasploit_module,
+              payload_unhandled_class: module_class,
+              payload_superclass: Msf::Payload
+          )
+        else
+          module_class_load = Metasploit::Cache::Direct::Class::Load.new(
+              direct_class: module_class,
+              logger: logger,
+              metasploit_module: module_ancestor_load.metasploit_module
+          )
+        end
+        
+        unless module_class_load.valid?
           logger.error {
-            "#{direct_class_load.class} is invalid: #{direct_class_load.errors.full_messages.to_sentence}"
+            "#{module_class_load.class} is invalid: #{module_class_load.errors.full_messages.to_sentence}"
           }
 
           next
         end
 
-        module_instance = direct_class.public_send(config.fetch(:build_instance))
+        module_instance = module_class.public_send(config.fetch(:build_instance))
 
         module_instance_load = Metasploit::Cache::Module::Instance::Load.new(
             ephemeral_class: config.fetch(:instance_ephemeral_class),
             logger: logger,
             metasploit_framework: metasploit_framework,
-            metasploit_module_class: direct_class_load.metasploit_class,
+            metasploit_module_class: module_class_load.metasploit_class,
             module_instance: module_instance
         )
 
@@ -395,6 +456,44 @@ class Metasploit::Cache::CLI < Thor
           }
 
           next
+        end
+
+        if module_instance.is_a? Metasploit::Cache::Payload::Single::Unhandled::Instance
+          payload_single_handled_class = module_instance.build_payload_single_handled_class
+
+          payload_single_handled_class_load = Metasploit::Cache::Payload::Single::Handled::Class::Load.new(
+              handler_module: module_instance_load.metasploit_module_instance.handler_klass,
+              logger: logger,
+              metasploit_module: module_ancestor_load.metasploit_module,
+              payload_single_handled_class: payload_single_handled_class,
+              payload_superclass: Msf::Payload
+          )
+
+          unless payload_single_handled_class_load.valid?
+            logger.error {
+              "#{payload_single_handled_class_load.class} is invalid: #{payload_single_handled_class_load.errors.full_messages.to_sentence}"
+            }
+
+            next
+          end
+
+          payload_single_handled_instance = payload_single_handled_class.build_payload_single_handled_instance
+
+          payload_single_handled_instance_load = Metasploit::Cache::Module::Instance::Load.new(
+              ephemeral_class: Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral,
+              logger: logger,
+              metasploit_framework: metasploit_framework,
+              metasploit_module_class: payload_single_handled_class_load.metasploit_class,
+              module_instance: payload_single_handled_instance
+          )
+
+          unless payload_single_handled_instance_load.valid?
+            logger.error {
+              "#{payload_single_handled_instance_load.class} is invalid: #{payload_single_handled_instance_load.errors.full_messages.to_sentence}"
+            }
+
+            next
+          end
         end
       end
     end

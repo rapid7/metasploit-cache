@@ -1,6 +1,22 @@
 # Adds {#each_changed} method to {Metasploit::Cache::Module::Path} associations, so that
 # {Metasploit::Cache::Module::Ancestor} from the given association can be populated from the file system.
 module Metasploit::Cache::Module::Path::AssociationExtension
+  #
+  # Module Methods
+  #
+
+  def self.real_path_rule(module_path_real_pathname:, relative_path_prefix:)
+    File::Find.new(
+        ftype: 'file',
+        path: module_path_real_pathname.join(relative_path_prefix).to_path,
+        pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
+    )
+  end
+
+  #
+  # Instance Methods
+  #
+
   # @note The yielded {Metasploit::Cache::Module::Ancestor} may contain unsaved changes.  It is the responsibility
   #   of the caller to save the record.
   #
@@ -45,12 +61,9 @@ module Metasploit::Cache::Module::Path::AssociationExtension
   #
   # @return [File::Find]
   def real_path_rule
-    File::Find.new(
-        ftype: 'file',
-        path: proxy_association.owner.real_pathname.join(
-            proxy_association.reflection.klass.relative_path_prefix
-        ).to_path,
-        pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}"
+    Metasploit::Cache::Module::Path::AssociationExtension.real_path_rule(
+        module_path_real_pathname: proxy_association.owner.real_pathname,
+        relative_path_prefix: proxy_association.reflection.klass.relative_path_prefix
     )
   end
 
