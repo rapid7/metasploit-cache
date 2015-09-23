@@ -90,14 +90,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       end
     end
 
-    context 'REFERENCE_NAME_SEPARATOR' do
-      subject(:reference_name_separator) do
-        described_class::REFERENCE_NAME_SEPARATOR
-      end
-
-      it { should == '/' }
-    end
-
     # pattern is tested in validation tests below
     it 'should define SHA_HEX_DIGEST_REGEXP' do
       expect(described_class::SHA1_HEX_DIGEST_REGEXP).to be_a Regexp
@@ -753,7 +745,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor, type: :model do
       context 'in unknown types' do
         let(:module_ancestor) {
           super().tap { |module_ancestor|
-            module_ancestor.relative_path = "#{module_type}/#{module_ancestor.reference_name}.rb"
+            module_ancestor.relative_path = "#{module_type}/reference/name.rb"
           }
         }
 

@@ -11,6 +11,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::AncestorCell < Cell::ViewMod
   #
 
   property :ancestor
+  property :name
   property :rank
 
   #

@@ -231,14 +231,22 @@ RSpec.describe Metasploit::Cache::Direct::Class do
       )
     }
 
+
     context 'with #ancestor' do
       let(:ancestor) {
-        FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
+        FactoryGirl.build(
+            :metasploit_cache_auxiliary_ancestor,
+            reference_name: ancestor_reference_name
+        )
       }
 
-      it 'is Metasploit::Cache::Module::Ancestor#reference_name' do
+      let(:ancestor_reference_name) {
+        'reference/name'
+      }
+
+      it 'is Metasploit::Cache::Module::Ancestor#relative_file_names with module type and extension stripped' do
         expect(reference_name).not_to be_nil
-        expect(reference_name).to eq(ancestor.reference_name)
+        expect(reference_name).to eq(ancestor_reference_name)
       end
     end
 

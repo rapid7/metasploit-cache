@@ -29,9 +29,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::AncestorCell, type:
           it {
             is_expected.to eq(
                                <<-EOS.strip_heredoc.strip
-                               # Module Type: payload
-                               # Payload Type: single
-                               # Reference Name: #{payload_unhandled_class.ancestor.reference_name}
+                               # Relative Path: #{payload_unhandled_class.ancestor.relative_path}
                                module #{metasploit_module_relative_name}
                                  #
                                  # CONSTANTS
@@ -52,9 +50,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::AncestorCell, type:
           it {
             is_expected.to eq(
                                <<-EOS.strip_heredoc.strip
-                               # Module Type: payload
-                               # Payload Type: stage
-                               # Reference Name: #{payload_unhandled_class.ancestor.reference_name}
+                               # Relative Path: #{payload_unhandled_class.ancestor.relative_path}
                                module #{metasploit_module_relative_name}
                                  #
                                  # CONSTANTS
@@ -75,9 +71,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::AncestorCell, type:
           it {
             is_expected.to eq(
                                <<-EOS.strip_heredoc.strip
-                               # Module Type: payload
-                               # Payload Type: stager
-                               # Reference Name: #{payload_unhandled_class.ancestor.reference_name}
+                               # Relative Path: #{payload_unhandled_class.ancestor.relative_path}
                                module #{metasploit_module_relative_name}
                                  #
                                  # CONSTANTS

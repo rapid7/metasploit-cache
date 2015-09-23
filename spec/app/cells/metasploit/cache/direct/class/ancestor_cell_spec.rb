@@ -31,7 +31,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
             is_expected.to eq(
                                <<-EOS.strip_heredoc.strip
                                # Module Type: auxiliary
-                               # Reference Name: #{direct_class.ancestor.reference_name}
+                               # Reference Name: #{direct_class.name.reference}
                                class #{metasploit_module_relative_name} < Metasploit::Model::Base
                                  #
                                  # CONSTANTS
@@ -53,7 +53,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
             is_expected.to eq(
                                <<-EOS.strip_heredoc.strip
                                # Module Type: encoder
-                               # Reference Name: #{direct_class.ancestor.reference_name}
+                               # Reference Name: #{direct_class.name.reference}
                                class #{metasploit_module_relative_name} < Metasploit::Model::Base
                                  #
                                  # CONSTANTS
@@ -75,7 +75,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
             is_expected.to eq(
                                <<-EOS.strip_heredoc.strip
                                # Module Type: exploit
-                               # Reference Name: #{direct_class.ancestor.reference_name}
+                               # Reference Name: #{direct_class.name.reference}
                                class #{metasploit_module_relative_name} < Metasploit::Model::Base
                                  #
                                  # CONSTANTS
@@ -97,7 +97,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
             is_expected.to eq(
                                <<-EOS.strip_heredoc.strip
                                # Module Type: nop
-                               # Reference Name: #{direct_class.ancestor.reference_name}
+                               # Reference Name: #{direct_class.name.reference}
                                class #{metasploit_module_relative_name} < Metasploit::Model::Base
                                  #
                                  # CONSTANTS
@@ -119,7 +119,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
             is_expected.to eq(
                                <<-EOS.strip_heredoc.strip
                                # Module Type: post
-                               # Reference Name: #{direct_class.ancestor.reference_name}
+                               # Reference Name: #{direct_class.name.reference}
                                class #{metasploit_module_relative_name} < Metasploit::Model::Base
                                  #
                                  # CONSTANTS

@@ -22,21 +22,20 @@ RSpec.describe Metasploit::Cache::Module::AncestorCell, type: :cell do
       }
 
       context 'Metasploit::Cache::Module::Ancestor#module_type' do
+        let(:expected_rendered_template) {
+          <<-EOS.strip_heredoc.strip
+          # Relative Path: #{module_ancestor.relative_path}
+          class #{metasploit_module_relative_name} < Metasploit::Model::Base
+          end
+          EOS
+        }
+
         context 'with auxiliary' do
           let(:module_ancestor_factory) {
             :metasploit_cache_auxiliary_ancestor
           }
 
-          it {
-            is_expected.to eq(
-                               <<-EOS.strip_heredoc.strip
-                               # Module Type: auxiliary
-                               # Reference Name: #{module_ancestor.reference_name}
-                               class #{metasploit_module_relative_name} < Metasploit::Model::Base
-                               end
-                               EOS
-                             )
-          }
+          it { is_expected.to eq(expected_rendered_template) }
         end
 
         context 'with encoder' do
@@ -44,16 +43,7 @@ RSpec.describe Metasploit::Cache::Module::AncestorCell, type: :cell do
             :metasploit_cache_encoder_ancestor
           }
 
-          it {
-            is_expected.to eq(
-                               <<-EOS.strip_heredoc.strip
-                               # Module Type: encoder
-                               # Reference Name: #{module_ancestor.reference_name}
-                               class #{metasploit_module_relative_name} < Metasploit::Model::Base
-                               end
-                               EOS
-                           )
-          }
+          it { is_expected.to eq(expected_rendered_template) }
         end
 
         context 'with exploit' do
@@ -61,16 +51,7 @@ RSpec.describe Metasploit::Cache::Module::AncestorCell, type: :cell do
             :metasploit_cache_exploit_ancestor
           }
 
-          it {
-            is_expected.to eq(
-                               <<-EOS.strip_heredoc.strip
-                               # Module Type: exploit
-                               # Reference Name: #{module_ancestor.reference_name}
-                               class #{metasploit_module_relative_name} < Metasploit::Model::Base
-                               end
-                           EOS
-                           )
-          }
+          it { is_expected.to eq(expected_rendered_template) }
         end
 
         context 'with nop' do
@@ -78,16 +59,7 @@ RSpec.describe Metasploit::Cache::Module::AncestorCell, type: :cell do
             :metasploit_cache_nop_ancestor
           }
 
-          it {
-            is_expected.to eq(
-                               <<-EOS.strip_heredoc.strip
-                               # Module Type: nop
-                               # Reference Name: #{module_ancestor.reference_name}
-                               class #{metasploit_module_relative_name} < Metasploit::Model::Base
-                               end
-                           EOS
-                           )
-          }
+          it { is_expected.to eq(expected_rendered_template) }
         end
 
         context 'with post' do
@@ -95,16 +67,7 @@ RSpec.describe Metasploit::Cache::Module::AncestorCell, type: :cell do
             :metasploit_cache_post_ancestor
           }
 
-          it {
-            is_expected.to eq(
-                               <<-EOS.strip_heredoc.strip
-                               # Module Type: post
-                               # Reference Name: #{module_ancestor.reference_name}
-                               class #{metasploit_module_relative_name} < Metasploit::Model::Base
-                               end
-                           EOS
-                           )
-          }
+          it { is_expected.to eq(expected_rendered_template) }
         end
       end
     end
