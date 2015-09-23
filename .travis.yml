@@ -10,8 +10,8 @@ env:
   - BUNDLER_INSTALL_WITHOUT="sqlite3" RAKE_TASKS="spec" SPEC="spec/exe/metasploit_cache_spec.rb"
   - BEFORE_INSTALL="./travis-ci/install_sqlite3" CPATH="${PWD}/output/include" BUNDLER_INSTALL_WITHOUT="postgresql" LD_LIBRARY_PATH="${PWD}/output/lib" LIBRARY_PATH="${PWD}/output/lib" RAKE_TASKS="spec" SPEC="spec/exe/metasploit_cache_spec.rb"
 
-  - BUNDLER_INSTALL_WITHOUT="sqlite3" RAKE_TASKS="spec" SPEC_OPTS="--tag auxiliary --tag exploit --tag post"
-  - BEFORE_INSTALL="./travis-ci/install_sqlite3" CPATH="${PWD}/output/include" BUNDLER_INSTALL_WITHOUT="postgresql" LD_LIBRARY_PATH="${PWD}/output/lib" LIBRARY_PATH="${PWD}/output/lib" RAKE_TASKS="spec" SPEC_OPTS="--tag auxiliary --tag exploit --tag post"
+  - BUNDLER_INSTALL_WITHOUT="sqlite3" RAKE_TASKS="spec" SPEC_OPTS="--tag auxiliary --tag encoder --tag exploit --tag nop --tag post"
+  - BEFORE_INSTALL="./travis-ci/install_sqlite3" CPATH="${PWD}/output/include" BUNDLER_INSTALL_WITHOUT="postgresql" LD_LIBRARY_PATH="${PWD}/output/lib" LIBRARY_PATH="${PWD}/output/lib" RAKE_TASKS="spec" SPEC_OPTS="--tag auxiliary --tag encoder --tag exploit --tag nop --tag post"
 
   - BEFORE_INSTALL="./travis-ci/install_sqlite3" CPATH="${PWD}/output/include" BUNDLER_INSTALL_WITHOUT="postgresql" LD_LIBRARY_PATH="${PWD}/output/lib" LIBRARY_PATH="${PWD}/output/lib" RAKE_TASKS="spec" SPEC_OPTS="--tag payload_single --tag payload_stage --tag payload_staged --tag payload_stager"
   - BUNDLER_INSTALL_WITHOUT="sqlite3" RAKE_TASKS="spec" SPEC_OPTS="--tag payload_single --tag payload_stage --tag payload_staged --tag payload_stager"
