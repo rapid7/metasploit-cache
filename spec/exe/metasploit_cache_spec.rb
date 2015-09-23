@@ -59,6 +59,7 @@ RSpec.describe 'metasploit-cache', :content do
         '--gem', 'metasploit-framewor',
         '--logger-severity', 'ERROR',
         '--name', 'modules',
+        '--only-type-directories', 'encoders', 'nops'
     )
 
     @metasploit_cache_load_out = Tempfile.new(['metasploit-cache-load', '.log'])
@@ -152,8 +153,7 @@ RSpec.describe 'metasploit-cache', :content do
                                                            '--require', 'metasploit/framework',
                                                                         'metasploit/framework/executable_path_validator',
                                                                         'metasploit/framework/file_path_validator',
-                                                           '--logger-severity', 'ERROR',
-                                                           '--only-type-directories', 'encoders', 'nops'
+                                                           '--logger-severity', 'ERROR'
                     )
 
                     metasploit_cache_use_out = Tempfile.new(['metasploit-cache-use', '.log'])
