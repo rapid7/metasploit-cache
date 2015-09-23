@@ -12,7 +12,6 @@ RSpec.describe Metasploit::Cache::Payload::Handler do
     end
 
     context 'indices' do
-      it { is_expected.to have_db_index(:handler_type).unique(true) }
       it { is_expected.to have_db_index(:name).unique(true) }
     end
   end
