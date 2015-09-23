@@ -56,11 +56,6 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
             inclusion: {
                 in: Metasploit::Cache::Payload::Handler::GeneralType::ALL
             }
-  validates :handler_type,
-            presence: true,
-            uniqueness: {
-                unless: :batched?
-            }
   validates :name,
             presence: true,
             uniqueness: {
