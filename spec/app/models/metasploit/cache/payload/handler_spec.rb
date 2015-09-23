@@ -119,7 +119,6 @@ RSpec.describe Metasploit::Cache::Payload::Handler do
         )
       }
 
-      it { is_expected.to validate_uniqueness_of :handler_type }
       it { is_expected.to validate_uniqueness_of :name }
     end
   end
