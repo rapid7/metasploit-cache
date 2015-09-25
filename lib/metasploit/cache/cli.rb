@@ -1,5 +1,6 @@
 require 'erb'
 require 'ruby-progressbar'
+require 'transaction_retry'
 
 # Command-line interface (CLI) for metasploit-cache
 class Metasploit::Cache::CLI < Thor
@@ -518,6 +519,9 @@ class Metasploit::Cache::CLI < Thor
     erb_template = File.read(database_yaml_path)
     configuration = YAML.load(ERB.new(erb_template).result)
     ActiveRecord::Base.establish_connection(configuration.fetch(environment))
+
+    TransactionRetry.apply_activerecord_patch
+    TransactionRetry.max_retries = TYPE_DIRECTORIES.length
   end
 
   # Filters {TYPE_DIRECTORIES} based on `--only-type-directories` arguments.

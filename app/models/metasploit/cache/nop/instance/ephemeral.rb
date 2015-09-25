@@ -80,7 +80,13 @@ class Metasploit::Cache::Nop::Instance::Ephemeral < Metasploit::Model::Base
       }
 
       saved = ActiveRecord::Base.connection_pool.with_connection {
-        synchronized.batched_save
+        nop_class = to.class
+
+        nop_class.isolation_level(:serializable) {
+          nop_class.transaction {
+            synchronized.batched_save
+          }
+        }
       }
 
       unless saved

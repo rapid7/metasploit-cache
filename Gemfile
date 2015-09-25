@@ -3,6 +3,10 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in metasploit-cache.gemspec
 gemspec
 
+gem 'transaction_isolation',
+    github: 'limhoff-r7/transaction_isolation',
+    ref: '5f9b0068b68aa1628efca98835d50e7708f97d88'
+
 group :content do
   gem 'metasploit-framework',
       github: 'rapid7/metasploit-framework',

@@ -176,7 +176,7 @@ RSpec.describe Metasploit::Cache::Payload::Handable::Ephemeral::Handler do
             synchronize
           end
 
-          it { is_expected.to be_new_record }
+          it { is_expected.to be_persisted }
 
           it 'has source.handler_klass.general_handler_type for #general_handler_type' do
             expect(destination_handler.general_handler_type).to eq(source.handler_klass.general_handler_type)

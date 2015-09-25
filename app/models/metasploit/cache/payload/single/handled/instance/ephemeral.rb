@@ -68,7 +68,13 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral < Metaspl
     with_payload_staged_instance_tag(to) do |tagged|
       # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
       saved = ActiveRecord::Base.connection_pool.with_connection {
-        to.batched_save
+        to_class = to.class
+
+        to_class.isolation_level(:serializable) {
+          to_class.transaction {
+            to.batched_save
+          }
+        }
       }
 
       unless saved
