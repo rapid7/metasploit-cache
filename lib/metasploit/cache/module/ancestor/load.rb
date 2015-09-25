@@ -145,8 +145,16 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
   # @return [void]
   def module_ancestor_valid
     # allow the presence validation to handle it being nil
-    if module_ancestor and module_ancestor.invalid?(validation_context)
-      errors.add(:module_ancestor, :invalid)
+    if module_ancestor
+      valid = module_ancestor.class.isolation_level(:repeatable_read) {
+        module_ancestor.transaction {
+          module_ancestor.valid?(validation_context)
+        }
+      }
+
+      unless valid
+        errors.add(:module_ancestor, :invalid)
+      end
     end
   end
 
