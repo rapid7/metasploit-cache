@@ -70,7 +70,7 @@ module Metasploit::Cache::Ephemeral
 
         retry
       else
-        raise record_not_unique
+        record_class.new(attributes)
       end
     rescue ActiveRecord::RecordInvalid => record_invalid
       record_invalid.record
