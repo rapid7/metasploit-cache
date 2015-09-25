@@ -10,6 +10,8 @@ module Metasploit::Cache::Ephemeral
 
   # The maximum numbers of times to retry in {create_unique}
   MAX_RETRIES = 5
+  # Number of milliseconds in a second
+  MILLISECONDS_PER_SECOND = 1000
 
   #
   # Module Methods
@@ -59,6 +61,10 @@ module Metasploit::Cache::Ephemeral
 
           lines.join("\n")
         }
+
+        milliseconds = rand(2 << count)
+        seconds = milliseconds.fdiv(MILLISECONDS_PER_SECOND)
+        sleep(seconds)
 
         retry
       else
