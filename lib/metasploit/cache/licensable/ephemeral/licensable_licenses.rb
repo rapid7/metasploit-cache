@@ -24,9 +24,15 @@ module Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
     cached_added_attribute_set.each do |abbreviation|
       license = cached_license_by_abbreviation[abbreviation]
 
-      destination.licensable_licenses.build(
-          license: license
-      )
+      destination_class = destination.class
+
+      destination_class.isolation_level(:repeatable_read) do
+        destination_class.transaction do
+          destination.licensable_licenses.build(
+              license: license
+          )
+        end
+      end
     end
 
     destination

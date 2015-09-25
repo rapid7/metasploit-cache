@@ -63,10 +63,16 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
         email_address = cached_email_address_by_full[email_address_full]
       end
 
-      destination.contributions.build(
-          author: author,
-          email_address: email_address
-      )
+      destination_class = destination.class
+
+      destination_class.isolation_level(:repeatable_read) do
+        destination_class.transaction do
+          destination.contributions.build(
+              author: author,
+              email_address: email_address
+          )
+        end
+      end
     end
 
     destination
