@@ -43,11 +43,13 @@ module Metasploit::Cache::Ephemeral
     count = 0
 
     begin
-      Metasploit::Cache::Batch.batch do
-        record_class.transaction(requires_new: true) do
-          record_class.find_or_create_by!(attributes)
-        end
-      end
+      Metasploit::Cache::Batch.batch {
+        record_class.isolation_level(:serializable)  {
+          record_class.transaction(requires_new: true) {
+            record_class.find_or_create_by!(attributes)
+          }
+        }
+      }
     rescue ActiveRecord::RecordNotUnique => record_not_unique
       count += 1
 
