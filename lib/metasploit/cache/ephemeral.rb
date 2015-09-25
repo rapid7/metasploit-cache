@@ -39,11 +39,17 @@ module Metasploit::Cache::Ephemeral
           record_class.find_or_create_by!(attributes)
         end
       end
-    rescue ActiveRecord::RecordNotUnique
+    rescue ActiveRecord::RecordNotUnique => record_not_unique
       count += 1
 
       record_class.logger.debug {
-        "#{count.ordinalize} retry"
+        lines = ["#{count.ordinalize} retry caused by #{record_not_unique.message} (#{record_not_unique.class})"]
+
+        if record_not_unique.backtrace
+          lines.concat(record_not_unique.backtrace)
+        end
+
+        lines.join("\n")
       }
 
       retry
