@@ -5,6 +5,13 @@ module Metasploit::Cache::Ephemeral
   autoload :AttributeSet
 
   #
+  # CONSTANTS
+  #
+
+  # The maximum numbers of times to retry in {create_unique}
+  MAX_RETRIES = 5
+
+  #
   # Module Methods
   #
 
@@ -42,17 +49,21 @@ module Metasploit::Cache::Ephemeral
     rescue ActiveRecord::RecordNotUnique => record_not_unique
       count += 1
 
-      record_class.logger.debug {
-        lines = ["#{count.ordinalize} retry caused by #{record_not_unique.message} (#{record_not_unique.class})"]
+      if count <= MAX_RETRIES
+        record_class.logger.debug {
+          lines = ["#{count.ordinalize} retry caused by #{record_not_unique.message} (#{record_not_unique.class})"]
 
-        if record_not_unique.backtrace
-          lines.concat(record_not_unique.backtrace)
-        end
+          if record_not_unique.backtrace
+            lines.concat(record_not_unique.backtrace)
+          end
 
-        lines.join("\n")
-      }
+          lines.join("\n")
+        }
 
-      retry
+        retry
+      else
+        raise record_not_unique
+      end
     rescue ActiveRecord::RecordInvalid => record_invalid
       record_invalid.record
     end
