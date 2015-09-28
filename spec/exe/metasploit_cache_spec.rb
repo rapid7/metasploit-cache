@@ -202,7 +202,7 @@ RSpec.describe 'metasploit-cache', :content do
           # Shared Examples
           #
 
-          shared_examples_for 'can use full names' do |module_type, max_run_count: nil|
+          shared_examples_for 'can use full names' do |module_type, max_run_count: nil, pending_reason_by_reference_name: {}|
             context module_type do
               type_directory = Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE.fetch(module_type)
 
@@ -210,6 +210,7 @@ RSpec.describe 'metasploit-cache', :content do
                   max_run_count: max_run_count,
                   module_path_real_pathname: module_path_real_pathname,
                   module_type: module_type,
+                  pending_reason_by_reference_name: pending_reason_by_reference_name,
                   relative_path_prefix: type_directory
               ) { |relative_pathname|
                 Metasploit::Cache::Module::Class::Namable.reference_name(
@@ -260,7 +261,15 @@ RSpec.describe 'metasploit-cache', :content do
 
           include_examples 'can use full names',
                            'post',
-                           max_run_count: 5
+                           max_run_count: 5,
+                           pending_reason_by_reference_path: {
+                               'firefox/gather/cookies' => 'Missing platforms',
+                               'firefox/gather/history' => 'Missing platforms',
+                               'firefox/gather/passwords' => 'Missing platforms',
+                               'firefox/manage/webcam_chat' => 'Missing platforms',
+                               'windows/gather/credentials/spark_im' => 'Missing platforms',
+                               'windows/gather/netlm_downgrade' => 'Missing platforms',
+                           }
         end
       end
     end
