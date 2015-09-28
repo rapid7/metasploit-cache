@@ -158,6 +158,8 @@ RSpec.describe 'metasploit-cache', :content do
                   end
                 end
 
+                full_name = "#{module_type}/#{reference_name}"
+
                 it "can be `use`d" do
                   metasploit_framework_root = Metasploit::Framework::Engine.root
 
@@ -166,7 +168,7 @@ RSpec.describe 'metasploit-cache', :content do
                       'exec',
                       'metasploit-cache',
                       'use',
-                      "#{module_type}/#{reference_name}",
+                      full_name,
                       '--database-yaml', 'config/database.yml',
                       '--environment', 'content',
                       '--include', metasploit_framework_root.to_path,
