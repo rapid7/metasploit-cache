@@ -262,7 +262,7 @@ RSpec.describe 'metasploit-cache', :content do
           include_examples 'can use full names',
                            'post',
                            max_run_count: 5,
-                           pending_reason_by_reference_path: {
+                           pending_reason_by_reference_name: {
                                'firefox/gather/cookies' => 'Missing platforms',
                                'firefox/gather/history' => 'Missing platforms',
                                'firefox/gather/passwords' => 'Missing platforms',
