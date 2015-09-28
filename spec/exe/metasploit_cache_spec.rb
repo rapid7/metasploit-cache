@@ -72,7 +72,7 @@ RSpec.describe 'metasploit-cache', :content do
     Benchmark.bm do |report|
       report.report do
         metasploit_cache_load.start
-        metasploit_cache_load.poll_for_exit(5.minutes)
+        metasploit_cache_load.poll_for_exit(10.minutes)
       end
     end
 
