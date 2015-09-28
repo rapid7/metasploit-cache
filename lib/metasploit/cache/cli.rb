@@ -132,6 +132,10 @@ class Metasploit::Cache::CLI < Thor
                '`Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest` have changed and reloading should ' \
                'occur',
          type: :boolean
+  option :concurrent,
+         default: false,
+         desc: 'Load type directories concurrently',
+         type: :boolean
   option :gem,
          desc: 'The name of the gem that is adding this module path to metasploit-framework. For paths normally ' \
                "added by metasploit-framework itself, this would be `'metasploit-framework'`, while for Metasploit " \
@@ -182,10 +186,9 @@ class Metasploit::Cache::CLI < Thor
 
     type_directories = filtered_type_directories
 
-    threaded = true
     status = 0
 
-    if threaded
+    if options.fetch('concurrent')
       threads = type_directories.map { |type_directory|
         # self must be passed first so load_type_directory is bound to it
         Thread.new self,
@@ -213,7 +216,7 @@ class Metasploit::Cache::CLI < Thor
               type_directory,
               assume_changed: options.fetch('assume_changed'),
               metasploit_framework: metasploit_framework_double,
-              logger: cached_tagged_logger,
+              logger: tagged_logger,
           )
         rescue Exception => exception
           tagged_logger.error(exception)
