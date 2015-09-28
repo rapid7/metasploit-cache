@@ -56,7 +56,7 @@ RSpec.describe 'metasploit-cache', :content do
         '--require', 'metasploit/framework',
                      'metasploit/framework/executable_path_validator',
                      'metasploit/framework/file_path_validator',
-        '--gem', 'metasploit-framewor',
+        '--gem', 'metasploit-framework',
         '--logger-severity', 'ERROR',
         '--name', 'modules'
     )
