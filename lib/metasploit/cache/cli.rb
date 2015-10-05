@@ -76,6 +76,12 @@ class Metasploit::Cache::CLI < Thor
           build_instance: :build_payload_stage_instance,
           instance_ephemeral_class: Metasploit::Cache::Payload::Stage::Instance::Ephemeral
       },
+      'payloads/stagers' => {
+          ancestors: :stager_payload_ancestors,
+          build_class: :build_stager_payload_class,
+          build_instance: :build_payload_stager_instance,
+          instance_ephemeral_class: Metasploit::Cache::Payload::Stager::Instance::Ephemeral
+      },
       'post' => {
         ancestors: :post_ancestors,
         build_class: :build_post_class,
@@ -85,7 +91,7 @@ class Metasploit::Cache::CLI < Thor
   }
 
   # Supported directories from which to loaded Metasploit Modules into cache.
-  TYPE_DIRECTORIES = %w{auxiliary encoders exploits nops payloads/singles payloads/stages post}
+  TYPE_DIRECTORIES = %w{auxiliary encoders exploits nops payloads/singles payloads/stages payloads/stagers post}
 
   #
   # Class Methods
