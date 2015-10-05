@@ -158,6 +158,12 @@ class Metasploit::Cache::CLI < Thor
          desc: "Only load the given type directories ('auxiliary', 'encoders', 'exploits', 'nops', " \
                "'payloads/singles', 'payloads/stages', 'payloads/stagers', 'post')",
          type: :array
+  option :staged_payloads,
+         default: true,
+         desc: 'If `true`, then attempt to load staged payloads from the already loaded stage and stager payloads. ' \
+               '(If the database is not populated yet, and you run with `--only-type-directories`, you need to run ' \
+                'with at least `--only-type-directories payloads/stages payloads/stagers`.) ' \
+               'If `false`, only load stage and stagers without combining into staged payloads.'
   option :name,
          desc: 'The name of the module path scoped to GEM.  GEM and NAME uniquely identify this path so that ' \
                'if MODULE_PATH changes, the entire cache does not need to be invalidated because the change in ' \
@@ -197,6 +203,7 @@ class Metasploit::Cache::CLI < Thor
     )
 
     type_directories = filtered_type_directories
+    metasploit_framework = metasploit_framework_double
 
     status = 0
 
@@ -207,7 +214,7 @@ class Metasploit::Cache::CLI < Thor
                    module_path,
                    type_directory,
                    assume_changed: options.fetch('assume_changed'),
-                   metasploit_framework: metasploit_framework_double,
+                   metasploit_framework: metasploit_framework,
                    logger: tagged_logger,
                    &:load_type_directory
       }
@@ -227,7 +234,7 @@ class Metasploit::Cache::CLI < Thor
               module_path,
               type_directory,
               assume_changed: options.fetch('assume_changed'),
-              metasploit_framework: metasploit_framework_double,
+              metasploit_framework: metasploit_framework,
               logger: tagged_logger,
           )
         rescue Exception => exception
@@ -235,6 +242,13 @@ class Metasploit::Cache::CLI < Thor
           status = 1
         end
       end
+    end
+
+    if options.fetch('staged_payloads')
+      load_staged_payloads(
+          logger: tagged_logger,
+          metasploit_framework: metasploit_framework
+      )
     end
 
     exit(status)
@@ -577,6 +591,135 @@ class Metasploit::Cache::CLI < Thor
         $LOAD_PATH.unshift expanded_load_path
       end
     end
+  end
+
+  # Loads {Metasploit::Cache::Payload::Staged::Instance}s from compatible
+  # {Metasploit::Cache::Payload::Stage::Instance}s and {Metasploit::Cache::Payload::Stager::Instances}.
+  #
+  # @param logger [ActiveSupport::TaggedLogging]
+  # @param metasploit_framework
+  def load_staged_payloads(logger:, metasploit_framework:)
+    payload_stage_instances = Metasploit::Cache::Payload::Stage::Instance.all.to_a
+    payload_stage_instance_count = Metasploit::Cache::Payload::Stage::Instance.count
+
+    payload_stager_instances = Metasploit::Cache::Payload::Stager::Instance.all.to_a
+    payload_stager_instance_count = Metasploit::Cache::Payload::Stager::Instance.count
+
+    output = Metasploit::Cache::CLI::ProgressBarOutput.new(logger)
+    progress_bar = ProgressBar.create(
+        format: "[%t] %c / %C (%p%%) after %a",
+        output: output,
+        title: 'staged payloads'
+    )
+    progress_bar.total = payload_stage_instance_count * payload_stager_instance_count
+
+    payload_stage_instances.each do |payload_stage_instance|
+      payload_stage_ancestor = payload_stage_instance.payload_stage_class.ancestor
+      payload_stage_real_path = payload_stage_ancestor.real_pathname.to_s
+
+      logger.tagged(payload_stage_real_path) do |payload_stage_logger|
+        payload_stage_metasploit_module = module_ancestor_metasploit_module(payload_stage_ancestor)
+
+        payload_stager_instances.each do |payload_stager_instance|
+          payload_stager_ancestor = payload_stager_instance.payload_stager_class.ancestor
+          payload_stager_real_path = payload_stager_ancestor.real_pathname.to_s
+
+          payload_stage_logger.tagged(payload_stager_real_path) do |payload_staged_logger|
+            payload_stager_handler_module = payload_stager_instance.handler.name.constantize
+            payload_stager_metasploit_module = module_ancestor_metasploit_module(payload_stager_ancestor)
+
+            load_staged_payload(
+                logger: payload_staged_logger,
+                metasploit_framework: metasploit_framework,
+                payload_stage_instance: payload_stage_instance,
+                payload_stage_metasploit_module: payload_stage_metasploit_module,
+                payload_stager_handler_module: payload_stager_handler_module,
+                payload_stager_instance: payload_stager_instance,
+                payload_stager_metasploit_module: payload_stager_metasploit_module
+            )
+
+            progress_bar.increment
+          end
+        end
+      end
+    end
+  end
+
+  # @param logger [ActiveSupport::TaggedLogging]
+  # @param metasploit_framework
+  # @param payload_stage_instance [Metasploit::Cache::Payload::Stage::Instance]
+  # @param payload_stager_instance [Metasploit::Cache::Paylaod::Stager::Instance]
+  def load_staged_payload(
+      logger:,
+      metasploit_framework:,
+      payload_stage_instance:,
+      payload_stage_metasploit_module:,
+      payload_stager_handler_module:,
+      payload_stager_instance:,
+      payload_stager_metasploit_module:
+  )
+    payload_staged_class = Metasploit::Cache::Payload::Staged::Class.new(
+        payload_stage_instance: payload_stage_instance,
+        payload_stager_instance: payload_stager_instance
+    )
+
+    unless payload_staged_class.valid?
+      # only info because a lot of staged classes are expected to be invalid due to architecture or platform
+      # incompatibility.
+      logger.info {
+        "#{payload_staged_class.class} is invalid: #{payload_staged_class.errors.full_messages.to_sentence}"
+      }
+
+      return
+    end
+
+    payload_staged_class_load = Metasploit::Cache::Payload::Staged::Class::Load.new(
+        # constantize cached name instead of using
+        # `payload_stager_instance_load.metasploit_module_instance.handler_klass` to prove handler can be
+        # loaded directly from cache without the need to load the payload_stager_instance on reboot
+        handler_module: payload_stager_handler_module,
+        logger: logger,
+        payload_stage_metasploit_module: payload_stage_metasploit_module,
+        payload_staged_class: payload_staged_class,
+        payload_stager_metasploit_module: payload_stager_metasploit_module,
+        payload_superclass: Msf::Payload
+    )
+
+    unless payload_staged_class_load.valid?
+      logger.error {
+        "#{payload_staged_class_load.class} is invalid: #{payload_staged_class_load.errors.full_messages.to_sentence}"
+      }
+      
+      return
+    end
+    
+    payload_staged_instance = payload_staged_class.build_payload_staged_instance
+
+    payload_staged_instance_load = Metasploit::Cache::Module::Instance::Load.new(
+        ephemeral_class: Metasploit::Cache::Payload::Staged::Instance::Ephemeral,
+        logger: logger,
+        metasploit_framework: metasploit_framework,
+        metasploit_module_class: payload_staged_class_load.metasploit_class,
+        module_instance: payload_staged_instance
+    )
+
+    unless payload_staged_instance_load.valid?
+      logger.error {
+        "#{payload_staged_instance_load.instance} is invalid: #{payload_staged_instance_load.errors.full_messages.to_sentence}"
+      }
+    end
+  end
+
+  def module_ancestor_metasploit_module(module_ancestor)
+    namespace_module = module_ancestor_module_namespace(module_ancestor)
+
+    namespace_module.load.metasploit_module
+  end
+
+  def module_ancestor_module_namespace(module_ancestor)
+    names = Metasploit::Cache::Module::Namespace.names(module_ancestor)
+
+    Metasploit::Cache::Constant.current(names)
   end
 
   # Root directory for metasploit-cache.
