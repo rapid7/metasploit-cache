@@ -156,7 +156,7 @@ class Metasploit::Cache::CLI < Thor
                'collisions on NAME which could disrupt the cache behavior.'
   option :only_type_directories,
          desc: "Only load the given type directories ('auxiliary', 'encoders', 'exploits', 'nops', " \
-               "'payloads/singles', 'post')",
+               "'payloads/singles', 'payloads/stages', 'payloads/stagers', 'post')",
          type: :array
   option :name,
          desc: 'The name of the module path scoped to GEM.  GEM and NAME uniquely identify this path so that ' \
