@@ -163,7 +163,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
 
       context 'without #rank' do
         it 'does attempt to save' do
-          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize)
+          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize).and_return(expected_direct_class)
           expect(expected_direct_class).to receive(:batched_save)
 
           persist
@@ -205,7 +205,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
 
       context 'without #rank' do
         it 'does attempt to save' do
-          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize)
+          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize).and_return(direct_class_ephemeral.direct_class)
           expect(direct_class_ephemeral.direct_class).to receive(:batched_save)
 
           persist
