@@ -1,6 +1,9 @@
 RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
+  include_context 'ActiveSupport::TaggedLogging'
+
   subject(:module_ancestor_ephemeral) {
     described_class.new(
+        logger: logger,
         metasploit_module: metasploit_module,
         real_path_sha1_hex_digest: real_path_sha1_hex_digest
     )

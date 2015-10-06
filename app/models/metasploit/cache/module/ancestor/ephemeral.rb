@@ -60,25 +60,43 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   # @option options [Metasploit::Cache::Module::Ancestor] :to (module_ancestor) Save cacheable data to `module_ancestor`.
   # @return [Metasploit::Cache::Module::Ancestor] `#persisted?` will be `false` if saving fails
   def persist(to: module_ancestor)
-    # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
-    ActiveRecord::Base.connection_pool.with_connection do
-      to_class = to.class
+    with_module_ancestor_tag(to) do |tagged|
+      # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
+      saved = ActiveRecord::Base.connection_pool.with_connection {
+        to_class = to.class
 
-      saved = to_class.isolation_level(:serializable) {
-        to_class.transaction {
-          to.batched_save
+        to_class.isolation_level(:serializable) {
+          to_class.transaction {
+            to.batched_save
+          }
         }
       }
 
       unless saved
-        logger.tagged(to.real_pathname.to_s) { |tagged|
-          tagged.error {
-            "Could not be persisted: #{to.errors.full_messages.to_sentence}"
-          }
+        tagged.error {
+          "Could not be persisted: #{to.errors.full_messages.to_sentence}"
         }
       end
     end
 
     to
+  end
+
+  private
+
+  # Tags log with {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  #
+  # @param module_ancestor [Metasploit::Cache::Module::Ancestor, #real_pathname]
+  # @yield [tagged_logger]
+  # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] {#logger} with
+  #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
+  # @yieldreturn [void]
+  # @return [void]
+  def with_module_ancestor_tag(module_ancestor, &block)
+    real_path = ActiveRecord::Base.connection_pool.with_connection {
+      module_ancestor.real_pathname.to_s
+    }
+
+    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
   end
 end
