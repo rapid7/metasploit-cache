@@ -108,10 +108,6 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
   # @yieldreturn [void]
   # @return [void]
   def with_payload_unhandled_class_tag(payload_unhandled_class, &block)
-    real_path = ActiveRecord::Base.connection_pool.with_connection {
-      payload_unhandled_class.ancestor.real_pathname.to_s
-    }
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
+    Metasploit::Cache::Module::Ancestor::Ephemeral.with_module_ancestor_tag(logger, payload_unhandled_class.ancestor, &block)
   end
 end
