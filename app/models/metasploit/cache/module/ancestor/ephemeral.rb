@@ -59,9 +59,7 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   # @yieldreturn [void]
   # @return [void]
   def self.with_module_ancestor_tag(logger, module_ancestor, &block)
-    real_path = ActiveRecord::Base.connection_pool.with_connection {
-      module_ancestor.real_pathname.to_s
-    }
+    real_path = module_ancestor.real_pathname.to_s
 
     Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
   end
@@ -81,26 +79,16 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   # @option options [Metasploit::Cache::Module::Ancestor] :to (module_ancestor) Save cacheable data to `module_ancestor`.
   # @return [Metasploit::Cache::Module::Ancestor] `#persisted?` will be `false` if saving fails
   def persist(to: module_ancestor)
-    with_module_ancestor_tag(to) do |tagged|
-      # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
-      saved = ActiveRecord::Base.connection_pool.with_connection {
-        to_class = to.class
+    persisted = nil
 
-        to_class.isolation_level(:serializable) {
-          to_class.transaction {
-            to.batched_save
-          }
-        }
-      }
-
-      unless saved
-        tagged.error {
-          "Could not be persisted: #{to.errors.full_messages.to_sentence}"
-        }
+    ActiveRecord::Base.connection_pool.with_connection do
+      with_module_ancestor_tag(to) do |tagged|
+        # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
+        persisted = Metasploit::Cache::Ephemeral.persist(logger: tagged, record: to)
       end
     end
 
-    to
+    persisted
   end
 
   private

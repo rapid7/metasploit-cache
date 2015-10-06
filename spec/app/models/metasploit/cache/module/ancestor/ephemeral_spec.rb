@@ -117,7 +117,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
             full_error_messages = module_ancestor.errors.full_messages.to_sentence
 
             expect(full_error_messages).not_to be_blank
-            expect(logger_string_io.string).to include("Could not be persisted: #{full_error_messages}")
+            expect(logger_string_io.string).to include("Could not be persisted to Metasploit::Cache::Auxiliary::Ancestor: #{full_error_messages}")
           end
         end
 
