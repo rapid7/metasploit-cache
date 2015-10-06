@@ -59,29 +59,26 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   # @param options [Hash{Symbol => Metasploit::Cache::Module::Ancestor}]
   # @option options [Metasploit::Cache::Module::Ancestor] :to (module_ancestor) Save cacheable data to `module_ancestor`.
   # @return [Metasploit::Cache::Module::Ancestor] `#persisted?` will be `false` if saving fails
-  def persist(options={})
-    options.assert_valid_keys(:to)
-    module_ancestor = options[:to] || self.module_ancestor
-
+  def persist(to: module_ancestor)
     # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
     ActiveRecord::Base.connection_pool.with_connection do
-      module_ancestor_class = module_ancestor.class
+      to_class = to.class
 
-      saved = module_ancestor_class.isolation_level(:serializable) {
-        module_ancestor_class.transaction {
-          module_ancestor.batched_save
+      saved = to_class.isolation_level(:serializable) {
+        to_class.transaction {
+          to.batched_save
         }
       }
 
       unless saved
-        logger.tagged(module_ancestor.real_pathname.to_s) { |tagged|
+        logger.tagged(to.real_pathname.to_s) { |tagged|
           tagged.error {
-            "Could not be persisted: #{module_ancestor.errors.full_messages.to_sentence}"
+            "Could not be persisted: #{to.errors.full_messages.to_sentence}"
           }
         }
       end
     end
 
-    module_ancestor
+    to
   end
 end
