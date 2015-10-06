@@ -61,11 +61,11 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   # @yieldreturn [void]
   # @return [void]
   def self.with_payload_single_handled_class_tag(logger, payload_single_handled_class, &block)
-    tag = ActiveRecord::Base.connection_pool.with_connection {
-      payload_single_handled_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor.real_pathname.to_s
-    }
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, tag, &block)
+    Metasploit::Cache::Module::Ancestor::Ephemeral.with_module_ancestor_tag(
+        logger,
+        payload_single_handled_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor,
+        &block
+    )
   end
 
   #
