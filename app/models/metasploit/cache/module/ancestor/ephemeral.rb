@@ -46,6 +46,27 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
             presence: true
 
   #
+  # Class Methods
+  #
+
+  # Tags log with {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  #
+  # @param
+  # @param module_ancestor [Metasploit::Cache::Module::Ancestor, #real_pathname]
+  # @yield [tagged_logger]
+  # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] {#logger} with
+  #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
+  # @yieldreturn [void]
+  # @return [void]
+  def self.with_module_ancestor_tag(logger, module_ancestor, &block)
+    real_path = ActiveRecord::Base.connection_pool.with_connection {
+      module_ancestor.real_pathname.to_s
+    }
+
+    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
+  end
+
+  #
   # Instance Methods
   #
 
@@ -93,10 +114,6 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   # @yieldreturn [void]
   # @return [void]
   def with_module_ancestor_tag(module_ancestor, &block)
-    real_path = ActiveRecord::Base.connection_pool.with_connection {
-      module_ancestor.real_pathname.to_s
-    }
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
+    self.class.with_module_ancestor_tag(logger, module_ancestor, &block)
   end
 end

@@ -114,10 +114,6 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # @yieldreturn [void]
   # @return [void]
   def with_direct_class_tag(direct_class, &block)
-    real_path = ActiveRecord::Base.connection_pool.with_connection {
-      direct_class.ancestor.real_pathname.to_s
-    }
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
+    Metasploit::Cache::Module::Ancestor::Ephemeral.with_module_ancestor_tag(logger, direct_class.ancestor, &block)
   end
 end
