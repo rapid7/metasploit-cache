@@ -12,7 +12,7 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # @return [Class<Metasploit::Cache::Direct::Class>]
   attr_accessor :direct_class_class
 
-  # Tagged logger to which to log {#persist_direct_class} errors.
+  # Tagged logger to which to log {#persist} errors.
   #
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger
@@ -52,14 +52,14 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # Instance Methods
   #
 
-  # @note This ephemeral cache should be validated with `valid?` prior to calling {#persist_direct_class} to ensure
+  # @note This ephemeral cache should be validated with `valid?` prior to calling {#persist} to ensure
   #   that {#logger} is present in case of error.
   # @note Validation errors for `direct_class` will be logged as errors tagged with
   #   {Metasploit::Cache::Module::Ancestor#real_pathname}/.
   #
   # @param to [Metasploit::Cache::Direct::Class] Save cacheable data to {Metasploit::Cache::Direct::Class}.
   # @return [Metasploit::Cache::Direct::Class] `#persisted?` will be `false` if saving fails.
-  def persist_direct_class(to: direct_class)
+  def persist(to: direct_class)
     with_direct_class_tag(to) do |tagged|
       name!(direct_class: to)
 

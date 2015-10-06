@@ -15,7 +15,7 @@ RSpec.describe Metasploit::Cache::Module::Class::Ephemeral::Rank do
           :metasploit_cache_auxiliary_class,
           rank: destination_rank
       ).tap { |direct_class|
-        # Set to nil after build so that record passed to #persist_direct_class must fill in the rank, but the built
+        # Set to nil after build so that record passed to #persist must fill in the rank, but the built
         # template still contains a Rank like a real loading scenario.
         direct_class.rank = nil
       }

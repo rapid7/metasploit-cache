@@ -70,7 +70,7 @@ class Metasploit::Cache::Direct::Class::Load < Metasploit::Model::Base
         metasploit_module.ephemeral_cache_by_source[:class] = ephemeral_cache
 
         if ephemeral_cache.valid?
-          ephemeral_cache.persist_direct_class(to: direct_class)
+          ephemeral_cache.persist(to: direct_class)
 
           if direct_class.persisted?
             # The load only succeeded if the metadata was persisted, so @metasploit_class is `nil` otherwise.

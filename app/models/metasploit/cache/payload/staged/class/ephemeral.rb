@@ -7,7 +7,7 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   # Attributes
   #
 
-  # Tagged logger to which to log {#persist_direct_class} errors.
+  # Tagged logger to which to log {#persist} errors.
   #
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger

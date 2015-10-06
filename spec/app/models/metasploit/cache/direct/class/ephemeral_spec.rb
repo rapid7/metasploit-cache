@@ -14,7 +14,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
         expected_direct_class_factory,
         rank: expected_module_rank
     ).tap { |direct_class|
-      # Set to nil after build so that record passed to #persist_direct_class must fill in the rank, but the built
+      # Set to nil after build so that record passed to #persist must fill in the rank, but the built
       # template still contains a Rank like a real loading scenario.
       direct_class.rank = nil
     }
@@ -94,9 +94,9 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
     it { is_expected.to validate_presence_of(:metasploit_class) }
   end
 
-  context '#persist_direct_class' do
-    subject(:persist_direct_class) do
-      direct_class_ephemeral.persist_direct_class(*args)
+  context '#persist' do
+    subject(:persist) do
+      direct_class_ephemeral.persist(*args)
     end
 
     context 'with :to' do
@@ -111,13 +111,13 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
       it 'does not access default #direct_class' do
         expect(direct_class_ephemeral).not_to receive(:direct_class)
 
-        persist_direct_class
+        persist
       end
 
       it 'uses :to' do
         expect(expected_direct_class).to receive(:batched_save).and_call_original
 
-        persist_direct_class
+        persist
       end
 
       context 'with #rank' do
@@ -136,13 +136,13 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
             end
 
             it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
-              persist_direct_class
+              persist
 
               expect(logger_string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
             end
 
             it 'logs validation errors' do
-              persist_direct_class
+              persist
 
               full_error_messages = expected_direct_class.errors.full_messages.to_sentence
 
@@ -154,7 +154,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
           context 'success' do
             specify {
               expect {
-                persist_direct_class
+                persist
               }.to change(Metasploit::Cache::Direct::Class, :count).by(1)
             }
           end
@@ -166,7 +166,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
           expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize)
           expect(expected_direct_class).to receive(:batched_save)
 
-          persist_direct_class
+          persist
         end
       end
     end
@@ -192,14 +192,14 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
       it 'defaults to #direct_class' do
         expect(direct_class_ephemeral).to receive(:direct_class).and_call_original
 
-        persist_direct_class
+        persist
       end
 
       context 'with #rank' do
         it 'uses #batched_save' do
           expect(direct_class_ephemeral.direct_class).to receive(:batched_save).and_call_original
 
-          persist_direct_class
+          persist
         end
       end
 
@@ -208,7 +208,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
           expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize)
           expect(direct_class_ephemeral.direct_class).to receive(:batched_save)
 
-          persist_direct_class
+          persist
         end
       end
     end
