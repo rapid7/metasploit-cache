@@ -171,7 +171,7 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
         metasploit_module.ephemeral_cache_by_source[:ancestor] = ephemeral_cache
 
         if ephemeral_cache.valid?
-          ephemeral_cache.persist_module_ancestor(to: module_ancestor)
+          ephemeral_cache.persist(to: module_ancestor)
 
           # TODO log module_ancestor.errors
           if module_ancestor.persisted?

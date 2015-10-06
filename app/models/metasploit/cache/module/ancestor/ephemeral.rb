@@ -49,7 +49,7 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   # Instance Methods
   #
 
-  # @note This ephemeral cache should be validated with `valid?` prior to calling {#persist_module_ancestor} to ensure
+  # @note This ephemeral cache should be validated with `valid?` prior to calling {#persist} to ensure
   #   that {#logger} is present in case of error.
   # @note Validation errors for `module_ancestor` will be logged as errors tagged with
   #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
@@ -59,7 +59,7 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   # @param options [Hash{Symbol => Metasploit::Cache::Module::Ancestor}]
   # @option options [Metasploit::Cache::Module::Ancestor] :to (module_ancestor) Save cacheable data to `module_ancestor`.
   # @return [Metasploit::Cache::Module::Ancestor] `#persisted?` will be `false` if saving fails
-  def persist_module_ancestor(options={})
+  def persist(options={})
     options.assert_valid_keys(:to)
     module_ancestor = options[:to] || self.module_ancestor
 
