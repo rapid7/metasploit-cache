@@ -62,12 +62,10 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   # @yieldreturn [void]
   # @return [void]
   def self.with_payload_staged_class_tag(logger, payload_staged_class, &block)
-    tags = ActiveRecord::Base.connection_pool.with_connection {
-      [
-          payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_pathname.to_s,
-          payload_staged_class.payload_stager_instance.payload_stager_class.ancestor.real_pathname.to_s
-      ]
-    }
+    tags = [
+        payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_pathname.to_s,
+        payload_staged_class.payload_stager_instance.payload_stager_class.ancestor.real_pathname.to_s
+    ]
 
     Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, *tags, &block)
   end
@@ -103,26 +101,16 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   #   {Metasploit::Cache::Payload::Stager::Class}.
   # @return [Metasploit::Cache::Payload::Stager::Class] `#persisted?` will be `false` if saving fails.
   def persist(to: payload_staged_class)
-    with_payload_staged_class_tag(to) do |tagged|
-      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
-      saved = ActiveRecord::Base.connection_pool.with_connection {
-        to_class = to.class
+    persisted = nil
 
-        to_class.isolation_level(:serializable) {
-          to_class.transaction {
-            to.batched_save
-          }
-        }
-      }
-
-      unless saved
-        tagged.error {
-          "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
-        }
+    ActiveRecord::Base.connection_pool.with_connection do
+      with_payload_staged_class_tag(to) do |tagged|
+        persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
+                                                         record: to
       end
     end
 
-    to
+    persisted
   end
 
   private
