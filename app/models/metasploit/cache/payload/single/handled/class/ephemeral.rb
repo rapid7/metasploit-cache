@@ -84,28 +84,18 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   #   {Metasploit::Cache::Payload::Single::Handled::Class}.
   # @return [Metasploit::Cache::Payload::Single::Handled::Class] `#persisted?` will be `false` if saving fails.
   def persist(to: payload_single_handled_class)
-    with_payload_single_handled_class_tag(to) do |tagged|
-      name!(payload_single_handled_class: to)
+    persisted = nil
 
-      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
-      saved = ActiveRecord::Base.connection_pool.with_connection {
-        to_class = to.class
+    ActiveRecord::Base.connection_pool.with_connection do
+      with_payload_single_handled_class_tag(to) do |tagged|
+        name!(payload_single_handled_class: to)
 
-        to_class.isolation_level(:serializable) {
-          to_class.transaction {
-            to.batched_save
-          }
-        }
-      }
-
-      unless saved
-        tagged.error {
-          "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
-        }
+        persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
+                                                         record: to
       end
     end
 
-    to
+    persisted
   end
 
   private
