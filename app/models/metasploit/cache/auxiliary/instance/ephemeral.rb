@@ -57,51 +57,40 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   #   Giving `to` saves a database lookup if {#auxiliary_instance} is not loaded.
   # @return [Metasploit::Cache::Auxiliary::Instance] `#persisted?` will be `false` if saving fails.
   def persist(to: auxiliary_instance)
-    [:description, :name].each do |attribute|
-      to.send("#{attribute}=", metasploit_module_instance.send(attribute))
-    end
+    persisted = nil
 
-    if metasploit_module_instance.passive?
-      to.stance = Metasploit::Cache::Module::Stance::PASSIVE
-    else
-      to.stance = Metasploit::Cache::Module::Stance::AGGRESSIVE
-    end
+    ActiveRecord::Base.connection_pool.with_connection do
+      with_auxiliary_instance_tag(to) do |tagged|
+        [:description, :name].each do |attribute|
+          to.send("#{attribute}=", metasploit_module_instance.send(attribute))
+        end
 
-    synchronizers = [
-        Metasploit::Cache::Actionable::Ephemeral::Actions,
-        Metasploit::Cache::Contributable::Ephemeral::Contributions,
-        Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
-    ]
+        if metasploit_module_instance.passive?
+          to.stance = Metasploit::Cache::Module::Stance::PASSIVE
+        else
+          to.stance = Metasploit::Cache::Module::Stance::AGGRESSIVE
+        end
 
-    synchronized = nil
+        synchronizers = [
+            Metasploit::Cache::Actionable::Ephemeral::Actions,
+            Metasploit::Cache::Contributable::Ephemeral::Contributions,
+            Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
+        ]
 
-    with_auxiliary_instance_tag(to) do |tagged|
-      synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
-        synchronizer.synchronize(
-            destination: block_destination,
-            logger: tagged,
-            source: metasploit_module_instance
-        )
-      }
-
-      saved = ActiveRecord::Base.connection_pool.with_connection {
-        synchronized_class = synchronized.class
-
-        synchronized_class.isolation_level(:serializable) {
-          synchronized_class.transaction {
-            synchronized.batched_save
-          }
+        synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
+          synchronizer.synchronize(
+              destination: block_destination,
+              logger: tagged,
+              source: metasploit_module_instance
+          )
         }
-      }
 
-      unless saved
-        tagged.error {
-          "Could not be persisted to #{synchronized.class}: #{synchronized.errors.full_messages.to_sentence}"
-        }
+        persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
+                                                         record: synchronized
       end
     end
 
-    synchronized
+    persisted
   end
 
   private
@@ -123,9 +112,7 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   # @yieldreturn [void]
   # @return [void]
   def with_auxiliary_instance_tag(auxiliary_instance, &block)
-    real_path = ActiveRecord::Base.connection_pool.with_connection {
-      auxiliary_instance.auxiliary_class.ancestor.real_pathname.to_s
-    }
+    real_path = auxiliary_instance.auxiliary_class.ancestor.real_pathname.to_s
 
     Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
   end
