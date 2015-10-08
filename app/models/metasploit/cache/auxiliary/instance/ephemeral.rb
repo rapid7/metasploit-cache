@@ -4,6 +4,8 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   extend ActiveSupport::Autoload
   extend Metasploit::Cache::ResurrectingAttribute
 
+  autoload :Stance
+
   #
   # Attributes
   #
@@ -65,14 +67,9 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
           to.send("#{attribute}=", metasploit_module_instance.send(attribute))
         end
 
-        if metasploit_module_instance.passive?
-          to.stance = Metasploit::Cache::Module::Stance::PASSIVE
-        else
-          to.stance = Metasploit::Cache::Module::Stance::AGGRESSIVE
-        end
-
         synchronizers = [
             Metasploit::Cache::Actionable::Ephemeral::Actions,
+            self.class::Stance,
             Metasploit::Cache::Contributable::Ephemeral::Contributions,
             Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
         ]
