@@ -76,4 +76,29 @@ module Metasploit::Cache::Ephemeral
       record_invalid.record
     end
   end
+
+  # Attempts to persist `record` to database.
+  #
+  # @param logger [ActiveSupport::TaggedLogging] Tagged logger to which to log `record` validation errors if
+  #   `#batched_save` fails.
+  # @param record [ActiveRecord::Base, #batched_save, #errors] Record to attempt to batch save and log validation
+  #   errors if not saved.
+  # @return [ActiveRecord::Base] `#persisted?` will be `false` if saving fails.
+  def self.persist(logger:, record:)
+    record_class = record.class
+
+    saved = record_class.isolation_level(:serializable) {
+      record_class.transaction {
+        record.batched_save
+      }
+    }
+    
+    unless saved
+      logger.error {
+        "Could not be persisted to #{record_class}: #{record.errors.full_messages.to_sentence}"
+      }
+    end
+
+    record
+  end
 end

@@ -55,46 +55,35 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
   #   Giving `to` saves a database lookup if {#encoder_instance} is not loaded.
   # @return [Metasploit::Cache:Encoder::Instance] `#persisted?` will be `false` if saving fails.
   def persist(to: encoder_instance)
-    [:description, :name].each do |attribute|
-      to.send("#{attribute}=", metasploit_module_instance.send(attribute))
-    end
+    persisted = nil
 
-    synchronizers = [
-        Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures,
-        Metasploit::Cache::Contributable::Ephemeral::Contributions,
-        Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses,
-        Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
-    ]
+    ActiveRecord::Base.connection_pool.with_connection do
+      [:description, :name].each do |attribute|
+        to.send("#{attribute}=", metasploit_module_instance.send(attribute))
+      end
 
-    synchronized = nil
+      synchronizers = [
+          Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures,
+          Metasploit::Cache::Contributable::Ephemeral::Contributions,
+          Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses,
+          Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
+      ]
 
-    with_encoder_instance_tag(to) do |tagged|
-      synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
-        synchronizer.synchronize(
-            destination: block_destination,
-            logger: logger,
-            source: metasploit_module_instance
-        )
-      }
-
-      saved = ActiveRecord::Base.connection_pool.with_connection {
-        synchronized_class = synchronized.class
-
-        synchronized_class.isolation_level(:serializable) {
-          synchronized_class.transaction {
-            synchronized.batched_save
-          }
+      with_encoder_instance_tag(to) do |tagged|
+        synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
+          synchronizer.synchronize(
+              destination: block_destination,
+              logger: logger,
+              source: metasploit_module_instance
+          )
         }
-      }
 
-      unless saved
-        tagged.error {
-          "Could not be persisted to #{synchronized.class}: #{synchronized.errors.full_messages.to_sentence}"
-        }
+        persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
+                                                         record: synchronized
       end
     end
 
-    synchronized
+    persisted
   end
 
   private
@@ -116,9 +105,7 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
   # @yieldreturn [void]
   # @return [void]
   def with_encoder_instance_tag(encoder_instance, &block)
-    real_path = ActiveRecord::Base.connection_pool.with_connection {
-      encoder_instance.encoder_class.ancestor.real_pathname.to_s
-    }
+    real_path = encoder_instance.encoder_class.ancestor.real_pathname.to_s
 
     Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
   end

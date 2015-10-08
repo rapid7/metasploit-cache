@@ -1,6 +1,9 @@
 RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
+  include_context 'ActiveSupport::TaggedLogging'
+
   subject(:module_ancestor_ephemeral) {
     described_class.new(
+        logger: logger,
         metasploit_module: metasploit_module,
         real_path_sha1_hex_digest: real_path_sha1_hex_digest
     )
@@ -41,9 +44,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
     it { is_expected.to validate_presence_of(:real_path_sha1_hex_digest) }
   end
 
-  context '#persist_module_ancestor' do
-    subject(:persist_module_ancestor) {
-      module_ancestor_ephemeral.persist_module_ancestor(*args)
+  context '#persist' do
+    subject(:persist) {
+      module_ancestor_ephemeral.persist(*args)
     }
 
     context 'with :to' do
@@ -62,13 +65,13 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
       it 'does not access default #module_ancestor' do
         expect(module_ancestor_ephemeral).not_to receive(:module_ancestor)
 
-        persist_module_ancestor
+        persist
       end
 
       it 'uses :to' do
         expect(module_ancestor).to receive(:batched_save).and_call_original
 
-        persist_module_ancestor
+        persist
       end
 
       context 'batched save' do
@@ -103,18 +106,18 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
           end
 
           it 'tags log with Metasploit::Cache::Module::Ancestor#real_path' do
-            persist_module_ancestor
+            persist
 
             expect(logger_string_io.string).to include("[#{module_ancestor.real_pathname.to_s}]")
           end
 
           it 'logs validation errors' do
-            persist_module_ancestor
+            persist
 
             full_error_messages = module_ancestor.errors.full_messages.to_sentence
 
             expect(full_error_messages).not_to be_blank
-            expect(logger_string_io.string).to include("Could not be persisted: #{full_error_messages}")
+            expect(logger_string_io.string).to include("Could not be persisted to Metasploit::Cache::Auxiliary::Ancestor: #{full_error_messages}")
           end
         end
 
@@ -125,7 +128,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
 
           specify {
             expect {
-              persist_module_ancestor
+              persist
             }.to change(Metasploit::Cache::Module::Ancestor, :count).by(1)
           }
         end
@@ -140,13 +143,13 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
       it 'defaults to #module_ancestor' do
         expect(module_ancestor_ephemeral).to receive(:module_ancestor).and_call_original
 
-        persist_module_ancestor
+        persist
       end
 
       it 'uses #module_ancestor' do
         expect(module_ancestor_ephemeral.module_ancestor).to receive(:batched_save).and_call_original
 
-        persist_module_ancestor
+        persist
       end
     end
   end

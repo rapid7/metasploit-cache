@@ -159,7 +159,9 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral, type: :m
 
       context 'without #rank' do
         it 'does attempt to save' do
-          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize)
+          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize).and_return(
+                                                                           expected_payload_unhandled_class
+                                                                       )
           expect(expected_payload_unhandled_class).to receive(:batched_save)
 
           persist
@@ -201,7 +203,11 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral, type: :m
 
       context 'without #rank' do
         it 'does attempt to save' do
-          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize)
+          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to(
+              receive(:synchronize).and_return(
+                  payload_unhandled_class_ephemeral.payload_unhandled_class
+              )
+          )
           expect(payload_unhandled_class_ephemeral.payload_unhandled_class).to receive(:batched_save)
 
           persist

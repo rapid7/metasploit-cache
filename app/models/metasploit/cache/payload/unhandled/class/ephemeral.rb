@@ -61,32 +61,22 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
   #   {Metasploit::Cache::Payload::Unhandled::Class}.
   # @return [Metasploit::Cache::Payload::Unhandled::Class] `#persisted?` will be `false` if saving fails.
   def persist(to: payload_unhandled_class)
-    with_payload_unhandled_class_tag(to) do |tagged|
-      Metasploit::Cache::Module::Class::Ephemeral::Rank.synchronize(
-          destination: to,
-          logger: tagged,
-          source: metasploit_class
-      )
+    persisted = nil
 
-      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
-      saved = ActiveRecord::Base.connection_pool.with_connection {
-        to_class = to.class
+    ActiveRecord::Base.connection_pool.with_connection do
+      with_payload_unhandled_class_tag(to) do |tagged|
+        synchronized = Metasploit::Cache::Module::Class::Ephemeral::Rank.synchronize(
+            destination: to,
+            logger: tagged,
+            source: metasploit_class
+        )
 
-        to_class.isolation_level(:serializable) {
-          to_class.transaction {
-            to.batched_save
-          }
-        }
-      }
-
-      unless saved
-        tagged.error {
-          "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
-        }
+        persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
+                                                         record: synchronized
       end
     end
 
-    to
+    persisted
   end
 
   private
@@ -108,10 +98,6 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
   # @yieldreturn [void]
   # @return [void]
   def with_payload_unhandled_class_tag(payload_unhandled_class, &block)
-    real_path = ActiveRecord::Base.connection_pool.with_connection {
-      payload_unhandled_class.ancestor.real_pathname.to_s
-    }
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
+    Metasploit::Cache::Module::Ancestor::Ephemeral.with_module_ancestor_tag(logger, payload_unhandled_class.ancestor, &block)
   end
 end

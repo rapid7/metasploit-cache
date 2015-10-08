@@ -12,7 +12,7 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # @return [Class<Metasploit::Cache::Direct::Class>]
   attr_accessor :direct_class_class
 
-  # Tagged logger to which to log {#persist_direct_class} errors.
+  # Tagged logger to which to log {#persist} errors.
   #
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger
@@ -52,36 +52,31 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # Instance Methods
   #
 
-  # @note This ephemeral cache should be validated with `valid?` prior to calling {#persist_direct_class} to ensure
+  # @note This ephemeral cache should be validated with `valid?` prior to calling {#persist} to ensure
   #   that {#logger} is present in case of error.
   # @note Validation errors for `direct_class` will be logged as errors tagged with
   #   {Metasploit::Cache::Module::Ancestor#real_pathname}/.
   #
   # @param to [Metasploit::Cache::Direct::Class] Save cacheable data to {Metasploit::Cache::Direct::Class}.
   # @return [Metasploit::Cache::Direct::Class] `#persisted?` will be `false` if saving fails.
-  def persist_direct_class(to: direct_class)
-    with_direct_class_tag(to) do |tagged|
-      name!(direct_class: to)
+  def persist(to: direct_class)
+    persisted = nil
 
-      Metasploit::Cache::Module::Class::Ephemeral::Rank.synchronize(
-          destination: to,
-          logger: tagged,
-          source: metasploit_class
-      )
+    ActiveRecord::Base.connection_pool.with_connection do
+      with_direct_class_tag(to) do |tagged|
+        name!(direct_class: to)
 
-      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
-      saved = ActiveRecord::Base.connection_pool.with_connection {
-        to.batched_save
-      }
+        synchronized = Metasploit::Cache::Module::Class::Ephemeral::Rank.synchronize(
+            destination: to,
+            logger: tagged,
+            source: metasploit_class
+        )
 
-      unless saved
-        tagged.error {
-          "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
-        }
+        persisted = Metasploit::Cache::Ephemeral.persist(logger: tagged, record: synchronized)
       end
     end
 
-    to
+    persisted
   end
 
   private
@@ -114,10 +109,6 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   # @yieldreturn [void]
   # @return [void]
   def with_direct_class_tag(direct_class, &block)
-    real_path = ActiveRecord::Base.connection_pool.with_connection {
-      direct_class.ancestor.real_pathname.to_s
-    }
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
+    Metasploit::Cache::Module::Ancestor::Ephemeral.with_module_ancestor_tag(logger, direct_class.ancestor, &block)
   end
 end
