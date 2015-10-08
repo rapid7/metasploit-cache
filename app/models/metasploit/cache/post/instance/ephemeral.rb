@@ -58,13 +58,13 @@ class Metasploit::Cache::Post::Instance::Ephemeral < Metasploit::Model::Base
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      [:description, :name, :privileged].each do |attribute|
-        to.send("#{attribute}=", metasploit_module_instance.send(attribute))
-      end
-
-      to.disclosed_on = metasploit_module_instance.disclosure_date
-
       synchronizers = [
+          Metasploit::Cache::Ephemeral.synchronizer(
+              :description,
+              :name,
+              :privileged,
+              disclosure_date: :disclosed_on
+          ),
           Metasploit::Cache::Actionable::Ephemeral::Actions,
           Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures,
           Metasploit::Cache::Contributable::Ephemeral::Contributions,

@@ -77,6 +77,33 @@ module Metasploit::Cache::Ephemeral
     end
   end
 
+  # @param common_and_source_to_destination [Array<Symbol, Hash{Symbol => Symbol}>] List of attribute names that are the
+  #   same in destination and source, or a map of a source attribute to a destination attribute.
+  # @return [#synchronize(destination:, logger:, source:)]
+  def self.synchronizer(*common_and_source_to_destination)
+    synchronizer = Module.new
+
+    synchronizer.define_singleton_method(:synchronize) do |destination:, logger:, source:|
+      common_and_source_to_destination.each do |common_or_source_to_destination|
+        case common_or_source_to_destination
+        when Hash
+          source_to_destination = common_or_source_to_destination
+
+          source_to_destination.each do |source_attribute, destination_attribute|
+            destination.public_send("#{destination_attribute}=", source.public_send(source_attribute))
+          end
+        when Symbol
+          common = common_or_source_to_destination
+          destination.public_send("#{common}=", source.public_send(common))
+        end
+      end
+
+      destination
+    end
+
+    synchronizer
+  end
+
   # Attempts to persist `record` to database.
   #
   # @param logger [ActiveSupport::TaggedLogging] Tagged logger to which to log `record` validation errors if

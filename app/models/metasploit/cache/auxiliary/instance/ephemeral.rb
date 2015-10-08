@@ -63,11 +63,8 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
 
     ActiveRecord::Base.connection_pool.with_connection do
       with_auxiliary_instance_tag(to) do |tagged|
-        [:description, :name].each do |attribute|
-          to.send("#{attribute}=", metasploit_module_instance.send(attribute))
-        end
-
         synchronizers = [
+            Metasploit::Cache::Ephemeral.synchronizer(:description, :name),
             Metasploit::Cache::Actionable::Ephemeral::Actions,
             self.class::Stance,
             Metasploit::Cache::Contributable::Ephemeral::Contributions,

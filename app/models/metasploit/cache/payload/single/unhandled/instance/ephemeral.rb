@@ -60,11 +60,8 @@ class Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral < Metas
 
     ActiveRecord::Base.connection_pool.with_connection do
       with_payload_single_unhandled_instance_tag(to) do |tagged|
-        [:description, :name, :privileged].each do |attribute|
-          to.send("#{attribute}=", metasploit_module_instance.send(attribute))
-        end
-
         synchronizers = [
+            Metasploit::Cache::Ephemeral.synchronizer(:description, :name, :privileged),
             Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures,
             Metasploit::Cache::Contributable::Ephemeral::Contributions,
             Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses,

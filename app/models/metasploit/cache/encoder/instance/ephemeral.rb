@@ -58,11 +58,8 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      [:description, :name].each do |attribute|
-        to.send("#{attribute}=", metasploit_module_instance.send(attribute))
-      end
-
       synchronizers = [
+          Metasploit::Cache::Ephemeral.synchronizer(:description, :name),
           Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures,
           Metasploit::Cache::Contributable::Ephemeral::Contributions,
           Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses,
