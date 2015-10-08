@@ -74,7 +74,7 @@ group :test do
   # In a full rails project, factory_girl_rails would be in both the :development, and :test group, but since we only
   # want rails in :test, factory_girl_rails must also only be in :test.
   # add matchers from shoulda, such as validates_presence_of, which are useful for testing validations
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', '~> 3.0'
   # Coverage reports
   gem 'simplecov', require: false
   # defines time zones for activesupport.  Must be explicit since it is normally implicit with activerecord

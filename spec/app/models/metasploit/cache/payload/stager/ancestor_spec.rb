@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Stager::Ancestor do
+RSpec.describe Metasploit::Cache::Payload::Stager::Ancestor, type: :model do
   it_should_behave_like 'Metasploit::Cache::Payload::Ancestor.restrict',
                         payload_type: 'stager',
                         payload_type_directory: 'stagers'

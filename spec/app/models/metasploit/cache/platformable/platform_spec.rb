@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Platformable::Platform do
+RSpec.describe Metasploit::Cache::Platformable::Platform, type: :model do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do

@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Referencable::Reference do
+RSpec.describe Metasploit::Cache::Referencable::Reference, type: :model do
   context "database" do
     context "columns" do
       it { is_expected.to have_db_column(:reference_id).of_type(:integer).with_options(null:false) }

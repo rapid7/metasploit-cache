@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Module::Namespace::Cache do
+RSpec.describe Metasploit::Cache::Module::Namespace::Cache, type: :model do
   subject(:module_namespace_cache) {
     described_class.new
   }

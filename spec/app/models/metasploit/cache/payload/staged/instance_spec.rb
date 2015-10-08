@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Staged::Instance do
+RSpec.describe Metasploit::Cache::Payload::Staged::Instance, type: :model do
   context 'associations' do
     it { is_expected.to belong_to(:payload_staged_class).class_name('Metasploit::Cache::Payload::Staged::Class').inverse_of(:payload_staged_instance).with_foreign_key(:payload_staged_class_id) }
   end
