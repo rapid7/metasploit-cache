@@ -51,10 +51,10 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
 
   # Tags log with {Metasploit::Cache::Module::Ancestor#real_pathname}.
   #
-  # @param
+  # @param logger [ActiveSupport::TaggedLogger, #tagged] logger to tag.
   # @param module_ancestor [Metasploit::Cache::Module::Ancestor, #real_pathname]
   # @yield [tagged_logger]
-  # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] {#logger} with
+  # @yieldparam tagged_logger [ActiveSupport::TaggedLogger] `logger` with
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
   # @yieldreturn [void]
   # @return [void]
@@ -75,8 +75,7 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   #
   # Persists ephemeral cache data from {#metasploit_module} and it's namespace to the persistent cache entry.
   #
-  # @param options [Hash{Symbol => Metasploit::Cache::Module::Ancestor}]
-  # @option options [Metasploit::Cache::Module::Ancestor] :to (module_ancestor) Save cacheable data to `module_ancestor`.
+  # @param to [Metasploit::Cache::Module::Ancestor] Save cacheable data to `module_ancestor`.
   # @return [Metasploit::Cache::Module::Ancestor] `#persisted?` will be `false` if saving fails
   def persist(to: module_ancestor)
     persisted = nil

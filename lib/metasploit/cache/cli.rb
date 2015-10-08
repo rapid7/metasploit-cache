@@ -710,12 +710,23 @@ class Metasploit::Cache::CLI < Thor
     end
   end
 
+  # The ruby Class or Module defined in {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  #
+  # @param module_ancestor [Metasploit::Cache::Module::Ancestor, #real_path_sha1_hex_digest]
+  # @return [nil] if {Metasploit::Cache::Module::Ancestor} has NOT been loaded into memory.
+  # @return [Class, Module] if {Metasploit::Cache::Module::Ancestor} has been loaded into memory.
   def module_ancestor_metasploit_module(module_ancestor)
     namespace_module = module_ancestor_module_namespace(module_ancestor)
 
     namespace_module.load.metasploit_module
   end
 
+  # The implicit namespace ruby Module that is the parent of the ruby Class or Module defined in
+  # {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  #
+  # @param module_ancestor [Metasploit::Cache::Module::Ancestor, #real_path_sha1_hex_digest]
+  # @return [nil] if {Metasploit::Cache::Module::Ancestor} has NOT been loaded into memory.
+  # @return [Module] if {Metasploit::Cache::Module::Ancestor} has been loaded into memory.
   def module_ancestor_module_namespace(module_ancestor)
     names = Metasploit::Cache::Module::Namespace.names(module_ancestor)
 
