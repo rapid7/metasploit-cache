@@ -65,26 +65,16 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral < Metaspl
   #   Giving `to` saves a database lookup if {#payload_single_handled_instance} is not loaded.
   # @return [Metasploit::Cache:Payload::Single::Handled::Instance] `#persisted?` will be `false` if saving fails.
   def persist(to: payload_single_handled_instance)
-    with_payload_staged_instance_tag(to) do |tagged|
-      # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
-      saved = ActiveRecord::Base.connection_pool.with_connection {
-        to_class = to.class
+    persisted = nil
 
-        to_class.isolation_level(:serializable) {
-          to_class.transaction {
-            to.batched_save
-          }
-        }
-      }
-
-      unless saved
-        tagged.error {
-          "Could not be persisted to #{to.class}: #{to.errors.full_messages.to_sentence}"
-        }
+    ActiveRecord::Base.connection_pool.with_connection do
+      with_payload_staged_instance_tag(to) do |tagged|
+        persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
+                                                         record: to
       end
     end
 
-    to
+    persisted
   end
 
   private
@@ -108,9 +98,7 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral < Metaspl
   # @yieldreturn [void]
   # @return [void]
   def with_payload_staged_instance_tag(payload_single_handled_instance, &block)
-    payload_single_handled_class = ActiveRecord::Base.connection_pool.with_connection {
-      payload_single_handled_instance.payload_single_handled_class
-    }
+    payload_single_handled_class = payload_single_handled_instance.payload_single_handled_class
 
     Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral.with_payload_single_handled_class_tag(
         logger,
