@@ -3,6 +3,20 @@ class Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral < Metas
   extend Metasploit::Cache::ResurrectingAttribute
 
   #
+  # CONSTANTS
+  #
+
+  # Modules used to synchronize attributes and associations before persisting to database.
+  SYNCHRONIZERS = [
+      Metasploit::Cache::Ephemeral.synchronizer(:description, :name, :privileged),
+      Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures,
+      Metasploit::Cache::Contributable::Ephemeral::Contributions,
+      Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses,
+      Metasploit::Cache::Payload::Handable::Ephemeral::Handler,
+      Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
+  ]
+
+  #
   # Attributes
   #
 
@@ -60,16 +74,7 @@ class Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral < Metas
 
     ActiveRecord::Base.connection_pool.with_connection do
       with_payload_single_unhandled_instance_tag(to) do |tagged|
-        synchronizers = [
-            Metasploit::Cache::Ephemeral.synchronizer(:description, :name, :privileged),
-            Metasploit::Cache::Architecturable::Ephemeral::ArchitecturableArchitectures,
-            Metasploit::Cache::Contributable::Ephemeral::Contributions,
-            Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses,
-            Metasploit::Cache::Payload::Handable::Ephemeral::Handler,
-            Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
-        ]
-
-        synchronized = synchronizers.reduce(to) { |block_destination, synchronizer|
+        synchronized = SYNCHRONIZERS.reduce(to) { |block_destination, synchronizer|
           synchronizer.synchronize(
               destination: block_destination,
               logger: logger,
