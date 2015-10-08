@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral do
+RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
   subject(:module_ancestor_ephemeral) {
     described_class.new(
         metasploit_module: metasploit_module,

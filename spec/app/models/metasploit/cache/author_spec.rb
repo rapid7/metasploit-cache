@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Author do
+RSpec.describe Metasploit::Cache::Author, type: :model do
   context 'associations' do
     it { is_expected.to have_many(:contributions).class_name('Metasploit::Cache::Contribution').dependent(:destroy).inverse_of(:author) }
     it { is_expected.to have_many(:email_addresses).class_name('Metasploit::Cache::EmailAddress').through(:contributions) }

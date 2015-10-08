@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::EmailAddress do
+RSpec.describe Metasploit::Cache::EmailAddress, type: :model do
   subject(:email_address) {
     FactoryGirl.build(:metasploit_cache_email_address)
   }

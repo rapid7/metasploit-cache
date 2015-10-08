@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Architecture do
+RSpec.describe Metasploit::Cache::Architecture, type: :model do
   subject(:architecture) do
     described_class.new
   end

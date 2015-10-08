@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Platform do
+RSpec.describe Metasploit::Cache::Platform, type: :model do
   subject(:platform) do
     FactoryGirl.generate :metasploit_cache_platform
   end

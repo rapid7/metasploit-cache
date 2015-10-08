@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Post::Instance::Ephemeral do
+RSpec.describe Metasploit::Cache::Post::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
     context '#post_instance' do
       subject(:post_instance) {

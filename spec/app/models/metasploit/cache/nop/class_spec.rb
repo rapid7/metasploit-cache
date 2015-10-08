@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Nop::Class do
+RSpec.describe Metasploit::Cache::Nop::Class, type: :model do
   it_should_behave_like 'Metasploit::Cache::Module::Class::Namable'
 
   it_should_behave_like 'Metasploit::Cache::Module::Descendant',

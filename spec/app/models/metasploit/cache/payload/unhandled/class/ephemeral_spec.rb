@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral do
+RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral, type: :model do
   include_context 'ActiveSupport::TaggedLogging'
 
   subject(:payload_unhandled_class_ephemeral) {

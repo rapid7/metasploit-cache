@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Module::Class::Name do
+RSpec.describe Metasploit::Cache::Module::Class::Name, type: :model do
   context 'associations' do
     it { is_expected.to belong_to(:module_class).inverse_of(:name).with_foreign_key(:module_class_id) }
   end
