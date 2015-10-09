@@ -112,6 +112,23 @@ module Metasploit::Cache::Ephemeral
   #   errors if not saved.
   # @return [ActiveRecord::Base] `#persisted?` will be `false` if saving fails.
   def self.persist(logger:, record:)
+    saved, record = serializable_batched_save(record)
+
+    unless saved
+      logger.error {
+        "Could not be persisted to #{record.class}: #{record.errors.full_messages.to_sentence}"
+      }
+    end
+
+    record
+  end
+
+  # Attempts to save the record in batch mode with serializable transaction isolation.
+  #
+  # @param record [ActiveRecord::Base, #batched_save] Record to attempt to batch save with serializable transaction
+  #   isolation
+  # @return [Array(Boolean, ActiveRecord::Base)] Return [saved, record]
+  def self.serializable_batched_save(record)
     record_class = record.class
 
     saved = record_class.isolation_level(:serializable) {
@@ -120,12 +137,6 @@ module Metasploit::Cache::Ephemeral
       }
     }
 
-    unless saved
-      logger.error {
-        "Could not be persisted to #{record_class}: #{record.errors.full_messages.to_sentence}"
-      }
-    end
-
-    record
+    [saved, record]
   end
 end
