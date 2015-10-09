@@ -77,6 +77,25 @@ module Metasploit::Cache::Ephemeral
     end
   end
 
+  # @param destination [ActiveRecord::Base] destination in `synchronize(destination:, logger:, source:)` called on each
+  #   synchronizer in `synchronizers`.
+  # @param source [Object] a Metasploit Module ancestor, class, or instance that supplies metadata synchronized to
+  #   `destination`.  `source` in `synchronize(destination:, logger:, source:)` called on each synchronizer in
+  #   `synchronizer`.
+  # @param synchronizers [Enumerable<#<ActiveRecord::Base>synchronize(destination: ActiveRecord::Base, logger:, source:)>, #reduce]
+  #   Enumerable of synchronizers that have a `synchronize(destination:, logger:, source:)` method that returns
+  #   `destination` updated with metadata to match `source`.
+  # @return [ActiveRecord::Base] `destination` synchronized using all `synchronizers`
+  def self.synchronize(destination:, logger:, source:, synchronizers: [])
+    synchronizers.reduce(destination) { |block_destination, synchronizer|
+      synchronizer.synchronize(
+          destination: block_destination,
+          logger: logger,
+          source: source
+      )
+    }
+  end
+
   # @param common_and_source_to_destination [Array<Symbol, Hash{Symbol => Symbol}>] List of attribute names that are the
   #   same in destination and source, or a map of a source attribute to a destination attribute.
   # @return [#synchronize(destination:, logger:, source:)]
