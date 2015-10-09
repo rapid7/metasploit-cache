@@ -64,7 +64,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      with_payload_unhandled_class_tag(to) do |tagged|
+      with_tagged_logger(to) do |tagged|
         synchronized = Metasploit::Cache::Module::Class::Ephemeral::Rank.synchronize(
             destination: to,
             logger: tagged,
@@ -97,7 +97,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
   # @yieldreturn [void]
   # @return [void]
-  def with_payload_unhandled_class_tag(payload_unhandled_class, &block)
-    Metasploit::Cache::Module::Ancestor::Ephemeral.with_module_ancestor_tag(logger, payload_unhandled_class.ancestor, &block)
+  def with_tagged_logger(payload_unhandled_class, &block)
+    Metasploit::Cache::Module::Ancestor::Ephemeral.with_tagged_logger(logger, payload_unhandled_class.ancestor, &block)
   end
 end

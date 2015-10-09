@@ -71,7 +71,7 @@ class Metasploit::Cache::Payload::Stage::Instance::Ephemeral < Metasploit::Model
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      with_payload_stage_instance_tag(to) do |tagged|
+      with_tagged_logger(to) do |tagged|
         synchronized = SYNCHRONIZERS.reduce(to) { |block_destination, synchronizer|
           synchronizer.synchronize(
               destination: block_destination,
@@ -107,7 +107,7 @@ class Metasploit::Cache::Payload::Stage::Instance::Ephemeral < Metasploit::Model
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
   # @yieldreturn [void]
   # @return [void]
-  def with_payload_stage_instance_tag(payload_stage_instance, &block)
+  def with_tagged_logger(payload_stage_instance, &block)
     real_path = payload_stage_instance.payload_stage_class.ancestor.real_pathname.to_s
 
     Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)

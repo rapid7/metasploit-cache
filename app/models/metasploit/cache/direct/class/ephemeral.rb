@@ -63,7 +63,7 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      with_direct_class_tag(to) do |tagged|
+      with_tagged_logger(to) do |tagged|
         name!(direct_class: to)
 
         synchronized = Metasploit::Cache::Module::Class::Ephemeral::Rank.synchronize(
@@ -108,7 +108,7 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
   # @yieldreturn [void]
   # @return [void]
-  def with_direct_class_tag(direct_class, &block)
-    Metasploit::Cache::Module::Ancestor::Ephemeral.with_module_ancestor_tag(logger, direct_class.ancestor, &block)
+  def with_tagged_logger(direct_class, &block)
+    Metasploit::Cache::Module::Ancestor::Ephemeral.with_tagged_logger(logger, direct_class.ancestor, &block)
   end
 end

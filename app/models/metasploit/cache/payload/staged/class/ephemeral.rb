@@ -61,7 +61,7 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tags.
   # @yieldreturn [void]
   # @return [void]
-  def self.with_payload_staged_class_tag(logger, payload_staged_class, &block)
+  def self.with_tagged_logger(logger, payload_staged_class, &block)
     tags = [
         payload_staged_class.payload_stage_instance.payload_stage_class.ancestor.real_pathname.to_s,
         payload_staged_class.payload_stager_instance.payload_stager_class.ancestor.real_pathname.to_s
@@ -104,7 +104,7 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      with_payload_staged_class_tag(to) do |tagged|
+      with_tagged_loggger(to) do |tagged|
         persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
                                                          record: to
       end
@@ -129,7 +129,7 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tags.
   # @yieldreturn [void]
   # @return [void]
-  def with_payload_staged_class_tag(payload_staged_class, &block)
-    self.class.with_payload_staged_class_tag(logger, payload_staged_class, &block)
+  def with_tagged_loggger(payload_staged_class, &block)
+    self.class.with_tagged_logger(logger, payload_staged_class, &block)
   end
 end

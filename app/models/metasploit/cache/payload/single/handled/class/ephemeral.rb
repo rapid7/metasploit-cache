@@ -60,8 +60,8 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tags.
   # @yieldreturn [void]
   # @return [void]
-  def self.with_payload_single_handled_class_tag(logger, payload_single_handled_class, &block)
-    Metasploit::Cache::Module::Ancestor::Ephemeral.with_module_ancestor_tag(
+  def self.with_tagged_logger(logger, payload_single_handled_class, &block)
+    Metasploit::Cache::Module::Ancestor::Ephemeral.with_tagged_logger(
         logger,
         payload_single_handled_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor,
         &block
@@ -87,7 +87,7 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      with_payload_single_handled_class_tag(to) do |tagged|
+      with_tagged_logger(to) do |tagged|
         name!(payload_single_handled_class: to)
 
         persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
@@ -129,7 +129,7 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tags.
   # @yieldreturn [void]
   # @return [void]
-  def with_payload_single_handled_class_tag(payload_single_handled_class, &block)
-    self.class.with_payload_single_handled_class_tag(logger, payload_single_handled_class, &block)
+  def with_tagged_logger(payload_single_handled_class, &block)
+    self.class.with_tagged_logger(logger, payload_single_handled_class, &block)
   end
 end

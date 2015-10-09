@@ -58,7 +58,7 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
   # @yieldreturn [void]
   # @return [void]
-  def self.with_module_ancestor_tag(logger, module_ancestor, &block)
+  def self.with_tagged_logger(logger, module_ancestor, &block)
     real_path = module_ancestor.real_pathname.to_s
 
     Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
@@ -81,7 +81,7 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      with_module_ancestor_tag(to) do |tagged|
+      with_tagged_logger(to) do |tagged|
         # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
         persisted = Metasploit::Cache::Ephemeral.persist(logger: tagged, record: to)
       end
@@ -100,7 +100,7 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
   # @yieldreturn [void]
   # @return [void]
-  def with_module_ancestor_tag(module_ancestor, &block)
-    self.class.with_module_ancestor_tag(logger, module_ancestor, &block)
+  def with_tagged_logger(module_ancestor, &block)
+    self.class.with_tagged_logger(logger, module_ancestor, &block)
   end
 end

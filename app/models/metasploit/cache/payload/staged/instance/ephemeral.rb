@@ -77,7 +77,7 @@ class Metasploit::Cache::Payload::Staged::Instance::Ephemeral < Metasploit::Mode
   #   Giving `to` saves a database lookup if {#payload_staged_instance} is not loaded.
   # @return [Metasploit::Cache:Payload::Staged::Instance] `#persisted?` will be `false` if saving fails.
   def persist(to: payload_staged_instance)
-    with_payload_staged_instance_tag(to) do |tagged|
+    with_tagged_logger(to) do |tagged|
       # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
       saved = ActiveRecord::Base.connection_pool.with_connection {
         to_class = to.class
@@ -117,8 +117,8 @@ class Metasploit::Cache::Payload::Staged::Instance::Ephemeral < Metasploit::Mode
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tags.
   # @yieldreturn [void]
   # @return [void]
-  def with_payload_staged_instance_tag(payload_staged_instance, &block)
-    Metasploit::Cache::Payload::Staged::Class::Ephemeral.with_payload_staged_class_tag(
+  def with_tagged_logger(payload_staged_instance, &block)
+    Metasploit::Cache::Payload::Staged::Class::Ephemeral.with_tagged_logger(
         logger,
         payload_staged_instance.payload_staged_class,
         &block

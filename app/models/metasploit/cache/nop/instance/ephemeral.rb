@@ -72,7 +72,7 @@ class Metasploit::Cache::Nop::Instance::Ephemeral < Metasploit::Model::Base
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      with_nop_instance_tag(to) do |tagged|
+      with_tagged_logger(to) do |tagged|
         synchronized = SYNCHRONIZERS.reduce(to) { |block_destination, synchronizer|
           synchronizer.synchronize(
               destination: block_destination,
@@ -107,7 +107,7 @@ class Metasploit::Cache::Nop::Instance::Ephemeral < Metasploit::Model::Base
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tag.
   # @yieldreturn [void]
   # @return [void]
-  def with_nop_instance_tag(nop_instance, &block)
+  def with_tagged_logger(nop_instance, &block)
     real_path = nop_instance.nop_class.ancestor.real_pathname.to_s
 
     Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)

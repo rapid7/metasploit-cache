@@ -68,7 +68,7 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral < Metaspl
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do
-      with_payload_staged_instance_tag(to) do |tagged|
+      with_tagged_logger(to) do |tagged|
         persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
                                                          record: to
       end
@@ -97,10 +97,10 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral < Metaspl
   #   {Metasploit::Cache::Module#Ancestor#real_pathname} tags.
   # @yieldreturn [void]
   # @return [void]
-  def with_payload_staged_instance_tag(payload_single_handled_instance, &block)
+  def with_tagged_logger(payload_single_handled_instance, &block)
     payload_single_handled_class = payload_single_handled_instance.payload_single_handled_class
 
-    Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral.with_payload_single_handled_class_tag(
+    Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral.with_tagged_logger(
         logger,
         payload_single_handled_class,
         &block
