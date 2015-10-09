@@ -77,8 +77,12 @@ module Metasploit::Cache::Ephemeral
     end
   end
 
+  # Synchronizes `destination` with `source` across all `synchronizers`.
+  #
   # @param destination [ActiveRecord::Base] destination in `synchronize(destination:, logger:, source:)` called on each
   #   synchronizer in `synchronizers`.
+  # @param logger [ActiveSupport::TaggedLogging] logger with {Metasploit::Cache::Module::Ancestor#real_pathname} already
+  #   tagged.
   # @param source [Object] a Metasploit Module ancestor, class, or instance that supplies metadata synchronized to
   #   `destination`.  `source` in `synchronize(destination:, logger:, source:)` called on each synchronizer in
   #   `synchronizer`.
