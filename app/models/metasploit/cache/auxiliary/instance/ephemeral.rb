@@ -111,8 +111,8 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   # @yieldreturn [void]
   # @return [void]
   def with_tagged_logger(auxiliary_instance, &block)
-    real_path = auxiliary_instance.auxiliary_class.ancestor.real_pathname.to_s
-
-    Metasploit::Cache::Logged.with_tagged_logger(ActiveRecord::Base, logger, real_path, &block)
+    Metasploit::Cache::Module::Ancestor::Ephemeral.with_tagged_logger logger,
+                                                                      auxiliary_instance.auxiliary_class.ancestor,
+                                                                      &block
   end
 end
