@@ -1,7 +1,19 @@
 # Ephemeral Cache for connecting an in-memory single payload Metasploit Module's ruby Class to its persisted
 # {Metasploit::Cache::Payload::Single::Handled::Class}.
 class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit::Model::Base
+  extend ActiveSupport::Autoload
   extend Metasploit::Cache::ResurrectingAttribute
+
+  autoload :Name
+
+  #
+  # CONSTANTS
+  #
+
+  # Modules used to synchronize attributes and associations before persisting to database.
+  SYNCHRONIZERS = [
+      self::Name
+  ]
 
   #
   # Attributes
@@ -88,10 +100,10 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
 
     ActiveRecord::Base.connection_pool.with_connection do
       with_tagged_logger(to) do |tagged|
-        name!(payload_single_handled_class: to)
-
-        persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
-                                                         record: to
+        persisted = Metasploit::Cache::Ephemeral.persist destination: to,
+                                                         logger: tagged,
+                                                         source: payload_single_handled_metasploit_module_class,
+                                                         synchronizers: SYNCHRONIZERS
       end
     end
 
@@ -99,18 +111,6 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   end
 
   private
-
-  # Builds `#name` for `payload_single_handled_class`.
-  #
-  # @param payload_single_handled_class [Metasploit::Cache::Payload::Single::Handled::Class, #build_name, #class, #reference_name]
-  #
-  # @return [void]
-  def name!(payload_single_handled_class:)
-    payload_single_handled_class.build_name(
-        module_type: 'payload',
-        reference: payload_single_handled_class.reference_name
-    )
-  end
 
   # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} used to resurrect {#payload_single_handled_class}.
   #

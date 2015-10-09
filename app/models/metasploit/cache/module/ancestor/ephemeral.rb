@@ -83,7 +83,10 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
     ActiveRecord::Base.connection_pool.with_connection do
       with_tagged_logger(to) do |tagged|
         # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
-        persisted = Metasploit::Cache::Ephemeral.persist(logger: tagged, record: to)
+        persisted = Metasploit::Cache::Ephemeral.persist destination: to,
+                                                         logger: tagged,
+                                                         source: :metasploit_module,
+                                                         synchronizers: []
       end
     end
 

@@ -4,6 +4,15 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
   extend Metasploit::Cache::ResurrectingAttribute
 
   #
+  # CONSTANTS
+  #
+
+  # Synchronizes attributes and associations from {#metasploit_class} before persisting to database.
+  SYNCHRONIZERS = [
+      Metasploit::Cache::Module::Class::Ephemeral::Rank
+  ]
+
+  #
   # Attributes
   #
 
@@ -65,14 +74,10 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
 
     ActiveRecord::Base.connection_pool.with_connection do
       with_tagged_logger(to) do |tagged|
-        synchronized = Metasploit::Cache::Module::Class::Ephemeral::Rank.synchronize(
-            destination: to,
-            logger: tagged,
-            source: metasploit_class
-        )
-
-        persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
-                                                         record: synchronized
+        persisted = Metasploit::Cache::Ephemeral.persist destination: to,
+                                                         logger: tagged,
+                                                         source: metasploit_class,
+                                                         synchronizers: SYNCHRONIZERS
       end
     end
 

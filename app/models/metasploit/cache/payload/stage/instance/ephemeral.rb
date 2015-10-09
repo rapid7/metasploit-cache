@@ -72,13 +72,10 @@ class Metasploit::Cache::Payload::Stage::Instance::Ephemeral < Metasploit::Model
 
     ActiveRecord::Base.connection_pool.with_connection do
       with_tagged_logger(to) do |tagged|
-        synchronized = Metasploit::Cache::Ephemeral.synchronize destination: to,
-                                                                logger: tagged,
-                                                                source: metasploit_module_instance,
-                                                                synchronizers: SYNCHRONIZERS
-
-        persisted = Metasploit::Cache::Ephemeral.persist logger: tagged,
-                                                         record: synchronized
+        persisted = Metasploit::Cache::Ephemeral.persist destination: to,
+                                                         logger: tagged,
+                                                         source: metasploit_module_instance,
+                                                         synchronizers: SYNCHRONIZERS
       end
     end
 

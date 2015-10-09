@@ -90,7 +90,7 @@ module Metasploit::Cache::Ephemeral
   #   Enumerable of synchronizers that have a `synchronize(destination:, logger:, source:)` method that returns
   #   `destination` updated with metadata to match `source`.
   # @return [ActiveRecord::Base] `destination` synchronized using all `synchronizers`
-  def self.synchronize(destination:, logger:, source:, synchronizers: [])
+  def self.synchronize(destination:, logger:, source:, synchronizers:)
     synchronizers.reduce(destination) { |block_destination, synchronizer|
       synchronizer.synchronize(
           destination: block_destination,
@@ -127,23 +127,34 @@ module Metasploit::Cache::Ephemeral
     synchronizer
   end
 
-  # Attempts to persist `record` to database.
+  # Attempts to persist `destination` to database after synchronizing it with `source` using `synchronizers`.
   #
-  # @param logger [ActiveSupport::TaggedLogging] Tagged logger to which to log `record` validation errors if
-  #   `#batched_save` fails.
-  # @param record [ActiveRecord::Base, #batched_save, #errors] Record to attempt to batch save and log validation
+  # @param destination [ActiveRecord::Base, #batched_save, #errors] Record to attempt to batch save and log validation
   #   errors if not saved.
+  # @param logger [ActiveSupport::TaggedLogging] Tagged logger to which to log `destination` validation errors if
+  #   `#batched_save` fails.
+  # @param source [Object] a Metasploit Module ancestor, class, or instance that supplies metadata synchronized to
+  #   `destination`.  `source` in `synchronize(destination:, logger:, source:)` called on each synchronizer in
+  #   `synchronizer`.
+  # @param synchronizers [Enumerable<#<ActiveRecord::Base>synchronize(destination: ActiveRecord::Base, logger:, source:)>, #reduce]
+  #   Enumerable of synchronizers that have a `synchronize(destination:, logger:, source:)` method that returns
+  #   `destination` updated with metadata to match `source`.
   # @return [ActiveRecord::Base] `#persisted?` will be `false` if saving fails.
-  def self.persist(logger:, record:)
-    saved, record = serializable_batched_save(record)
+  def self.persist(destination:, logger:, source:, synchronizers:)
+    synchronized = Metasploit::Cache::Ephemeral.synchronize destination: destination,
+                                                            logger: logger,
+                                                            source: source,
+                                                            synchronizers: synchronizers
+
+    saved, persisted = serializable_batched_save(synchronized)
 
     unless saved
       logger.error {
-        "Could not be persisted to #{record.class}: #{record.errors.full_messages.to_sentence}"
+        "Could not be persisted to #{persisted.class}: #{persisted.errors.full_messages.to_sentence}"
       }
     end
 
-    record
+    persisted
   end
 
   # Attempts to save the record in batch mode with serializable transaction isolation.

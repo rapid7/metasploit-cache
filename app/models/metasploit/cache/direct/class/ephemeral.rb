@@ -1,7 +1,19 @@
 # Ephemeral Cache for connecting an in-memory Metasploit Module's ruby Class to its persisted
 # {Metasploit::Cache::Module::Class}.
 class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
+  extend ActiveSupport::Autoload
   extend Metasploit::Cache::ResurrectingAttribute
+
+  autoload :Name
+
+  #
+  # CONSTANTS
+  #
+
+  SYNCHRONIZERS = [
+      self::Name,
+      Metasploit::Cache::Module::Class::Ephemeral::Rank
+  ]
 
   #
   # Attributes
@@ -64,15 +76,10 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
 
     ActiveRecord::Base.connection_pool.with_connection do
       with_tagged_logger(to) do |tagged|
-        name!(direct_class: to)
-
-        synchronized = Metasploit::Cache::Module::Class::Ephemeral::Rank.synchronize(
-            destination: to,
-            logger: tagged,
-            source: metasploit_class
-        )
-
-        persisted = Metasploit::Cache::Ephemeral.persist(logger: tagged, record: synchronized)
+        persisted = Metasploit::Cache::Ephemeral.persist destination: to,
+                                                         logger: tagged,
+                                                         source: metasploit_class,
+                                                         synchronizers: SYNCHRONIZERS
       end
     end
 
@@ -80,18 +87,6 @@ class Metasploit::Cache::Direct::Class::Ephemeral < Metasploit::Model::Base
   end
 
   private
-
-  # Builds `#name` for `direct_class`.
-  #
-  # @param direct_class [Metasploit::Cache::Direct::Class, #reference_name, #class] Used to log errors if
-  #   `direct_class`.
-  # @return [void]
-  def name!(direct_class:)
-    direct_class.build_name(
-        module_type: direct_class.class::MODULE_TYPE,
-        reference: direct_class.reference_name
-    )
-  end
 
   # {Metasploit::Cache::Module::Ancestor#real_path_sha1_hex_digest} used to resurrect {#persistent}.
   #
