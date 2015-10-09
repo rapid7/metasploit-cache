@@ -33,7 +33,6 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
         )
       }
 
-
       #
       # lets
       #
@@ -230,7 +229,6 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
           ancestor: ancestor
       )
     }
-
 
     context 'with #ancestor' do
       let(:ancestor) {
