@@ -3,9 +3,9 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral, type: :model do
 
   subject(:direct_class_ephemeral) {
     described_class.new(
-        direct_class_class: expected_direct_class.class,
         logger: logger,
-        metasploit_class: metasploit_class
+        metasploit_class: metasploit_class,
+        persistent_class: expected_direct_class.class
     )
   }
 
@@ -64,9 +64,9 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral, type: :model do
   end
 
   context 'resurrecting attributes' do
-    context '#direct_class' do
-      subject(:direct_class) {
-        direct_class_ephemeral.direct_class
+    context '#persistent' do
+      subject(:persistent) {
+        direct_class_ephemeral.persistent
       }
 
       before(:each) do
@@ -78,20 +78,20 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral, type: :model do
       end
 
       it 'is an instance of a subclass of Metasploit::Cache::Direct::Class' do
-        expect(direct_class.class).to be < Metasploit::Cache::Direct::Class
+        expect(persistent.class).to be < Metasploit::Cache::Direct::Class
       end
 
       it 'is a Metasploit::Cache::Direct::Class with #ancestor matching pre-existing Metasploit::Cache::Module::Ancestor' do
-        expect(direct_class).to eq(expected_direct_class)
-        expect(direct_class.ancestor).to eq(module_ancestor)
+        expect(persistent).to eq(expected_direct_class)
+        expect(persistent.ancestor).to eq(module_ancestor)
       end
     end
   end
 
   context 'validations' do
-    it { is_expected.to validate_presence_of(:direct_class_class) }
     it { is_expected.to validate_presence_of(:logger) }
     it { is_expected.to validate_presence_of(:metasploit_class) }
+    it { is_expected.to validate_presence_of(:persistent_class) }
   end
 
   context '#persist' do
@@ -108,8 +108,8 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral, type: :model do
         ]
       }
 
-      it 'does not access default #direct_class' do
-        expect(direct_class_ephemeral).not_to receive(:direct_class)
+      it 'does not access default #persistent' do
+        expect(direct_class_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -189,15 +189,15 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral, type: :model do
         expected_direct_class.save!
       end
 
-      it 'defaults to #direct_class' do
-        expect(direct_class_ephemeral).to receive(:direct_class).and_call_original
+      it 'defaults to #persistent' do
+        expect(direct_class_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       context 'with #rank' do
         it 'uses #batched_save' do
-          expect(direct_class_ephemeral.direct_class).to receive(:batched_save).and_call_original
+          expect(direct_class_ephemeral.persistent).to receive(:batched_save).and_call_original
 
           persist
         end
@@ -205,8 +205,8 @@ RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral, type: :model do
 
       context 'without #rank' do
         it 'does attempt to save' do
-          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize).and_return(direct_class_ephemeral.direct_class)
-          expect(direct_class_ephemeral.direct_class).to receive(:batched_save)
+          expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to receive(:synchronize).and_return(direct_class_ephemeral.persistent)
+          expect(direct_class_ephemeral.persistent).to receive(:batched_save)
 
           persist
         end

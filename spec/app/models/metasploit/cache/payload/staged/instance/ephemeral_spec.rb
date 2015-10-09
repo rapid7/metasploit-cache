@@ -43,13 +43,13 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral, type: :m
   end
 
   context 'resurrecting attributes' do
-    context '#payload_staged_instance' do
+    context '#persistent' do
       include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
       include_context 'metasploit_module_instance'
 
-      subject(:payload_staged_instance) {
-        payload_staged_instance_ephemeral.payload_staged_instance
+      subject(:persistent) {
+        payload_staged_instance_ephemeral.persistent
       }
 
       #
@@ -74,12 +74,12 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral, type: :m
       it { is_expected.to be_a Metasploit::Cache::Payload::Staged::Instance }
 
       it 'is pre-existing Metasploit::Cache::Payload::Staged::Instance' do
-        expect(payload_staged_instance).to eq(existing_payload_staged_instance)
+        expect(persistent).to eq(existing_payload_staged_instance)
       end
 
       context 'Metasploit::Cache::Paylaod::Staged::Instance#payload_stage_instance' do
         subject(:payload_staged_class) {
-          payload_staged_instance.payload_staged_class
+          persistent.payload_staged_class
         }
 
         it { is_expected.to be_persisted }
@@ -188,8 +188,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral, type: :m
         double('payload staged Metasploit Module instance')
       }
 
-      it 'does not access default #payload_staged_instance' do
-        expect(payload_staged_instance_ephemeral).not_to receive(:payload_staged_instance)
+      it 'does not access default #persistent' do
+        expect(payload_staged_instance_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -276,14 +276,14 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral, type: :m
         existing_payload_staged_instance
       end
 
-      it 'defaults to #payload_staged_instance' do
-        expect(payload_staged_instance_ephemeral).to receive(:payload_staged_instance).and_call_original
+      it 'defaults to #persistent' do
+        expect(payload_staged_instance_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(payload_staged_instance_ephemeral.payload_staged_instance).to receive(:batched_save).and_call_original
+        expect(payload_staged_instance_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

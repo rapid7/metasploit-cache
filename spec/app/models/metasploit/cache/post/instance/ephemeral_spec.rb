@@ -1,8 +1,8 @@
 RSpec.describe Metasploit::Cache::Post::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
-    context '#post_instance' do
-      subject(:post_instance) {
-        post_instance_ephemeral.post_instance
+    context '#persistent' do
+      subject(:persistent) {
+        post_instance_ephemeral.persistent
       }
 
       #
@@ -48,7 +48,7 @@ RSpec.describe Metasploit::Cache::Post::Instance::Ephemeral, type: :model do
       it { is_expected.to be_a Metasploit::Cache::Post::Instance }
 
       it 'has #post_class matching pre-existing Metasploit::Cache::Post::Class' do
-        expect(post_instance.post_class).to eq(existing_post_instance.post_class)
+        expect(persistent.post_class).to eq(existing_post_instance.post_class)
       end
     end
   end
@@ -156,8 +156,8 @@ RSpec.describe Metasploit::Cache::Post::Instance::Ephemeral, type: :model do
         )
       }
 
-      it 'does not access default #post_instance' do
-        expect(post_instance_ephemeral).not_to receive(:post_instance)
+      it 'does not access default #persistent' do
+        expect(post_instance_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -235,14 +235,14 @@ RSpec.describe Metasploit::Cache::Post::Instance::Ephemeral, type: :model do
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
-      it 'defaults to #post_instance' do
-        expect(post_instance_ephemeral).to receive(:post_instance).and_call_original
+      it 'defaults to #persistent' do
+        expect(post_instance_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(post_instance_ephemeral.post_instance).to receive(:batched_save).and_call_original
+        expect(post_instance_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

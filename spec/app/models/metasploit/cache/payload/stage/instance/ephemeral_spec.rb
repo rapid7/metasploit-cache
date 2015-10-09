@@ -1,8 +1,8 @@
 RSpec.describe Metasploit::Cache::Payload::Stage::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
-    context '#payload_stage_instance' do
-      subject(:payload_stage_instance) {
-        payload_stage_instance_ephemeral.payload_stage_instance
+    context '#persistent' do
+      subject(:persistent) {
+        payload_stage_instance_ephemeral.persistent
       }
 
       #
@@ -48,7 +48,7 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance::Ephemeral, type: :mo
       it { is_expected.to be_a Metasploit::Cache::Payload::Stage::Instance }
 
       it 'has #payload_stage_class matching pre-existing Metasploit::Cache::Payload::Stage::Class' do
-        expect(payload_stage_instance.payload_stage_class).to eq(existing_payload_stage_instance.payload_stage_class)
+        expect(persistent.payload_stage_class).to eq(existing_payload_stage_instance.payload_stage_class)
       end
     end
   end
@@ -124,8 +124,8 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance::Ephemeral, type: :mo
         )
       }
 
-      it 'does not access default #payload_stage_instance' do
-        expect(payload_stage_instance_ephemeral).not_to receive(:payload_stage_instance)
+      it 'does not access default #persistent' do
+        expect(payload_stage_instance_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -203,14 +203,14 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance::Ephemeral, type: :mo
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
-      it 'defaults to #payload_stage_instance' do
-        expect(payload_stage_instance_ephemeral).to receive(:payload_stage_instance).and_call_original
+      it 'defaults to #persistent' do
+        expect(payload_stage_instance_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(payload_stage_instance_ephemeral.payload_stage_instance).to receive(:batched_save).and_call_original
+        expect(payload_stage_instance_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

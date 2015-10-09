@@ -1,8 +1,8 @@
 RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
-    context '#encoder_instance' do
-      subject(:encoder_instance) {
-        encoder_instance_ephemeral.encoder_instance
+    context '#persistent' do
+      subject(:persistent) {
+        encoder_instance_ephemeral.persistent
       }
 
       #
@@ -48,7 +48,7 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral, type: :model do
       it { is_expected.to be_a Metasploit::Cache::Encoder::Instance }
 
       it 'has #encoder_class matching pre-existing Metasploit::Cache::Encoder::Class' do
-        expect(encoder_instance.encoder_class).to eq(existing_encoder_instance.encoder_class)
+        expect(persistent.encoder_class).to eq(existing_encoder_instance.encoder_class)
       end
     end
   end
@@ -138,8 +138,8 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral, type: :model do
         )
       }
 
-      it 'does not access default #encoder_instance' do
-        expect(encoder_instance_ephemeral).not_to receive(:encoder_instance)
+      it 'does not access default #persistent' do
+        expect(encoder_instance_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -217,14 +217,14 @@ RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral, type: :model do
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
-      it 'defaults to #encoder_instance' do
-        expect(encoder_instance_ephemeral).to receive(:encoder_instance).and_call_original
+      it 'defaults to #persistent' do
+        expect(encoder_instance_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(encoder_instance_ephemeral.encoder_instance).to receive(:batched_save).and_call_original
+        expect(encoder_instance_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

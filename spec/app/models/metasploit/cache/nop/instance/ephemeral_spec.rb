@@ -1,8 +1,8 @@
 RSpec.describe Metasploit::Cache::Nop::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
     context '#nop_instance' do
-      subject(:nop_instance) {
-        nop_instance_ephemeral.nop_instance
+      subject(:persistent) {
+        nop_instance_ephemeral.persistent
       }
 
       #
@@ -48,7 +48,7 @@ RSpec.describe Metasploit::Cache::Nop::Instance::Ephemeral, type: :model do
       it { is_expected.to be_a Metasploit::Cache::Nop::Instance }
 
       it 'has #nop_class matching pre-existing Metasploit::Cache::Nop::Class' do
-        expect(nop_instance.nop_class).to eq(existing_nop_instance.nop_class)
+        expect(persistent.nop_class).to eq(existing_nop_instance.nop_class)
       end
     end
   end
@@ -150,8 +150,8 @@ RSpec.describe Metasploit::Cache::Nop::Instance::Ephemeral, type: :model do
         )
       }
 
-      it 'does not access default #nop_instance' do
-        expect(nop_instance_ephemeral).not_to receive(:nop_instance)
+      it 'does not access default #persistent' do
+        expect(nop_instance_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -229,14 +229,14 @@ RSpec.describe Metasploit::Cache::Nop::Instance::Ephemeral, type: :model do
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
-      it 'defaults to #nop_instance' do
-        expect(nop_instance_ephemeral).to receive(:nop_instance).and_call_original
+      it 'defaults to #persistent' do
+        expect(nop_instance_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(nop_instance_ephemeral.nop_instance).to receive(:batched_save).and_call_original
+        expect(nop_instance_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

@@ -1,11 +1,11 @@
 RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
-    context '#payload_single_unhandled_instance' do
+    context '#persistent' do
       include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
-      subject(:payload_single_unhandled_instance) {
-        payload_single_unhandled_instance_ephemeral.payload_single_unhandled_instance
+      subject(:persistent) {
+        payload_single_unhandled_instance_ephemeral.persistent
       }
 
       #
@@ -52,7 +52,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemera
       it { is_expected.to be_a Metasploit::Cache::Payload::Single::Unhandled::Instance }
 
       it 'has #payload_single_unhandled_class matching pre-existing Metasploit::Cache::Payload::Single::Unhandled::Class' do
-        expect(payload_single_unhandled_instance.payload_single_unhandled_class).to eq(existing_payload_single_unhandled_instance.payload_single_unhandled_class)
+        expect(persistent.payload_single_unhandled_class).to eq(existing_payload_single_unhandled_instance.payload_single_unhandled_class)
       end
     end
   end
@@ -132,8 +132,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemera
         )
       }
 
-      it 'does not access default #payload_single_unhandled_instance' do
-        expect(payload_single_unhandled_instance_ephemeral).not_to receive(:payload_single_unhandled_instance)
+      it 'does not access default #persistent' do
+        expect(payload_single_unhandled_instance_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -215,14 +215,14 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemera
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
-      it 'defaults to #payload_single_unhandled_instance' do
-        expect(payload_single_unhandled_instance_ephemeral).to receive(:payload_single_unhandled_instance).and_call_original
+      it 'defaults to #persistent' do
+        expect(payload_single_unhandled_instance_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(payload_single_unhandled_instance_ephemeral.payload_single_unhandled_instance).to receive(:batched_save).and_call_original
+        expect(payload_single_unhandled_instance_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

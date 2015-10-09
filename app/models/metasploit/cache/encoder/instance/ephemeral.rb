@@ -36,7 +36,7 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
   # Cached metadata for this {#metasploit_module_instance}.
   #
   # @return [Metasploit::Cache::Encoder::Instance]
-  resurrecting_attr_accessor(:encoder_instance) {
+  resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Encoder::Instance.joins(
           encoder_class: :ancestor
@@ -67,7 +67,7 @@ class Metasploit::Cache::Encoder::Instance::Ephemeral < Metasploit::Model::Base
   # @param to [Metasploit::Cache::Encoder::Instance] Sve cacheable data to {Metasploit::Cache::Encoder::Instance}.
   #   Giving `to` saves a database lookup if {#encoder_instance} is not loaded.
   # @return [Metasploit::Cache:Encoder::Instance] `#persisted?` will be `false` if saving fails.
-  def persist(to: encoder_instance)
+  def persist(to: persistent)
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do

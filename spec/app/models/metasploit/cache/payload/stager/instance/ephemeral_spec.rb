@@ -1,11 +1,11 @@
 RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
-    context '#payload_stager_instance' do
+    context '#persistent' do
       include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
-      subject(:payload_stager_instance) {
-        payload_stager_instance_ephemeral.payload_stager_instance
+      subject(:persistent) {
+        payload_stager_instance_ephemeral.persistent
       }
 
       #
@@ -53,7 +53,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral, type: :m
       it { is_expected.to be_a Metasploit::Cache::Payload::Stager::Instance }
 
       it 'has #payload_stager_class matching pre-existing Metasploit::Cache::Payload::Stager::Class' do
-        expect(payload_stager_instance.payload_stager_class).to eq(existing_payload_stager_instance.payload_stager_class)
+        expect(persistent.payload_stager_class).to eq(existing_payload_stager_instance.payload_stager_class)
       end
     end
   end
@@ -133,8 +133,8 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral, type: :m
         )
       }
 
-      it 'does not access default #payload_stager_instance' do
-        expect(payload_stager_instance_ephemeral).not_to receive(:payload_stager_instance)
+      it 'does not access default #persistent' do
+        expect(payload_stager_instance_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -217,14 +217,14 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral, type: :m
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
-      it 'defaults to #payload_stager_instance' do
-        expect(payload_stager_instance_ephemeral).to receive(:payload_stager_instance).and_call_original
+      it 'defaults to #persistent' do
+        expect(payload_stager_instance_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(payload_stager_instance_ephemeral.payload_stager_instance).to receive(:batched_save).and_call_original
+        expect(payload_stager_instance_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

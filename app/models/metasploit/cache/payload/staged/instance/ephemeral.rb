@@ -24,7 +24,7 @@ class Metasploit::Cache::Payload::Staged::Instance::Ephemeral < Metasploit::Mode
   # Cached metadata for this {#metasploit_module_instance}.
   #
   # @return [Metasploit::Cache::Payload::Staged::Instance]
-  resurrecting_attr_accessor(:payload_staged_instance) {
+  resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Payload::Staged::Instance.where_ancestor_real_path_sha1_hex_digests(
           stage: ancestor_real_path_sha1_hex_digest(:stage),
@@ -76,7 +76,7 @@ class Metasploit::Cache::Payload::Staged::Instance::Ephemeral < Metasploit::Mode
   # @param to [Metasploit::Cache::Payload::Staged::Instance] Sve cacheable data to {Metasploit::Cache::Payload::Staged::Instance}.
   #   Giving `to` saves a database lookup if {#payload_staged_instance} is not loaded.
   # @return [Metasploit::Cache:Payload::Staged::Instance] `#persisted?` will be `false` if saving fails.
-  def persist(to: payload_staged_instance)
+  def persist(to: persistent)
     with_tagged_logger(to) do |tagged|
       # Ensure that connection is only held temporarily by Thread instead of being memoized to Thread
       saved = ActiveRecord::Base.connection_pool.with_connection {

@@ -43,7 +43,7 @@ class Metasploit::Cache::Post::Instance::Ephemeral < Metasploit::Model::Base
   # Cached metadata for this {#metasploit_module_instance}.
   #
   # @return [Metasploit::Cache::Post::Instance]
-  resurrecting_attr_accessor(:post_instance) {
+  resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Post::Instance.joins(
           post_class: :ancestor
@@ -74,7 +74,7 @@ class Metasploit::Cache::Post::Instance::Ephemeral < Metasploit::Model::Base
   # @param to [Metasploit::Cache::Post::Instance] Sve cacheable data to {Metasploit::Cache::Post::Instance}.
   #   Giving `to` saves a database lookup if {#post_instance} is not loaded.
   # @return [Metasploit::Cache:Post::Instance] `#persisted?` will be `false` if saving fails.
-  def persist(to: post_instance)
+  def persist(to: persistent)
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do

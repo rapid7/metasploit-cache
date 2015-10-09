@@ -1,8 +1,8 @@
 RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
-    context '#auxiliary_instance' do
-      subject(:auxiliary_instance) {
-        auxiliary_instance_ephemeral.auxiliary_instance
+    context '#persistent' do
+      subject(:persistent) {
+        auxiliary_instance_ephemeral.persistent
       }
 
       #
@@ -48,7 +48,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral, type: :model d
       it { is_expected.to be_a Metasploit::Cache::Auxiliary::Instance }
 
       it 'has #auxiliary_class matching pre-existing Metasploit::Cache::Auxiliary::Class' do
-        expect(auxiliary_instance.auxiliary_class).to eq(existing_auxiliary_instance.auxiliary_class)
+        expect(persistent.auxiliary_class).to eq(existing_auxiliary_instance.auxiliary_class)
       end
     end
   end
@@ -139,8 +139,8 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral, type: :model d
         )
       }
 
-      it 'does not access default #auxiliary_instance' do
-        expect(auxiliary_instance_ephemeral).not_to receive(:auxiliary_instance)
+      it 'does not access default #persistent' do
+        expect(auxiliary_instance_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -218,14 +218,14 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Ephemeral, type: :model d
         metasploit_class.ephemeral_cache_by_source[:ancestor] = metasploit_class
       end
 
-      it 'defaults to #auxiliary_instance' do
-        expect(auxiliary_instance_ephemeral).to receive(:auxiliary_instance).and_call_original
+      it 'defaults to #persistent' do
+        expect(auxiliary_instance_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(auxiliary_instance_ephemeral.auxiliary_instance).to receive(:batched_save).and_call_original
+        expect(auxiliary_instance_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

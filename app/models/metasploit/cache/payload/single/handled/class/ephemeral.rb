@@ -24,7 +24,7 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   # Cached metadata for this Class.
   #
   # @return [Metasploit::Cache::Direct::Class]
-  resurrecting_attr_accessor :payload_single_handled_class do
+  resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Payload::Single::Handled::Class.joins(
           payload_single_unhandled_instance: {
@@ -34,7 +34,7 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
            Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
       ).readonly(false).first
     }
-  end
+  }
 
   #
   # Validations
@@ -83,7 +83,7 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral < Metasploit
   # @param to [Metasploit::Cache::Payload::Single::Handled::Class] Save cacheable data to
   #   {Metasploit::Cache::Payload::Single::Handled::Class}.
   # @return [Metasploit::Cache::Payload::Single::Handled::Class] `#persisted?` will be `false` if saving fails.
-  def persist(to: payload_single_handled_class)
+  def persist(to: persistent)
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do

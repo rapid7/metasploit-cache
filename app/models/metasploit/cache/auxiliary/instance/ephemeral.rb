@@ -40,7 +40,7 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   # Cached metadata for this {#metasploit_instance}
   #
   # @return [Metasploit::Cache::Auxiliary::Instance]
-  resurrecting_attr_accessor :auxiliary_instance do
+  resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Auxiliary::Instance.joins(
           auxiliary_class: :ancestor
@@ -48,7 +48,7 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
           Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
       ).readonly(false).first
     }
-  end
+  }
 
   #
   # Validations
@@ -71,7 +71,7 @@ class Metasploit::Cache::Auxiliary::Instance::Ephemeral < Metasploit::Model::Bas
   # @param to [Metasploit::Cache::Auxiliary::Instance] Save cacheable data to {Metasploit::Cache::Auxiliary::Instance}.
   #   Giving `to` saves a database lookup if {#auxiliary_instance} is not loaded.
   # @return [Metasploit::Cache::Auxiliary::Instance] `#persisted?` will be `false` if saving fails.
-  def persist(to: auxiliary_instance)
+  def persist(to: persistent)
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do

@@ -37,7 +37,7 @@ class Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral < Metas
   # Cached metadata for this {#metasploit_module_instance}.
   #
   # @return [Metasploit::Cache::Payload::Single::Unhandled::Instance]
-  resurrecting_attr_accessor(:payload_single_unhandled_instance) {
+  resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Payload::Single::Unhandled::Instance.joins(
           payload_single_unhandled_class: :ancestor
@@ -69,7 +69,7 @@ class Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral < Metas
   #   {Metasploit::Cache::Payload::Single::Unhandled::Instance}. Giving `to` saves a database lookup if
   #   {#payload_single_unhandled_instance} is not loaded.
   # @return [Metasploit::Cache:Payload::Single::Unhandled::Instance] `#persisted?` will be `false` if saving fails.
-  def persist(to: payload_single_unhandled_instance)
+  def persist(to: persistent)
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do

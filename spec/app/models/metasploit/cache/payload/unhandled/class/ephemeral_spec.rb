@@ -60,9 +60,9 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral, type: :m
   end
 
   context 'resurrecting attributes' do
-    context '#payload_unhandled_class' do
-      subject(:payload_unhandled_class) {
-        payload_unhandled_class_ephemeral.payload_unhandled_class
+    context '#persistent' do
+      subject(:persistent) {
+        payload_unhandled_class_ephemeral.persistent
       }
 
       before(:each) do
@@ -74,12 +74,12 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral, type: :m
       end
 
       it 'is an instance of a subclass of Metasploit::Cache::Payload::Unhandled::Class' do
-        expect(payload_unhandled_class.class).to be < Metasploit::Cache::Payload::Unhandled::Class
+        expect(persistent.class).to be < Metasploit::Cache::Payload::Unhandled::Class
       end
 
       it 'is a Metasploit::Cache::Direct::Class with #ancestor matching pre-existing Metasploit::Cache::Module::Ancestor' do
-        expect(payload_unhandled_class).to eq(expected_payload_unhandled_class)
-        expect(payload_unhandled_class.ancestor).to eq(module_ancestor)
+        expect(persistent).to eq(expected_payload_unhandled_class)
+        expect(persistent.ancestor).to eq(module_ancestor)
       end
     end
   end
@@ -104,8 +104,8 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral, type: :m
         ]
       }
 
-      it 'does not access default #payload_unhandled_class' do
-        expect(payload_unhandled_class_ephemeral).not_to receive(:payload_unhandled_class)
+      it 'does not access default #persistent' do
+        expect(payload_unhandled_class_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -187,15 +187,15 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral, type: :m
         expected_payload_unhandled_class.save!
       end
 
-      it 'defaults to #payload_unhandled_class' do
-        expect(payload_unhandled_class_ephemeral).to receive(:payload_unhandled_class).and_call_original
+      it 'defaults to #persistent' do
+        expect(payload_unhandled_class_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       context 'with #rank' do
         it 'uses #batched_save' do
-          expect(payload_unhandled_class_ephemeral.payload_unhandled_class).to receive(:batched_save).and_call_original
+          expect(payload_unhandled_class_ephemeral.persistent).to receive(:batched_save).and_call_original
 
           persist
         end
@@ -205,10 +205,10 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Ephemeral, type: :m
         it 'does attempt to save' do
           expect(Metasploit::Cache::Module::Class::Ephemeral::Rank).to(
               receive(:synchronize).and_return(
-                  payload_unhandled_class_ephemeral.payload_unhandled_class
+                  payload_unhandled_class_ephemeral.persistent
               )
           )
-          expect(payload_unhandled_class_ephemeral.payload_unhandled_class).to receive(:batched_save)
+          expect(payload_unhandled_class_ephemeral.persistent).to receive(:batched_save)
 
           persist
         end

@@ -29,13 +29,13 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
   # Cached metadata for this Class.
   #
   # @return [Metasploit::Cache::Payload::Unhandled::Class]
-  resurrecting_attr_accessor :payload_unhandled_class do
+  resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
       payload_unhandled_class_class.where(
           Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
       ).joins(:ancestor).readonly(false).first
     }
-  end
+  }
 
   #
   # Validations
@@ -60,7 +60,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Ephemeral < Metasploit::Mode
   # @param to [Metasploit::Cache::Payload::Unhandled::Class] Save cacheable data to
   #   {Metasploit::Cache::Payload::Unhandled::Class}.
   # @return [Metasploit::Cache::Payload::Unhandled::Class] `#persisted?` will be `false` if saving fails.
-  def persist(to: payload_unhandled_class)
+  def persist(to: persistent)
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do

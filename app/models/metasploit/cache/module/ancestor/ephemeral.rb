@@ -28,11 +28,11 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   # Cached metadata for this Module.
   #
   # @return [Metasploit::Cache::Module::Ancestor]
-  resurrecting_attr_accessor :module_ancestor do
+  resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Module::Ancestor.where(real_path_sha1_hex_digest: real_path_sha1_hex_digest).first
     }
-  end
+  }
 
   #
   # Validations
@@ -77,7 +77,7 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
   #
   # @param to [Metasploit::Cache::Module::Ancestor] Save cacheable data to `module_ancestor`.
   # @return [Metasploit::Cache::Module::Ancestor] `#persisted?` will be `false` if saving fails
-  def persist(to: module_ancestor)
+  def persist(to: persistent)
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do

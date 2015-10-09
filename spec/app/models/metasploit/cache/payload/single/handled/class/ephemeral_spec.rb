@@ -1,11 +1,11 @@
 RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral, type: :model do
   context 'resurrecting attributes' do
-    context '#payload_single_handled_class' do
+    context '#persistent' do
       include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
-      subject(:payload_single_handled_class) {
-        payload_single_handled_class_ephemeral.payload_single_handled_class
+      subject(:persistent) {
+        payload_single_handled_class_ephemeral.persistent
       }
 
       #
@@ -42,12 +42,12 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral, ty
       end
 
       it 'is an instance of Metasploit::Cache::Payload::Single::Handled::Class' do
-        expect(payload_single_handled_class).to be_a Metasploit::Cache::Payload::Single::Handled::Class
+        expect(persistent).to be_a Metasploit::Cache::Payload::Single::Handled::Class
       end
 
       context 'Metasploit::Cache::Payload::Single::Handled::Class#payload_single_unhandled_instance' do
         subject(:payload_single_unhandled_instance) {
-          payload_single_handled_class.payload_single_unhandled_instance
+          persistent.payload_single_unhandled_instance
         }
 
         it { is_expected.to be_persisted }
@@ -127,8 +127,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral, ty
         passed_payload_single_handled_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor
       }
 
-      it 'does not access default #payload_single_handled_class' do
-        expect(payload_single_handled_class_ephemeral).not_to receive(:payload_single_handled_class)
+      it 'does not access default #persistent' do
+        expect(payload_single_handled_class_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -210,14 +210,14 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral, ty
         )
       }
 
-      it 'defaults to #payload_single_handled_class' do
-        expect(payload_single_handled_class_ephemeral).to receive(:payload_single_handled_class).and_call_original
+      it 'defaults to #persistent' do
+        expect(payload_single_handled_class_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(payload_single_handled_class_ephemeral.payload_single_handled_class).to receive(:batched_save).and_call_original
+        expect(payload_single_handled_class_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

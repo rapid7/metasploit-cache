@@ -1,11 +1,11 @@
 RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral, type: :model do
   context 'resurrecting attributes' do
-    context '#payload_staged_class' do
+    context '#persistent' do
       include_context ':metasploit_cache_payload_handler_module'
       include_context 'Metasploit::Cache::Spec::Unload.unload'
 
-      subject(:payload_staged_class) {
-        payload_staged_class_ephemeral.payload_staged_class
+      subject(:persistent) {
+        payload_staged_class_ephemeral.persistent
       }
 
       #
@@ -57,12 +57,12 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral, type: :mode
       end
 
       it 'is an instance of Metasploit::Cache::Payload::Staged::Class' do
-        expect(payload_staged_class).to be_a Metasploit::Cache::Payload::Staged::Class
+        expect(persistent).to be_a Metasploit::Cache::Payload::Staged::Class
       end
 
       context 'Metasploit::Cache::Payload::Staged::Class#payload_stage_instance' do
         subject(:payload_stage_instance) {
-          payload_staged_class.payload_stage_instance
+          persistent.payload_stage_instance
         }
 
         it { is_expected.to be_persisted }
@@ -86,7 +86,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral, type: :mode
 
       context 'Metasploit::Cache::Payload::Staged::Class#payload_stager_instance' do
         subject(:payload_stager_instance) {
-          payload_staged_class.payload_stager_instance
+          persistent.payload_stager_instance
         }
 
         it { is_expected.to be_persisted }
@@ -183,8 +183,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral, type: :mode
         passed_payload_staged_class.payload_stager_instance.payload_stager_class.ancestor
       }
 
-      it 'does not access default #payload_staged_class' do
-        expect(payload_staged_class_ephemeral).not_to receive(:payload_staged_class)
+      it 'does not access default #persistent' do
+        expect(payload_staged_class_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -278,14 +278,14 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Ephemeral, type: :mode
         )
       }
 
-      it 'defaults to #payload_staged_class' do
-        expect(payload_staged_class_ephemeral).to receive(:payload_staged_class).and_call_original
+      it 'defaults to #persistent' do
+        expect(payload_staged_class_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
       it 'uses #batched_save' do
-        expect(payload_staged_class_ephemeral.payload_staged_class).to receive(:batched_save).and_call_original
+        expect(payload_staged_class_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end

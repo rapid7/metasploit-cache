@@ -24,14 +24,14 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   # Cached metadata for this Class.
   #
   # @return [Metasploit::Cache::Direct::Class]
-  resurrecting_attr_accessor :payload_staged_class do
+  resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
       Metasploit::Cache::Payload::Staged::Class.where_ancestor_real_path_sha1_hex_digests(
           stage: ancestor_real_path_sha1_hex_digest(:stage),
           stager: ancestor_real_path_sha1_hex_digest(:stager)
       ).readonly(false).first
     }
-  end
+  }
 
   #
   # Validations
@@ -100,7 +100,7 @@ class Metasploit::Cache::Payload::Staged::Class::Ephemeral < Metasploit::Model::
   # @param to [Metasploit::Cache::Payload::Stager::Class] Save cacheable data to
   #   {Metasploit::Cache::Payload::Stager::Class}.
   # @return [Metasploit::Cache::Payload::Stager::Class] `#persisted?` will be `false` if saving fails.
-  def persist(to: payload_staged_class)
+  def persist(to: persistent)
     persisted = nil
 
     ActiveRecord::Base.connection_pool.with_connection do

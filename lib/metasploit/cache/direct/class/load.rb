@@ -63,9 +63,9 @@ class Metasploit::Cache::Direct::Class::Load < Metasploit::Model::Base
         @metasploit_class = nil
 
         ephemeral_cache = Metasploit::Cache::Direct::Class::Ephemeral.new(
-            direct_class_class: direct_class.class,
             logger: logger,
-            metasploit_class: metasploit_module
+            metasploit_class: metasploit_module,
+            persistent_class: direct_class.class
         )
         metasploit_module.ephemeral_cache_by_source[:class] = ephemeral_cache
 

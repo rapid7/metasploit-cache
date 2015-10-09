@@ -22,9 +22,9 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
   end
 
   context 'resurrecting attributes' do
-    context '#module_ancestor' do
-      subject(:module_ancestor) {
-        module_ancestor_ephemeral.module_ancestor
+    context '#persistent' do
+      subject(:persistent) {
+        module_ancestor_ephemeral.persistent
       }
 
       before(:each) do
@@ -33,7 +33,7 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
       end
 
       it 'is a Metasploit::Cache::Module::Ancestor with matching #real_path_sha1_hex_digest' do
-        expect(module_ancestor).to eq(expected_module_ancestor)
+        expect(persistent).to eq(expected_module_ancestor)
       end
     end
   end
@@ -62,8 +62,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
         FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
       }
 
-      it 'does not access default #module_ancestor' do
-        expect(module_ancestor_ephemeral).not_to receive(:module_ancestor)
+      it 'does not access default #persistent' do
+        expect(module_ancestor_ephemeral).not_to receive(:persistent)
 
         persist
       end
@@ -140,14 +140,14 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Ephemeral, type: :model do
         []
       }
 
-      it 'defaults to #module_ancestor' do
-        expect(module_ancestor_ephemeral).to receive(:module_ancestor).and_call_original
+      it 'defaults to #persistent' do
+        expect(module_ancestor_ephemeral).to receive(:persistent).and_call_original
 
         persist
       end
 
-      it 'uses #module_ancestor' do
-        expect(module_ancestor_ephemeral.module_ancestor).to receive(:batched_save).and_call_original
+      it 'uses #persistent' do
+        expect(module_ancestor_ephemeral.persistent).to receive(:batched_save).and_call_original
 
         persist
       end
