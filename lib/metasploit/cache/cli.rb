@@ -461,7 +461,7 @@ class Metasploit::Cache::CLI < Thor
               metasploit_module: module_ancestor_load.metasploit_module
           )
         end
-        
+
         unless module_class_load.valid?
           logger.error {
             "#{module_class_load.class} is invalid: #{module_class_load.errors.full_messages.to_sentence}"

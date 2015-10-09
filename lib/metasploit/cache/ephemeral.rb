@@ -119,7 +119,7 @@ module Metasploit::Cache::Ephemeral
         record.batched_save
       }
     }
-    
+
     unless saved
       logger.error {
         "Could not be persisted to #{record_class}: #{record.errors.full_messages.to_sentence}"
