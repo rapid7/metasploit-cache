@@ -26,10 +26,10 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger
 
-  # The subclass of {Metasploit::Cache::Payload::Unhandled::Class} to use to look up {#payload_unhandled_class}.
+  # The subclass of {Metasploit::Cache::Payload::Unhandled::Class} to use to look up {#persistent}.
   #
   # @return [Class<Metasploit::Cache::Payload::Unhandled::Class>]
-  attr_accessor :payload_unhandled_class_class
+  attr_accessor :persistent_class
 
   #
   # Resurrecting Attributes
@@ -40,7 +40,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
   # @return [Metasploit::Cache::Payload::Unhandled::Class]
   resurrecting_attr_accessor(:persistent) {
     ActiveRecord::Base.connection_pool.with_connection {
-      payload_unhandled_class_class.where(
+      persistent_class.where(
           Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
       ).joins(:ancestor).readonly(false).first
     }
@@ -54,7 +54,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
             presence: true
   validates :logger,
             presence: true
-  validates :payload_unhandled_class_class,
+  validates :persistent_class,
             presence: true
 
   #

@@ -4,7 +4,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Persister, type: :m
   subject(:payload_unhandled_class_persister) {
     described_class.new(
         ephemeral: metasploit_class,
-        payload_unhandled_class_class: expected_payload_unhandled_class.class,
+        persistent_class: expected_payload_unhandled_class.class,
         logger: logger
     )
   }
@@ -86,7 +86,7 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Persister, type: :m
 
   context 'validations' do
     it { is_expected.to validate_presence_of(:ephemeral) }
-    it { is_expected.to validate_presence_of(:payload_unhandled_class_class) }
+    it { is_expected.to validate_presence_of(:persistent_class) }
     it { is_expected.to validate_presence_of(:logger) }
   end
 
