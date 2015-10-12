@@ -391,7 +391,7 @@ RSpec.describe Metasploit::Cache::Actionable::Persister::Actions do
     }
 
     let(:source) {
-      double("Metasploit Module instance").tap { |metasploit_module_instance|
+      double('Metasploit Module instance').tap { |metasploit_module_instance|
         allow(metasploit_module_instance).to receive(:actions).and_return(source_actions)
       }
     }

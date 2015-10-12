@@ -90,7 +90,7 @@ RSpec.describe Metasploit::Cache::Persister do
 
     context 'without valid attributes' do
       let(:full) {
-        "invalid-email"
+        'invalid-email'
       }
 
       it 'returns invalid record' do
