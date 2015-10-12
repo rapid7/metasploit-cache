@@ -87,7 +87,7 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
         if instance
           instance.extend Metasploit::Cache::Cacheable
           persister = persister_class.new(
-              metasploit_module_instance: instance,
+              ephemeral: instance,
               logger: logger
           )
           instance.persister_by_source[:instance] = persister

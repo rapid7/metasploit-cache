@@ -7,15 +7,15 @@ class Metasploit::Cache::Payload::Staged::Class::Persister < Metasploit::Model::
   # Attributes
   #
 
+  # The Metasploit Module being cached.
+  #
+  # @return [Class]
+  attr_accessor :ephemeral
+
   # Tagged logger to which to log {#persist} errors.
   #
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger
-
-  # The Metasploit Module being cached.
-  #
-  # @return [Class]
-  attr_accessor :payload_staged_metasploit_module_class
 
   #
   # Resurrecting Attributes
@@ -37,9 +37,9 @@ class Metasploit::Cache::Payload::Staged::Class::Persister < Metasploit::Model::
   # Validations
   #
 
-  validates :logger,
+  validates :ephemeral,
             presence: true
-  validates :payload_staged_metasploit_module_class,
+  validates :logger,
             presence: true
 
   #
@@ -83,7 +83,7 @@ class Metasploit::Cache::Payload::Staged::Class::Persister < Metasploit::Model::
   #
   # @return [String]
   def ancestor_real_path_sha1_hex_digest(source)
-    payload_staged_metasploit_module_class.ancestor_by_source.fetch(source).persister_by_source.fetch(:ancestor).real_path_sha1_hex_digest
+    ephemeral.ancestor_by_source.fetch(source).persister_by_source.fetch(:ancestor).real_path_sha1_hex_digest
   end
 
   # @note This persister should be validated with `valid?` prior to calling {#persist} to ensure that {#logger} is
@@ -107,7 +107,7 @@ class Metasploit::Cache::Payload::Staged::Class::Persister < Metasploit::Model::
       with_tagged_loggger(to) do |tagged|
         persisted = Metasploit::Cache::Persister.persist destination: to,
                                                          logger: tagged,
-                                                         source: payload_staged_metasploit_module_class,
+                                                         source: ephemeral,
                                                          synchronizers: []
       end
     end

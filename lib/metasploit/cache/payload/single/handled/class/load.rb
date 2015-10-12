@@ -120,8 +120,8 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Load < Metasploit::Mod
         self.class.include_ancestor(metasploit_class, :single, metasploit_module)
 
         persister = Metasploit::Cache::Payload::Single::Handled::Class::Persister.new(
-            logger: logger,
-            payload_single_handled_metasploit_module_class: metasploit_class
+            ephemeral: metasploit_class,
+            logger: logger
         )
 
         metasploit_class.persister_by_source[:class] = persister

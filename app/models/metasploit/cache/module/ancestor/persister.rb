@@ -6,17 +6,17 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
   # Attributes
   #
 
+  # The Metasploit Module being cached.
+  #
+  # @return [Module]
+  attr_accessor :ephemeral
+
   # Tagged logger to which to log {#persist_module_ancestor} errors.
   #
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger
 
-  # The Metasploit Module being cached.
-  #
-  # @return [Module]
-  attr_accessor :metasploit_module
-
-  # The SHA1 hexdigest of the path where {#metasploit_module} is defined on disk.
+  # The SHA1 hexdigest of the path where {#ephemeral} is defined on disk.
   #
   # @return [String]
   attr_accessor :real_path_sha1_hex_digest
@@ -38,9 +38,9 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
   # Validations
   #
 
-  validates :logger,
+  validates :ephemeral,
             presence: true
-  validates :metasploit_module,
+  validates :logger,
             presence: true
   validates :real_path_sha1_hex_digest,
             presence: true
@@ -73,7 +73,7 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
   # @note Validation errors for `module_ancestor` will be logged as errors tagged with
   #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
   #
-  # Persists ephemeral data from {#metasploit_module} and it's namespace to the persistent cache entry.
+  # Persists ephemeral data from {#ephemeral} and it's namespace to the persistent cache entry.
   #
   # @param to [Metasploit::Cache::Module::Ancestor] Save cacheable data to `module_ancestor`.
   # @return [Metasploit::Cache::Module::Ancestor] `#persisted?` will be `false` if saving fails
@@ -85,7 +85,7 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
         # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
         persisted = Metasploit::Cache::Persister.persist destination: to,
                                                          logger: tagged,
-                                                         source: :metasploit_module,
+                                                         source: :ephemeral,
                                                          synchronizers: []
       end
     end

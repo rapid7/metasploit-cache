@@ -21,7 +21,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Persister, type: :mode
 
       let(:payload_staged_class_persister) {
         described_class.new(
-            payload_staged_metasploit_module_class: double(
+            ephemeral: double(
                 'payload staged Metasploit Module class',
                 ancestor_by_source: {
                     stage: double(
@@ -111,8 +111,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Persister, type: :mode
   end
 
   context 'validations' do
+    it { is_expected.to validate_presence_of(:ephemeral) }
     it { is_expected.to validate_presence_of(:logger) }
-    it { is_expected.to validate_presence_of(:payload_staged_metasploit_module_class) }
   end
 
   context '#persist' do
@@ -131,7 +131,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Persister, type: :mode
     let(:payload_staged_class_persister) {
       described_class.new(
           logger: logger,
-          payload_staged_metasploit_module_class: double(
+          ephemeral: double(
               'payload staged Metasploit Module class',
               ancestor_by_source: {
                   stage: double(

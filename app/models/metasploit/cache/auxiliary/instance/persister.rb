@@ -26,7 +26,7 @@ class Metasploit::Cache::Auxiliary::Instance::Persister < Metasploit::Model::Bas
   # The in-memory auxiliary Metasploit Module instance being cached.
   #
   # @return [Object]
-  attr_accessor :metasploit_module_instance
+  attr_accessor :ephemeral
 
   # Tagged logger to which to log {#persist} errors.
   #
@@ -54,7 +54,7 @@ class Metasploit::Cache::Auxiliary::Instance::Persister < Metasploit::Model::Bas
   # Validations
   #
 
-  validates :metasploit_module_instance,
+  validates :ephemeral,
             presence: true
   validates :logger,
             presence: true
@@ -78,7 +78,7 @@ class Metasploit::Cache::Auxiliary::Instance::Persister < Metasploit::Model::Bas
       with_tagged_logger(to) do |tagged|
         persisted = Metasploit::Cache::Persister.persist destination: to,
                                                          logger: tagged,
-                                                         source: metasploit_module_instance,
+                                                         source: ephemeral,
                                                          synchronizers: SYNCHRONIZERS
       end
     end
@@ -92,7 +92,7 @@ class Metasploit::Cache::Auxiliary::Instance::Persister < Metasploit::Model::Bas
   #
   # @return [String]
   def real_path_sha1_hex_digest
-    metasploit_module_instance.class.persister_by_source[:ancestor].real_path_sha1_hex_digest
+    ephemeral.class.persister_by_source[:ancestor].real_path_sha1_hex_digest
   end
 
   # Tags log with {Metasploit::Cache::Auxiliary::Instance#auxiliary_class}

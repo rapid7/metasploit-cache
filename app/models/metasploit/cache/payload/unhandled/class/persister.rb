@@ -7,7 +7,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
   # CONSTANTS
   #
 
-  # Synchronizes attributes and associations from {#metasploit_class} before persisting to database.
+  # Synchronizes attributes and associations from {#ephemeral} before persisting to database.
   SYNCHRONIZERS = [
       Metasploit::Cache::Module::Class::Persister::Rank
   ]
@@ -16,20 +16,20 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
   # Attributes
   #
 
-  # The subclass of {Metasploit::Cache::Payload::Unhandled::Class} to use to look up {#payload_unhandled_class}.
+  # The Metasploit Module being cached.
   #
-  # @return [Class<Metasploit::Cache::Payload::Unhandled::Class>]
-  attr_accessor :payload_unhandled_class_class
+  # @return [Class]
+  attr_accessor :ephemeral
 
   # Tagged logger to which to log {#persist} errors.
   #
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger
 
-  # The Metasploit Module being cached.
+  # The subclass of {Metasploit::Cache::Payload::Unhandled::Class} to use to look up {#payload_unhandled_class}.
   #
-  # @return [Class]
-  attr_accessor :metasploit_class
+  # @return [Class<Metasploit::Cache::Payload::Unhandled::Class>]
+  attr_accessor :payload_unhandled_class_class
 
   #
   # Resurrecting Attributes
@@ -50,9 +50,9 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
   # Validations
   #
 
-  validates :logger,
+  validates :ephemeral,
             presence: true
-  validates :metasploit_class,
+  validates :logger,
             presence: true
   validates :payload_unhandled_class_class,
             presence: true
@@ -76,7 +76,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
       with_tagged_logger(to) do |tagged|
         persisted = Metasploit::Cache::Persister.persist destination: to,
                                                          logger: tagged,
-                                                         source: metasploit_class,
+                                                         source: ephemeral,
                                                          synchronizers: SYNCHRONIZERS
       end
     end
@@ -90,7 +90,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
   #
   # @return [String]
   def real_path_sha1_hex_digest
-    metasploit_class.persister_by_source[:ancestor].real_path_sha1_hex_digest
+    ephemeral.persister_by_source[:ancestor].real_path_sha1_hex_digest
   end
 
   # Tags log with {Metasploit::Cache::Payload::Unhandled::Class#ancestor}

@@ -18,6 +18,11 @@ class Metasploit::Cache::Direct::Class::Persister < Metasploit::Model::Base
   # Attributes
   #
 
+  # The Metasploit Module being cached.
+  #
+  # @return [Class]
+  attr_accessor :ephemeral
+
   # The subclass of {Metasploit::Cache::Direct::Class} to use to look up {#persistent}.
   #
   # @return [Class<Metasploit::Cache::Direct::Class>]
@@ -27,11 +32,6 @@ class Metasploit::Cache::Direct::Class::Persister < Metasploit::Model::Base
   #
   # @return [ActiveSupport::TaggedLogging]
   attr_accessor :logger
-
-  # The Metasploit Module being cached.
-  #
-  # @return [Class]
-  attr_accessor :metasploit_class
 
   #
   # Resurrecting Attributes
@@ -52,7 +52,7 @@ class Metasploit::Cache::Direct::Class::Persister < Metasploit::Model::Base
   # Validations
   #
 
-  validates :metasploit_class,
+  validates :ephemeral,
             presence: true
   validates :persistent_class,
             presence: true
@@ -77,7 +77,7 @@ class Metasploit::Cache::Direct::Class::Persister < Metasploit::Model::Base
       with_tagged_logger(to) do |tagged|
         persisted = Metasploit::Cache::Persister.persist destination: to,
                                                          logger: tagged,
-                                                         source: metasploit_class,
+                                                         source: ephemeral,
                                                          synchronizers: SYNCHRONIZERS
       end
     end
@@ -91,7 +91,7 @@ class Metasploit::Cache::Direct::Class::Persister < Metasploit::Model::Base
   #
   # @return [String]
   def real_path_sha1_hex_digest
-    metasploit_class.persister_by_source[:ancestor].real_path_sha1_hex_digest
+    ephemeral.persister_by_source[:ancestor].real_path_sha1_hex_digest
   end
 
   # Tags log with {Metasploit::Cache::Direct::Class#ancestor} {Metasploit::Cache::Module::Ancestor#real_pathname}.

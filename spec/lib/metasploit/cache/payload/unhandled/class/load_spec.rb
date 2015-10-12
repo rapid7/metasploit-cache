@@ -173,8 +173,8 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Load do
             class_persister = metasploit_class.persister_by_source[:class]
 
             expect(class_persister).to be_a Metasploit::Cache::Payload::Unhandled::Class::Persister
-            expect(class_persister.metasploit_class).to eq(metasploit_class)
-            expect(class_persister.metasploit_class).not_to eq(metasploit_module)
+            expect(class_persister.ephemeral).to eq(metasploit_class)
+            expect(class_persister.ephemeral).not_to eq(metasploit_module)
           end
 
           context 'with persisted' do

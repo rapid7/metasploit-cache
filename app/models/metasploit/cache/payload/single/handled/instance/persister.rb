@@ -10,7 +10,7 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Persister < Metaspl
   # The in-memory single payload Metasploit Module instance with handled mixed-in being cached.
   #
   # @return [Object]
-  attr_accessor :metasploit_module_instance
+  attr_accessor :ephemeral
 
   # Tagged logger to which to log {#persist} errors.
   #
@@ -21,7 +21,7 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Persister < Metaspl
   # Resurrecting Attributes
   #
 
-  # Cached metadata for this {#metasploit_module_instance}.
+  # Cached metadata for this {#ephemeral}.
   #
   # @return [Metasploit::Cache::Payload::Single::Handled::Instance]
   resurrecting_attr_accessor(:persistent) {
@@ -42,9 +42,9 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Persister < Metaspl
   # Validations
   #
 
-  validates :logger,
+  validates :ephemeral,
             presence: true
-  validates :metasploit_module_instance,
+  validates :logger,
             presence: true
 
   #
@@ -71,7 +71,7 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Persister < Metaspl
       with_tagged_logger(to) do |tagged|
         persisted = Metasploit::Cache::Persister.persist destination: to,
                                                          logger: tagged,
-                                                         source: metasploit_module_instance,
+                                                         source: ephemeral,
                                                          synchronizers: []
       end
     end
@@ -85,7 +85,7 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Persister < Metaspl
   #
   # @return [String]
   def real_path_sha1_hex_digest
-    metasploit_module_instance.class.persister_by_source.fetch(:ancestor).real_path_sha1_hex_digest
+    ephemeral.class.persister_by_source.fetch(:ancestor).real_path_sha1_hex_digest
   end
 
   # Tags log with {Metasploit::Cache::Payload::Single::Handled::Class#payload_single_unhandled_instance}

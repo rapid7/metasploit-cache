@@ -164,8 +164,8 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
     else
       if valid?
         persister = Metasploit::Cache::Module::Ancestor::Persister.new(
+            ephemeral: metasploit_module,
             logger: logger,
-            metasploit_module: metasploit_module,
             real_path_sha1_hex_digest: module_namespace.cache.real_path_sha1_hex_digest
         )
         metasploit_module.persister_by_source[:ancestor] = persister

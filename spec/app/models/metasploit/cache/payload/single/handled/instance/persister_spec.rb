@@ -21,7 +21,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
 
       let(:payload_single_handled_instance_persister) {
         described_class.new(
-            metasploit_module_instance: double(
+            ephemeral: double(
                 'payload single handled Metasploit Module instance',
                 class: double(
                     'payload single handled Metasploit Module class',
@@ -83,8 +83,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
   end
 
   context 'validations' do
+    it { is_expected.to validate_presence_of(:ephemeral) }
     it { is_expected.to validate_presence_of(:logger) }
-    it { is_expected.to validate_presence_of(:metasploit_module_instance) }
   end
 
   context '#persist' do
@@ -102,8 +102,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
 
     let(:payload_single_handled_instance_persister) {
       described_class.new(
-          logger: logger,
-          metasploit_module_instance: double(
+          ephemeral: double(
               'payload single handled Metasploit Module instance',
               class: double(
                   'payload single handled Metasploit Module class',
@@ -113,7 +112,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
                     )
                   }
               )
-          )
+          ),
+          logger: logger
       )
     }
 

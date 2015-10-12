@@ -3,8 +3,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Persister, type: :model do
 
   subject(:module_ancestor_persister) {
     described_class.new(
+        ephemeral: metasploit_module,
         logger: logger,
-        metasploit_module: metasploit_module,
         real_path_sha1_hex_digest: real_path_sha1_hex_digest
     )
   }
@@ -39,8 +39,8 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Persister, type: :model do
   end
 
   context 'validations' do
+    it { is_expected.to validate_presence_of(:ephemeral) }
     it { is_expected.to validate_presence_of(:logger) }
-    it { is_expected.to validate_presence_of(:metasploit_module) }
     it { is_expected.to validate_presence_of(:real_path_sha1_hex_digest) }
   end
 

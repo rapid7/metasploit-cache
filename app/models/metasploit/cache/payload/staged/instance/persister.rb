@@ -10,7 +10,7 @@ class Metasploit::Cache::Payload::Staged::Instance::Persister < Metasploit::Mode
   # The in-memory staged payload Metasploit Module instance being cached.
   #
   # @return [Object]
-  attr_accessor :metasploit_module_instance
+  attr_accessor :ephemeral
 
   # Tagged logger to which to log {#persist} errors.
   #
@@ -21,7 +21,7 @@ class Metasploit::Cache::Payload::Staged::Instance::Persister < Metasploit::Mode
   # Resurrecting Attributes
   #
 
-  # Cached metadata for this {#metasploit_module_instance}.
+  # Cached metadata for this {#ephemeral}.
   #
   # @return [Metasploit::Cache::Payload::Staged::Instance]
   resurrecting_attr_accessor(:persistent) {
@@ -37,7 +37,7 @@ class Metasploit::Cache::Payload::Staged::Instance::Persister < Metasploit::Mode
   # Validations
   #
 
-  validates :metasploit_module_instance,
+  validates :ephemeral,
             presence: true
   validates :logger,
             presence: true
@@ -57,7 +57,7 @@ class Metasploit::Cache::Payload::Staged::Instance::Persister < Metasploit::Mode
   #
   # @return [String]
   def ancestor_real_path_sha1_hex_digest(source)
-    metasploit_module_instance.class.persister_by_source.fetch(:class).ancestor_real_path_sha1_hex_digest(source)
+    ephemeral.class.persister_by_source.fetch(:class).ancestor_real_path_sha1_hex_digest(source)
   end
 
   # @note This persister should be validated with `#valid?` prior to calling {#persist} to ensure that {#logger} is

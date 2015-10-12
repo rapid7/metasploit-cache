@@ -80,9 +80,9 @@ class Metasploit::Cache::Payload::Unhandled::Class::Load < Metasploit::Model::Ba
         metasploit_class.include metasploit_module
 
         persister = Metasploit::Cache::Payload::Unhandled::Class::Persister.new(
-            payload_unhandled_class_class: payload_unhandled_class.class,
+            ephemeral: metasploit_class,
             logger: logger,
-            metasploit_class: metasploit_class
+            payload_unhandled_class_class: payload_unhandled_class.class
         )
 
         metasploit_class.persister_by_source[:class] = persister

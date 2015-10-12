@@ -3,8 +3,8 @@ RSpec.describe Metasploit::Cache::Direct::Class::Persister, type: :model do
 
   subject(:direct_class_persister) {
     described_class.new(
+        ephemeral: metasploit_class,
         logger: logger,
-        metasploit_class: metasploit_class,
         persistent_class: expected_direct_class.class
     )
   }
@@ -46,7 +46,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::Persister, type: :model do
 
   let(:module_ancestor_persister) {
     Metasploit::Cache::Module::Ancestor::Persister.new(
-        metasploit_module: metasploit_class,
+        ephemeral: metasploit_class,
         real_path_sha1_hex_digest: real_path_sha1_hex_digest
     )
   }
@@ -89,8 +89,8 @@ RSpec.describe Metasploit::Cache::Direct::Class::Persister, type: :model do
   end
 
   context 'validations' do
+    it { is_expected.to validate_presence_of(:ephemeral) }
     it { is_expected.to validate_presence_of(:logger) }
-    it { is_expected.to validate_presence_of(:metasploit_class) }
     it { is_expected.to validate_presence_of(:persistent_class) }
   end
 

@@ -135,8 +135,8 @@ class Metasploit::Cache::Payload::Staged::Class::Load < Metasploit::Model::Base
         # There is no specialized Metasploit::Cache::Payload::Unhandled::Class::Persister because metadata is the same
         # for Metasploit::Cache::Payload::Unhandled::Class once the metasploit_class is mixed.
         persister = Metasploit::Cache::Payload::Staged::Class::Persister.new(
-            logger: logger,
-            payload_staged_metasploit_module_class: metasploit_class
+            ephemeral: metasploit_class,
+            logger: logger
         )
 
         metasploit_class.persister_by_source[:class] = persister
