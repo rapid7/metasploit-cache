@@ -4,6 +4,13 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Persister < Metaspl
   extend Metasploit::Cache::ResurrectingAttribute
 
   #
+  # CONSTANTS
+  #
+
+  # Modules used to synchronize attributes and associations before persisting to database.
+  SYNCHRONIZERS = []
+
+  #
   # Attributes
   #
 
@@ -72,7 +79,7 @@ class Metasploit::Cache::Payload::Single::Handled::Instance::Persister < Metaspl
         persisted = Metasploit::Cache::Persister.persist destination: to,
                                                          logger: tagged,
                                                          source: ephemeral,
-                                                         synchronizers: []
+                                                         synchronizers: SYNCHRONIZERS
       end
     end
 

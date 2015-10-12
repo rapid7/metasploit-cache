@@ -3,6 +3,13 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
   extend Metasploit::Cache::ResurrectingAttribute
 
   #
+  # CONSTANTS
+  #
+
+  # Modules used to synchronize attributes and associatons before persisting to database
+  SYNCHRONIZERS = []
+
+  #
   # Attributes
   #
 
@@ -82,11 +89,10 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
 
     ActiveRecord::Base.connection_pool.with_connection do
       with_tagged_logger(to) do |tagged|
-        # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
         persisted = Metasploit::Cache::Persister.persist destination: to,
                                                          logger: tagged,
                                                          source: ephemeral,
-                                                         synchronizers: []
+                                                         synchronizers: SYNCHRONIZERS
       end
     end
 
