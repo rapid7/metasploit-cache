@@ -95,8 +95,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
       # lets
       #
 
-      let(:ephemeral_class) {
-        Metasploit::Cache::Auxiliary::Instance::Ephemeral
+      let(:persister_class) {
+        Metasploit::Cache::Auxiliary::Instance::Persister
       }
 
       let(:metasploit_framework) {
@@ -109,7 +109,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
       let(:module_instance_load) {
         described_class.new(
-            ephemeral_class: ephemeral_class,
+            persister_class: persister_class,
             logger: logger,
             metasploit_framework: metasploit_framework,
             metasploit_module_class: metasploit_module_class,
@@ -333,8 +333,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
     }
 
     context 'with valid for loading' do
-      let(:ephemeral_class) {
-        Metasploit::Cache::Auxiliary::Instance::Ephemeral
+      let(:persister_class) {
+        Metasploit::Cache::Auxiliary::Instance::Persister
       }
 
       let(:metasploit_framework) {
@@ -343,7 +343,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
       let(:module_instance_load) {
         described_class.new(
-            ephemeral_class: ephemeral_class,
+            persister_class: persister_class,
             logger: logger,
             metasploit_framework: metasploit_framework,
             metasploit_module_class: metasploit_module_class,
@@ -369,8 +369,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
             )
           }
 
-          let(:ephemeral_class) {
-            Metasploit::Cache::Auxiliary::Instance::Ephemeral
+          let(:persister_class) {
+            Metasploit::Cache::Auxiliary::Instance::Persister
           }
 
           let(:module_instance) {
@@ -393,7 +393,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
             expect(direct_class_load).to be_valid
 
             described_class.new(
-                ephemeral_class: ephemeral_class,
+                persister_class: persister_class,
                 logger: logger,
                 metasploit_framework: metasploit_framework,
                 metasploit_module_class: direct_class_load.metasploit_class,
@@ -648,7 +648,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
                   let(:payload_single_handled_instance_load) {
                     described_class.new(
-                        ephemeral_class: Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral,
+                        persister_class: Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
                         logger: logger,
                         metasploit_framework: metasploit_framework,
                         metasploit_module_class: payload_single_handled_class_load.metasploit_class,
@@ -675,7 +675,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
                   let(:payload_single_unhandled_instance_load) {
                     Metasploit::Cache::Module::Instance::Load.new(
-                        ephemeral_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral,
+                        persister_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Persister,
                         logger: logger,
                         metasploit_framework: metasploit_framework,
                         metasploit_module_class: payload_single_unhandled_class_load.metasploit_class,
@@ -785,7 +785,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
                 let(:payload_stage_instance_load) {
                   Metasploit::Cache::Module::Instance::Load.new(
-                      ephemeral_class: Metasploit::Cache::Payload::Stage::Instance::Ephemeral,
+                      persister_class: Metasploit::Cache::Payload::Stage::Instance::Persister,
                       logger: logger,
                       metasploit_framework: metasploit_framework,
                       metasploit_module_class: payload_stage_class_load.metasploit_class,
@@ -834,7 +834,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
                     let(:payload_staged_instance_load) {
                       described_class.new(
-                          ephemeral_class: Metasploit::Cache::Payload::Staged::Instance::Ephemeral,
+                          persister_class: Metasploit::Cache::Payload::Staged::Instance::Persister,
                           logger: logger,
                           metasploit_framework: metasploit_framework,
                           metasploit_module_class: payload_staged_class_load.metasploit_class,
@@ -881,7 +881,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
                     let(:payload_stager_instance_load) {
                       Metasploit::Cache::Module::Instance::Load.new(
-                          ephemeral_class: Metasploit::Cache::Payload::Stager::Instance::Ephemeral,
+                          persister_class: Metasploit::Cache::Payload::Stager::Instance::Persister,
                           logger: logger,
                           metasploit_framework: metasploit_framework,
                           metasploit_module_class: payload_stager_class_load.metasploit_class,
@@ -994,7 +994,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
             let(:module_instance_load) {
               described_class.new(
-                  ephemeral_class: Metasploit::Cache::Auxiliary::Instance::Ephemeral,
+                  persister_class: Metasploit::Cache::Auxiliary::Instance::Persister,
                   logger: logger,
                   metasploit_framework: metasploit_framework,
                   metasploit_module_class: direct_class_load.metasploit_class,
@@ -1029,7 +1029,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
             let(:module_instance_load) {
               described_class.new(
-                  ephemeral_class: Metasploit::Cache::Encoder::Instance::Ephemeral,
+                  persister_class: Metasploit::Cache::Encoder::Instance::Persister,
                   logger: logger,
                   metasploit_framework: metasploit_framework,
                   metasploit_module_class: direct_class_load.metasploit_class,
@@ -1090,7 +1090,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
             let(:module_instance_load) {
               described_class.new(
-                  ephemeral_class: Metasploit::Cache::Exploit::Instance::Ephemeral,
+                  persister_class: Metasploit::Cache::Exploit::Instance::Persister,
                   logger: logger,
                   metasploit_framework: metasploit_framework,
                   metasploit_module_class: direct_class_load.metasploit_class,
@@ -1125,7 +1125,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
             let(:module_instance_load) {
               described_class.new(
-                  ephemeral_class: Metasploit::Cache::Nop::Instance::Ephemeral,
+                  persister_class: Metasploit::Cache::Nop::Instance::Persister,
                   logger: logger,
                   metasploit_framework: metasploit_framework,
                   metasploit_module_class: direct_class_load.metasploit_class,
@@ -1326,7 +1326,7 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
             let(:module_instance_load) {
               described_class.new(
-                  ephemeral_class: Metasploit::Cache::Post::Instance::Ephemeral,
+                  persister_class: Metasploit::Cache::Post::Instance::Persister,
                   logger: logger,
                   metasploit_framework: metasploit_framework,
                   metasploit_module_class: direct_class_load.metasploit_class,

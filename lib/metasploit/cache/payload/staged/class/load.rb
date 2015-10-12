@@ -25,7 +25,7 @@ class Metasploit::Cache::Payload::Staged::Class::Load < Metasploit::Model::Base
   # `Metasploit<n>` ruby `Module` declared in {Metasploit::Cache::Module::Ancestor#contents} for stage payload
   # Metasploit Module ancestor.
   #
-  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `ephemeral_cache_by_source[:ancestor]`.
+  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `persister_by_source[:ancestor]`.
   attr_accessor :payload_stage_metasploit_module
 
   # The staged payload class being loaded.
@@ -36,7 +36,7 @@ class Metasploit::Cache::Payload::Staged::Class::Load < Metasploit::Model::Base
   # `Metasploit<n>` ruby `Module` declared in {Metasploit::Cache::Module::Ancestor#contents} for stager payload
   # Metasploit Module ancestor.
   #
-  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `ephemeral_cache_by_source[:ancestor]`.
+  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `persister_by_source[:ancestor]`.
   attr_accessor :payload_stager_metasploit_module
 
   # The superclass to subclass and include {#metasploit_module} into.
@@ -132,17 +132,17 @@ class Metasploit::Cache::Payload::Staged::Class::Load < Metasploit::Model::Base
         self.class.include_ancestor(metasploit_class, :stager, payload_stager_metasploit_module)
         self.class.include_ancestor(metasploit_class, :stage, payload_stage_metasploit_module)
 
-        # There is no specialized Metasploit::Cache::Payload::Unhandled::Class::Ephemeral because metadata is the same
+        # There is no specialized Metasploit::Cache::Payload::Unhandled::Class::Persister because metadata is the same
         # for Metasploit::Cache::Payload::Unhandled::Class once the metasploit_class is mixed.
-        ephemeral_cache = Metasploit::Cache::Payload::Staged::Class::Ephemeral.new(
+        persister = Metasploit::Cache::Payload::Staged::Class::Persister.new(
             logger: logger,
             payload_staged_metasploit_module_class: metasploit_class
         )
 
-        metasploit_class.ephemeral_cache_by_source[:class] = ephemeral_cache
+        metasploit_class.persister_by_source[:class] = persister
 
-        if ephemeral_cache.valid?
-          ephemeral_cache.persist(to: payload_staged_class)
+        if persister.valid?
+          persister.persist(to: payload_staged_class)
 
           if payload_staged_class.persisted?
             # Name class so that it can be looked up by name to prevent unnecessary reloading.

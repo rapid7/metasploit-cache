@@ -146,7 +146,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance, type: :m
 
                   let(:module_instance_load) {
                     Metasploit::Cache::Module::Instance::Load.new(
-                        ephemeral_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral,
+                        persister_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Persister,
                         logger: logger,
                         metasploit_framework: metasploit_framework,
                         metasploit_module_class: payload_unhandled_class_load.metasploit_class,

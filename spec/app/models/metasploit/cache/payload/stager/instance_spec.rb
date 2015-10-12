@@ -151,7 +151,7 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance, type: :model do
 
                   let(:module_instance_load) {
                     Metasploit::Cache::Module::Instance::Load.new(
-                        ephemeral_class: Metasploit::Cache::Payload::Stager::Instance::Ephemeral,
+                        persister_class: Metasploit::Cache::Payload::Stager::Instance::Persister,
                         logger: logger,
                         metasploit_framework: metasploit_framework,
                         metasploit_module_class: payload_unhandled_class_load.metasploit_class,

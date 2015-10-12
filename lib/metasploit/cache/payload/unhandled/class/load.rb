@@ -18,7 +18,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Load < Metasploit::Model::Ba
 
   # `Metasploit<n>` ruby `Module` declared in {Metasploit::Cache::Module::Ancestor#contents}.
   #
-  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `ephemeral_cache_by_source[:ancestor]`.
+  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `persister_by_source[:ancestor]`.
   attr_accessor :metasploit_module
 
   # The superclass to subclass and include {#metasploit_module} into.
@@ -79,16 +79,16 @@ class Metasploit::Cache::Payload::Unhandled::Class::Load < Metasploit::Model::Ba
         metasploit_class.extend Metasploit::Cache::Cacheable
         metasploit_class.include metasploit_module
 
-        ephemeral_cache = Metasploit::Cache::Payload::Unhandled::Class::Ephemeral.new(
+        persister = Metasploit::Cache::Payload::Unhandled::Class::Persister.new(
             payload_unhandled_class_class: payload_unhandled_class.class,
             logger: logger,
             metasploit_class: metasploit_class
         )
 
-        metasploit_class.ephemeral_cache_by_source[:class] = ephemeral_cache
+        metasploit_class.persister_by_source[:class] = persister
 
-        if ephemeral_cache.valid?
-          ephemeral_cache.persist(to: payload_unhandled_class)
+        if persister.valid?
+          persister.persist(to: payload_unhandled_class)
 
           if payload_unhandled_class.persisted?
             # Name class so that it can be looked up by name to prevent unnecessary reloading.

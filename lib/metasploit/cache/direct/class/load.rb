@@ -16,7 +16,7 @@ class Metasploit::Cache::Direct::Class::Load < Metasploit::Model::Base
 
   # `Metasploit<n>` ruby `Module` declared in {Metasploit::Cache::Module::Ancestor#contents}.
   #
-  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `ephemeral_cache_by_source[:ancestor]`.
+  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `persister_by_source[:ancestor]`.
   attr_accessor :metasploit_module
 
   #
@@ -62,15 +62,15 @@ class Metasploit::Cache::Direct::Class::Load < Metasploit::Model::Base
       if valid?(:loading)
         @metasploit_class = nil
 
-        ephemeral_cache = Metasploit::Cache::Direct::Class::Ephemeral.new(
+        persister = Metasploit::Cache::Direct::Class::Persister.new(
             logger: logger,
             metasploit_class: metasploit_module,
             persistent_class: direct_class.class
         )
-        metasploit_module.ephemeral_cache_by_source[:class] = ephemeral_cache
+        metasploit_module.persister_by_source[:class] = persister
 
-        if ephemeral_cache.valid?
-          ephemeral_cache.persist(to: direct_class)
+        if persister.valid?
+          persister.persist(to: direct_class)
 
           if direct_class.persisted?
             # The load only succeeded if the metadata was persisted, so @metasploit_class is `nil` otherwise.

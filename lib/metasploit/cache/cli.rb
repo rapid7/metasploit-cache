@@ -18,23 +18,23 @@ class Metasploit::Cache::CLI < Thor
   CONFIG_BY_MODULE_TYPE = {
       'auxiliary' => {
           instance: :auxiliary_instance,
-          instance_ephemeral_class: Metasploit::Cache::Auxiliary::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Auxiliary::Instance::Persister
       },
       'encoder' => {
           instance: :encoder_instance,
-          instance_ephemeral_class: Metasploit::Cache::Encoder::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Encoder::Instance::Persister
       },
       'exploit' => {
           instance: :exploit_instance,
-          instance_ephemeral_class: Metasploit::Cache::Exploit::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Exploit::Instance::Persister
       },
       'nop' => {
           instance: :nop_instance,
-          instance_ephemeral_class: Metasploit::Cache::Nop::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Nop::Instance::Persister
       },
       'post' => {
           instance: :post_instance,
-          instance_ephemeral_class: Metasploit::Cache::Post::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Post::Instance::Persister
       }
   }
 
@@ -44,49 +44,49 @@ class Metasploit::Cache::CLI < Thor
           ancestors: :auxiliary_ancestors,
           build_class: :build_auxiliary_class,
           build_instance: :build_auxiliary_instance,
-          instance_ephemeral_class: Metasploit::Cache::Auxiliary::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Auxiliary::Instance::Persister
       },
       'encoders' => {
           ancestors: :encoder_ancestors,
           build_class: :build_encoder_class,
           build_instance: :build_encoder_instance,
-          instance_ephemeral_class: Metasploit::Cache::Encoder::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Encoder::Instance::Persister
       },
       'exploits' => {
           ancestors: :exploit_ancestors,
           build_class: :build_exploit_class,
           build_instance: :build_exploit_instance,
-          instance_ephemeral_class: Metasploit::Cache::Exploit::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Exploit::Instance::Persister
       },
       'nops' => {
           ancestors: :nop_ancestors,
           build_class: :build_nop_class,
           build_instance: :build_nop_instance,
-          instance_ephemeral_class: Metasploit::Cache::Nop::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Nop::Instance::Persister
       },
       'payloads/singles' => {
           ancestors: :single_payload_ancestors,
           build_class: :build_payload_single_unhandled_class,
           build_instance: :build_payload_single_unhandled_instance,
-          instance_ephemeral_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Persister
       },
       'payloads/stages' => {
           ancestors: :stage_payload_ancestors,
           build_class: :build_stage_payload_class,
           build_instance: :build_payload_stage_instance,
-          instance_ephemeral_class: Metasploit::Cache::Payload::Stage::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Payload::Stage::Instance::Persister
       },
       'payloads/stagers' => {
           ancestors: :stager_payload_ancestors,
           build_class: :build_stager_payload_class,
           build_instance: :build_payload_stager_instance,
-          instance_ephemeral_class: Metasploit::Cache::Payload::Stager::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Payload::Stager::Instance::Persister
       },
       'post' => {
         ancestors: :post_ancestors,
         build_class: :build_post_class,
           build_instance: :build_post_instance,
-          instance_ephemeral_class: Metasploit::Cache::Post::Instance::Ephemeral
+          instance_persister_class: Metasploit::Cache::Post::Instance::Persister
       }
   }
 
@@ -347,7 +347,7 @@ class Metasploit::Cache::CLI < Thor
       module_instance = direct_class.public_send(config.fetch(:instance))
 
       module_instance_load = Metasploit::Cache::Module::Instance::Load.new(
-          ephemeral_class: config.fetch(:instance_ephemeral_class),
+          persister_class: config.fetch(:instance_persister_class),
           logger: tagged_logger,
           metasploit_framework: metasploit_framework_double,
           metasploit_module_class: direct_class_load.metasploit_class,
@@ -381,7 +381,7 @@ class Metasploit::Cache::CLI < Thor
       end
 
       payload_single_handled_instance_load = Metasploit::Cache::Module::Instance::Load.new(
-          ephemeral_class: Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral,
+          persister_class: Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
           logger: tagged_logger,
           metasploit_framework: metasploit_framework_double,
           metasploit_module_class: payload_single_handled_class_load.metasploit_class,
@@ -473,7 +473,7 @@ class Metasploit::Cache::CLI < Thor
         module_instance = module_class.public_send(config.fetch(:build_instance))
 
         module_instance_load = Metasploit::Cache::Module::Instance::Load.new(
-            ephemeral_class: config.fetch(:instance_ephemeral_class),
+            persister_class: config.fetch(:instance_persister_class),
             logger: logger,
             metasploit_framework: metasploit_framework,
             metasploit_module_class: module_class_load.metasploit_class,
@@ -510,7 +510,7 @@ class Metasploit::Cache::CLI < Thor
           payload_single_handled_instance = payload_single_handled_class.build_payload_single_handled_instance
 
           payload_single_handled_instance_load = Metasploit::Cache::Module::Instance::Load.new(
-              ephemeral_class: Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral,
+              persister_class: Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
               logger: logger,
               metasploit_framework: metasploit_framework,
               metasploit_module_class: payload_single_handled_class_load.metasploit_class,
@@ -696,7 +696,7 @@ class Metasploit::Cache::CLI < Thor
     payload_staged_instance = payload_staged_class.build_payload_staged_instance
 
     payload_staged_instance_load = Metasploit::Cache::Module::Instance::Load.new(
-        ephemeral_class: Metasploit::Cache::Payload::Staged::Instance::Ephemeral,
+        persister_class: Metasploit::Cache::Payload::Staged::Instance::Persister,
         logger: logger,
         metasploit_framework: metasploit_framework,
         metasploit_module_class: payload_staged_class_load.metasploit_class,

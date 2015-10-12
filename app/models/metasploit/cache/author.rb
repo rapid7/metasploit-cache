@@ -8,7 +8,7 @@ class Metasploit::Cache::Author < ActiveRecord::Base
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
 
-  autoload :Ephemeral
+  autoload :Persister
 
   #
   # Associations

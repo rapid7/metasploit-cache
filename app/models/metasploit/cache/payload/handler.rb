@@ -6,7 +6,7 @@ class Metasploit::Cache::Payload::Handler < ActiveRecord::Base
 
   include Metasploit::Cache::Batch::Descendant
 
-  autoload :Ephemeral
+  autoload :Persister
   autoload :GeneralType
   autoload :Namespace
 

@@ -7,7 +7,7 @@ class Metasploit::Cache::EmailAddress < ActiveRecord::Base
   include Metasploit::Model::Search
   include Metasploit::Model::Translation
 
-  autoload :Ephemeral
+  autoload :Persister
 
   #
   # Associations

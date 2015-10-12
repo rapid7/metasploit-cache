@@ -25,7 +25,7 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Load < Metasploit::Mod
   # `Metasploit<n>` ruby `Module` declared in {Metasploit::Cache::Module::Ancestor#contents} for single payload
   # Metasploit Module ancestor.
   #
-  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `ephemeral_cache_by_source[:ancestor]`.
+  # @return [Module<Metasploit::Cache::Cacheable>] Must be have a `persister_by_source[:ancestor]`.
   attr_accessor :metasploit_module
 
   # The payload single handled class being loaded.
@@ -119,15 +119,15 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Load < Metasploit::Mod
         self.class.include_ancestor(metasploit_class, :handler, handler_module)
         self.class.include_ancestor(metasploit_class, :single, metasploit_module)
 
-        ephemeral_cache = Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral.new(
+        persister = Metasploit::Cache::Payload::Single::Handled::Class::Persister.new(
             logger: logger,
             payload_single_handled_metasploit_module_class: metasploit_class
         )
 
-        metasploit_class.ephemeral_cache_by_source[:class] = ephemeral_cache
+        metasploit_class.persister_by_source[:class] = persister
 
-        if ephemeral_cache.valid?
-          ephemeral_cache.persist(to: payload_single_handled_class)
+        if persister.valid?
+          persister.persist(to: payload_single_handled_class)
 
           if payload_single_handled_class.persisted?
             # Name class so that it can be looked up by name to prevent unnecessary reloading.

@@ -125,7 +125,7 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
 
                 let(:module_instance_load) {
                   Metasploit::Cache::Module::Instance::Load.new(
-                      ephemeral_class: Metasploit::Cache::Auxiliary::Instance::Ephemeral,
+                      persister_class: Metasploit::Cache::Auxiliary::Instance::Persister,
                       logger: logger,
                       metasploit_framework: metasploit_framework,
                       metasploit_module_class: direct_class_load.metasploit_class,

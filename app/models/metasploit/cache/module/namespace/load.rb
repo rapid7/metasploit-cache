@@ -163,15 +163,15 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
       @module_ancestor_eval_exception = exception
     else
       if valid?
-        ephemeral_cache = Metasploit::Cache::Module::Ancestor::Ephemeral.new(
+        persister = Metasploit::Cache::Module::Ancestor::Persister.new(
             logger: logger,
             metasploit_module: metasploit_module,
             real_path_sha1_hex_digest: module_namespace.cache.real_path_sha1_hex_digest
         )
-        metasploit_module.ephemeral_cache_by_source[:ancestor] = ephemeral_cache
+        metasploit_module.persister_by_source[:ancestor] = persister
 
-        if ephemeral_cache.valid?
-          ephemeral_cache.persist(to: module_ancestor)
+        if persister.valid?
+          persister.persist(to: module_ancestor)
 
           # TODO log module_ancestor.errors
           if module_ancestor.persisted?

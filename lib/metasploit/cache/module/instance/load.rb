@@ -4,25 +4,15 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
   # Attributes
   #
 
-  # Ephemeral class
+  # Tagged logger to which to load loading errors.
   #
-  # @return [#new(metasploit_module_instance: Object, logger: ActiveSupport::TaggedLogging)]
-  attr_accessor :ephemeral_class
+  # @return [ActiveSupport::TaggedLogging]
+  attr_accessor :logger
 
   # Framework that {#metasploit_module_class} `#initialize` can access Metasploit Framework world state.
   #
   # @return [#events]
   attr_accessor :metasploit_framework
-
-  # The module instance being loaded.
-  #
-  # @return [ActiveRecord::Base]
-  attr_accessor :module_instance
-
-  # Tagged logger to which to load loading errors.
-  #
-  # @return [ActiveSupport::TaggedLogging]
-  attr_accessor :logger
 
   # `Metasploit<n>` ruby `Class` declared in {Metasploit::Cache::Module::Ancestor#contents}.
   #
@@ -35,6 +25,16 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
   # @return [nil] if no exception was raised.
   # @return [Exception] if exception was raised.
   attr_reader :metasploit_module_class_new_exception
+
+  # The module instance being loaded.
+  #
+  # @return [ActiveRecord::Base]
+  attr_accessor :module_instance
+
+  # Persister class
+  #
+  # @return [#new(metasploit_module_instance: Object, logger: ActiveSupport::TaggedLogging)]
+  attr_accessor :persister_class
 
   #
   #
@@ -52,20 +52,20 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
   #
   # Attribute Validations
   #
-
-  validates :ephemeral_class,
+  
+  validates :logger,
             presence: true
   validates :metasploit_framework,
+            presence: true
+  validates :metasploit_module_class,
             presence: true
   validates :metasploit_module_instance,
             presence: {
                 unless: :loading_context?
             }
-  validates :metasploit_module_class,
-            presence: true
   validates :module_instance,
             presence: true
-  validates :logger,
+  validates :persister_class,
             presence: true
 
   #
@@ -86,14 +86,14 @@ class Metasploit::Cache::Module::Instance::Load < Metasploit::Model::Base
 
         if instance
           instance.extend Metasploit::Cache::Cacheable
-          ephemeral_cache = ephemeral_class.new(
+          persister = persister_class.new(
               metasploit_module_instance: instance,
               logger: logger
           )
-          instance.ephemeral_cache_by_source[:instance] = ephemeral_cache
+          instance.persister_by_source[:instance] = persister
 
-          if ephemeral_cache.valid?
-            ephemeral_cache.persist(to: module_instance)
+          if persister.valid?
+            persister.persist(to: module_instance)
 
             if module_instance.persisted?
               @metasploit_module_instance = instance

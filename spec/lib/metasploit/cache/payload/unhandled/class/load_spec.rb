@@ -163,18 +163,18 @@ RSpec.describe Metasploit::Cache::Payload::Unhandled::Class::Load do
     context 'with #logger' do
       context 'with #payload_unhandled_class' do
         context 'with #metasploit_module' do
-          it 'does not set metasploit_module.ephemeral_cache_by_source[:class]' do
+          it 'does not set metasploit_module.persister_by_source[:class]' do
             expect {
               metasploit_class
-            }.not_to change { metasploit_module.ephemeral_cache_by_source[:class] }.from(nil)
+            }.not_to change { metasploit_module.persister_by_source[:class] }.from(nil)
           end
 
-          it 'sets metasploit_class.ephemeral_cache_by_source[:class]' do
-            class_ephemeral_cache = metasploit_class.ephemeral_cache_by_source[:class]
+          it 'sets metasploit_class.persister_by_source[:class]' do
+            class_persister = metasploit_class.persister_by_source[:class]
 
-            expect(class_ephemeral_cache).to be_a Metasploit::Cache::Payload::Unhandled::Class::Ephemeral
-            expect(class_ephemeral_cache.metasploit_class).to eq(metasploit_class)
-            expect(class_ephemeral_cache.metasploit_class).not_to eq(metasploit_module)
+            expect(class_persister).to be_a Metasploit::Cache::Payload::Unhandled::Class::Persister
+            expect(class_persister.metasploit_class).to eq(metasploit_class)
+            expect(class_persister.metasploit_class).not_to eq(metasploit_module)
           end
 
           context 'with persisted' do

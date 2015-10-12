@@ -169,12 +169,12 @@ RSpec.describe Metasploit::Cache::Direct::Class::Load do
     context 'with #logger' do
       context 'with #direct_class' do
         context 'with #metasploit_module' do
-          it 'sets metasploit_module.ephemeral_cache_by_source[:class]' do
+          it 'sets metasploit_module.persister_by_source[:class]' do
             expect {
               metasploit_class
             }.to change {
-                   metasploit_module.ephemeral_cache_by_source[:class]
-                 }.to instance_of(Metasploit::Cache::Direct::Class::Ephemeral)
+                   metasploit_module.persister_by_source[:class]
+                 }.to instance_of(Metasploit::Cache::Direct::Class::Persister)
           end
 
           context 'with persisted' do

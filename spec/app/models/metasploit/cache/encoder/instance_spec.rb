@@ -122,11 +122,11 @@ RSpec.describe Metasploit::Cache::Encoder::Instance, type: :model do
 
                 let(:module_instance_load) {
                   Metasploit::Cache::Module::Instance::Load.new(
-                      ephemeral_class: Metasploit::Cache::Encoder::Instance::Ephemeral,
                       logger: logger,
                       metasploit_framework: metasploit_framework,
                       metasploit_module_class: direct_class_load.metasploit_class,
                       module_instance: metasploit_cache_encoder_instance,
+                      persister_class: Metasploit::Cache::Encoder::Instance::Persister
                   )
                 }
 

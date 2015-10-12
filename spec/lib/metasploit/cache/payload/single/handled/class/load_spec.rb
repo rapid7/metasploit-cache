@@ -355,11 +355,11 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class::Load, type: :
                 expect(single_index).to be < handler_index
               end
 
-              it 'sets metasploit_class.ephemeral_cache_by_source[:class]' do
-                class_ephemeral_cache = metasploit_class.ephemeral_cache_by_source[:class]
+              it 'sets metasploit_class.persister_by_source[:class]' do
+                class_persister = metasploit_class.persister_by_source[:class]
 
-                expect(class_ephemeral_cache).to be_a Metasploit::Cache::Payload::Single::Handled::Class::Ephemeral
-                expect(class_ephemeral_cache.payload_single_handled_metasploit_module_class).to eq(metasploit_class)
+                expect(class_persister).to be_a Metasploit::Cache::Payload::Single::Handled::Class::Persister
+                expect(class_persister.payload_single_handled_metasploit_module_class).to eq(metasploit_class)
               end
 
               context 'with persisted' do

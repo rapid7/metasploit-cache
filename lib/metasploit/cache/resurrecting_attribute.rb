@@ -6,7 +6,7 @@ require 'weakref'
 # the block.
 #
 # @example Defining a resurrecting attribute
-#   class Metasploit::Cache::Module::Ancestor::Ephemeral
+#   class Metasploit::Cache::Module::Ancestor::Persister
 #     extend Metasploit::Cache::ResurrectingAttribute
 #
 #     #
@@ -22,11 +22,11 @@ require 'weakref'
 #     # Resurrecting Attributes
 #     #
 #
-#     resurrecting_attr_accessor :module_ancestor do
+#     resurrecting_attr_accessor(:persistent) {
 #        ActiveRecord::Base.connection_pool.with_connection {
 #          Metasploit::Cache::Module::Ancestor.where(real_path_sha1_hex_digest: real_path_sha1_hex_digest).first
 #        }
-#      end
+#      }
 #   end
 module Metasploit::Cache::ResurrectingAttribute
   # Defines a reader and writer for `attribute_name`.
