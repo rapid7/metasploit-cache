@@ -85,7 +85,7 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
         # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
         persisted = Metasploit::Cache::Persister.persist destination: to,
                                                          logger: tagged,
-                                                         source: :ephemeral,
+                                                         source: ephemeral,
                                                          synchronizers: []
       end
     end
