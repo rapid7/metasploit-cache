@@ -1,7 +1,6 @@
 # Connects an in-memory Metasploit Module's ruby Class to its persisted {Metasploit::Cache::Module::Class}.
-class Metasploit::Cache::Direct::Class::Persister < Metasploit::Model::Base
+class Metasploit::Cache::Direct::Class::Persister < Metasploit::Cache::Module::Persister
   extend ActiveSupport::Autoload
-  extend Metasploit::Cache::ResurrectingAttribute
 
   autoload :Name
 
@@ -18,20 +17,10 @@ class Metasploit::Cache::Direct::Class::Persister < Metasploit::Model::Base
   # Attributes
   #
 
-  # The Metasploit Module being cached.
-  #
-  # @return [Class]
-  attr_accessor :ephemeral
-
   # The subclass of {Metasploit::Cache::Direct::Class} to use to look up {#persistent}.
   #
   # @return [Class<Metasploit::Cache::Direct::Class>]
   attr_accessor :persistent_class
-
-  # Tagged logger to which to log {#persist} errors.
-  #
-  # @return [ActiveSupport::TaggedLogging]
-  attr_accessor :logger
 
   #
   # Resurrecting Attributes
@@ -52,38 +41,12 @@ class Metasploit::Cache::Direct::Class::Persister < Metasploit::Model::Base
   # Validations
   #
 
-  validates :ephemeral,
-            presence: true
   validates :persistent_class,
-            presence: true
-  validates :logger,
             presence: true
 
   #
   # Instance Methods
   #
-
-  # @note This persister should be validated with `valid?` prior to calling {#persist} to ensure
-  #   that {#logger} is present in case of error.
-  # @note Validation errors for `persistent` will be logged as errors tagged with
-  #   {Metasploit::Cache::Module::Ancestor#real_pathname}/.
-  #
-  # @param to [Metasploit::Cache::Direct::Class] Save cacheable data to {Metasploit::Cache::Direct::Class}.
-  # @return [Metasploit::Cache::Direct::Class] `#persisted?` will be `false` if saving fails.
-  def persist(to: persistent)
-    persisted = nil
-
-    ActiveRecord::Base.connection_pool.with_connection do
-      with_tagged_logger(to) do |tagged|
-        persisted = Metasploit::Cache::Persister.persist destination: to,
-                                                         logger: tagged,
-                                                         source: ephemeral,
-                                                         synchronizers: SYNCHRONIZERS
-      end
-    end
-
-    persisted
-  end
 
   private
 

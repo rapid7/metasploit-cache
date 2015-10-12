@@ -1,8 +1,6 @@
 # Connects an in-memory payload unhandled Metasploit Module's ruby Class to its persisted
 # {Metasploit::Cache::Payload::Unhandled::Class}.
-class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Model::Base
-  extend Metasploit::Cache::ResurrectingAttribute
-
+class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Cache::Module::Persister
   #
   # CONSTANTS
   #
@@ -15,16 +13,6 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
   #
   # Attributes
   #
-
-  # The Metasploit Module being cached.
-  #
-  # @return [Class]
-  attr_accessor :ephemeral
-
-  # Tagged logger to which to log {#persist} errors.
-  #
-  # @return [ActiveSupport::TaggedLogging]
-  attr_accessor :logger
 
   # The subclass of {Metasploit::Cache::Payload::Unhandled::Class} to use to look up {#persistent}.
   #
@@ -50,39 +38,12 @@ class Metasploit::Cache::Payload::Unhandled::Class::Persister < Metasploit::Mode
   # Validations
   #
 
-  validates :ephemeral,
-            presence: true
-  validates :logger,
-            presence: true
   validates :persistent_class,
             presence: true
 
   #
   # Instance Methods
   #
-
-  # @note This persister should be validated with `valid?` prior to calling {#persist} to ensure that {#logger} is
-  #   present in case of error.
-  # @note Validation errors for `to` will be logged as errors tagged with
-  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
-  #
-  # @param to [Metasploit::Cache::Payload::Unhandled::Class] Save cacheable data to
-  #   {Metasploit::Cache::Payload::Unhandled::Class}.
-  # @return [Metasploit::Cache::Payload::Unhandled::Class] `#persisted?` will be `false` if saving fails.
-  def persist(to: persistent)
-    persisted = nil
-
-    ActiveRecord::Base.connection_pool.with_connection do
-      with_tagged_logger(to) do |tagged|
-        persisted = Metasploit::Cache::Persister.persist destination: to,
-                                                         logger: tagged,
-                                                         source: ephemeral,
-                                                         synchronizers: SYNCHRONIZERS
-      end
-    end
-
-    persisted
-  end
 
   private
 

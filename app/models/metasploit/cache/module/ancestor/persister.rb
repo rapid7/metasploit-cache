@@ -1,7 +1,5 @@
 # Connects an in-memory Metasploit Module to its persisted {Metasploit::Cache::Module::Ancestor}.
-class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
-  extend Metasploit::Cache::ResurrectingAttribute
-
+class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Cache::Module::Persister
   #
   # CONSTANTS
   #
@@ -12,16 +10,6 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
   #
   # Attributes
   #
-
-  # The Metasploit Module being cached.
-  #
-  # @return [Module]
-  attr_accessor :ephemeral
-
-  # Tagged logger to which to log {#persist_module_ancestor} errors.
-  #
-  # @return [ActiveSupport::TaggedLogging]
-  attr_accessor :logger
 
   # The SHA1 hexdigest of the path where {#ephemeral} is defined on disk.
   #
@@ -45,10 +33,6 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
   # Validations
   #
 
-  validates :ephemeral,
-            presence: true
-  validates :logger,
-            presence: true
   validates :real_path_sha1_hex_digest,
             presence: true
 
@@ -74,30 +58,6 @@ class Metasploit::Cache::Module::Ancestor::Persister < Metasploit::Model::Base
   #
   # Instance Methods
   #
-
-  # @note This persister should be validated with `valid?` prior to calling {#persist} to ensure that {#logger} is
-  #   present in case of error.
-  # @note Validation errors for `module_ancestor` will be logged as errors tagged with
-  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
-  #
-  # Persists ephemeral data from {#ephemeral} and it's namespace to the persistent cache entry.
-  #
-  # @param to [Metasploit::Cache::Module::Ancestor] Save cacheable data to `module_ancestor`.
-  # @return [Metasploit::Cache::Module::Ancestor] `#persisted?` will be `false` if saving fails
-  def persist(to: persistent)
-    persisted = nil
-
-    ActiveRecord::Base.connection_pool.with_connection do
-      with_tagged_logger(to) do |tagged|
-        persisted = Metasploit::Cache::Persister.persist destination: to,
-                                                         logger: tagged,
-                                                         source: ephemeral,
-                                                         synchronizers: SYNCHRONIZERS
-      end
-    end
-
-    persisted
-  end
 
   private
 

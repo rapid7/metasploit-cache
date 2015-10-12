@@ -1,8 +1,6 @@
 # Connects an in-memory payload_stage Metasploit Module's ruby instance to its persisted
 # {Metasploit::Cache::Payload::Stage::Instance}.
-class Metasploit::Cache::Payload::Stage::Instance::Persister < Metasploit::Model::Base
-  extend Metasploit::Cache::ResurrectingAttribute
-
+class Metasploit::Cache::Payload::Stage::Instance::Persister < Metasploit::Cache::Module::Persister
   #
   # CONSTANTS
   #
@@ -15,20 +13,6 @@ class Metasploit::Cache::Payload::Stage::Instance::Persister < Metasploit::Model
       Metasploit::Cache::Licensable::Persister::LicensableLicenses,
       Metasploit::Cache::Platformable::Persister::PlatformablePlatforms
   ]
-
-  #
-  # Attributes
-  #
-
-  # The in-memory payload_stage Metasploit Module instance being cached.
-  #
-  # @return [Object]
-  attr_accessor :ephemeral
-
-  # Tagged logger to which to log {#persist} errors.
-  #
-  # @return [ActiveSupport::TaggerLogger]
-  attr_accessor :logger
 
   #
   # Resurrecting Attributes
@@ -48,40 +32,8 @@ class Metasploit::Cache::Payload::Stage::Instance::Persister < Metasploit::Model
   }
 
   #
-  # Validations
-  #
-
-  validates :ephemeral,
-            presence: true
-  validates :logger,
-            presence: true
-
-  #
   # Instance Methods
   #
-
-  # @note This persister should be validated with `#valid?` prior to calling {#persist} to ensure that {#logger} is
-  #   present in case of error.
-  # @note Validation errors for `payload_stage_instance` will be logged as errors tagged with
-  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
-  #
-  # @param to [Metasploit::Cache::Payload::Stage::Instance] Sve cacheable data to {Metasploit::Cache::Payload::Stage::Instance}.
-  #   Giving `to` saves a database lookup if {#payload_stage_instance} is not loaded.
-  # @return [Metasploit::Cache:Payload::Stage::Instance] `#persisted?` will be `false` if saving fails.
-  def persist(to: persistent)
-    persisted = nil
-
-    ActiveRecord::Base.connection_pool.with_connection do
-      with_tagged_logger(to) do |tagged|
-        persisted = Metasploit::Cache::Persister.persist destination: to,
-                                                         logger: tagged,
-                                                         source: ephemeral,
-                                                         synchronizers: SYNCHRONIZERS
-      end
-    end
-
-    persisted
-  end
 
   private
 

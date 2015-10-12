@@ -1,7 +1,5 @@
 # Connects an in-memory post Metasploit Module's ruby instance to its persisted {Metasploit::Cache::}
-class Metasploit::Cache::Post::Instance::Persister < Metasploit::Model::Base
-  extend Metasploit::Cache::ResurrectingAttribute
-
+class Metasploit::Cache::Post::Instance::Persister < Metasploit::Cache::Module::Persister
   #
   # CONSTANTS
   #
@@ -23,20 +21,6 @@ class Metasploit::Cache::Post::Instance::Persister < Metasploit::Model::Base
   ]
 
   #
-  # Attributes
-  #
-
-  # The in-memory post Metasploit Module instance being cached.
-  #
-  # @return [Object]
-  attr_accessor :ephemeral
-
-  # Tagged logger to which to log {#persist} errors.
-  #
-  # @return [ActiveSupport::TaggerLogger]
-  attr_accessor :logger
-
-  #
   # Resurrecting Attributes
   #
 
@@ -54,40 +38,8 @@ class Metasploit::Cache::Post::Instance::Persister < Metasploit::Model::Base
   }
 
   #
-  # Validations
-  #
-
-  validates :ephemeral,
-            presence: true
-  validates :logger,
-            presence: true
-
-  #
   # Instance Methods
   #
-
-  # @note This persister should be validated with `#valid?` prior to calling {#persist} to ensure that {#logger} is
-  #   present in case of error.
-  # @note Validation errors for `post_instance` will be logged as errors tagged with
-  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
-  #
-  # @param to [Metasploit::Cache::Post::Instance] Sve cacheable data to {Metasploit::Cache::Post::Instance}.
-  #   Giving `to` saves a database lookup if {#post_instance} is not loaded.
-  # @return [Metasploit::Cache:Post::Instance] `#persisted?` will be `false` if saving fails.
-  def persist(to: persistent)
-    persisted = nil
-
-    ActiveRecord::Base.connection_pool.with_connection do
-      with_tagged_logger(to) do |tagged|
-        persisted = Metasploit::Cache::Persister.persist destination: to,
-                                                         logger: tagged,
-                                                         source: ephemeral,
-                                                         synchronizers: SYNCHRONIZERS
-      end
-    end
-
-    persisted
-  end
 
   private
 

@@ -1,8 +1,7 @@
 # Connects an in-memory single payload Metasploit Module's ruby Class to its persisted
 # {Metasploit::Cache::Payload::Single::Handled::Class}.
-class Metasploit::Cache::Payload::Single::Handled::Class::Persister < Metasploit::Model::Base
+class Metasploit::Cache::Payload::Single::Handled::Class::Persister < Metasploit::Cache::Module::Persister
   extend ActiveSupport::Autoload
-  extend Metasploit::Cache::ResurrectingAttribute
 
   autoload :Name
 
@@ -14,20 +13,6 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Persister < Metasploit
   SYNCHRONIZERS = [
       self::Name
   ]
-
-  #
-  # Attributes
-  #
-
-  # The Metasploit Module being cached.
-  #
-  # @return [Class]
-  attr_accessor :ephemeral
-
-  # Tagged logger to which to log {#persist} errors.
-  #
-  # @return [ActiveSupport::TaggedLogging]
-  attr_accessor :logger
 
   #
   # Resurrecting Attributes
@@ -47,15 +32,6 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Persister < Metasploit
       ).readonly(false).first
     }
   }
-
-  #
-  # Validations
-  #
-
-  validates :ephemeral,
-            presence: true
-  validates :logger,
-            presence: true
 
   #
   # Class Methods
@@ -83,32 +59,6 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Persister < Metasploit
   #
   # Instance Methods
   #
-
-  # @note This persister should be validated with `valid?` prior to calling {#persist} to ensure that {#logger} is
-  #   present in case of error.
-  # @note Validation errors for `payload_single_handled_class` will be logged as errors tagged with
-  #   {Metasploit::Cache::Payload::Single::Handled::Class#payload_single_unhandled_instance}
-  #   {Metasploit::Cache::Payload::Single::Unhandled::Instance#payload_single_unhandled_class}
-  #   {Metasploit::Cache::Payload::Single::Unhandled::Class#ancestor}
-  #   {Metasploit::Cache::Module::Ancestor#real_pathname}.
-  #
-  # @param to [Metasploit::Cache::Payload::Single::Handled::Class] Save cacheable data to
-  #   {Metasploit::Cache::Payload::Single::Handled::Class}.
-  # @return [Metasploit::Cache::Payload::Single::Handled::Class] `#persisted?` will be `false` if saving fails.
-  def persist(to: persistent)
-    persisted = nil
-
-    ActiveRecord::Base.connection_pool.with_connection do
-      with_tagged_logger(to) do |tagged|
-        persisted = Metasploit::Cache::Persister.persist destination: to,
-                                                         logger: tagged,
-                                                         source: ephemeral,
-                                                         synchronizers: SYNCHRONIZERS
-      end
-    end
-
-    persisted
-  end
 
   private
 
