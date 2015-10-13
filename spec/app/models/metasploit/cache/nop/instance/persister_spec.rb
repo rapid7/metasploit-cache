@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Nop::Instance::Persister, type: :model do
+  it_should_behave_like 'Metasploit::Cache::Module::Persister'
+
   context 'resurrecting attributes' do
     context '#nop_instance' do
       subject(:persistent) {
@@ -51,11 +53,6 @@ RSpec.describe Metasploit::Cache::Nop::Instance::Persister, type: :model do
         expect(persistent.nop_class).to eq(existing_nop_instance.nop_class)
       end
     end
-  end
-
-  context 'validations' do
-    it { is_expected.to validate_presence_of(:ephemeral) }
-    it { is_expected.to validate_presence_of(:logger) }
   end
 
   context '#persist' do

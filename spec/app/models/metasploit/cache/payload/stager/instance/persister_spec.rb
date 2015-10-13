@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Persister, type: :model do
+  it_should_behave_like 'Metasploit::Cache::Module::Persister'
+
   context 'resurrecting attributes' do
     context '#persistent' do
       include_context ':metasploit_cache_payload_handler_module'
@@ -56,11 +58,6 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Persister, type: :m
         expect(persistent.payload_stager_class).to eq(existing_payload_stager_instance.payload_stager_class)
       end
     end
-  end
-
-  context 'validations' do
-    it { is_expected.to validate_presence_of(:ephemeral) }
-    it { is_expected.to validate_presence_of(:logger) }
   end
 
   context '#persist' do

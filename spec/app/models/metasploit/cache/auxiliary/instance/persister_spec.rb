@@ -1,4 +1,6 @@
 RSpec.describe Metasploit::Cache::Auxiliary::Instance::Persister, type: :model do
+  it_should_behave_like 'Metasploit::Cache::Module::Persister'
+
   context 'resurrecting attributes' do
     context '#persistent' do
       subject(:persistent) {
@@ -51,11 +53,6 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance::Persister, type: :model d
         expect(persistent.auxiliary_class).to eq(existing_auxiliary_instance.auxiliary_class)
       end
     end
-  end
-
-  context 'validations' do
-    it { is_expected.to validate_presence_of(:ephemeral) }
-    it { is_expected.to validate_presence_of(:logger) }
   end
 
   context '#persist' do
