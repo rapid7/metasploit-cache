@@ -2,5 +2,6 @@
 module Metasploit::Cache::Module::Class::Persister
   extend ActiveSupport::Autoload
 
+  autoload :PersistentClass
   autoload :Rank
 end

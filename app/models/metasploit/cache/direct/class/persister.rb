@@ -2,6 +2,8 @@
 class Metasploit::Cache::Direct::Class::Persister < Metasploit::Cache::Module::Persister
   extend ActiveSupport::Autoload
 
+  include Metasploit::Cache::Module::Class::Persister::PersistentClass
+
   autoload :Name
 
   #
@@ -12,37 +14,6 @@ class Metasploit::Cache::Direct::Class::Persister < Metasploit::Cache::Module::P
       self::Name,
       Metasploit::Cache::Module::Class::Persister::Rank
   ]
-
-  #
-  # Attributes
-  #
-
-  # The subclass of {Metasploit::Cache::Direct::Class} to use to look up {#persistent}.
-  #
-  # @return [Class<Metasploit::Cache::Direct::Class>]
-  attr_accessor :persistent_class
-
-  #
-  # Resurrecting Attributes
-  #
-
-  # Cached metadata for this Class.
-  #
-  # @return [Metasploit::Cache::Direct::Class]
-  resurrecting_attr_accessor(:persistent) {
-    ActiveRecord::Base.connection_pool.with_connection {
-      persistent_class.where(
-          Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
-      ).joins(:ancestor).readonly(false).first
-    }
-  }
-
-  #
-  # Validations
-  #
-
-  validates :persistent_class,
-            presence: true
 
   #
   # Instance Methods
