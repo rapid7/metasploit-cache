@@ -3,14 +3,14 @@ RSpec.describe Metasploit::Cache::Module::Persister do
     described_class.new
   }
 
-  context '#persistent' do
-    subject(:persistent) {
-      module_persister.persistent
+  context '#persistent_relation' do
+    subject(:persistent_relation) {
+      module_persister.send(:persistent_relation)
     }
 
     specify {
       expect {
-        persistent
+        persistent_relation
       }.to raise_error NotImplementedError
     }
   end

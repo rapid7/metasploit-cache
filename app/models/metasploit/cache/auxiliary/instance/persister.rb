@@ -19,25 +19,19 @@ class Metasploit::Cache::Auxiliary::Instance::Persister < Metasploit::Cache::Mod
   ]
 
   #
-  # Resurrecting Attributes
-  #
-
-  # Cached metadata for this {#metasploit_instance}
-  #
-  # @return [Metasploit::Cache::Auxiliary::Instance]
-  resurrecting_attr_accessor(:persistent) {
-    ActiveRecord::Base.connection_pool.with_connection {
-      Metasploit::Cache::Auxiliary::Instance.joins(
-          auxiliary_class: :ancestor
-      ).where(
-          Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
-      ).readonly(false).first
-    }
-  }
-
-  #
   # Instance Methods
   #
+
+  protected
+
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Auxiliary::Instance>]
+  def persistent_relation
+    Metasploit::Cache::Auxiliary::Instance.joins(
+        auxiliary_class: :ancestor
+    ).where(
+        Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
+    )
+  end
 
   private
 

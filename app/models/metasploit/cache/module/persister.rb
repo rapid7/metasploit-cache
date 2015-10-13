@@ -22,6 +22,19 @@ class Metasploit::Cache::Module::Persister < Metasploit::Model::Base
   attr_accessor :logger
 
   #
+  # Resurrecting Attributes
+  #
+
+  # Cached metadata for this {#metasploit_instance}
+  #
+  # @return [Metasploit::Cache::Auxiliary::Instance]
+  resurrecting_attr_accessor(:persistent) {
+    ActiveRecord::Base.connection_pool.with_connection {
+      persistent_relation.readonly(false).first
+    }
+  }
+
+  #
   # Validations
   #
 
@@ -58,19 +71,19 @@ class Metasploit::Cache::Module::Persister < Metasploit::Model::Base
     persisted
   end
 
-  # @abstract Use {Metasploit::Cache::ResurrectingAttribute#resurrecting_attr_accessor} to define a `#persistent`
-  #   attribute that can be reloaded from metadata stored on the persisters (such as the real_path_sha1_hex_digest) of
-  #   the ancestor(s).
+  protected
+
+  # @abstract Override with a method that returns a query that can that reload {#persistent} from metadata stored on the
+  #   persisters (such as the real_path_sha1_hex_digest) of the ancestor(s).
   #
-  # @return [ActiveRecord::Base]
-  def persistent
+  # @return [ActiveRecord::Relation]
+  def persistent_relation
     raise NotImplementedError.new(
-              "#{self.class}.##{__method__} must be defined to return an ActiveRecord::Base subclass instance that " \
-              'can be used as the default `to` keyword argument for `#persist`'
+              "#{self.class}.#{__method__} must be defined to return an ActiveRecord::Relation, " \
+              "which will have `.readonly(false).first` called on it to retrieve #{self.class}#persistent, " \
+              'which can be used as the default `to` keyword argument for `#persist`'
           )
   end
-
-  protected
 
   # @abstract {#with_tagger_logger} needs to tag {#logger} with one or more {Metasplpoit::Cache::Module::Ancestor}(s)
   #   using {#persistent} or instance of {#persistent}'s class passed to {#persist}.

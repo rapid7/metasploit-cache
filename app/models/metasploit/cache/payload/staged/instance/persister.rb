@@ -9,22 +9,6 @@ class Metasploit::Cache::Payload::Staged::Instance::Persister < Metasploit::Cach
   SYNCHRONIZERS = []
 
   #
-  # Resurrecting Attributes
-  #
-
-  # Cached metadata for this {#ephemeral}.
-  #
-  # @return [Metasploit::Cache::Payload::Staged::Instance]
-  resurrecting_attr_accessor(:persistent) {
-    ActiveRecord::Base.connection_pool.with_connection {
-      Metasploit::Cache::Payload::Staged::Instance.where_ancestor_real_path_sha1_hex_digests(
-          stage: ancestor_real_path_sha1_hex_digest(:stage),
-          stager: ancestor_real_path_sha1_hex_digest(:stager)
-      ).readonly(false).first
-    }
-  }
-
-  #
   # Validations
   #
 
@@ -49,6 +33,16 @@ class Metasploit::Cache::Payload::Staged::Instance::Persister < Metasploit::Cach
   # @return [String]
   def ancestor_real_path_sha1_hex_digest(source)
     ephemeral.class.persister_by_source.fetch(:class).ancestor_real_path_sha1_hex_digest(source)
+  end
+
+  protected
+
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Staged::Instance>]
+  def persistent_relation
+    Metasploit::Cache::Payload::Staged::Instance.where_ancestor_real_path_sha1_hex_digests(
+        stage: ancestor_real_path_sha1_hex_digest(:stage),
+        stager: ancestor_real_path_sha1_hex_digest(:stager)
+    )
   end
 
   private

@@ -15,25 +15,6 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Persister < Metasploit
   ]
 
   #
-  # Resurrecting Attributes
-  #
-
-  # Cached metadata for this Class.
-  #
-  # @return [Metasploit::Cache::Direct::Class]
-  resurrecting_attr_accessor(:persistent) {
-    ActiveRecord::Base.connection_pool.with_connection {
-      Metasploit::Cache::Payload::Single::Handled::Class.joins(
-          payload_single_unhandled_instance: {
-              payload_single_unhandled_class: :ancestor
-          }
-      ).where(
-           Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
-      ).readonly(false).first
-    }
-  }
-
-  #
   # Class Methods
   #
 
@@ -59,6 +40,19 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Persister < Metasploit
   #
   # Instance Methods
   #
+
+  protected
+
+  # @return ActiveRecord::Relation<Metasploit::Cache::Payload::Single::Handled::Class>
+  def persistent_relation
+    Metasploit::Cache::Payload::Single::Handled::Class.joins(
+        payload_single_unhandled_instance: {
+            payload_single_unhandled_class: :ancestor
+        }
+    ).where(
+        Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
+    )
+  end
 
   private
 

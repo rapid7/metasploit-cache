@@ -14,25 +14,19 @@ class Metasploit::Cache::Nop::Instance::Persister < Metasploit::Cache::Module::P
   ]
 
   #
-  # Resurrecting Attributes
-  #
-
-  # Cached metadata for this {#ephemeral}.
-  #
-  # @return [Metasploit::Cache::Nop::Instance]
-  resurrecting_attr_accessor(:persistent) {
-    ActiveRecord::Base.connection_pool.with_connection {
-      Metasploit::Cache::Nop::Instance.joins(
-          nop_class: :ancestor
-      ).where(
-           Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
-      ).readonly(false).first
-    }
-  }
-
-  #
   # Instance Methods
   #
+
+  protected
+
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Nop::Instance>]
+  def persistent_relation
+    Metasploit::Cache::Nop::Instance.joins(
+        nop_class: :ancestor
+    ).where(
+        Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
+    )
+  end
 
   private
 

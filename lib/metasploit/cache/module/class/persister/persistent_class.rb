@@ -4,21 +4,6 @@ module Metasploit::Cache::Module::Class::Persister::PersistentClass
 
   included do
     #
-    # Resurrecting Attributes
-    #
-
-    # Cached metadata for this Class.
-    #
-    # @return [Metasploit::Cache::Payload::Unhandled::Class]
-    resurrecting_attr_accessor(:persistent) {
-      ActiveRecord::Base.connection_pool.with_connection {
-        persistent_class.where(
-            Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
-        ).joins(:ancestor).readonly(false).first
-      }
-    }
-
-    #
     # Validations
     #
 
@@ -34,4 +19,19 @@ module Metasploit::Cache::Module::Class::Persister::PersistentClass
   #
   # @return [Class<Metasploit::Cache::Payload::Unhandled::Class>]
   attr_accessor :persistent_class
+
+  #
+  # Instance Methods
+  #
+
+  protected
+
+  # @return [ActiveRecord::Relation<>]
+  def persistent_relation
+    persistent_class.joins(
+        :ancestor
+    ).where(
+        Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
+    )
+  end
 end

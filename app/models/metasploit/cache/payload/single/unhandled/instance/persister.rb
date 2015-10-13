@@ -16,25 +16,19 @@ class Metasploit::Cache::Payload::Single::Unhandled::Instance::Persister < Metas
   ]
 
   #
-  # Resurrecting Attributes
-  #
-
-  # Cached metadata for this {#ephemeral}.
-  #
-  # @return [Metasploit::Cache::Payload::Single::Unhandled::Instance]
-  resurrecting_attr_accessor(:persistent) {
-    ActiveRecord::Base.connection_pool.with_connection {
-      Metasploit::Cache::Payload::Single::Unhandled::Instance.joins(
-          payload_single_unhandled_class: :ancestor
-      ).where(
-           Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
-      ).readonly(false).first
-    }
-  }
-
-  #
   # Instance Methods
   #
+
+  protected
+
+  # @return ActiveRecord::Relation<Metasploit::Cache::Payload::Single::Unhandled::Instance>
+  def persistent_relation
+    Metasploit::Cache::Payload::Single::Unhandled::Instance.joins(
+        payload_single_unhandled_class: :ancestor
+    ).where(
+        Metasploit::Cache::Module::Ancestor.arel_table[:real_path_sha1_hex_digest].eq(real_path_sha1_hex_digest)
+    )
+  end
 
   private
 
