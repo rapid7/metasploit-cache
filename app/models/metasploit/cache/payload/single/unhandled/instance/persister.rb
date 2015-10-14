@@ -21,7 +21,7 @@ class Metasploit::Cache::Payload::Single::Unhandled::Instance::Persister < Metas
 
   protected
 
-  # @return ActiveRecord::Relation<Metasploit::Cache::Payload::Single::Unhandled::Instance>
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Single::Unhandled::Instance>]
   def persistent_relation
     Metasploit::Cache::Payload::Single::Unhandled::Instance.joins(
         payload_single_unhandled_class: :ancestor

@@ -18,6 +18,11 @@ class Metasploit::Cache::Payload::Stager::Ancestor::Handler < ActiveRecord::Base
   # Attributes
   #
 
+  # @!attribute payload_stager_ancestor_id
+  #   Foreign key for {#payload_stager_ancestor}
+  #
+  #   @return [Integer]
+
   # @!attribute type_alias
   #   @note Should never be `nil`.  If the Metasploit Module ruby Module does not respond to `handler_type_alias`, then
   #     {Metasploit::Cache::Payload::Stager::Ancestor#handler} should be `nil`.

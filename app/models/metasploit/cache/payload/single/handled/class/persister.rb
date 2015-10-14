@@ -43,7 +43,7 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Persister < Metasploit
 
   protected
 
-  # @return ActiveRecord::Relation<Metasploit::Cache::Payload::Single::Handled::Class>
+  # @return [ActiveRecord::Relation<Metasploit::Cache::Payload::Single::Handled::Class>]
   def persistent_relation
     Metasploit::Cache::Payload::Single::Handled::Class.joins(
         payload_single_unhandled_instance: {
