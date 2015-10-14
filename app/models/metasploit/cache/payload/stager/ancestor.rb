@@ -3,6 +3,7 @@ class Metasploit::Cache::Payload::Stager::Ancestor < Metasploit::Cache::Payload:
   extend ActiveSupport::Autoload
 
   autoload :Handler
+  autoload :Persister
 
   #
   # CONSTANTS
