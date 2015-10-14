@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150905153101) do
+ActiveRecord::Schema.define(version: 20151013154613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -260,6 +260,13 @@ ActiveRecord::Schema.define(version: 20150905153101) do
   end
 
   add_index "mc_payload_staged_instances", ["payload_staged_class_id"], name: "index_mc_payload_staged_instances_on_payload_staged_class_id", unique: true, using: :btree
+
+  create_table "mc_payload_stager_ancestor_handlers", force: true do |t|
+    t.string  "type_alias",                 null: false
+    t.integer "payload_stager_ancestor_id", null: false
+  end
+
+  add_index "mc_payload_stager_ancestor_handlers", ["payload_stager_ancestor_id"], name: "unique_mc_payload_stager_ancestor_handlers", unique: true, using: :btree
 
   create_table "mc_payload_stager_instances", force: true do |t|
     t.text    "description",             null: false
