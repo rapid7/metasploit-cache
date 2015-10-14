@@ -137,10 +137,11 @@ RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance, type: :m
 
                   let(:module_ancestor_load) {
                     Metasploit::Cache::Module::Ancestor::Load.new(
+                        logger: logger,
                         # This should match the major version number of metasploit-framework
                         maximum_version: 4,
                         module_ancestor: payload_single_ancestor,
-                        logger: logger
+                        persister_class: Metasploit::Cache::Module::Ancestor::Persister
                     )
                   }
 

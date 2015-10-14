@@ -7,7 +7,8 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
         maximum_api_version: maximum_api_version,
         maximum_core_version: maximum_core_version,
         maximum_version: maximum_version,
-        module_namespace: module_namespace
+        module_namespace: module_namespace,
+        persister_class: persister_class
     )
   }
 
@@ -35,6 +36,10 @@ RSpec.describe Metasploit::Cache::Module::Namespace::Load do
     module_namespace.cache.real_path_sha1_hex_digest = Digest::SHA1.hexdigest('')
 
     module_namespace
+  }
+
+  let(:persister_class) {
+    Metasploit::Cache::Module::Ancestor::Persister
   }
 
   context 'validations' do

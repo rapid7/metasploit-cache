@@ -304,7 +304,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class::Load, type: :
                 logger: logger,
                 # This should match the major version number of metasploit-framework
                 maximum_version: 4,
-                module_ancestor: payload_single_handled_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor
+                module_ancestor: payload_single_handled_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor,
+                persister_class: Metasploit::Cache::Module::Ancestor::Persister
             )
           }
 

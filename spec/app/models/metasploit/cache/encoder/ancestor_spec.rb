@@ -15,7 +15,8 @@ RSpec.describe Metasploit::Cache::Encoder::Ancestor, type: :model do
         FactoryGirl.build(:metasploit_cache_encoder_ancestor)
       }
 
-      it_should_behave_like 'Metasploit::Cache::Module::Ancestor factory' do
+      it_should_behave_like 'Metasploit::Cache::Module::Ancestor factory',
+                            persister_class: Metasploit::Cache::Module::Ancestor::Persister do
         let(:module_ancestor) {
           metasploit_cache_encoder_ancestor
         }

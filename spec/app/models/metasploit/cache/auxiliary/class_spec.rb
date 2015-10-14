@@ -35,7 +35,8 @@ RSpec.describe Metasploit::Cache::Auxiliary::Class, type: :model do
           Metasploit::Cache::Module::Ancestor::Load.new(
               logger: logger,
               maximum_version: 4,
-              module_ancestor: full_metasploit_cache_auxiliary_class.ancestor
+              module_ancestor: full_metasploit_cache_auxiliary_class.ancestor,
+              persister_class: Metasploit::Cache::Module::Ancestor::Persister
           )
         }
 

@@ -403,10 +403,11 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
 
           let(:module_ancestor_load) {
             Metasploit::Cache::Module::Ancestor::Load.new(
+                logger: logger,
                 # This should match the major version number of metasploit-framework
                 maximum_version: 4,
                 module_ancestor: module_instance.auxiliary_class.ancestor,
-                logger: logger
+                persister_class: Metasploit::Cache::Module::Ancestor::Persister
             )
           }
 
@@ -624,7 +625,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                         logger: logger,
                         # This should match the major version number of metasploit-framework
                         maximum_version: 4,
-                        module_ancestor: payload_single_ancestor
+                        module_ancestor: payload_single_ancestor,
+                        persister_class: Metasploit::Cache::Module::Ancestor::Persister
                     )
                   }
 
@@ -762,7 +764,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                   Metasploit::Cache::Module::Ancestor::Load.new(
                       logger: logger,
                       maximum_version: maximum_version,
-                      module_ancestor: payload_stage_ancestor
+                      module_ancestor: payload_stage_ancestor,
+                      persister_class: Metasploit::Cache::Module::Ancestor::Persister
                   )
                 }
 
@@ -858,7 +861,8 @@ RSpec.describe Metasploit::Cache::Module::Instance::Load, type: :model do
                       Metasploit::Cache::Module::Ancestor::Load.new(
                           logger: logger,
                           maximum_version: maximum_version,
-                          module_ancestor: payload_stager_ancestor
+                          module_ancestor: payload_stager_ancestor,
+                          persister_class: Metasploit::Cache::Payload::Stager::Ancestor::Persister
                       )
                     }
 

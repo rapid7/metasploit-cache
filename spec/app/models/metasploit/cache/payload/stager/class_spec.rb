@@ -37,7 +37,8 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Class, type: :model do
           Metasploit::Cache::Module::Ancestor::Load.new(
               logger: logger,
               maximum_version: 4,
-              module_ancestor: metasploit_cache_payload_stager_class.ancestor
+              module_ancestor: metasploit_cache_payload_stager_class.ancestor,
+              persister_class: Metasploit::Cache::Module::Ancestor::Persister
           )
         }
 

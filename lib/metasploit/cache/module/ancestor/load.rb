@@ -23,6 +23,11 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
   #   @return [Metasploit::Cache::Module::Ancestor]
   attr_accessor :module_ancestor
 
+  # Persister class
+  #
+  # @return [#new(ephemeral: Module, logger: ActiveSupport::TaggedLogging)]
+  attr_accessor :persister_class
+
   #
   # Validations
   #
@@ -46,6 +51,8 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
             unless: :loading_context?,
             presence: true
   validates :module_ancestor,
+            presence: true
+  validates :persister_class,
             presence: true
 
 
@@ -91,7 +98,7 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
           commit = false
           @namespace_module = nil
 
-          namespace_module_load = namespace_module.load
+          namespace_module_load = namespace_module.load(persister_class: persister_class)
           namespace_module_load.logger = logger
           namespace_module_load.maximum_version = maximum_version
 

@@ -16,7 +16,8 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Ancestor, type: :model do
       }
 
       it_should_behave_like 'Metasploit::Cache::Payload::Ancestor factory',
-                            payload_type: 'stage' do
+                            payload_type: 'stage',
+                            persister_class: Metasploit::Cache::Module::Ancestor::Persister do
         let(:payload_ancestor) {
           metasploit_cache_payload_stage_ancestor
         }

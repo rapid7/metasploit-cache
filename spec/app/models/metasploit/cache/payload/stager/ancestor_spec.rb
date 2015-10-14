@@ -17,7 +17,8 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Ancestor, type: :model do
       }
 
       it_should_behave_like 'Metasploit::Cache::Payload::Ancestor factory',
-                            payload_type: 'stager' do
+                            payload_type: 'stager',
+                            persister_class: Metasploit::Cache::Module::Ancestor::Persister do
         let(:payload_ancestor) {
           metasploit_cache_payload_stager_ancestor
         }
@@ -38,7 +39,8 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Ancestor, type: :model do
       }
 
       it_should_behave_like 'Metasploit::Cache::Payload::Ancestor factory',
-                            payload_type: 'stager' do
+                            payload_type: 'stager',
+                            persister_class: Metasploit::Cache::Payload::Stager::Ancestor::Persister do
         let(:payload_ancestor) {
           full_metasploit_cache_payload_stager_ancestor
         }

@@ -52,7 +52,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Class, type: :model 
             Metasploit::Cache::Module::Ancestor::Load.new(
                 logger: logger,
                 maximum_version: 4,
-                module_ancestor: payload_single_ancestor
+                module_ancestor: payload_single_ancestor,
+                persister_class: Metasploit::Cache::Module::Ancestor::Persister
             )
           }
 

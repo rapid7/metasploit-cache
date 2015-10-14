@@ -6,10 +6,11 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
   subject(:module_ancestor_load) do
     described_class.new(
+        logger: logger,
         # This should match the major version number of metasploit-framework
         maximum_version: 4,
         module_ancestor: module_ancestor,
-        logger: logger
+        persister_class: Metasploit::Cache::Module::Ancestor::Persister
     )
   end
 

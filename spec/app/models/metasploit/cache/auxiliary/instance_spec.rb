@@ -119,7 +119,8 @@ RSpec.describe Metasploit::Cache::Auxiliary::Instance, type: :model do
                       # This should match the major version number of metasploit-framework
                       maximum_version: 4,
                       module_ancestor: auxiliary_ancestor,
-                      logger: logger
+                      logger: logger,
+                      persister_class: Metasploit::Cache::Module::Ancestor::Persister
                   )
                 }
 

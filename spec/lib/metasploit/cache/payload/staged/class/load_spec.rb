@@ -369,7 +369,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
                 logger: logger,
                 # This should match the major version number of metasploit-framework
                 maximum_version: 4,
-                module_ancestor: payload_staged_class.payload_stage_instance.payload_stage_class.ancestor
+                module_ancestor: payload_staged_class.payload_stage_instance.payload_stage_class.ancestor,
+                persister_class: Metasploit::Cache::Module::Ancestor::Persister
             )
           }
 
@@ -397,7 +398,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
                     logger: logger,
                     # This should match the major version number of metasploit-framework
                     maximum_version: 4,
-                    module_ancestor: payload_staged_class.payload_stager_instance.payload_stager_class.ancestor
+                    module_ancestor: payload_staged_class.payload_stager_instance.payload_stager_class.ancestor,
+                    persister_class: Metasploit::Cache::Module::Ancestor::Persister
                 )
               }
 

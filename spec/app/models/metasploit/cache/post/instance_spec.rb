@@ -139,10 +139,11 @@ RSpec.describe Metasploit::Cache::Post::Instance, type: :model do
 
                 let(:module_ancestor_load) {
                   Metasploit::Cache::Module::Ancestor::Load.new(
+                      logger: logger,
                       # This should match the major version number of metasploit-framework
                       maximum_version: 4,
                       module_ancestor: post_ancestor,
-                      logger: logger
+                      persister_class: Metasploit::Cache::Module::Ancestor::Persister
                   )
                 }
 

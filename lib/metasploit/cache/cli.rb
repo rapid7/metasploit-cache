@@ -41,50 +41,58 @@ class Metasploit::Cache::CLI < Thor
   # Maps type directory to config used for {#load_type_directory}.
   CONFIG_BY_TYPE_DIRECTORY = {
       'auxiliary' => {
+          ancestor_persister_class: Metasploit::Cache::Module::Ancestor::Persister,
           ancestors: :auxiliary_ancestors,
           build_class: :build_auxiliary_class,
           build_instance: :build_auxiliary_instance,
           instance_persister_class: Metasploit::Cache::Auxiliary::Instance::Persister
       },
       'encoders' => {
+          ancestor_persister_class: Metasploit::Cache::Module::Ancestor::Persister,
           ancestors: :encoder_ancestors,
           build_class: :build_encoder_class,
           build_instance: :build_encoder_instance,
           instance_persister_class: Metasploit::Cache::Encoder::Instance::Persister
       },
       'exploits' => {
+          ancestor_persister_class: Metasploit::Cache::Module::Ancestor::Persister,
           ancestors: :exploit_ancestors,
           build_class: :build_exploit_class,
           build_instance: :build_exploit_instance,
           instance_persister_class: Metasploit::Cache::Exploit::Instance::Persister
       },
       'nops' => {
+          ancestor_persister_class: Metasploit::Cache::Module::Ancestor::Persister,
           ancestors: :nop_ancestors,
           build_class: :build_nop_class,
           build_instance: :build_nop_instance,
           instance_persister_class: Metasploit::Cache::Nop::Instance::Persister
       },
       'payloads/singles' => {
+          ancestor_persister_class: Metasploit::Cache::Module::Ancestor::Persister,
           ancestors: :single_payload_ancestors,
           build_class: :build_payload_single_unhandled_class,
           build_instance: :build_payload_single_unhandled_instance,
           instance_persister_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Persister
       },
       'payloads/stages' => {
+          ancestor_persister_class: Metasploit::Cache::Module::Ancestor::Persister,
           ancestors: :stage_payload_ancestors,
           build_class: :build_stage_payload_class,
           build_instance: :build_payload_stage_instance,
           instance_persister_class: Metasploit::Cache::Payload::Stage::Instance::Persister
       },
       'payloads/stagers' => {
+          ancestor_persister_class: Metasploit::Cache::Payload::Stager::Ancestor::Persister,
           ancestors: :stager_payload_ancestors,
           build_class: :build_stager_payload_class,
           build_instance: :build_payload_stager_instance,
           instance_persister_class: Metasploit::Cache::Payload::Stager::Instance::Persister
       },
       'post' => {
-        ancestors: :post_ancestors,
-        build_class: :build_post_class,
+          ancestor_persister_class: Metasploit::Cache::Module::Ancestor::Persister,
+          ancestors: :post_ancestors,
+          build_class: :build_post_class,
           build_instance: :build_post_instance,
           instance_persister_class: Metasploit::Cache::Post::Instance::Persister
       }
@@ -434,7 +442,8 @@ class Metasploit::Cache::CLI < Thor
         module_ancestor_load = Metasploit::Cache::Module::Ancestor::Load.new(
             logger: logger,
             maximum_version: Metasploit::Framework::Version::MAJOR,
-            module_ancestor: module_ancestor
+            module_ancestor: module_ancestor,
+            persister_class: config.fetch(:ancestor_persister_class)
         )
 
         unless module_ancestor_load.valid?
