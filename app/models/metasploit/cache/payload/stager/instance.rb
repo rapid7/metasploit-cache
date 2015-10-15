@@ -99,12 +99,6 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
   #
   #   @return [String]
 
-  # @!attribute handler_type_alias
-  #   Alternate name for the handler_type to prevent naming collisions in staged payload Metasploit Modules that use
-  #   this stager payload Metasploit Module.
-  #
-  #   @return [String]
-
   # @!attribute name
   #   The human-readable name of this stager payload Metasploit Module.  This can be thought of as the title or summary
   #   of the Metasploit Module.

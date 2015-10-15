@@ -270,7 +270,6 @@ ActiveRecord::Schema.define(version: 20151013154613) do
 
   create_table "mc_payload_stager_instances", force: true do |t|
     t.text    "description",             null: false
-    t.string  "handler_type_alias"
     t.string  "name",                    null: false
     t.boolean "privileged",              null: false
     t.integer "handler_id",              null: false
