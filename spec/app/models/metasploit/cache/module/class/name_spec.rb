@@ -199,4 +199,63 @@ RSpec.describe Metasploit::Cache::Module::Class::Name, type: :model do
       it { is_expected.to validate_uniqueness_of(:reference).scoped_to(:module_type) }
     end
   end
+
+  context '#full' do
+    subject(:full) {
+      module_class_name.full
+    }
+
+    let(:module_class_name) {
+      described_class.new(
+          module_type: module_type,
+          reference: reference
+      )
+    }
+
+    context 'with #module_type' do
+      let(:module_type) {
+        FactoryGirl.generate :metasploit_cache_module_type
+      }
+
+      context 'with #reference' do
+        let(:reference) {
+          'reference'
+        }
+
+        it "is '<module_type>/<reference_name>'" do
+          expect(full).to eq("#{module_type}/#{reference}")
+        end
+      end
+
+      context 'without #reference' do
+        let(:reference) {
+          nil
+        }
+
+        it { is_expected.to be_nil }
+      end
+    end
+
+    context 'without module_type' do
+      let(:module_type) {
+        nil
+      }
+
+      context 'with #reference' do
+        let(:reference) {
+          'reference'
+        }
+
+        it { is_expected.to be_nil }
+      end
+
+      context 'without #reference' do
+        let(:reference) {
+          nil
+        }
+
+        it { is_expected.to be_nil }
+      end
+    end
+  end
 end
