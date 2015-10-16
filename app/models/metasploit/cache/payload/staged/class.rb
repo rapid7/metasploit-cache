@@ -7,6 +7,7 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   extend ActiveSupport::Autoload
 
   include Metasploit::Cache::Batch::Root
+  include Metasploit::Cache::Module::Class::Namable
 
   autoload :Persister
   autoload :Load
@@ -180,6 +181,15 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   # Instance Methods
   #
 
+  # Whether the architectures and platforms from the {#payload_stage_instance} and {#payload_stager_instance} are
+  # compatible.
+  #
+  # @return [true] if architectures and platforms are compatible
+  # @return [false] if archtiectures and/or platforms are incompatible
+  def compatible?
+    architectures_compatible? && platforms_compatible?
+  end
+
   # @!method payload_stage_instance_id=(payload_stage_instance_id)
   #   Sets {#payload_stage_instance_id} and invalidates cached {#payload_stage_instance} so it is reloaded on next
   #   access.
@@ -227,17 +237,22 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
     end
   end
 
+  # @return [true] if platforms are compatible or if {#payload_stage_instance} or {#payload_stager_instance} are not
+  #   set.
+  # @return [false]
+  def architectures_compatible?
+    scope = architectures
+
+    scope.nil? || scope.exists?
+  end
+
   # Validates that {#payload_stage_instance} and {#payload_stager_instance} have at least one
   # {Metasploit::Cache::Architecture} in common.
   #
   # @return [void]
   def compatible_architectures
-    scope = architectures
-
-    unless scope.nil?
-      unless scope.exists?
-        errors.add(:base, :incompatible_architectures)
-      end
+    unless architectures_compatible?
+      errors.add(:base, :incompatible_architectures)
     end
   end
 
@@ -246,14 +261,8 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
   #
   # @return [void]
   def compatible_platforms
-    arel_and_bind_values = platforms_arel_and_bind_values
-
-    unless arel_and_bind_values.nil?
-      arel, bind_values = arel_and_bind_values
-
-      if Metasploit::Cache::Platform.find_by_sql(arel.take(1), bind_values).empty?
-        errors.add(:base, :incompatible_platforms)
-      end
+    unless platforms_compatible?
+      errors.add(:base, :incompatible_platforms)
     end
   end
 
@@ -314,6 +323,21 @@ class Metasploit::Cache::Payload::Staged::Class < ActiveRecord::Base
 
       [arel, bind_values]
     end
+  end
+
+  def platforms_compatible?
+    arel_and_bind_values = platforms_arel_and_bind_values
+    compatible = true
+
+    unless arel_and_bind_values.nil?
+      arel, bind_values = arel_and_bind_values
+
+      if Metasploit::Cache::Platform.find_by_sql(arel.take(1), bind_values).empty?
+        compatible = false
+      end
+    end
+
+    compatible
   end
 
   # Returns AREL query for the element of the subset table that are (improper) subset of superset table when

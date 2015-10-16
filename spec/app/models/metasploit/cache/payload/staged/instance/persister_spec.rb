@@ -168,7 +168,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Persister, type: :m
 
       let(:payload_staged_class) {
         FactoryGirl.create(
-            :metasploit_cache_payload_staged_class,
+            :full_metasploit_cache_payload_staged_class,
             payload_stager_instance_handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
       }

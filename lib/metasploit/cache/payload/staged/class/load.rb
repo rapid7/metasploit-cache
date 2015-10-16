@@ -167,7 +167,7 @@ class Metasploit::Cache::Payload::Staged::Class::Load < Metasploit::Model::Base
   # @return [void]
   def payload_staged_class_valid
     # allow the presence validation to handle it being nil
-    if payload_staged_class && payload_staged_class.invalid?
+    if payload_staged_class && payload_staged_class.invalid?(validation_context)
       errors.add(:payload_staged_class, :invalid)
     end
   end

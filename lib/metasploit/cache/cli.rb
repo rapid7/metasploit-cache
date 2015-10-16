@@ -672,12 +672,9 @@ class Metasploit::Cache::CLI < Thor
         payload_stager_instance: payload_stager_instance
     )
 
-    unless payload_staged_class.valid?
-      # only info because a lot of staged classes are expected to be invalid due to architecture or platform
-      # incompatibility.
-      logger.info {
-        "#{payload_staged_class.class} is invalid: #{payload_staged_class.errors.full_messages.to_sentence}"
-      }
+    unless payload_staged_class.compatible?
+      # only info because a lot of staged classes are expected to have incompatibilities
+      logger.info "Incompatible architectures or platforms"
 
       return
     end
@@ -719,23 +716,27 @@ class Metasploit::Cache::CLI < Thor
     end
   end
 
-  # The ruby Class or Module defined in {Metasploit::Cache::Module::Ancestor#real_pathname}.
+  # @note No on-demand loading occurs.  The ruby Class or Module must have been previously loaded for this method NOT to
+  #   return `nil`.
+  #
+  # The Metasploit Module ruby Class or Module defined in the {Metasploit::Cache::Module::Ancestor#real_pathname}.
   #
   # @param module_ancestor [Metasploit::Cache::Module::Ancestor, #real_path_sha1_hex_digest]
-  # @return [nil] if {Metasploit::Cache::Module::Ancestor} has NOT been loaded into memory.
-  # @return [Class, Module] if {Metasploit::Cache::Module::Ancestor} has been loaded into memory.
+  # @return [Module] a `Module` or `Class` from the {Metasploit::Cache::Module::Ancestor#real_pathname}
+  # @return [nil] if {#module_ancestor_module_namespace} is `nil`
   def module_ancestor_metasploit_module(module_ancestor)
     namespace_module = module_ancestor_module_namespace(module_ancestor)
 
-    namespace_module.load.metasploit_module
+    if namespace_module
+      namespace_module.load.metasploit_module
+    end
   end
 
-  # The implicit namespace ruby Module that is the parent of the ruby Class or Module defined in
+  # The parent namespace Module of the ruby Class or Module defined in
   # {Metasploit::Cache::Module::Ancestor#real_pathname}.
   #
-  # @param module_ancestor [Metasploit::Cache::Module::Ancestor, #real_path_sha1_hex_digest]
-  # @return [nil] if {Metasploit::Cache::Module::Ancestor} has NOT been loaded into memory.
-  # @return [Module] if {Metasploit::Cache::Module::Ancestor} has been loaded into memory.
+  # @return [Module] a ruby Module that acts as the implicit namespace for a Metasploit Module's ruby Class or Module.
+  # @return [nil] if {Metasploit::Cache::Module::Namespace.names} does not resolve to a loaded ruby Module.
   def module_ancestor_module_namespace(module_ancestor)
     names = Metasploit::Cache::Module::Namespace.names(module_ancestor)
 

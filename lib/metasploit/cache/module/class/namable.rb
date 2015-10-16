@@ -27,7 +27,9 @@ module Metasploit::Cache::Module::Class::Namable
     #
 
     validates :name,
-              presence: true
+              presence: {
+                  unless: :loading_context?
+              }
   end
 
   #
@@ -55,5 +57,17 @@ module Metasploit::Cache::Module::Class::Namable
     end
 
     derived
+  end
+
+  #
+  # Instance Methods
+  #
+
+  # Whether the current `#validation_context` is `:loading`.
+  #
+  # @return [true] if `#validation_context` is `:loading`.
+  # @return [false] otherwise
+  def loading_context?
+    validation_context == :loading
   end
 end

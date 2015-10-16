@@ -21,18 +21,11 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
   end
 
   context 'factories' do
-    context 'metasploit_cache_payload_staged_class' do
+    context 'full_metasploit_cache_payload_staged_class' do
       context 'with :payload_stager_instance_handler_load_pathname' do
         include_context 'ActiveSupport::TaggedLogging'
         include_context ':metasploit_cache_payload_handler_module'
         include_context 'Metasploit::Cache::Spec::Unload.unload'
-
-        subject(:metasploit_cache_payload_staged_class) {
-          FactoryGirl.build(
-              :metasploit_cache_payload_staged_class,
-              payload_stager_instance_handler_load_pathname: payload_stager_instance_handler_load_pathname
-          )
-        }
 
         #
         # lets
@@ -70,7 +63,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
         }
 
         let(:payload_stage_instance) {
-          metasploit_cache_payload_staged_class.payload_stage_instance
+          full_metasploit_cache_payload_staged_class.payload_stage_instance
         }
 
         let(:payload_stage_instance_load) {
@@ -88,7 +81,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
               handler_module: payload_stager_instance_load.metasploit_module_instance.handler_klass,
               logger: logger,
               payload_stage_metasploit_module: payload_stage_ancestor_load.metasploit_module,
-              payload_staged_class: metasploit_cache_payload_staged_class,
+              payload_staged_class: full_metasploit_cache_payload_staged_class,
               payload_stager_metasploit_module: payload_stager_ancestor_load.metasploit_module,
               payload_superclass: Metasploit::Cache::Direct::Class::Superclass
           )
@@ -122,7 +115,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
         }
 
         let(:payload_stager_instance) {
-          metasploit_cache_payload_staged_class.payload_stager_instance
+          full_metasploit_cache_payload_staged_class.payload_stager_instance
         }
 
         let(:payload_stager_instance_handler_load_pathname) {
@@ -139,46 +132,186 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
           )
         }
 
-        it { is_expected.to be_valid }
+        context 'with payload stager handler_type_alias' do
+          subject(:full_metasploit_cache_payload_staged_class) {
+            FactoryGirl.build(
+                :full_metasploit_cache_payload_staged_class,
+                compatible_architectures: compatible_architectures,
+                compatible_platforms: compatible_platforms,
+                payload_stager_instance: FactoryGirl.create(
+                    :metasploit_cache_payload_stager_instance,
+                    :metasploit_cache_contributable_contributions,
+                    :metasploit_cache_licensable_licensable_licenses,
+                    :metasploit_cache_payload_handable_handler,
+                    # Must be after all association building traits so assocations are populated for writing contents
+                    :metasploit_cache_payload_stager_instance_payload_stager_class_ancestor_contents,
+                    # Hash arguments are overrides and available to all traits
+                    architecturable_architectures: compatible_architectures.map { |compatible_architecture|
+                      Metasploit::Cache::Architecturable::Architecture.new(
+                          architecture: compatible_architecture
+                      )
+                    },
+                    handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname,
+                    payload_stager_class: FactoryGirl.create(
+                        :metasploit_cache_payload_stager_class,
+                        ancestor: FactoryGirl.create(
+                            :metasploit_cache_payload_stager_ancestor,
+                            handler: FactoryGirl.build(
+                                :metasploit_cache_payload_stager_ancestor_handler,
+                                type_alias: handler_type_alias
+                            )
+                        )
+                    ),
+                    platformable_platforms: compatible_platforms.map { |compatible_platform|
+                      Metasploit::Cache::Platformable::Platform.new(
+                          platform: compatible_platform
+                      )
+                    }
+                )
+            )
+          }
 
-        it 'is loadable' do
-          expect(payload_staged_class_load).to be_valid
-        end
+          let(:compatible_architectures) {
+            [
+                FactoryGirl.generate(:metasploit_cache_architecture)
+            ]
+          }
 
-        context 'Metasploit::Cache::Payload::Staged::Class#payload_stage_instance' do
+          let(:compatible_platforms) {
+            [
+                FactoryGirl.generate(:metasploit_cache_platform)
+            ]
+          }
+
+          let(:handler_type_alias) {
+            FactoryGirl.generate :metasploit_cache_payload_stager_ancestor_handler_type_alias
+          }
+
+          it { is_expected.to be_valid }
+
           it 'is loadable' do
-            expect(payload_stage_instance_load).to be_valid
+            expect(payload_staged_class_load).to be_valid
           end
 
-          context 'Metasploit::Cache::Payload::Stage::Instance#payload_stage_class' do
+          it 'uses handler_type_alias in name' do
+            payload_staged_class_load
+
+            expect(full_metasploit_cache_payload_staged_class.name.reference).to include(handler_type_alias)
+          end
+
+          context 'Metasploit::Cache::Payload::Staged::Class#payload_stage_instance' do
             it 'is loadable' do
-              expect(payload_stage_class_load).to be_valid
+              expect(payload_stage_instance_load).to be_valid
             end
 
-            context 'Metasploit::Cache::Payload::Stage::Class#ancestor' do
+            context 'Metasploit::Cache::Payload::Stage::Instance#payload_stage_class' do
               it 'is loadable' do
-                expect(payload_stage_ancestor_load).to be_valid
+                expect(payload_stage_class_load).to be_valid
+              end
+
+              context 'Metasploit::Cache::Payload::Stage::Class#ancestor' do
+                it 'is loadable' do
+                  expect(payload_stage_ancestor_load).to be_valid
+                end
+              end
+            end
+          end
+
+          context 'Metasploit::Cache::Payload::Staged::Class#payload_stager_instance' do
+            it 'is loadable' do
+              expect(payload_stager_instance_load).to be_valid
+            end
+
+            context 'Metasploit::Cache::Payload::Stager::Instance#payload_stager_class' do
+              it 'is loadable' do
+                expect(payload_stager_class_load).to be_valid
+              end
+
+              context 'Metasploit::Cache::Payload::Stager::Class#ancestor' do
+                it 'is loadable' do
+                  expect(payload_stager_ancestor_load).to be_valid
+                end
               end
             end
           end
         end
 
-        context 'Metasploit::Cache::Payload::Staged::Class#payload_stager_instance' do
+        context 'without payload stager handler_type_alias' do
+          subject(:full_metasploit_cache_payload_staged_class) {
+            FactoryGirl.build(
+                :full_metasploit_cache_payload_staged_class,
+                payload_stager_instance_handler_load_pathname: payload_stager_instance_handler_load_pathname
+            )
+          }
+
+          it { is_expected.to be_valid }
+
           it 'is loadable' do
-            expect(payload_stager_instance_load).to be_valid
+            expect(payload_staged_class_load).to be_valid
           end
 
-          context 'Metasploit::Cache::Payload::Stager::Instance#payload_stager_class' do
+          context 'Metasploit::Cache::Payload::Staged::Class#payload_stage_instance' do
             it 'is loadable' do
-              expect(payload_stager_class_load).to be_valid
+              expect(payload_stage_instance_load).to be_valid
             end
 
-            context 'Metasploit::Cache::Payload::Stager::Class#ancestor' do
+            context 'Metasploit::Cache::Payload::Stage::Instance#payload_stage_class' do
               it 'is loadable' do
-                expect(payload_stager_ancestor_load).to be_valid
+                expect(payload_stage_class_load).to be_valid
+              end
+
+              context 'Metasploit::Cache::Payload::Stage::Class#ancestor' do
+                it 'is loadable' do
+                  expect(payload_stage_ancestor_load).to be_valid
+                end
               end
             end
           end
+
+          context 'Metasploit::Cache::Payload::Staged::Class#payload_stager_instance' do
+            it 'is loadable' do
+              expect(payload_stager_instance_load).to be_valid
+            end
+
+            context 'Metasploit::Cache::Payload::Stager::Instance#payload_stager_class' do
+              it 'is loadable' do
+                expect(payload_stager_class_load).to be_valid
+              end
+
+              context 'Metasploit::Cache::Payload::Stager::Class#ancestor' do
+                it 'is loadable' do
+                  expect(payload_stager_ancestor_load).to be_valid
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+
+    context 'metasploit_cache_payload_staged_class' do
+      context 'with :payload_stager_instance_handler_load_pathname' do
+        include_context ':metasploit_cache_payload_handler_module'
+
+        subject(:metasploit_cache_payload_staged_class) {
+          FactoryGirl.build(
+              :metasploit_cache_payload_staged_class,
+              payload_stager_instance_handler_load_pathname: payload_stager_instance_handler_load_pathname
+          )
+        }
+
+        let(:payload_stager_instance_handler_load_pathname) {
+          Metasploit::Model::Spec.temporary_pathname.join('lib')
+        }
+
+        it { is_expected.not_to be_valid }
+
+        context 'Metasploit::Cache::Payload::Staged::Class#name' do
+          subject(:name) {
+            metasploit_cache_payload_staged_class.name
+          }
+
+          it { is_expected.to be_nil }
         end
       end
 
@@ -505,7 +638,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
 
       before(:each) do
         FactoryGirl.create(
-            :metasploit_cache_payload_staged_class,
+            :full_metasploit_cache_payload_staged_class,
             payload_stager_instance_handler_load_pathname: payload_stager_instance_handler_load_pathname
         )
       end

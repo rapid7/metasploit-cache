@@ -16,7 +16,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Persister, type: :mode
 
       let(:existing_payload_staged_class) {
         FactoryGirl.create(
-            :metasploit_cache_payload_staged_class,
+            :full_metasploit_cache_payload_staged_class,
             payload_stager_instance_handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
       }
@@ -221,13 +221,6 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Persister, type: :mode
           end
 
           it 'logs validation errors' do
-            # Right now, there are no validation errors because there are no attributes on
-            # Metasploit::Cache::Payload::Staged::Class and the associations are already set.
-            expect(passed_payload_staged_class.errors.full_messages.to_sentence).to be_blank
-
-            # ... so, fake some validation errors
-            passed_payload_staged_class.errors.add(:base, :invalid)
-
             persist
 
             full_error_messages = passed_payload_staged_class.errors.full_messages.to_sentence
@@ -238,11 +231,79 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Persister, type: :mode
         end
 
         context 'success' do
-          specify {
-            expect {
-              persist
-            }.to change(Metasploit::Cache::Payload::Staged::Class, :count).by(1)
-          }
+          context 'with handler_type_alias' do
+            let(:compatible_architectures) {
+              [
+                  FactoryGirl.generate(:metasploit_cache_architecture)
+              ]
+            }
+
+            let(:compatible_platforms) {
+              [
+                  FactoryGirl.generate(:metasploit_cache_platform)
+              ]
+            }
+
+            let(:passed_payload_staged_class) {
+              FactoryGirl.build(
+                  :metasploit_cache_payload_staged_class,
+                  compatible_architectures: compatible_architectures,
+                  compatible_platforms: compatible_platforms,
+                  payload_stager_instance: payload_stager_instance
+              )
+            }
+
+            let(:payload_stage_ancestor) {
+              passed_payload_staged_class.payload_stage_instance.payload_stage_class.ancestor
+            }
+
+            let(:payload_stager_ancestor) {
+              FactoryGirl.create(:full_metasploit_cache_payload_stager_ancestor)
+            }
+
+            let(:payload_stager_class) {
+              FactoryGirl.create(
+                  :metasploit_cache_payload_stager_class,
+                  ancestor: payload_stager_ancestor
+              )
+            }
+
+            let(:payload_stager_instance) {
+              FactoryGirl.create(
+                  :metasploit_cache_payload_stager_instance,
+                  :metasploit_cache_contributable_contributions,
+                  :metasploit_cache_licensable_licensable_licenses,
+                  :metasploit_cache_payload_handable_handler,
+                  # Hash arguments are overrides and available to all traits
+                  architecturable_architectures: compatible_architectures.map { |compatible_architecture|
+                    Metasploit::Cache::Architecturable::Architecture.new(
+                        architecture: compatible_architecture
+                    )
+                  },
+                  handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname,
+                  payload_stager_class: payload_stager_class,
+                  platformable_platforms: compatible_platforms.map { |compatible_platform|
+                    Metasploit::Cache::Platformable::Platform.new(
+                        platform: compatible_platform
+                    )
+                  }
+              )
+            }
+
+            specify {
+              expect {
+                persist
+              }.to change(Metasploit::Cache::Payload::Staged::Class, :count).by(1)
+            }
+          end
+
+          context 'without handler_type_alias' do
+            specify {
+              expect {
+                persist
+              }.to change(Metasploit::Cache::Payload::Staged::Class, :count).by(1)
+            }
+          end
         end
       end
     end
@@ -270,7 +331,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Persister, type: :mode
 
       let!(:existing_payload_staged_class) {
         FactoryGirl.create(
-            :metasploit_cache_payload_staged_class,
+            :full_metasploit_cache_payload_staged_class,
             payload_stager_instance_handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname
         )
       }

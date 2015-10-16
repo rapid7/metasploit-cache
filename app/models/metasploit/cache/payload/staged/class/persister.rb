@@ -1,12 +1,18 @@
 # Connects an in-memory stage payload Metasploit Module's ruby Class to its persisted
 # {Metasploit::Cache::Payload::Staged::Class}.
 class Metasploit::Cache::Payload::Staged::Class::Persister < Metasploit::Cache::Module::Persister
+  extend ActiveSupport::Autoload
+
+  autoload :Name
+
   #
   # CONSTANTS
   #
 
   # Modules used to synchronize attributes and associations before persisting to database.
-  SYNCHRONIZERS = []
+  SYNCHRONIZERS = [
+      self::Name
+  ]
 
   #
   # Resurrecting Attributes
