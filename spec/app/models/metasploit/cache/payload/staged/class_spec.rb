@@ -646,4 +646,146 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class, type: :model do
       it { is_expected.to validate_uniqueness_of(:payload_stage_instance_id).scoped_to(:payload_stager_instance_id) }
     end
   end
+
+  context 'compatible?' do
+    include_context ':metasploit_cache_payload_handler_module'
+
+    subject(:compatible?) {
+      payload_staged_class.compatible?
+    }
+
+    let(:payload_staged_class) {
+      FactoryGirl.build(
+          :full_metasploit_cache_payload_staged_class,
+          payload_stage_instance: FactoryGirl.create(
+              :metasploit_cache_payload_stage_instance,
+              :metasploit_cache_contributable_contributions,
+              :metasploit_cache_licensable_licensable_licenses,
+              # Must be after all association building traits so assocations are populated for writing contents
+              :metasploit_cache_payload_stage_instance_payload_stage_class_ancestor_contents,
+              # Hash arguments are overrides and available to all traits
+              architecturable_architectures: stage_architectures.map { |architecture|
+                Metasploit::Cache::Architecturable::Architecture.new(
+                    architecture: architecture
+                )
+              },
+              platformable_platforms: stage_platforms.map { |platform|
+                Metasploit::Cache::Platformable::Platform.new(
+                    platform: platform
+                )
+              }
+          ),
+          payload_stager_instance: FactoryGirl.create(
+              :metasploit_cache_payload_stager_instance,
+              :metasploit_cache_contributable_contributions,
+              :metasploit_cache_licensable_licensable_licenses,
+              :metasploit_cache_payload_handable_handler,
+              # Must be after all association building traits so assocations are populated for writing contents
+              :metasploit_cache_payload_stager_instance_payload_stager_class_ancestor_contents,
+              # Hash arguments are overrides and available to all traits
+              architecturable_architectures: stager_architectures.map { |architecture|
+                Metasploit::Cache::Architecturable::Architecture.new(
+                    architecture: architecture
+                )
+              },
+              handler_load_pathname: metasploit_cache_payload_handler_module_load_pathname,
+              platformable_platforms: stager_platforms.map { |platform|
+                Metasploit::Cache::Platformable::Platform.new(
+                    platform: platform
+                )
+              }
+          )
+      )
+    }
+
+    context 'with compatible architectures' do
+      let(:stage_architectures) {
+        [
+            FactoryGirl.generate(:metasploit_cache_architecture)
+        ]
+      }
+
+      let(:stager_architectures) {
+        stage_architectures
+      }
+
+      context 'with compatible platforms' do
+        let(:stage_platforms) {
+          [
+              Metasploit::Cache::Platform.find_by!(fully_qualified_name: 'Windows')
+          ]
+        }
+
+        let(:stager_platforms) {
+          [
+              Metasploit::Cache::Platform.find_by!(fully_qualified_name: 'Windows XP')
+          ]
+        }
+
+        it { is_expected.to eq(true) }
+      end
+
+      context 'without compatible platforms' do
+        let(:stage_platforms) {
+          [
+              Metasploit::Cache::Platform.find_by!(fully_qualified_name: 'Windows')
+          ]
+        }
+
+        let(:stager_platforms) {
+          [
+              Metasploit::Cache::Platform.find_by!(fully_qualified_name: 'Linux')
+          ]
+        }
+
+        it { is_expected.to eq(false) }
+      end
+    end
+
+    context 'without compatible architectures' do
+      let(:stage_architectures) {
+        [
+            Metasploit::Cache::Architecture.find_by!(abbreviation: 'x86')
+        ]
+      }
+
+      let(:stager_architectures) {
+        [
+            Metasploit::Cache::Architecture.find_by!(abbreviation: 'mipsle')
+        ]
+      }
+
+      context 'with compatible platforms' do
+        let(:stage_platforms) {
+          [
+              Metasploit::Cache::Platform.find_by!(fully_qualified_name: 'Windows')
+          ]
+        }
+
+        let(:stager_platforms) {
+          [
+              Metasploit::Cache::Platform.find_by!(fully_qualified_name: 'Windows XP')
+          ]
+        }
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'without compatible platforms' do
+        let(:stage_platforms) {
+          [
+              Metasploit::Cache::Platform.find_by!(fully_qualified_name: 'Windows')
+          ]
+        }
+
+        let(:stager_platforms) {
+          [
+              Metasploit::Cache::Platform.find_by!(fully_qualified_name: 'Linux')
+          ]
+        }
+
+        it { is_expected.to eq(false) }
+      end
+    end
+  end
 end
