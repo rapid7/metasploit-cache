@@ -314,96 +314,12 @@ class Metasploit::Cache::CLI < Thor
 
     module_class = module_class_name.module_class
 
-    if module_class.respond_to? :ancestor
-      module_ancestor = module_class.ancestor
+    if module_class.is_a? Metasploit::Cache::Payload::Staged::Class
+      use_staged_instance module_class,
+                          logger: tagged_logger
     else
-      module_ancestor = module_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor
-    end
-
-    module_ancestor_load = Metasploit::Cache::Module::Ancestor::Load.new(
-        logger: tagged_logger,
-        maximum_version: Metasploit::Framework::Version::MAJOR,
-        module_ancestor: module_ancestor,
-        persister_class: Metasploit::Cache::Module::Ancestor::Persister
-    )
-
-    unless module_ancestor_load.valid?
-      tagged_logger.error {
-        "#{module_ancestor_load.class} is invalid: #{module_ancestor_load.errors.full_messages.to_sentence}"
-      }
-
-      exit(2)
-    end
-
-    if module_class.is_a? Metasploit::Cache::Direct::Class
-      direct_class = module_class
-
-      direct_class_load = Metasploit::Cache::Direct::Class::Load.new(
-          direct_class: direct_class,
-          logger: tagged_logger,
-          metasploit_module: module_ancestor_load.metasploit_module
-      )
-
-      unless direct_class_load.valid?
-        tagged_logger.error {
-          "#{direct_class_load.class} is invalid: #{direct_class_load.errors.full_messages.to_sentence}"
-        }
-
-        exit(3)
-      end
-
-      config = CONFIG_BY_MODULE_TYPE.fetch(module_type)
-      module_instance = direct_class.public_send(config.fetch(:instance))
-
-      module_instance_load = Metasploit::Cache::Module::Instance::Load.new(
-          persister_class: config.fetch(:instance_persister_class),
-          logger: tagged_logger,
-          metasploit_framework: metasploit_framework_double,
-          metasploit_module_class: direct_class_load.metasploit_class,
-          module_instance: module_instance
-      )
-
-      unless module_instance_load.valid?
-        tagged_logger.error {
-          "#{module_instance_load.class} is invalid: #{module_instance_load.errors.full_messages.to_sentence}"
-        }
-
-        exit(4)
-      end
-    else
-      payload_single_handled_class = module_class
-
-      payload_single_handled_class_load = Metasploit::Cache::Payload::Single::Handled::Class::Load.new(
-          handler_module: payload_single_handled_class.payload_single_unhandled_instance.handler.name.constantize,
-          logger: tagged_logger,
-          metasploit_module: module_ancestor_load.metasploit_module,
-          payload_single_handled_class: payload_single_handled_class,
-          payload_superclass: Msf::Payload
-      )
-
-      unless payload_single_handled_class_load.valid?
-        tagged_logger.error {
-          "#{payload_single_handled_class_load.class} is invalid: #{payload_single_handled_class_load.errors.full_messages.to_sentence}"
-        }
-
-        exit(3)
-      end
-
-      payload_single_handled_instance_load = Metasploit::Cache::Module::Instance::Load.new(
-          persister_class: Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
-          logger: tagged_logger,
-          metasploit_framework: metasploit_framework_double,
-          metasploit_module_class: payload_single_handled_class_load.metasploit_class,
-          module_instance: payload_single_handled_class.payload_single_unhandled_instance
-      )
-
-      unless payload_single_handled_instance_load.valid?
-        tagged_logger.error {
-          "#{payload_single_handled_instance_load} is invalid: #{payload_single_handled_instance_load.errors.full_messages.to_sentence}"
-        }
-
-        exit(4)
-      end
+      use_unstaged_instance module_class,
+                            logger: tagged_logger
     end
 
     tagged_logger.info {
@@ -774,6 +690,172 @@ class Metasploit::Cache::CLI < Thor
   def require_libraries(libraries)
     libraries.each do |library|
       require library
+    end
+  end
+
+  # @note Will exit on errors.
+  #
+  # Validates `active_model`.  If `active_model` is invalid, logs validation error full messages as a sentence and exit
+  # with `exit_code`.
+  #
+  # @param active_model [#errors, #valid?] model to validate
+  # @param exit_code [Integer] Code passed to `exit` when `active_model` is invalid
+  # @param logger [ActiveSupport::TaggedLogging]
+  # @return [void]
+  def exit_unless_valid(active_model, exit_code, logger:)
+    unless active_model.valid?
+      logger.error {
+        "#{active_model.class} is invalid: #{active_model.errors.full_messages.to_sentence}"
+      }
+
+      exit(exit_code)
+    end
+  end
+
+  # @note Will exit on errors.
+  #
+  # Loads the stage and stage ancestors before loading the staged class and instance.
+  #
+  # @param payload_staged_class [Metasploit::Cache::Payload::Staged::Class]
+  # @param logger [ActiveSupport::TaggedLogging]
+  # @return [void]
+  def use_staged_instance(payload_staged_class, logger:)
+    payload_stage_ancestor = payload_staged_class.payload_stage_instance.payload_stage_class.ancestor
+
+    payload_stage_ancestor_load = Metasploit::Cache::Module::Ancestor::Load.new(
+        logger: logger,
+        maximum_version: Metasploit::Framework::Version::MAJOR,
+        module_ancestor: payload_stage_ancestor,
+        persister_class: Metasploit::Cache::Module::Ancestor::Persister
+    )
+
+    exit_unless_valid payload_stage_ancestor_load,
+                      2,
+                      logger: logger
+
+    payload_stager_ancestor = payload_staged_class.payload_stager_instance.payload_stager_class.ancestor
+
+    payload_stager_ancestor_load = Metasploit::Cache::Module::Ancestor::Load.new(
+        logger: logger,
+        maximum_version: Metasploit::Framework::Version::MAJOR,
+        module_ancestor: payload_stager_ancestor,
+        persister_class: Metasploit::Cache::Payload::Stager::Ancestor::Persister
+    )
+
+    exit_unless_valid payload_stager_ancestor_load,
+                      3,
+                      logger: logger
+
+    payload_staged_class_load = Metasploit::Cache::Payload::Staged::Class::Load.new(
+        handler_module: payload_staged_class.payload_stager_instance.handler.name.constantize,
+        logger: logger,
+        payload_stage_metasploit_module: payload_stage_ancestor_load.metasploit_module,
+        payload_staged_class: payload_staged_class,
+        payload_stager_metasploit_module: payload_stager_ancestor_load.metasploit_module,
+        payload_superclass: Msf::Payload
+    )
+
+    exit_unless_valid payload_staged_class_load,
+                      4,
+                      logger: logger
+
+    payload_staged_instance = payload_staged_class.payload_staged_instance
+
+    payload_staged_instance_load = Metasploit::Cache::Module::Instance::Load.new(
+        logger: logger,
+        metasploit_framework: metasploit_framework_double,
+        metasploit_module_class: payload_staged_class_load.metasploit_class,
+        module_instance: payload_staged_instance,
+        persister_class: Metasploit::Cache::Payload::Staged::Instance::Persister
+    )
+
+    exit_unless_valid payload_staged_instance_load,
+                      5,
+                      logger: logger
+  end
+
+  # @note Will exit on errors.
+  #
+  # Loads the ancestor, class, and instance.
+  #
+  # @param module_class [Metasploit::Cache::Auxiliary::Class, Metasploit::Cache::Encoder::Class,
+  #                      Metasploit::Cache::Exploit::Class, Metasploit::Cache::Nop::Class,
+  #                      Metasploit::Cache::Payload::Single::Handled::Class, Metasploit::Cache::Post::Class]
+  # @param logger [ActiveSupport::TaggedLogger]
+  # @return [void]
+  def use_unstaged_instance(module_class, logger:)
+    if module_class.respond_to? :ancestor
+      module_ancestor = module_class.ancestor
+    else
+      module_ancestor = module_class.payload_single_unhandled_instance.payload_single_unhandled_class.ancestor
+    end
+
+    module_ancestor_load = Metasploit::Cache::Module::Ancestor::Load.new(
+        logger: logger,
+        maximum_version: Metasploit::Framework::Version::MAJOR,
+        module_ancestor: module_ancestor,
+        persister_class: Metasploit::Cache::Module::Ancestor::Persister
+    )
+
+    exit_unless_valid module_ancestor_load,
+                      2,
+                      logger: logger
+
+    if module_class.is_a? Metasploit::Cache::Direct::Class
+      direct_class = module_class
+
+      direct_class_load = Metasploit::Cache::Direct::Class::Load.new(
+          direct_class: direct_class,
+          logger: logger,
+          metasploit_module: module_ancestor_load.metasploit_module
+      )
+
+      exit_unless_valid direct_class_load,
+                        3,
+                        logger: logger
+
+      config = CONFIG_BY_MODULE_TYPE.fetch(module_class.name.module_type)
+      module_instance = direct_class.public_send(config.fetch(:instance))
+
+      module_instance_load = Metasploit::Cache::Module::Instance::Load.new(
+          persister_class: config.fetch(:instance_persister_class),
+          logger: logger,
+          metasploit_framework: metasploit_framework_double,
+          metasploit_module_class: direct_class_load.metasploit_class,
+          module_instance: module_instance
+      )
+
+      exit_unless_valid module_instance_load,
+                        4,
+                        logger: logger
+    else
+      payload_single_handled_class = module_class
+
+      payload_single_handled_class_load = Metasploit::Cache::Payload::Single::Handled::Class::Load.new(
+          handler_module: payload_single_handled_class.payload_single_unhandled_instance.handler.name.constantize,
+          logger: logger,
+          metasploit_module: module_ancestor_load.metasploit_module,
+          payload_single_handled_class: payload_single_handled_class,
+          payload_superclass: Msf::Payload
+      )
+
+      exit_unless_valid payload_single_handled_class_load,
+                        3,
+                        logger: logger
+
+      payload_single_unhandled_instance = payload_single_handled_class.payload_single_unhandled_instance
+
+      payload_single_handled_instance_load = Metasploit::Cache::Module::Instance::Load.new(
+          persister_class: Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
+          logger: logger,
+          metasploit_framework: metasploit_framework_double,
+          metasploit_module_class: payload_single_handled_class_load.metasploit_class,
+          module_instance: payload_single_unhandled_instance
+      )
+
+      exit_unless_valid payload_single_handled_instance_load,
+                        4,
+                        logger: logger
     end
   end
 end
