@@ -323,7 +323,8 @@ class Metasploit::Cache::CLI < Thor
     module_ancestor_load = Metasploit::Cache::Module::Ancestor::Load.new(
         logger: tagged_logger,
         maximum_version: Metasploit::Framework::Version::MAJOR,
-        module_ancestor: module_ancestor
+        module_ancestor: module_ancestor,
+        persister_class: Metasploit::Cache::Module::Ancestor::Persister
     )
 
     unless module_ancestor_load.valid?
