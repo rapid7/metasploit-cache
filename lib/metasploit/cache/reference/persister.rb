@@ -11,16 +11,16 @@ module Metasploit::Cache::Reference::Persister
 
     if authority
       {
-          authority: {
-              abbreviation: authority.abbreviation
-          },
-          designation: reference.designation
+        authority: {
+          abbreviation: authority.abbreviation
+        },
+        designation: reference.designation
       }
       # don't use the reference.url since the metasploit-framework API doesn't support URLs for designations
     else
       # without an authority, only have the URL
       {
-          url: reference.url
+        url: reference.url
       }
     end
   end
@@ -38,12 +38,12 @@ module Metasploit::Cache::Reference::Persister
   # @return [Hash{Hash{authority: Hash{abbreviation: String}, designation: String}, Hash{url: String} => Metasploit::Cache::Reference}]
   def self.by_attributes(attributes_set:, authority_by_abbreviation:, logger:)
     existing_by_attributes(
-        attributes_set: attributes_set,
-        authority_by_abbreviation: authority_by_abbreviation
+      attributes_set: attributes_set,
+      authority_by_abbreviation: authority_by_abbreviation
     ).tap { |hash|
       hash.default_proc = new_by_attributes_proc(
-          authority_by_abbreviation: authority_by_abbreviation,
-          logger: logger
+        authority_by_abbreviation: authority_by_abbreviation,
+        logger: logger
       )
     }
   end
@@ -120,13 +120,13 @@ module Metasploit::Cache::Reference::Persister
       {}
     else
       cached_conditions = conditions(
-          attributes_set: attributes_set,
-          authority_by_abbreviation: authority_by_abbreviation
+        attributes_set: attributes_set,
+        authority_by_abbreviation: authority_by_abbreviation
       )
       cached_unioned_conditions = union_conditions(cached_conditions)
       # get pre-existing references in bulk
       Metasploit::Cache::Reference.references(:authority).where(
-          cached_unioned_conditions
+        cached_unioned_conditions
       ).each_with_object({}) do |reference, reference_by_attributes|
         attributes = attributes(reference)
 
@@ -166,20 +166,20 @@ module Metasploit::Cache::Reference::Persister
           }
 
           hash[attributes] = Metasploit::Cache::Reference.new(
-              authority: authority,
-              designation: designation
+            authority: authority,
+            designation: designation
           )
         else
           hash[attributes] = Metasploit::Cache::Persister.create_unique(
-              Metasploit::Cache::Reference,
-              authority_id: authority.id,
-              designation: attributes.fetch(:designation)
+            Metasploit::Cache::Reference,
+            authority_id: authority.id,
+            designation: attributes.fetch(:designation)
           )
         end
       else
         hash[attributes] = Metasploit::Cache::Persister.create_unique(
-            Metasploit::Cache::Reference,
-            url: attributes.fetch(:url)
+          Metasploit::Cache::Reference,
+          url: attributes.fetch(:url)
         )
       end
     }
