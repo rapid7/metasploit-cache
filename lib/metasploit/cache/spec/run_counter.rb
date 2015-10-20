@@ -1,5 +1,6 @@
-# Tracks the number of runs of a context and limits the runs to a {#max} number.  Must be an object as simple integers
-# can only be updated when a context variable, which doesn't work for function calls
+# Tracks the number of runs of a context and limits the runs to a {#max} number.
+# Must be an object as simple integers can only be updated when a context
+# variable, which doesn't work for function calls
 class Metasploit::Cache::Spec::RunCounter
   #
   # Attributes
