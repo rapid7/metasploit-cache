@@ -218,6 +218,8 @@ Style/BlockDelimiters:
     #
     # Here, the return value of `Foo.new` is used to define a `foo` helper but
     # doesn't appear to be used from the return value of `let`.
+    # error in logger.error { .. }
+    - error
     - let
     - let!
     - subject
