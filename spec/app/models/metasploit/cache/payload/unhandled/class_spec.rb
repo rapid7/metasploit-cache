@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Unhandled::Class do
+RSpec.describe Metasploit::Cache::Payload::Unhandled::Class, type: :model do
   it 'is a subclass of Metasploit::Cache::Direct::Class' do
     expect(described_class).to be < Metasploit::Cache::Direct::Class
   end

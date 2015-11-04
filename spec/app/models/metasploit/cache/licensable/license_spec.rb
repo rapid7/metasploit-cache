@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Licensable::License do
+RSpec.describe Metasploit::Cache::Licensable::License, type: :model do
   context "database" do
     context "columns" do
       it { is_expected.to have_db_column(:license_id).of_type(:integer).with_options(null:false) }

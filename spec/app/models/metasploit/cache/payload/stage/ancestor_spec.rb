@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Stage::Ancestor do
+RSpec.describe Metasploit::Cache::Payload::Stage::Ancestor, type: :model do
   it_should_behave_like 'Metasploit::Cache::Payload::Ancestor.restrict',
                         payload_type: 'stage',
                         payload_type_directory: 'stages'

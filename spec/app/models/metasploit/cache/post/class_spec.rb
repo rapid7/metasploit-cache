@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Post::Class do
+RSpec.describe Metasploit::Cache::Post::Class, type: :model do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do

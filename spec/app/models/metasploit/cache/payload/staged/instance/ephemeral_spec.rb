@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral do
+RSpec.describe Metasploit::Cache::Payload::Staged::Instance::Ephemeral, type: :model do
   shared_context 'metasploit_module_instance' do
     let(:existing_payload_staged_instance) {
       FactoryGirl.create(

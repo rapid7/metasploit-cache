@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Single::Handled::Instance do
+RSpec.describe Metasploit::Cache::Payload::Single::Handled::Instance, type: :model do
   context 'associations' do
     it { is_expected.to belong_to(:payload_single_handled_class).class_name('Metasploit::Cache::Payload::Single::Handled::Class').inverse_of(:payload_single_handled_instance) }
   end

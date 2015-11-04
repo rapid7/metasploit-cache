@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::License do
+RSpec.describe Metasploit::Cache::License, type: :model do
   context 'associations' do
     it { is_expected.to have_many(:licensable_licenses).class_name('Metasploit::Cache::Licensable::License').dependent(:destroy).inverse_of(:license) }
   end

@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Nop::Instance::Ephemeral do
+RSpec.describe Metasploit::Cache::Nop::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
     context '#nop_instance' do
       subject(:nop_instance) {

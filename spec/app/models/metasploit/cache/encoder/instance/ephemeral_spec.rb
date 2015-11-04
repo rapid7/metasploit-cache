@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral do
+RSpec.describe Metasploit::Cache::Encoder::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
     context '#encoder_instance' do
       subject(:encoder_instance) {

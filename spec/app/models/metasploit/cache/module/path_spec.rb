@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Module::Path do
+RSpec.describe Metasploit::Cache::Module::Path, type: :model do
   it { should be_a ActiveModel::Dirty }
 
   it_should_behave_like 'Metasploit::Cache::Module::Path::AssociationExtension',
