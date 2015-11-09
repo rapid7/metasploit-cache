@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral do
+RSpec.describe Metasploit::Cache::Payload::Stager::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
     context '#payload_stager_instance' do
       include_context ':metasploit_cache_payload_handler_module'

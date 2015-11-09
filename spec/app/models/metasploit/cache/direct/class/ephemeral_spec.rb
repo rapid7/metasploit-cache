@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral do
+RSpec.describe Metasploit::Cache::Direct::Class::Ephemeral, type: :model do
   include_context 'ActiveSupport::TaggedLogging'
 
   subject(:direct_class_ephemeral) {

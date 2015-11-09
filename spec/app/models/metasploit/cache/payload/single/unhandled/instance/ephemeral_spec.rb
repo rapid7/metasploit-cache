@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral do
+RSpec.describe Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral, type: :model do
   context 'resurrecting attributes' do
     context '#payload_single_unhandled_instance' do
       include_context ':metasploit_cache_payload_handler_module'

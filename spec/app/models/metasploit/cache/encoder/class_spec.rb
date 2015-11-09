@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Encoder::Class do
+RSpec.describe Metasploit::Cache::Encoder::Class, type: :model do
   it_should_behave_like 'Metasploit::Concern.run'
 
   it_should_behave_like 'Metasploit::Cache::Module::Class::Namable'

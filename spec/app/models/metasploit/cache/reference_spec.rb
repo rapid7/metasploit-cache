@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Reference do
+RSpec.describe Metasploit::Cache::Reference, type: :model do
   context 'associations' do
     it { is_expected.to have_many(:auxiliary_instances).class_name('Metasploit::Cache::Auxiliary::Instance').source(:referencable).through(:referencable_references) }
     it { is_expected.to belong_to(:authority).class_name('Metasploit::Cache::Authority').inverse_of(:references) }

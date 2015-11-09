@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Architecturable::Architecture do
+RSpec.describe Metasploit::Cache::Architecturable::Architecture, type: :model do
   context 'associations' do
     it { is_expected.to belong_to(:architecture).class_name('Metasploit::Cache::Architecture').inverse_of(:architecturable_architectures) }
     it { is_expected.to belong_to(:architecturable) }

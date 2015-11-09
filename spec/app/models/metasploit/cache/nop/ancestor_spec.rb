@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Nop::Ancestor do
+RSpec.describe Metasploit::Cache::Nop::Ancestor, type: :model do
   it_should_behave_like 'Metasploit::Cache::Module::Ancestor.restrict',
                         module_type: 'nop',
                         module_type_directory: 'nops'
