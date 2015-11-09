@@ -1,6 +1,13 @@
 # Class-level metadata for a single payload Metasploit Module with the handler mixed in.
 class Metasploit::Cache::Payload::Single::Unhandled::Class < Metasploit::Cache::Payload::Unhandled::Class
   #
+  # CONSTANTS
+  #
+
+  # The {Metasploit::Cache::Module::Class::Name#module_type}
+  MODULE_TYPE = Metasploit::Cache::Module::Type::PAYLOAD
+
+  #
   # Associations
   #
 

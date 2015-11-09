@@ -5,6 +5,15 @@ module Metasploit::Cache::Ephemeral
   autoload :AttributeSet
 
   #
+  # CONSTANTS
+  #
+
+  # The maximum numbers of times to retry in {create_unique}
+  MAX_RETRIES = 5
+  # Number of milliseconds in a second
+  MILLISECONDS_PER_SECOND = 1000
+
+  #
   # Module Methods
   #
 
@@ -34,19 +43,35 @@ module Metasploit::Cache::Ephemeral
     count = 0
 
     begin
-      Metasploit::Cache::Batch.batch do
-        record_class.transaction(requires_new: true) do
-          record_class.find_or_create_by!(attributes)
-        end
-      end
-    rescue ActiveRecord::RecordNotUnique
+      Metasploit::Cache::Batch.batch {
+        record_class.isolation_level(:serializable)  {
+          record_class.transaction(requires_new: true) {
+            record_class.find_or_create_by!(attributes)
+          }
+        }
+      }
+    rescue ActiveRecord::RecordNotUnique => record_not_unique
       count += 1
 
-      record_class.logger.debug {
-        "#{count.ordinalize} retry"
-      }
+      if count <= MAX_RETRIES
+        record_class.logger.debug {
+          lines = ["#{count.ordinalize} retry caused by #{record_not_unique.message} (#{record_not_unique.class})"]
 
-      retry
+          if record_not_unique.backtrace
+            lines.concat(record_not_unique.backtrace)
+          end
+
+          lines.join("\n")
+        }
+
+        milliseconds = rand(2 << count)
+        seconds = milliseconds.fdiv(MILLISECONDS_PER_SECOND)
+        sleep(seconds)
+
+        retry
+      else
+        record_class.new(attributes)
+      end
     rescue ActiveRecord::RecordInvalid => record_invalid
       record_invalid.record
     end

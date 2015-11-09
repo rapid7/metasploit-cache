@@ -65,7 +65,15 @@ class Metasploit::Cache::Module::Ancestor::Ephemeral < Metasploit::Model::Base
 
     # Ensure that connection is only held temporary by Thread instead of being memoized to Thread
     ActiveRecord::Base.connection_pool.with_connection do
-      unless module_ancestor.batched_save
+      module_ancestor_class = module_ancestor.class
+
+      saved = module_ancestor_class.isolation_level(:serializable) {
+        module_ancestor_class.transaction {
+          module_ancestor.batched_save
+        }
+      }
+
+      unless saved
         logger.tagged(module_ancestor.real_pathname.to_s) { |tagged|
           tagged.error {
             "Could not be persisted: #{module_ancestor.errors.full_messages.to_sentence}"

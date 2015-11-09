@@ -44,11 +44,17 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Load < Metasploit::Mod
   #
   #
 
+  # MUST be first so {#metasploit_class} calling `valid?(:loading)` doesn't overwrite non-loading errors.
+  validates :metasploit_class,
+            presence: {
+                unless: :loading_context?
+            }
   #
   # Method Validations
   #
 
-  validate :payload_single_handled_class_valid
+  validate :payload_single_handled_class_valid,
+           unless: :loading_context?
 
   #
   # Attribute Validations
@@ -58,10 +64,6 @@ class Metasploit::Cache::Payload::Single::Handled::Class::Load < Metasploit::Mod
             presence: true
   validates :logger,
             presence: true
-  validates :metasploit_class,
-            presence: {
-                unless: :loading_context?
-            }
   validates :metasploit_module,
             presence: true
   validates :payload_single_handled_class,

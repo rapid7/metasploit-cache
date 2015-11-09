@@ -17,23 +17,20 @@ RSpec.describe Metasploit::Cache::Payload::AncestorCell, type: :cell do
       }
 
       context 'Metasploit::Cache::Payload::Ancestor#payload_type' do
+        let(:expected_rendered_template) {
+          <<-EOS.strip_heredoc.strip
+          # Relative Path: #{payload_ancestor.relative_path}
+          module #{metasploit_module_relative_name}
+          end
+          EOS
+        }
 
         context 'with single' do
           let(:payload_ancestor) {
             FactoryGirl.build(:metasploit_cache_payload_single_ancestor)
           }
 
-          it {
-            is_expected.to eq(
-                               <<-EOS.strip_heredoc.strip
-                               # Module Type: payload
-                               # Payload Type: single
-                               # Reference Name: #{payload_ancestor.reference_name}
-                               module #{metasploit_module_relative_name}
-                               end
-                               EOS
-                             )
-          }
+          it { is_expected.to eq(expected_rendered_template) }
         end
 
         context 'with stage' do
@@ -41,17 +38,7 @@ RSpec.describe Metasploit::Cache::Payload::AncestorCell, type: :cell do
             FactoryGirl.build(:metasploit_cache_payload_stage_ancestor)
           }
 
-          it {
-            is_expected.to eq(
-                               <<-EOS.strip_heredoc.strip
-                               # Module Type: payload
-                               # Payload Type: stage
-                               # Reference Name: #{payload_ancestor.reference_name}
-                               module #{metasploit_module_relative_name}
-                               end
-                               EOS
-                             )
-          }
+          it { is_expected.to eq(expected_rendered_template) }
         end
 
         context 'with stager' do
@@ -59,17 +46,7 @@ RSpec.describe Metasploit::Cache::Payload::AncestorCell, type: :cell do
             FactoryGirl.build(:metasploit_cache_payload_stager_ancestor)
           }
 
-          it {
-            is_expected.to eq(
-                               <<-EOS.strip_heredoc.strip
-                               # Module Type: payload
-                               # Payload Type: stager
-                               # Reference Name: #{payload_ancestor.reference_name}
-                               module #{metasploit_module_relative_name}
-                               end
-                               EOS
-                             )
-          }
+          it { is_expected.to eq(expected_rendered_template) }
         end
       end
     end

@@ -48,6 +48,7 @@ RSpec.describe 'metasploit-cache', :content do
         'exec',
         'metasploit-cache',
         'load',
+        metasploit_framework_root.join('modules').to_path,
         '--database-yaml', 'config/database.yml',
         '--environment', 'content',
         '--include', metasploit_framework_root.to_path,
@@ -55,10 +56,9 @@ RSpec.describe 'metasploit-cache', :content do
         '--require', 'metasploit/framework',
                      'metasploit/framework/executable_path_validator',
                      'metasploit/framework/file_path_validator',
-        '--gem', 'metasploit-framewor',
+        '--gem', 'metasploit-framework',
         '--logger-severity', 'ERROR',
-        '--name', 'modules',
-        metasploit_framework_root.join('modules').to_path
+        '--name', 'modules'
     )
 
     @metasploit_cache_load_out = Tempfile.new(['metasploit-cache-load', '.log'])
@@ -72,7 +72,7 @@ RSpec.describe 'metasploit-cache', :content do
     Benchmark.bm do |report|
       report.report do
         metasploit_cache_load.start
-        metasploit_cache_load.poll_for_exit(5.minutes)
+        metasploit_cache_load.poll_for_exit(10.minutes)
       end
     end
 
@@ -106,98 +106,170 @@ RSpec.describe 'metasploit-cache', :content do
         # use relative pathname so that context name is not dependent on build directory
         context module_path_relative_pathname.to_s do
           #
-          # Shared Examples
+          # Context Methods
           #
 
-          shared_examples_for 'can use full names' do |module_type, skip: nil|
-            context_options = {}
+          # Yields each relative Pathname under `relative_path_prefix` under `module_path_real_pathname` that points to
+          # {Metasploit::Cache::Module::Ancestor#real_pathname}.
+          #
+          # @param max_run_count [Integer, nil] The max number of examples to run from the context.
+          # @param module_path_real_pathname [Pathname] {Metasploit::Cache::Module::Path#real_pathname}
+          # @param module_type [Stirng] module type for reference name.
+          # @param pending_by_reference_name [Hash{String => String}] Maps reference name to pending reason.
+          # @param relative_path_prefix [String] Path prefix under `module_path_real_pathname` to search for ancestor
+          #   paths.
+          # @yield [relative_pathname]
+          # @yieldparam relative_pathname [Pathname] pathname relative to `module_path_real_pathname`.
+          # @yieldreturn [String] reference name derived from relative_pathname
+          # @return [void]
+          def self.each_reference_name(max_run_count: nil, module_path_real_pathname:, module_type:, pending_reason_by_reference_name: {}, relative_path_prefix:)
+            rule = Metasploit::Cache::Module::Path::AssociationExtension.real_path_rule(
+                module_path_real_pathname: module_path_real_pathname,
+                relative_path_prefix: relative_path_prefix
+            )
 
-            if skip
-              context_options = {
-                  skip: skip
-              }
-            end
+            run_count = 0
 
-            context module_type, context_options do
-              type_directory = Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE.fetch(module_type)
-              real_type_pathname = module_path_real_pathname.join(type_directory)
+            rule.find do |real_path|
+              real_pathname = Pathname.new(real_path)
+              relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
 
-              rule = File::Find.new(
-                  ftype: 'file',
-                  pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}",
-                  path: real_type_pathname.to_path
-              )
+              reference_name = yield relative_pathname
 
-              rule.find do |real_path|
-                real_pathname = Pathname.new(real_path)
-                reference_path = real_pathname.relative_path_from(real_type_pathname).to_s
-                reference_name = reference_path.chomp(File.extname(reference_path))
 
-                context reference_name do
-                  full_name = "#{module_type}/#{reference_name}"
+              context_options = {}
+              pending_reason = pending_reason_by_reference_name[reference_name]
 
-                  it "can be `use`d" do
-                    metasploit_framework_root = Metasploit::Framework::Engine.root
+              if pending_reason
+                context_options[:pending] = pending_reason
+              end
 
-                    metasploit_cache_use = ChildProcess.build(
-                                                           'bundle',
-                                                           'exec',
-                                                           'metasploit-cache',
-                                                           'use',
-                                                           '--database-yaml', 'config/database.yml',
-                                                           '--environment', 'content',
-                                                           '--include', metasploit_framework_root.to_path,
-                                                                        metasploit_framework_root.join('app', 'validators').to_path,
-                                                           '--require', 'metasploit/framework',
-                                                                        'metasploit/framework/executable_path_validator',
-                                                                        'metasploit/framework/file_path_validator',
-                                                           '--logger-severity', 'ERROR',
-                                                           '--only-type-directories', 'encoders', 'nops',
-                                                           full_name
-                    )
+              context reference_name, context_options do
+                unless pending_reason
+                  if max_run_count
+                    before(:each) do
+                      run_count += 1
 
-                    metasploit_cache_use_out = Tempfile.new(['metasploit-cache-use', '.log'])
-                    metasploit_cache_use_out.sync = true
-
-                    metasploit_cache_use.cwd = Metasploit::Cache::Engine.root.join('spec', 'dummy').to_path
-                    metasploit_cache_use.io.stdout = metasploit_cache_use_out
-                    metasploit_cache_use.start
-                    metasploit_cache_use.wait
-
-                    expect(metasploit_cache_use.exit_code).to eq(0), ->(){
-                      metasploit_cache_use_out.rewind
-
-                      "metasploit-cache use #{full_name} exited with non-zero status:\n#{metasploit_cache_use_out.read}"
-                    }
+                      if run_count > max_run_count
+                        skip "Skipping because #{max_run_count} Metasploit Modules with ancestors under " \
+                           "#{relative_path_prefix} have been tested already and testing them all takes too long"
+                      end
+                    end
                   end
+                end
+
+                full_name = "#{module_type}/#{reference_name}"
+
+                it "can be `use`d" do
+                  metasploit_framework_root = Metasploit::Framework::Engine.root
+
+                  metasploit_cache_use = ChildProcess.build(
+                      'bundle',
+                      'exec',
+                      'metasploit-cache',
+                      'use',
+                      full_name,
+                      '--database-yaml', 'config/database.yml',
+                      '--environment', 'content',
+                      '--include', metasploit_framework_root.to_path,
+                      metasploit_framework_root.join('app', 'validators').to_path,
+                      '--require', 'metasploit/framework',
+                      'metasploit/framework/executable_path_validator',
+                      'metasploit/framework/file_path_validator',
+                      '--logger-severity', 'ERROR'
+                  )
+
+                  metasploit_cache_use_out = Tempfile.new(['metasploit-cache-use', '.log'])
+                  metasploit_cache_use_out.sync = true
+
+                  metasploit_cache_use.cwd = Metasploit::Cache::Engine.root.join('spec', 'dummy').to_path
+                  metasploit_cache_use.io.stdout = metasploit_cache_use_out
+                  metasploit_cache_use.start
+                  metasploit_cache_use.wait
+
+                  expect(metasploit_cache_use.exit_code).to eq(0), ->(){
+                    metasploit_cache_use_out.rewind
+
+                    "metasploit-cache use #{full_name} exited with non-zero status " \
+                      "(#{metasploit_cache_use.exit_code}):\n#{metasploit_cache_use_out.read}"
+                  }
                 end
               end
             end
           end
 
+          #
+          # Shared Examples
+          #
+
+          shared_examples_for 'can use full names' do |module_type, max_run_count: nil, pending_reason_by_reference_name: {}|
+            context module_type do
+              type_directory = Metasploit::Cache::Module::Ancestor::DIRECTORY_BY_MODULE_TYPE.fetch(module_type)
+
+              each_reference_name(
+                  max_run_count: max_run_count,
+                  module_path_real_pathname: module_path_real_pathname,
+                  module_type: module_type,
+                  pending_reason_by_reference_name: pending_reason_by_reference_name,
+                  relative_path_prefix: type_directory
+              ) { |relative_pathname|
+                Metasploit::Cache::Module::Class::Namable.reference_name(
+                    relative_file_names: relative_pathname.each_filename,
+                    scoping_levels: 1
+                )
+              }
+            end
+          end
+
           include_examples 'can use full names',
                            'auxiliary',
-                           skip: "require 'metasploit/framework' takes ~3 seconds, so each test is ~5 seconds, which " \
-                                 'means testing all auxiliary Metasploit Modules would take > 1 hour.  Skip until ' \
-                                 'metasploit-framework loads faster. Add auxiliary to --only-type-directories when ' \
-                                 'removing this skip.'
+                           max_run_count: 5
 
-          include_examples 'can use full names', 'encoder'
+          include_examples 'can use full names',
+                           'encoder',
+                           max_run_count: 5
 
           include_examples 'can use full names',
                            'exploit',
-                           skip: "require 'metasploit/framework' takes ~3 seconds, so each test is ~5 seconds, which " \
-                                 'means testing all exploit Metasploit Modules would take > 3 hours.  Skip until ' \
-                                 'metasploit-framework loads faster.  Add exploits to --only-type-directories when ' \
-                                 'removing this skip.'
+                           max_run_count: 5
 
           include_examples 'can use full names', 'nop'
 
+          context 'payload' do
+            context '(single)' do
+              each_reference_name(
+                  max_run_count: 5,
+                  module_path_real_pathname: module_path_real_pathname,
+                  module_type: 'payload',
+                  pending_reason_by_reference_name: {
+                      'bsd/x64/shell_bind_tcp' => 'NameError uninitialized constant Msf::Sessions::CommandShellUnix',
+                      'bsd/x64/shell_reverse_tcp' => 'NameError uninitialized constant Msf::Sessions::CommandShellUnix',
+                      'generic/shell_bind_tcp' => 'NameError uninitialized constant Msf::Sessions::CommandShell',
+                      'generic/shell_reverse_tcp' => 'NameError uninitialized constant Msf::Sessions::CommandShell',
+                      'osx/x64/shell_bind_tcp' => 'NameError uninitialized constant Msf::Sessions::CommandShellUnix',
+                      'osx/x64/shell_reverse_tcp' => 'NameError uninitialized constant Msf::Sessions::CommandShellUnix'
+                  },
+                  relative_path_prefix: 'payloads/singles'
+              ) { |relative_pathname|
+                Metasploit::Cache::Module::Class::Namable.reference_name(
+                    relative_file_names: relative_pathname.each_filename,
+                    scoping_levels: 2
+                )
+              }
+            end
+          end
+
           include_examples 'can use full names',
                            'post',
-                           skip: "require 'metasploit/framework' takes ~3 seconds, so each test is ~5 seconds, which" \
-                           'means testing all posts takes > 8 minutes.  Skip until metasploit-framework loads ' \
-                           'faster. Add post to --only-type-directories when removing this skip.'
+                           max_run_count: 5,
+                           pending_reason_by_reference_name: {
+                               'firefox/gather/cookies' => 'Missing platforms',
+                               'firefox/gather/history' => 'Missing platforms',
+                               'firefox/gather/passwords' => 'Missing platforms',
+                               'firefox/manage/webcam_chat' => 'Missing platforms',
+                               'windows/gather/credentials/spark_im' => 'Missing platforms',
+                               'windows/gather/netlm_downgrade' => 'Missing platforms',
+                           }
         end
       end
     end

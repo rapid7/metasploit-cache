@@ -35,9 +35,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   # Maps directory to {#module_type} for converting a {#relative_path} into a {#module_type} and {#reference_name}
   MODULE_TYPE_BY_DIRECTORY = DIRECTORY_BY_MODULE_TYPE.invert
 
-  # Separator used to join names in {#reference_name}.  It is always '/', even on Windows, where '\' is a valid
-  # file separator.
-  REFERENCE_NAME_SEPARATOR = '/'
 
   # Regular expression matching a full SHA-1 hex digest.
   SHA1_HEX_DIGEST_REGEXP = /\A[0-9a-z]{40}\Z/
@@ -377,25 +374,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     end
   end
 
-  # The reference name of the module.  The name of the module under its {#module_type type}.
-  #
-  # @return [String] if {#real_pathname} is set and ends with {EXTENSION}.
-  # @return [nil] otherwise.
-  def reference_name
-    derived = nil
-    reference_name_file_names = relative_file_names.drop(1)
-    reference_name_base_name = reference_name_file_names[-1]
-
-    if reference_name_base_name
-      if File.extname(reference_name_base_name) == EXTENSION
-        reference_name_file_names[-1] = File.basename(reference_name_base_name, EXTENSION)
-        derived = reference_name_file_names.join(REFERENCE_NAME_SEPARATOR)
-      end
-    end
-
-    derived
-  end
-
   # File names on {#relative_pathname}.
   #
   # @return [Enumerator<String>]
@@ -418,21 +396,6 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
     if relative_path
       Pathname.new(relative_path)
     end
-  end
-
-  # The path relative to the {#module_type_directory} under the {Metasploit::Cache::Module::Path
-  # parent_path.real_path}, including the file {EXTENSION extension}.
-  #
-  # @return [String] {#reference_name} + {EXTENSION}
-  # @return [nil] if {#reference_name} is `nil`.
-  def reference_path
-    path = nil
-
-    if reference_name
-      path = "#{reference_name}#{EXTENSION}"
-    end
-
-    path
   end
 
   private

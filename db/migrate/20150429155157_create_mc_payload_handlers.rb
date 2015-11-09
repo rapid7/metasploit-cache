@@ -30,8 +30,6 @@ class CreateMcPayloadHandlers < ActiveRecord::Migration
     end
 
     change_table TABLE_NAME do |t|
-      t.index :handler_type,
-              unique: true
       t.index :name,
               unique: true
     end

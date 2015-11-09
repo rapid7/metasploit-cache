@@ -40,7 +40,11 @@ module Metasploit::Cache::Payload::Handable::Ephemeral::Handler
       cached_source_attributes = source_attributes(source)
 
       if cached_destination_attributes != cached_source_attributes
-        payload_handler = Metasploit::Cache::Payload::Handler.where(cached_source_attributes).first_or_initialize
+        payload_handler = Metasploit::Cache::Payload::Handler.isolation_level(:serializable) {
+          Metasploit::Cache::Payload::Handler.transaction {
+            destination.handler = Metasploit::Cache::Payload::Handler.where(cached_source_attributes).first_or_create!
+          }
+        }
 
         destination.handler = payload_handler
       end

@@ -6,8 +6,7 @@ class Metasploit::Cache::Module::AncestorCell < Cell::ViewModel
   # Properties
   #
 
-  property :module_type
-  property :reference_name
+  property :relative_path
 
   #
   # Instance Methods

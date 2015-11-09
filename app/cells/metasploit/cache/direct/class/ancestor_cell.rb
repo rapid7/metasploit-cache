@@ -9,7 +9,7 @@ class Metasploit::Cache::Direct::Class::AncestorCell < Cell::ViewModel
   # Properties
   #
 
-  property :ancestor
+  property :name
   property :rank
 
   #

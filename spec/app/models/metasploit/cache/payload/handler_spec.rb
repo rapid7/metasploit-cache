@@ -12,7 +12,6 @@ RSpec.describe Metasploit::Cache::Payload::Handler, type: :model do
     end
 
     context 'indices' do
-      it { is_expected.to have_db_index(:handler_type).unique(true) }
       it { is_expected.to have_db_index(:name).unique(true) }
     end
   end
@@ -120,7 +119,6 @@ RSpec.describe Metasploit::Cache::Payload::Handler, type: :model do
         )
       }
 
-      it { is_expected.to validate_uniqueness_of :handler_type }
       it { is_expected.to validate_uniqueness_of :name }
     end
   end

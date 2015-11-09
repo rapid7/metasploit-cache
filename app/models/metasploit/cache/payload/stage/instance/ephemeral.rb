@@ -78,7 +78,13 @@ class Metasploit::Cache::Payload::Stage::Instance::Ephemeral < Metasploit::Model
       }
 
       saved = ActiveRecord::Base.connection_pool.with_connection {
-        synchronized.batched_save
+        synchronized_class = synchronized.class
+
+        synchronized_class.isolation_level(:serializable) {
+          synchronized_class.transaction {
+            synchronized.batched_save
+          }
+        }
       }
 
       unless saved

@@ -37,4 +37,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'metasploit-model', '~> 1.0'
   spec.add_runtime_dependency 'ruby-progressbar', '~> 1.7'
   spec.add_runtime_dependency 'thor', '~> 0.19.1'
+  spec.add_runtime_dependency 'transaction_isolation', '> 1.0.4', '< 2'
+  spec.add_runtime_dependency 'transaction_retry', '~> 1.0'
 end

@@ -61,6 +61,22 @@ RSpec.describe Metasploit::Cache::Ephemeral do
         end
       end
 
+      context 'with > MAX_RETRIES' do
+        include_context 'ActiveSupport::TaggedLogging'
+
+        before(:each) do
+          ActiveRecord::Base.logger = logger
+
+          allow(record_class).to receive(:find_or_create_by!).and_raise(
+                                     ActiveRecord::RecordNotUnique.new('')
+                                 )
+        end
+
+        it 'returns new record' do
+          expect(create_unique).to be_a_new_record
+        end
+      end
+
       context 'without record before create' do
         it 'returns newly created record' do
           expect {

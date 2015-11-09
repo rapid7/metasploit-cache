@@ -21,13 +21,14 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   # Instance Methods
   #
 
-  # Derives references name for Metasploit Module from {Metasploit::Cache::Module::Ancestor#relative_path}.
+  # Derives reference name for Metasploit Module from {Metasploit::Cache::Module::Ancestor#relative_path}.
   #
   # @return [nil] if {#ancestor} is `nil` of {#ancestor}'s {Metasploit::Cache::Module::Ancestor#reference_name} is `nil`
   # @return [String] Relative path with type directory and file extension removed.
   def reference_name
     if ancestor
-      ancestor.reference_name
+      Metasploit::Cache::Module::Class::Namable.reference_name relative_file_names: ancestor.relative_file_names,
+                                                               scoping_levels: 1
     end
   end
 end

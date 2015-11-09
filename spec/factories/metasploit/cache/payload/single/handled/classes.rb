@@ -19,5 +19,13 @@ FactoryGirl.define do
           handler_load_pathname: payload_single_unhandled_instance_handler_load_pathname
       )
     }
+
+    after(:build) do |payload_single_handled_class, _evaluator|
+      payload_single_handled_class.build_name(
+          module_type: 'payload',
+          reference: payload_single_handled_class.reference_name
+
+      )
+    end
   end
 end

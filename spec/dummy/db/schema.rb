@@ -212,7 +212,6 @@ ActiveRecord::Schema.define(version: 20150905153101) do
     t.string "name",                 null: false
   end
 
-  add_index "mc_payload_handlers", ["handler_type"], name: "index_mc_payload_handlers_on_handler_type", unique: true, using: :btree
   add_index "mc_payload_handlers", ["name"], name: "index_mc_payload_handlers_on_name", unique: true, using: :btree
 
   create_table "mc_payload_single_handled_classes", force: true do |t|
