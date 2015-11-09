@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Encoder::Ancestor do
+RSpec.describe Metasploit::Cache::Encoder::Ancestor, type: :model do
   it_should_behave_like 'Metasploit::Cache::Module::Ancestor.restrict',
                         module_type: 'encoder',
                         module_type_directory: 'encoders'

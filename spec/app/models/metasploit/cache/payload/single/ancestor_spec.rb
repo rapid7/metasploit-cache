@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Payload::Single::Ancestor do
+RSpec.describe Metasploit::Cache::Payload::Single::Ancestor, type: :model do
   it_should_behave_like 'Metasploit::Cache::Payload::Ancestor.restrict',
                         payload_type: 'single',
                         payload_type_directory: 'singles'

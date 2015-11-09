@@ -125,3 +125,12 @@ RSpec.configure do |config|
 end
 
 Metasploit::Cache::Spec::Unload::Suite.configure!
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.library :active_record
+    with.library :active_model
+
+    with.test_framework :rspec
+  end
+end

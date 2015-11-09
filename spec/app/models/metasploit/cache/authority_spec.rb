@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Authority do
+RSpec.describe Metasploit::Cache::Authority, type: :model do
   context 'associations' do
     it { should have_many(:references).class_name('Metasploit::Cache::Reference').dependent(:destroy) }
   end

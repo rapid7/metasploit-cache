@@ -1,4 +1,4 @@
-RSpec.describe Metasploit::Cache::Nop::Instance do
+RSpec.describe Metasploit::Cache::Nop::Instance, type: :model do
   it_should_behave_like 'Metasploit::Concern.run'
 
   context 'associations' do
