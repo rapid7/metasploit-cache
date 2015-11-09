@@ -156,20 +156,29 @@ module Metasploit::Cache::Reference::Ephemeral
         authority_abbreviation = authority_attributes.fetch(:abbreviation)
         authority = authority_by_abbreviation[authority_abbreviation]
 
+        designation = attributes.fetch(:designation)
+
         if authority.nil?
           logger.error {
             "No seeded Metasploit::Cache::Authority with abbreviation (#{authority_abbreviation.inspect}). " \
             'If this is a typo, correct it; otherwise, add new Metasploit::Cache::Authority by following the ' \
             'instruction for adding a new seed: https://github.com/rapid7/metasploit-cache#seeds.'
           }
-        end
 
-        hash[attributes] = Metasploit::Cache::Reference.new(
-            authority: authority,
-            designation: attributes.fetch(:designation)
-        )
+          hash[attributes] = Metasploit::Cache::Reference.new(
+              authority: authority,
+              designation: designation
+          )
+        else
+          hash[attributes] = Metasploit::Cache::Ephemeral.create_unique(
+              Metasploit::Cache::Reference,
+              authority_id: authority.id,
+              designation: attributes.fetch(:designation)
+          )
+        end
       else
-        hash[attributes] = Metasploit::Cache::Reference.new(
+        hash[attributes] = Metasploit::Cache::Ephemeral.create_unique(
+            Metasploit::Cache::Reference,
             url: attributes.fetch(:url)
         )
       end

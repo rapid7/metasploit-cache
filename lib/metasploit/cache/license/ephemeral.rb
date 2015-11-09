@@ -7,7 +7,10 @@ module Metasploit::Cache::License::Ephemeral
   # @return [Hash{String => Metasploit::Cache::License}]
   def self.by_abbreviation(existing_abbreviation_set:)
     existing_by_abbreviation(abbreviation_set: existing_abbreviation_set).tap { |hash|
-      hash.default_proc = new_by_abbreviation_proc
+      hash.default_proc = Metasploit::Cache::Ephemeral.create_unique_proc(
+          Metasploit::Cache::License,
+          :abbreviation
+      )
     }
   end
 
@@ -28,14 +31,5 @@ module Metasploit::Cache::License::Ephemeral
         license_by_abbreviation[license.abbreviation] = license
       }
     end
-  end
-
-  # Maps {Metasploit::Cache::License#abbreviation} to new {Metasploit::Cache::License}.
-  #
-  # @return [Proc<Hash, String>]
-  def self.new_by_abbreviation_proc
-    ->(hash, abbreviation) {
-      hash[abbreviation] = Metasploit::Cache::License.new(abbreviation: abbreviation)
-    }
   end
 end

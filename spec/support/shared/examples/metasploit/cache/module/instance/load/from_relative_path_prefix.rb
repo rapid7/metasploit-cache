@@ -16,6 +16,25 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
       relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
 
       context display_path do
+        #
+        # Methods
+        #
+
+        def valid_or_log(record)
+          expect(record).to be_valid,
+                            ->() {
+                              "Expected #{record.class} to be valid, but got errors:\n" \
+                              "#{record.errors.full_messages.join("\n")}\n" \
+                              "\n" \
+                              "Log:\n" \
+                              "#{logger_string_io.string}"
+                            }
+        end
+
+        #
+        # lets
+        #
+
         let(:metasploit_framework) {
           double(
               'Metasploit Framework',
@@ -55,12 +74,12 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
         it 'loads Metasploit Module instance', options do
           expect(module_ancestor_load).to load_metasploit_module
 
-          expect(direct_class_load).to be_valid
+          valid_or_log(direct_class_load)
           expect(direct_class).to be_persisted
 
           expect(module_instance_load).to be_valid(:loading)
 
-          module_instance_load.valid?
+          valid_or_log(module_instance_load)
 
           unless module_instance.valid?
             # Only covered on failure

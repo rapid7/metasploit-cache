@@ -142,7 +142,7 @@ RSpec.describe Metasploit::Cache::Post::Instance::Ephemeral, type: :model do
       }
 
       let(:post_class) {
-        FactoryGirl.create(:metasploit_cache_post_class)
+        FactoryGirl.create(:full_metasploit_cache_post_class)
       }
 
       let(:post_instance) {

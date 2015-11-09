@@ -22,6 +22,16 @@ class CreateMcDirectClasses < ActiveRecord::Migration
   # @return [void]
   def up
     create_table TABLE_NAME do |t|
+      #
+      # STI
+      #
+
+      t.string :type, null: false
+
+      #
+      # Foreign Keys
+      #
+
       t.references :ancestor, null: false
       t.references :rank, null: false
     end

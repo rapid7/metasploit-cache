@@ -1,12 +1,5 @@
 FactoryGirl.define do
   #
-  # Sequences
-  #
-
-  sequence :metasploit_cache_payload_unhandled_class_factory,
-           Metasploit::Cache::Payload::Unhandled::Class::Spec.random_factory
-
-  #
   # Traits
   #
 

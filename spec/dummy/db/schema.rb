@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150904202802) do
+ActiveRecord::Schema.define(version: 20150905153101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 20150904202802) do
   add_index "mc_contributions", ["email_address_id"], name: "index_mc_contributions_on_email_address_id", using: :btree
 
   create_table "mc_direct_classes", force: true do |t|
+    t.string  "type",        null: false
     t.integer "ancestor_id", null: false
     t.integer "rank_id",     null: false
   end
@@ -169,6 +170,16 @@ ActiveRecord::Schema.define(version: 20150904202802) do
   add_index "mc_module_ancestors", ["parent_path_id"], name: "index_mc_module_ancestors_on_parent_path_id", using: :btree
   add_index "mc_module_ancestors", ["real_path_sha1_hex_digest"], name: "index_mc_module_ancestors_on_real_path_sha1_hex_digest", unique: true, using: :btree
   add_index "mc_module_ancestors", ["relative_path"], name: "index_mc_module_ancestors_on_relative_path", unique: true, using: :btree
+
+  create_table "mc_module_class_names", force: true do |t|
+    t.string  "module_type",       null: false
+    t.string  "reference",         null: false
+    t.integer "module_class_id",   null: false
+    t.string  "module_class_type", null: false
+  end
+
+  add_index "mc_module_class_names", ["module_class_type", "module_class_id"], name: "unique_mc_module_class_name_for_module_class", unique: true, using: :btree
+  add_index "mc_module_class_names", ["module_type", "reference"], name: "index_mc_module_class_names_on_module_type_and_reference", unique: true, using: :btree
 
   create_table "mc_module_paths", force: true do |t|
     t.string "gem"
@@ -262,6 +273,14 @@ ActiveRecord::Schema.define(version: 20150904202802) do
 
   add_index "mc_payload_stager_instances", ["handler_id"], name: "index_mc_payload_stager_instances_on_handler_id", using: :btree
   add_index "mc_payload_stager_instances", ["payload_stager_class_id"], name: "index_mc_payload_stager_instances_on_payload_stager_class_id", unique: true, using: :btree
+
+  create_table "mc_payload_unhandled_classes", force: true do |t|
+    t.string  "type",        null: false
+    t.integer "ancestor_id", null: false
+    t.integer "rank_id",     null: false
+  end
+
+  add_index "mc_payload_unhandled_classes", ["ancestor_id"], name: "unique_mc_payoad_unhandled_classes", unique: true, using: :btree
 
   create_table "mc_platformable_platforms", force: true do |t|
     t.integer "platformable_id",   null: false

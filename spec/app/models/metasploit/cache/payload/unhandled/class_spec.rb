@@ -1,6 +1,18 @@
 RSpec.describe Metasploit::Cache::Payload::Unhandled::Class, type: :model do
-  it 'is a subclass of Metasploit::Cache::Direct::Class' do
-    expect(described_class).to be < Metasploit::Cache::Direct::Class
+  context 'database' do
+    context 'columns' do
+      it { is_expected.to have_db_column(:ancestor_id).of_type(:integer).with_options(null: false) }
+      it { is_expected.to have_db_column(:rank_id).of_type(:integer).with_options(null: false) }
+      it { is_expected.to have_db_column(:type).of_type(:string).with_options(null: false) }
+    end
+
+    context 'indices' do
+      it { is_expected.to have_db_index([:ancestor_id]).unique(true) }
+    end
+  end
+
+  it 'is not a subclass of Metasploit::Cache::Direct::Class' do
+    expect(described_class).not_to be < Metasploit::Cache::Direct::Class
   end
 
   context 'traits' do

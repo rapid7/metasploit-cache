@@ -43,7 +43,7 @@ RSpec.describe Metasploit::Cache::Nop::Instance, type: :model do
         context 'with #nop_class' do
           let(:nop_class) {
             FactoryGirl.build(
-                :metasploit_cache_nop_class,
+                :full_metasploit_cache_nop_class,
                 ancestor: nop_ancestor,
                 ancestor_contents?: false
             )

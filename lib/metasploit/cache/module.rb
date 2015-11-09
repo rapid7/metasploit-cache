@@ -20,11 +20,14 @@ module Metasploit::Cache::Module
 
   autoload :Ancestor
   autoload :AncestorCell
+  autoload :Descendant
+  autoload :Class
   autoload :Handler
   autoload :Instance
   autoload :Namespace
   autoload :Path
   autoload :Rank
+  autoload :Rankable
   autoload :Stance
   autoload :Type
 

@@ -4,6 +4,9 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
 
   include Metasploit::Cache::Batch::Descendant
   include Metasploit::Cache::Batch::Root
+  include Metasploit::Cache::Module::Class::Namable
+  include Metasploit::Cache::Module::Descendant
+  include Metasploit::Cache::Module::Rankable
 
   autoload :AncestorCell
   autoload :Ephemeral
@@ -13,56 +16,18 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   autoload :Spec
   autoload :Superclass
   autoload :Usability
-
+  
   #
-  # Associations
-  #
-
-  # @!method ancestor
-  #   @abstract Subclass and add the following association:
-  #     ```ruby
-  #       # Metadata for file that defined the ruby Class or Module.
-  #       belongs_to :ancestor,
-  #                  class_name: 'Metasploit::Cache::<module_typ>::Ancestor',
-  #                  inverse_of: <association on Metasploit::Cache::<module_type>::Ancestor>
-  #     ```
-  #
-  #   Metadata for file that defined the ruby Class or Module.
-  #
-  #   @return [Metasploit::Cache::Module::Ancestor]
-
-  # @!method rank
-  #   @abstract Subclass and add the following association:
-  #      ```ruby
-  #        # Reliability of  Metasploit Module.
-  #        belongs_to :rank,
-  #                   class_name: 'Metasploit::Cache::Rank',
-  #                   inverse_of: <association on Metasploit::Cache::Rank>
-  #      ```
-  #
-  #   Reliability of Metasploit Module.
-  #
-  #   @return [Metasploit::Cache::Rank]
-
-  #
-  # Attributes
+  # Instance Methods
   #
 
-  # @!method ancestor_id
-  #   The primary key of the associated {#ancestor}.
+  # Derives references name for Metasploit Module from {Metasploit::Cache::Module::Ancestor#relative_path}.
   #
-  #   @return [Integer]
-
-  #
-  # Validations
-  #
-
-  validates :ancestor,
-            presence: true
-  validates :ancestor_id,
-            uniqueness: {
-                unless: :batched?
-            }
-  validates :rank,
-            presence: true
+  # @return [nil] if {#ancestor} is `nil` of {#ancestor}'s {Metasploit::Cache::Module::Ancestor#reference_name} is `nil`
+  # @return [String] Relative path with type directory and file extension removed.
+  def reference_name
+    if ancestor
+      ancestor.reference_name
+    end
+  end
 end

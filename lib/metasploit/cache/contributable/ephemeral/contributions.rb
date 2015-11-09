@@ -166,7 +166,7 @@ module Metasploit::Cache::Contributable::Ephemeral::Contributions
   # @param source [#authors] a Metasploit Module instance
   # @return [#contributions] `destination`
   def self.synchronize(destination:, logger:, source:)
-    Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
+    destination.class.connection_pool.with_connection {
       cached_contribution_by_attributes = contribution_by_attributes(destination)
       cached_destination_attributes_set = destination_attributes_set(cached_contribution_by_attributes)
       cached_source_attributes_set = source_attributes_set(source)

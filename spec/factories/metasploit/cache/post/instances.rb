@@ -10,7 +10,7 @@ FactoryGirl.define do
     # Associations
     #
 
-    association :post_class, factory: :metasploit_cache_post_class
+    association :post_class, factory: :full_metasploit_cache_post_class
 
     factory :full_metasploit_cache_post_instance,
         traits: [

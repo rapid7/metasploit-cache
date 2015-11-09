@@ -79,10 +79,8 @@ class Metasploit::Cache::Payload::Unhandled::Class::Load < Metasploit::Model::Ba
         metasploit_class.extend Metasploit::Cache::Cacheable
         metasploit_class.include metasploit_module
 
-        # There is no specialized Metasploit::Cache::Payload::Unhandled::Class::Ephemeral because metadata is the same
-        # for Metasploit::Cache::Payload::Unhandled::Class once the metasploit_class is mixed.
-        ephemeral_cache = Metasploit::Cache::Direct::Class::Ephemeral.new(
-            direct_class_class: payload_unhandled_class.class,
+        ephemeral_cache = Metasploit::Cache::Payload::Unhandled::Class::Ephemeral.new(
+            payload_unhandled_class_class: payload_unhandled_class.class,
             logger: logger,
             metasploit_class: metasploit_class
         )
@@ -90,7 +88,7 @@ class Metasploit::Cache::Payload::Unhandled::Class::Load < Metasploit::Model::Ba
         metasploit_class.ephemeral_cache_by_source[:class] = ephemeral_cache
 
         if ephemeral_cache.valid?
-          ephemeral_cache.persist_direct_class(to: payload_unhandled_class)
+          ephemeral_cache.persist(to: payload_unhandled_class)
 
           if payload_unhandled_class.persisted?
             # Name class so that it can be looked up by name to prevent unnecessary reloading.

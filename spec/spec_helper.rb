@@ -45,6 +45,15 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
 
+  if config.exclusion_filter[:content]
+    %w{
+      spec/exe/metasploit_cache_spec.rb
+      spec/support/shared/examples/metasploit/cache/module/instance/load/from_relative_path_prefix.rb
+    }.each do |relative_path|
+      SimpleCov.add_filter Metasploit::Cache::Engine.root.join(relative_path).to_path
+    end
+  end
+
   # allow more verbose output when running an individual spec file.
   if config.files_to_run.one?
     # RSpec filters the backtrace by default so as not to be so noisy.

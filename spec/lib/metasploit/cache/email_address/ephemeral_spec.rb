@@ -18,8 +18,8 @@ RSpec.describe Metasploit::Cache::EmailAddress::Ephemeral do
       }
 
       context 'with existing Metasploit::Cache::EmailAddress#full' do
-        it "still returns a new Metasploit::Cache::EmailAddress because #full wasn't in :existing_full_set" do
-          expect(by_full[existing_not_in_full_set.full]).to be_new_record
+        it 'returns existing Metasploit::Cache::EmailAddress' do
+          expect(by_full[existing_not_in_full_set.full]).to eq existing_not_in_full_set
         end
       end
 
@@ -36,8 +36,12 @@ RSpec.describe Metasploit::Cache::EmailAddress::Ephemeral do
           FactoryGirl.generate :metasploit_cache_email_address_local
         }
 
-        it 'returns a new Metasploit::Cache::EmailAddress' do
-          expect(by_full[full]).to be_new_record
+        it 'returns a newly created Metasploit::Cache::EmailAddress' do
+          expect {
+            by_full[full]
+          }.to change(Metasploit::Cache::EmailAddress, :count).by(1)
+
+          expect(by_full[full]).to be_persisted
         end
       end
     end
@@ -67,8 +71,8 @@ RSpec.describe Metasploit::Cache::EmailAddress::Ephemeral do
         end
 
         context 'not in :existing_full_set' do
-          it "still returns a new Metasploit::Cache::EmailAddress because #full wasn't in :existing_full_set" do
-            expect(by_full[existing_not_in_full_set.full]).to be_new_record
+          it 'returns existing Metasploit::Cache::EmailAddress' do
+            expect(by_full[existing_not_in_full_set.full]).to eq existing_not_in_full_set
           end
         end
       end
@@ -86,8 +90,12 @@ RSpec.describe Metasploit::Cache::EmailAddress::Ephemeral do
           FactoryGirl.generate :metasploit_cache_email_address_local
         }
 
-        it 'returns a new Metasploit::Cache::EmailAddress' do
-          expect(by_full[full]).to be_new_record
+        it 'returns a newly created Metasploit::Cache::EmailAddress' do
+          expect {
+            by_full[full]
+          }.to change(Metasploit::Cache::EmailAddress, :count).by(1)
+
+          expect(by_full[full]).to be_persisted
         end
       end
     end
@@ -184,43 +192,6 @@ RSpec.describe Metasploit::Cache::EmailAddress::Ephemeral do
           expect(existing_by_full[full]).to be_nil
         end
       end
-    end
-  end
-
-  context 'new_by_full_proc' do
-    subject(:new_by_full_proc) {
-      described_class.new_by_full_proc.call(hash, full)
-    }
-
-    let(:domain) {
-      FactoryGirl.generate :metasploit_cache_email_address_domain
-    }
-
-    let(:full) {
-      "#{local}@#{domain}"
-    }
-
-    let(:hash) {
-      {}
-    }
-
-    let(:local) {
-      FactoryGirl.generate :metasploit_cache_email_address_local
-    }
-
-    it 'returns new Metasploit::Cache::EmailAddress' do
-      expect(new_by_full_proc).to be_a Metasploit::Cache::EmailAddress
-      expect(new_by_full_proc).to be_new_record
-    end
-
-    it 'set Metasploit::CacheEmailAddress#full' do
-      expect(new_by_full_proc.full).to eq(full)
-    end
-
-    it 'caches new Metasploit::Cache::EmailAddress in hash' do
-      returned = new_by_full_proc
-
-      expect(hash[full]).to eq(returned)
     end
   end
 end

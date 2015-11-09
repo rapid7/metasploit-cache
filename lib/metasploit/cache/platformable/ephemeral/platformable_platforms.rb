@@ -155,7 +155,7 @@ module Metasploit::Cache::Platformable::Ephemeral::PlatformablePlatforms
   # @param source [#platform] a Metasploit Module instance
   # @return [#platformable_platforms] `destination`
   def self.synchronize(destination:, logger:, source:)
-    Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
+    destination.class.connection_pool.with_connection {
       reduce(
           destination: destination,
           destination_attribute_set: destination_attribute_set(destination),

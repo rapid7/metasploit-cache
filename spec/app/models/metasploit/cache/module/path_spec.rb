@@ -569,10 +569,14 @@ RSpec.describe Metasploit::Cache::Module::Path, type: :model do
     end
   end
 
-  context '#name_collision' do
+  context '.name_collision' do
     subject(:name_collision) do
-      path.name_collision
+      described_class.name_collision(gem: gem, name: name)
     end
+
+    #
+    # let!s
+    #
 
     let!(:collision) do
       FactoryGirl.create(:named_metasploit_cache_module_path)
@@ -586,19 +590,15 @@ RSpec.describe Metasploit::Cache::Module::Path, type: :model do
       FactoryGirl.create(:unnamed_metasploit_cache_module_path)
     end
 
-    before(:each) do
-      path.valid?
-    end
-
     context 'with named' do
       context 'with same (gem, name)' do
-        let(:path) do
-          FactoryGirl.build(
-              :named_metasploit_cache_module_path,
-              gem: collision.gem,
-              name: collision.name
-          )
-        end
+        let(:gem) {
+          collision.gem
+        }
+
+        let(:name) {
+          collision.name
+        }
 
         it 'should return collision' do
           expect(name_collision).to eq(collision)
@@ -606,26 +606,34 @@ RSpec.describe Metasploit::Cache::Module::Path, type: :model do
       end
 
       context 'without same (gem, name)' do
-        let(:path) do
-          FactoryGirl.build(:named_metasploit_cache_module_path)
-        end
+        let(:gem) {
+          FactoryGirl.generate :metasploit_cache_module_path_gem
+        }
+
+        let(:name) {
+          FactoryGirl.generate :metasploit_cache_module_path_name
+        }
 
         it { should be_nil }
       end
     end
 
     context 'without named' do
-      let(:path) do
-        FactoryGirl.build(:unnamed_metasploit_cache_module_path)
-      end
+      let(:gem) {
+        nil
+      }
+
+      let(:name) {
+        nil
+      }
 
       it { should be_nil }
     end
   end
 
-  context '#real_path_collision' do
+  context '.real_path_collision' do
     subject(:real_path_collision) do
-      path.real_path_collision
+      described_class.real_path_collision(real_path)
     end
 
     let!(:collision) do
@@ -633,9 +641,9 @@ RSpec.describe Metasploit::Cache::Module::Path, type: :model do
     end
 
     context 'with same real_path' do
-      let(:path) do
-        FactoryGirl.build(:metasploit_cache_module_path, real_path: collision.real_path)
-      end
+      let(:real_path) {
+        collision.real_path
+      }
 
       it 'should return collision' do
         expect(real_path_collision).to eq(collision)
@@ -643,11 +651,213 @@ RSpec.describe Metasploit::Cache::Module::Path, type: :model do
     end
 
     context 'without same real_path' do
-      let(:path) do
-        FactoryGirl.build(:metasploit_cache_module_path)
-      end
+      let(:real_path) {
+        FactoryGirl.generate :metasploit_cache_module_path_real_path
+      }
 
       it { should be_nil }
+    end
+  end
+
+  context '.resolve_collisions' do
+    subject(:resolve_collisions) {
+      described_class.resolve_collisions(
+          gem: gem,
+          name: name,
+          real_path: real_path
+      )
+    }
+
+    context 'with name collision' do
+      #
+      # lets
+      #
+
+      let(:gem) {
+        name_collision.gem
+      }
+
+      let(:name) {
+        name_collision.name
+      }
+
+      #
+      # let!s
+      #
+
+      let!(:name_collision) {
+        FactoryGirl.create :named_metasploit_cache_module_path
+      }
+
+      context 'with real path collision' do
+        context 'with same Metasploit::Cache::Module::Path for name and real path collision' do
+          let(:real_path) {
+            name_collision.real_path
+          }
+
+          it 'returns name collision' do
+            expect(resolve_collisions).to eq(name_collision)
+          end
+        end
+
+        context 'without same Metasploit::Cache::Module::Path for name and real path collision' do
+          #
+          # lets
+          #
+
+          let(:real_path) {
+            real_path_collision.real_path
+          }
+
+          #
+          # let!s
+          #
+
+          let!(:real_path_collision) {
+            FactoryGirl.create :metasploit_cache_module_path
+          }
+
+          specify {
+            expect {
+              resolve_collisions
+            }.to raise_error(
+                     ActiveRecord::RecordNotUnique,
+                     "Collision against two pre-existing #{name.pluralize}: (1) on gem (#{name_collision.gem}) and " \
+                     "name (#{name_collision.name}) and (2) on real_path (#{real_path_collision.real_path})."
+                 )
+          }
+        end
+      end
+
+      context 'without real path collision' do
+        let(:real_path) {
+          FactoryGirl.generate :metasploit_cache_module_path_real_path
+        }
+
+        it 'updates #real_path on name collision to real_path' do
+          expect {
+            resolve_collisions
+          }.to change {
+                 name_collision.reload.real_path
+               }.to real_path
+        end
+
+        it 'returns name collision' do
+          expect(resolve_collisions).to eq(name_collision)
+        end
+      end
+    end
+
+    context 'without name collision' do
+      context 'with real path collision' do
+        #
+        # lets
+        #
+
+        let(:real_path) {
+          real_path_collision.real_path
+        }
+
+        let(:real_path_collision) {
+          FactoryGirl.create :named_metasploit_cache_module_path
+        }
+
+        context 'with named' do
+          let(:gem) {
+            FactoryGirl.generate :metasploit_cache_module_path_gem
+          }
+
+          let(:name) {
+            FactoryGirl.generate :metasploit_cache_module_path_name
+          }
+
+          it 'updates #gem on real path collision to gem' do
+            expect {
+              resolve_collisions
+            }.to change {
+                   real_path_collision.reload.gem
+                 }.to gem
+          end
+
+          it 'updates #name on real path collision to name' do
+            expect {
+              resolve_collisions
+            }.to change {
+                   real_path_collision.reload.name
+                 }.to name
+          end
+
+          it 'returns real path collision' do
+            expect(resolve_collisions).to eq(real_path_collision)
+          end
+        end
+
+        context 'without named' do
+          let(:gem) {
+            nil
+          }
+
+          let(:name) {
+            nil
+          }
+
+          it 'does not erase #gem on real path collision' do
+            expect {
+              resolve_collisions
+            }.not_to change {
+                   real_path_collision.reload.gem
+                 }
+          end
+
+          it 'does not erase #name on real path collision' do
+            expect {
+              resolve_collisions
+            }.not_to change {
+                   real_path_collision.reload.name
+                 }
+          end
+
+          it 'returns real path collision' do
+            expect(resolve_collisions).to eq(real_path_collision)
+          end
+        end
+      end
+
+      context 'without real path collision' do
+        let(:gem) do
+          FactoryGirl.generate :metasploit_cache_module_path_gem
+        end
+
+        let(:name) do
+          FactoryGirl.generate :metasploit_cache_module_path_name
+        end
+
+        let(:real_path) {
+          FactoryGirl.generate :metasploit_cache_module_path_real_path
+        }
+
+        it 'returns persisted' do
+          expect(resolve_collisions).to be_persisted
+        end
+
+        context '#gem' do
+          it 'is gem' do
+            expect(resolve_collisions.gem).to eq(gem)
+          end
+        end
+
+        context '#name' do
+          it 'is name' do
+            expect(resolve_collisions.name).to eq(name)
+          end
+        end
+
+        context '#real_path' do
+          it 'is real_path' do
+            expect(resolve_collisions.real_path).to eq(real_path)
+          end
+        end
+      end
     end
   end
 

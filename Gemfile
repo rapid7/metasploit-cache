@@ -54,6 +54,8 @@ group :test do
   gem 'aruba', github: 'rapid7/aruba', tag: 'v0.6.3.pre.metasploit.pre.yard.pre.port'
   # used for building markup for webpage factories
   gem 'builder'
+  # run child processes in tests
+  gem 'childprocess'
   # simplecov test formatter and uploader for Coveralls.io
   gem 'coveralls', require: false
   # Test shared examples and matchers.  Used with aruba

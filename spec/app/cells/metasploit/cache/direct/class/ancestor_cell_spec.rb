@@ -24,7 +24,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
       context 'Metasploit::Cache::Module::Ancestor#module_type' do
         context 'with auxiliary' do
           let(:direct_class_factory) {
-            :metasploit_cache_auxiliary_class
+            :full_metasploit_cache_auxiliary_class
           }
 
           it {
@@ -46,7 +46,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
 
         context 'with encoder' do
           let(:direct_class_factory) {
-            :metasploit_cache_encoder_class
+            :full_metasploit_cache_encoder_class
           }
 
           it {
@@ -68,7 +68,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
 
         context 'with exploit' do
           let(:direct_class_factory) {
-            :metasploit_cache_exploit_class
+            :full_metasploit_cache_exploit_class
           }
 
           it {
@@ -90,7 +90,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
 
         context 'with nop' do
           let(:direct_class_factory) {
-            :metasploit_cache_nop_class
+            :full_metasploit_cache_nop_class
           }
 
           it {
@@ -112,7 +112,7 @@ RSpec.describe Metasploit::Cache::Direct::Class::AncestorCell, type: :cell do
 
         context 'with post' do
           let(:direct_class_factory) {
-            :metasploit_cache_post_class
+            :full_metasploit_cache_post_class
           }
 
           it {

@@ -15,7 +15,8 @@ Gem::Specification.new do |spec|
   spec.license       = "BSD-3-clause"
 
   spec.files         = `git ls-files -z`.split("\x0")
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.bindir        = 'exe'
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = %w{app/cells app/models app/validators lib}
 
@@ -34,4 +35,6 @@ Gem::Specification.new do |spec|
   # Allow patching of Metasploit::Cache models.
   spec.add_runtime_dependency 'metasploit-concern', '~> 1.0'
   spec.add_runtime_dependency 'metasploit-model', '~> 1.0'
+  spec.add_runtime_dependency 'ruby-progressbar', '~> 1.7'
+  spec.add_runtime_dependency 'thor', '~> 0.19.1'
 end

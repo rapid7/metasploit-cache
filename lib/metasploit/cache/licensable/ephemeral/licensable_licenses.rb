@@ -84,7 +84,7 @@ module Metasploit::Cache::Licensable::Ephemeral::LicensableLicenses
   # @param source [#license] a Metasploit Module instance
   # @return [#licenses] `destination`
   def self.synchronize(destination:, logger:, source:)
-    Metasploit::Cache::Ephemeral.with_connection_transaction(destination_class: destination.class) {
+    destination.class.connection_pool.with_connection {
       cached_destination_attribute_set = destination_attribute_set(destination)
       cached_source_attribute_set = source_attribute_set(source)
 

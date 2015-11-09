@@ -28,6 +28,8 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
   #
 
   validate :module_ancestor_valid
+  validate :namespace_module_valid,
+           unless: :loading_context?
 
   #
   # Attribute Validations
@@ -95,6 +97,7 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
 
           if namespace_module_load.module_ancestor_eval(module_ancestor)
             @namespace_module = namespace_module
+            @namespace_module_load_errors = nil
 
             commit = true
           else
@@ -119,11 +122,9 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
   def namespace_module_load_errors
     unless instance_variable_defined? :@namespace_module_load_errors
       @namespace_module_load_errors = nil
-      namespace_module = self.namespace_module
 
-      if namespace_module
-        @namespace_module_load_errors = namespace_module.errors
-      end
+      # attempt to load namespace_module to populate @namespace_module_load_errors
+      namespace_module
     end
 
     @namespace_module_load_errors
@@ -146,6 +147,17 @@ class Metasploit::Cache::Module::Ancestor::Load < Metasploit::Model::Base
     # allow the presence validation to handle it being nil
     if module_ancestor and module_ancestor.invalid?(validation_context)
       errors.add(:module_ancestor, :invalid)
+    end
+  end
+
+  # Validates that there are no {#namespace_module_load_errors}.
+  #
+  # @return [void]
+  def namespace_module_valid
+    if namespace_module_load_errors
+      namespace_module_load_errors.each do |attribute, attribute_error|
+        errors.add(:"namespace_module.#{attribute}", attribute_error)
+      end
     end
   end
 end

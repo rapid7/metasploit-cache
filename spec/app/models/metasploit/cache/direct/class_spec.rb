@@ -3,6 +3,7 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
     context 'columns' do
       it { is_expected.to have_db_column(:ancestor_id).of_type(:integer).with_options(null: false) }
       it { is_expected.to have_db_column(:rank_id).of_type(:integer).with_options(null: false) }
+      it { is_expected.to have_db_column(:type).of_type(:string).with_options(null: false) }
     end
 
     context 'indices' do
@@ -21,12 +22,13 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
 
     it { is_expected.to validate_presence_of(:ancestor) }
     it { is_expected.to validate_uniqueness_of(:ancestor_id) }
+    it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:rank) }
 
     context 'is expected to validation uniqueness of #ancestor_id' do
       subject(:new_direct_class) {
         FactoryGirl.build(
-            :metasploit_cache_auxiliary_class,
+            :full_metasploit_cache_auxiliary_class,
             ancestor: existing_ancestor
         )
       }
@@ -50,7 +52,7 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
 
       let!(:existing_direct_class) {
         FactoryGirl.create(
-            :metasploit_cache_auxiliary_class,
+            :full_metasploit_cache_auxiliary_class,
             ancestor: existing_ancestor
         )
       }
@@ -88,7 +90,7 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
         context 'without #ancestor' do
           subject(:direct_class) {
             FactoryGirl.build(
-                :metasploit_cache_auxiliary_class,
+                :full_metasploit_cache_auxiliary_class,
                 ancestor: nil,
                 ancestor_contents?: true
             )
@@ -108,7 +110,7 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
           context 'with Metasploit::Cache::Module::Ancestor#real_pathname' do
             subject(:direct_class) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_class,
+                  :full_metasploit_cache_auxiliary_class,
                   ancestor: module_ancestor,
                   ancestor_contents?: true
               )
@@ -131,7 +133,7 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
           context 'without Metasploit::Cache::Module::Ancestor#real_pathname' do
             subject(:direct_class) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_class,
+                  :full_metasploit_cache_auxiliary_class,
                   ancestor_contents?: true,
                   ancestor: module_ancestor
               )
@@ -161,7 +163,7 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
         context 'without #ancestor' do
           subject(:direct_class) {
             FactoryGirl.build(
-                :metasploit_cache_auxiliary_class,
+                :full_metasploit_cache_auxiliary_class,
                 ancestor: false,
                 ancestor_contents?: false
             )
@@ -178,7 +180,7 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
           context 'with Metasploit::Cache::Module::Ancestor#real_pathname' do
             subject(:direct_class) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_class,
+                  :full_metasploit_cache_auxiliary_class,
                   ancestor_contents?: false
               )
             }
@@ -193,7 +195,7 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
           context 'without Metasploit::Cache::Module::Ancestor#real_pathname' do
             subject(:direct_class) {
               FactoryGirl.build(
-                  :metasploit_cache_auxiliary_class,
+                  :full_metasploit_cache_auxiliary_class,
                   ancestor: module_ancestor,
                   ancestor_contents?: false
               )
@@ -215,6 +217,37 @@ RSpec.describe Metasploit::Cache::Direct::Class, type: :model do
           end
         end
       end
+    end
+  end
+
+  context '#reference_name' do
+    subject(:reference_name) {
+      direct_class.reference_name
+    }
+
+    let(:direct_class) {
+      Metasploit::Cache::Auxiliary::Class.new(
+          ancestor: ancestor
+      )
+    }
+
+    context 'with #ancestor' do
+      let(:ancestor) {
+        FactoryGirl.build(:metasploit_cache_auxiliary_ancestor)
+      }
+
+      it 'is Metasploit::Cache::Module::Ancestor#reference_name' do
+        expect(reference_name).not_to be_nil
+        expect(reference_name).to eq(ancestor.reference_name)
+      end
+    end
+
+    context 'without #ancestor' do
+      let(:ancestor) {
+        nil
+      }
+
+      it { is_expected.to be_nil }
     end
   end
 end

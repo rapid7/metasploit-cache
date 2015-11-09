@@ -1,6 +1,13 @@
 # Class-level metadata for an encoder  Metasploit Module.
 class Metasploit::Cache::Encoder::Class < Metasploit::Cache::Direct::Class
   #
+  # CONSTANTS
+  #
+
+  # The {Metasploit::Cache::Module::Class::Name#module_type}
+  MODULE_TYPE = Metasploit::Cache::Module::Type::ENCODER
+
+  #
   # Associations
   #
 
@@ -19,7 +26,7 @@ class Metasploit::Cache::Encoder::Class < Metasploit::Cache::Direct::Class
   # Reliability of Metasploit Module.
   belongs_to :rank,
              class_name: 'Metasploit::Cache::Module::Rank',
-             inverse_of: :auxiliary_classes
+             inverse_of: :encoder_classes
 
   Metasploit::Concern.run(self)
 end
