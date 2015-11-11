@@ -276,7 +276,6 @@ it.
 
 #### Prepare test environment
 
-
 ```sh
 rm Gemfile.lock
 rm -rf .bundle
@@ -287,7 +286,7 @@ rake app:db:test:load
 
 #### Load entire `Metasploit::Cache::Module::Path`
 
-```ruby
+```sh
 export METASPLOIT_FRAMEWORK=`bundle show metasploit-framework`
 cd spec/dummy
 time metasploit-cache load ${METASPLOIT_FRAMEWORK}/modules \
@@ -313,7 +312,7 @@ The cache can be constructed faster using threading (`--concurrent`), but SQLite
 implements transaction isolation using locks, which could cause reads to fail once an EXCLUSIVE lock was acquired for a
 concurrent write, so `--concurrent` is `false` by default.
 
-```ruby
+```sh
 export METASPLOIT_FRAMEWORK=`bundle show metasploit-framework`
 cd spec/dummy
 time metasploit-cache load ${METASPLOIT_FRAMEWORK}/modules \
@@ -341,7 +340,7 @@ type directories) with `--only-type-directories`.
 
 Loading only `exploits`:
 
-```ruby
+```sh
 export METASPLOIT_FRAMEWORK=`bundle show metasploit-framework`
 cd spec/dummy
 time metasploit-cache load ${METASPLOIT_FRAMEWORK}/modules \
@@ -442,6 +441,61 @@ Remove the `['URL', '<Metasploit::Cache::Reference#url>']` format references in 
 
 If this is a typo, correct it; otherwise, add new `Metasploit::Cache::Authority` by
 [following the instruction for adding a new seed](#seeds).
+
+### Using
+
+`metasploit-cache use` can used to laod a Metasploit Module instance from its `Metasploit::Cache::Module::Name`.  Doing
+this can reveal missing `require`s that were only be fulfilled by other Metasploit Modules that were loaded before the
+used Metasploit Module.
+
+#### Load first
+
+You should have [prepared the test environment](#prepare-test-environment) and
+loaded [the entire module path](#load-entire-metasploitcachemodulepath) or
+[the type directory](#load-only-a-single-type-directory) for the module to be used.
+
+#### Using a Metasploit Module by full name
+
+```sh
+MODULE_TYPE = # Fill
+REFERENCE_NAME = # Fill
+MODULE_FULL_NAME = "${MODULE_TYPE}/${REFERENCE_NAME}"
+cd spec/dummy
+time metasploit-cache use ${MODULE_FULL_NAME} \
+                          --database-yaml config/database.yml \
+                          --environment test \
+                          --include /Users/limhoff/.rvm/gems/ruby-2.2.3@metasploit-cache/bundler/gems/metasploit-framework-1bfa84b37bca \
+                                    /Users/limhoff/.rvm/gems/ruby-2.2.3@metasploit-cache/bundler/gems/metasploit-framework-1bfa84b37bca/app/validators \
+                          --require metasploit/framework \
+                                    metasploit/framework/executable_path_validator \
+                                    metasploit/framework/file_path_validator \
+                          --logger-severity INFO
+```
+
+##### Success
+
+If a Metasploit Module can be successfully instantiated using the cache, then `<MODULE_FULL_NAME> is usable` will be
+printed.
+
+##### Failure
+
+###### Metasploit Module wasn't loaded
+
+If there was an error during `metasploit-cache load` that prevented the Metasploit Module instance from entering the
+cache, the you'll get an error that the `Metasploit::Cache::Module::Class::Name` could not be found:
+
+```
+[2015-11-11 15:13:33.341][ERROR] No Metasploit::Cache::Module::Class::Name found with module_type (payload) and reference (bsds/x64/shell_bind_tcp)
+```
+
+###### Missing Require
+
+If a `require` is missing, it will likely show up as a `NameError` for the missing constant:
+
+```
+[2015-11-11 15:11:06.032][ERROR] Metasploit::Cache::Module::Instance::Load is invalid: Metasploit module class new NameError uninitialized constant Msf::Sessions::CommandShellUnix:
+/Users/limhoff/.rvm/gems/ruby-2.2.3@metasploit-cache/bundler/gems/metasploit-framework-1bfa84b37bca/modules/payloads/singles/bsd/x64/shell_bind_tcp.rb:30:in `initialize'
+```
 
 ## Contributing
 
