@@ -263,6 +263,186 @@ NOTE: Do these steps only when adding non-root, nested platforms.
     bundle install --without content
     rake spec
 
+## Validating metasploit-framework Metasploit Modules
+
+The `metasploit-cache` binary can be used to check that Metasploit Modules from a given type directory can be loaded
+into the cache and that individual Metasploit Modules can be loaded out of the cache using just their Metasploit Module
+full name.
+
+### Loading
+
+`metasploit-cache load` can be used to load a `Metasploit::Cache::Module::Path` and one or all type directories under
+it.
+
+#### Prepare test environment
+
+
+```sh
+rm Gemfile.lock
+rm -rf .bundle
+bundle install --without sqlite3
+rake db:drop db:create db:migrate
+rake app:db:test:load
+```
+
+#### Load entire `Metasploit::Cache::Module::Path`
+
+```ruby
+export METASPLOIT_FRAMEWORK=`bundle show metasploit-framework`
+cd spec/dummy
+time metasploit-cache load ${METASPLOIT_FRAMEWORK}/modules \
+                           --database-yaml config/database.yml \
+                           --environment test \
+                           --include ${METASPLOIT_FRAMEWORK} \
+                                     ${METASPLOIT_FRAMEWORK}/app/validators \
+                           --require metasploit/framework \
+                                     metasploit/framework/executable_path_validator \
+                                     metasploit/framework/file_path_validator \
+                           --gem metasploit-framework \
+                           --logger-severity INFO \
+                           --name modules 2>&1 | tee metasploit-cache-load.log
+```
+
+You want to pipe to `tee` so that you can record the log in addition to seeing the output.
+
+The expected time to complete is ~3 minutes (`129.09s user 10.99s system 79% cpu 2:55.31 total` from the `time` output).
+
+#### Faster loading with concurrency
+
+The cache can be constructed faster using threading (`--concurrent`), but SQLite3 had a lot of failures due to how it
+implements transaction isolation using locks, which could cause reads to fail once an EXCLUSIVE lock was acquired for a
+concurrent write, so `--concurrent` is `false` by default.
+
+```ruby
+export METASPLOIT_FRAMEWORK=`bundle show metasploit-framework`
+cd spec/dummy
+time metasploit-cache load ${METASPLOIT_FRAMEWORK}/modules \
+                           --concurrent \
+                           --database-yaml config/database.yml \
+                           --environment test \
+                           --include ${METASPLOIT_FRAMEWORK} \
+                                     ${METASPLOIT_FRAMEWORK}/app/validators \
+                           --require metasploit/framework \
+                                     metasploit/framework/executable_path_validator \
+                                     metasploit/framework/file_path_validator \
+                           --gem metasploit-framework \
+                           --logger-severity INFO \
+                           --name modules 2>&1 | tee metasploit-cache-load.log
+```
+
+Because MRI is only single threaded when CPU bound, concurrent, doesn't speed up the load much
+(`129.66s user 17.74s system 92% cpu 2:39.27 total`).  The speed can be made faster if you lower the transaction
+isolation level is certain places in the code, but that can lead to inconsistent database state.
+
+#### Load only a single type directory
+
+If you want to load a single type of Metasploit Module, such as exploits, you can restrict the load to a one (or more
+type directories) with `--only-type-directories`.
+
+Loading only `exploits`:
+
+```ruby
+export METASPLOIT_FRAMEWORK=`bundle show metasploit-framework`
+cd spec/dummy
+time metasploit-cache load ${METASPLOIT_FRAMEWORK}/modules \
+                           --database-yaml config/database.yml \
+                           --environment test \
+                           --include ${METASPLOIT_FRAMEWORK} \
+                                     ${METASPLOIT_FRAMEWORK}/app/validators \
+                           --require metasploit/framework \
+                                     metasploit/framework/executable_path_validator \
+                                     metasploit/framework/file_path_validator \
+                           --gem metasploit-framework \
+                           --logger-severity INFO \
+                           --name modules
+                           --only-type-directories exploits 2>&1 | tee metasploit-cache-load-exploits.log
+```
+
+#### Common Warnings from Log
+
+Warnings do not prevent a Metasploit Module from being added to the cache, but instead indicate when the raw values from
+the Metasploit Module were converted to a canonical representation in the cache.  The warnings should be corrected as
+they imply missing or invalid metadata that can be systematically correctly, but is still wrong and may be uncacheable
+in the future.
+
+##### `Deprecated, non-canonical architecture abbreviation ("mips") converted to canonical abbreviations (["mipsbe", "mipsle"])`
+
+`mips` is not a supported `Metasploit::Cache::Architecture#abbreviation` because there are multiple MIPS architectures.
+`mips` is assumed to be 32-bit (and not 64-bit), but the endianness can be not inferred, so `mips` is converted to
+`mipsbe` (MIPS Big-Endian) and `mipsle` (MIPS Little-Endian).
+
+To get rid of the warning, change `'mips'` in the Metasploit Module file to `['mipsbe', 'miple']`.  The file is tagged
+in the log as the 3rd `[ ]` tag:
+
+```
+[2015-11-11 12:34:54.916][WARN][/Users/limhoff/.rvm/gems/ruby-2.2.3@metasploit-cache/bundler/gems/metasploit-framework-1bfa84b37bca/modules/encoders/generic/none.rb]  Deprecated, non-canonical architecture abbreviation ("mips") converted to canonical abbreviations (["mipsbe", "mipsle"])
+```
+
+##### `Deprecated, non-canonical architecture abbreviation ("x64") converted to canonical abbreviations (["x86_64"])
+
+`x64` is not a supported `Metasploit::Cache::Architecture#abbreviation` because there are multiple 64-bit architectures.
+For historical reasons, `x64` is assumed to imply `x86_64`, but there are other 64-bit architectures: `'cbea64'`
+(64-bit Cell Broadband Engine Architecture) and `'ppc64'`
+(64-bit Performance Optimization With Enhanced RISC - Performance Computing).
+
+To get rid of the warning, change `x86` in the metasploit Module file to `x86_64`.
+
+##### `Has no 'Arch', so assuming 'x86'.
+
+In the early days of metasploit-framework, only `'x86'` architecture was supported, so early Metasploit Modules or those
+Metasploit Modules copying those older Metasploit Modules as template may be missing and `'Arch'`, but now with so many
+architectures supported, you really should declare `'Arch'` because no when reading the source the reader would need to
+understand that no `'Arch'` means just `'`x86'` and **NOT** *all* architectures. You should add `'Arch' => 'x86'` to the
+module info Hash.
+
+#### Common Errors from Log
+
+Errors, unlike Warnings prevent a Metasploit Module from being added to the cache.  This can be caused from typos or
+omissions in the Metasploit Module that lead to missing metadata required for the Metasploit Module's module type.
+
+
+##### `Disclosed on can't be blank`
+
+The `'Disclosure Date'` field is missing for an exploit Metasploit Module.  Add `'Disclosure Date'` to the info `Hash`.
+If the Metasploit Module does not have a real disclosure date, then use the first commit date for the Metasploit Module.
+
+##### `Referencable references has too few referencable references (minimum is 1 referencable references)`
+
+The `'References'` array cannot be empty.  If no blog post can be found from the original author and no reference
+authority, such as CVE, has an identifier, then use `['URL', '<metasploit-framework-blog-post>']` or
+`['URL', '<github-url-of-module>']`.
+
+##### `PG::UniqueViolation: ERROR:  duplicate key value violates unique constraint "unique_mc_referencable_references"`
+
+There is a collision in the expanded form of the `References` such as when the
+`['<Metasploit::Cache::Authority#abbreviation>', '<Metasploit::Cache::Reference#designation>']` and
+`['URL', '<Metasploit::Cache::Reference#url>']` have the same `Metasploit::Cache::Reference#url`
+
+```ruby
+'References' =>
+        [
+          [ 'CVE', '2013-3238' ],
+          [ 'PMASA', '2013-2'],
+          [ 'waraxe', '2013-SA#103' ],
+          [ 'EDB', '25003'],
+          [ 'OSVDB', '92793'],
+          [ 'URL', 'http://www.waraxe.us/advisory-103.html' ],
+          [ 'URL', 'http://www.phpmyadmin.net/home_page/security/PMASA-2013-2.php' ]
+        ]
+```
+
+Above, `[ 'waraxe', '2013-SA#103' ]` has the same `Metasploit::Cache::Reference#url` as
+`[ 'URL', 'http://www.waraxe.us/advisory-103.html' ]` and `[ 'PMASA', '2013-2']` has the same
+`Metasploit::Cache::Reference#url` as `[ 'URL', 'http://www.phpmyadmin.net/home_page/security/PMASA-2013-2.php' ]`.
+
+Remove the `['URL', '<Metasploit::Cache::Reference#url>']` format references in favor of the 
+`['<Metasploit::Cache::Authority#abbreviation>', '<Metasploit::Cache::Reference#designation>']` references.
+
+##### `No seeded Metasploit::Cache::Authority with abbreviation`
+
+If this is a typo, correct it; otherwise, add new `Metasploit::Cache::Authority` by
+[following the instruction for adding a new seed](#seeds).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
