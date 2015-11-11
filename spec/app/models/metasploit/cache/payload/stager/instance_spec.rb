@@ -18,7 +18,6 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance, type: :model do
     context 'columns' do
       it { is_expected.to have_db_column(:description).of_type(:text).with_options(null: false) }
       it { is_expected.to have_db_column(:handler_id).of_type(:integer).with_options(null: false) }
-      it { is_expected.to have_db_column(:handler_type_alias).of_type(:string).with_options(null: true) }
       it { is_expected.to have_db_column(:name).of_type(:string).with_options(null: false) }
       it { is_expected.to have_db_column(:payload_stager_class_id).of_type(:integer).with_options(null: false) }
       it { is_expected.to have_db_column(:privileged).of_type(:boolean).with_options(null: false) }
@@ -142,16 +141,17 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance, type: :model do
 
                   let(:module_ancestor_load) {
                     Metasploit::Cache::Module::Ancestor::Load.new(
+                        logger: logger,
                         # This should match the major version number of metasploit-framework
                         maximum_version: 4,
                         module_ancestor: payload_stager_ancestor,
-                        logger: logger
+                        persister_class: Metasploit::Cache::Module::Ancestor::Persister
                     )
                   }
 
                   let(:module_instance_load) {
                     Metasploit::Cache::Module::Instance::Load.new(
-                        ephemeral_class: Metasploit::Cache::Payload::Stager::Instance::Ephemeral,
+                        persister_class: Metasploit::Cache::Payload::Stager::Instance::Persister,
                         logger: logger,
                         metasploit_framework: metasploit_framework,
                         metasploit_module_class: payload_unhandled_class_load.metasploit_class,
@@ -301,7 +301,6 @@ RSpec.describe Metasploit::Cache::Payload::Stager::Instance, type: :model do
   context 'validations' do
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :handler }
-    it { is_expected.not_to validate_presence_of :handler_type_alias }
     it { is_expected.to validate_presence_of :name }
     it { is_expected.to validate_presence_of :payload_stager_class }
     it { is_expected.to validate_inclusion_of(:privileged).in_array([false, true]) }

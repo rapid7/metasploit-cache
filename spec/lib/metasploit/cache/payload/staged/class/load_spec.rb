@@ -369,7 +369,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
                 logger: logger,
                 # This should match the major version number of metasploit-framework
                 maximum_version: 4,
-                module_ancestor: payload_staged_class.payload_stage_instance.payload_stage_class.ancestor
+                module_ancestor: payload_staged_class.payload_stage_instance.payload_stage_class.ancestor,
+                persister_class: Metasploit::Cache::Module::Ancestor::Persister
             )
           }
 
@@ -397,7 +398,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
                     logger: logger,
                     # This should match the major version number of metasploit-framework
                     maximum_version: 4,
-                    module_ancestor: payload_staged_class.payload_stager_instance.payload_stager_class.ancestor
+                    module_ancestor: payload_staged_class.payload_stager_instance.payload_stager_class.ancestor,
+                    persister_class: Metasploit::Cache::Module::Ancestor::Persister
                 )
               }
 
@@ -444,11 +446,11 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Class::Load, type: :model do
                   expect(stager_index).to be < handler_index
                 end
 
-                it 'sets metasploit_class.ephemeral_cache_by_source[:class]' do
-                  class_ephemeral_cache = metasploit_class.ephemeral_cache_by_source[:class]
+                it 'sets metasploit_class.persister_by_source[:class]' do
+                  class_persister = metasploit_class.persister_by_source[:class]
 
-                  expect(class_ephemeral_cache).to be_a Metasploit::Cache::Payload::Staged::Class::Ephemeral
-                  expect(class_ephemeral_cache.payload_staged_metasploit_module_class).to eq(metasploit_class)
+                  expect(class_persister).to be_a Metasploit::Cache::Payload::Staged::Class::Persister
+                  expect(class_persister.ephemeral).to eq(metasploit_class)
                 end
 
                 context 'with persisted' do

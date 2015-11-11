@@ -73,5 +73,27 @@ FactoryGirl.define do
           }
       )
     }
+
+    factory :full_metasploit_cache_payload_staged_class do
+      name {
+        stage_name = Metasploit::Cache::Module::Class::Namable.reference_name(
+            relative_file_names: payload_stage_instance.payload_stage_class.ancestor.relative_file_names,
+            scoping_levels: 2
+        )
+
+        payload_stager_ancestor_handler = payload_stager_instance.payload_stager_class.ancestor.handler
+
+        if payload_stager_ancestor_handler
+          handler_type = payload_stager_ancestor_handler.type_alias
+        else
+          handler_type = payload_stager_instance.handler.handler_type
+        end
+
+        Metasploit::Cache::Module::Class::Name.new(
+            module_type: 'payload',
+            reference: "#{stage_name}/#{handler_type}"
+        )
+      }
+    end
   end
 end

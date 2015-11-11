@@ -3,7 +3,7 @@ module Metasploit::Cache::Architecturable
   extend ActiveSupport::Autoload
 
   autoload :Architecture
-  autoload :Ephemeral
+  autoload :Persister
 
   #
   # Module Methods

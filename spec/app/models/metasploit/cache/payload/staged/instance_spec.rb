@@ -50,7 +50,8 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance, type: :model do
               logger: logger,
               # This should match the major version number of metasploit-framework
               maximum_version: 4,
-              module_ancestor: payload_stage_ancestor
+              module_ancestor: payload_stage_ancestor,
+              persister_class: Metasploit::Cache::Module::Ancestor::Persister
           )
         }
 
@@ -73,7 +74,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance, type: :model do
 
         let(:payload_stage_instance_load) {
           Metasploit::Cache::Module::Instance::Load.new(
-              ephemeral_class: Metasploit::Cache::Payload::Stage::Instance::Ephemeral,
+              persister_class: Metasploit::Cache::Payload::Stage::Instance::Persister,
               logger: logger,
               metasploit_framework: metasploit_framework,
               metasploit_module_class: payload_stage_class_load.metasploit_class,
@@ -102,7 +103,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance, type: :model do
 
         let(:payload_staged_instance_load) {
           Metasploit::Cache::Module::Instance::Load.new(
-              ephemeral_class: Metasploit::Cache::Payload::Staged::Instance::Ephemeral,
+              persister_class: Metasploit::Cache::Payload::Staged::Instance::Persister,
               logger: logger,
               metasploit_framework: metasploit_framework,
               metasploit_module_class: payload_staged_class_load.metasploit_class,
@@ -120,10 +121,11 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance, type: :model do
 
         let(:payload_stager_ancestor_load) {
           Metasploit::Cache::Module::Ancestor::Load.new(
+              logger: logger,
               # This should match the major version number of metasploit-framework
               maximum_version: 4,
               module_ancestor: payload_stager_ancestor,
-              logger: logger
+              persister_class: Metasploit::Cache::Module::Ancestor::Persister
           )
         }
 
@@ -146,7 +148,7 @@ RSpec.describe Metasploit::Cache::Payload::Staged::Instance, type: :model do
 
         let(:payload_stager_instance_load) {
           Metasploit::Cache::Module::Instance::Load.new(
-              ephemeral_class: Metasploit::Cache::Payload::Stager::Instance::Ephemeral,
+              persister_class: Metasploit::Cache::Payload::Stager::Instance::Persister,
               logger: logger,
               metasploit_framework: metasploit_framework,
               metasploit_module_class: payload_stager_class_load.metasploit_class,

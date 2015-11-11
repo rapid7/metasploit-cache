@@ -39,7 +39,8 @@ RSpec.describe Metasploit::Cache::Nop::Class, type: :model do
           Metasploit::Cache::Module::Ancestor::Load.new(
               logger: logger,
               maximum_version: 4,
-              module_ancestor: full_metasploit_cache_nop_class.ancestor
+              module_ancestor: full_metasploit_cache_nop_class.ancestor,
+              persister_class: Metasploit::Cache::Module::Ancestor::Persister
           )
         }
 

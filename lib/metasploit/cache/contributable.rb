@@ -2,5 +2,5 @@
 module Metasploit::Cache::Contributable
   extend ActiveSupport::Autoload
 
-  autoload :Ephemeral
+  autoload :Persister
 end

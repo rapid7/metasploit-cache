@@ -1,5 +1,10 @@
 # Metadata from loading stager payload modules.
 class Metasploit::Cache::Payload::Stager::Ancestor < Metasploit::Cache::Payload::Ancestor
+  extend ActiveSupport::Autoload
+
+  autoload :Handler
+  autoload :Persister
+
   #
   # CONSTANTS
   #
@@ -13,6 +18,14 @@ class Metasploit::Cache::Payload::Stager::Ancestor < Metasploit::Cache::Payload:
   #
   # Associations
   #
+
+  # Handler metadata from ruby Module methods
+  has_one :handler,
+          autosave: true,
+          class_name: 'Metasploit::Cache::Payload::Stager::Ancestor::Handler',
+          dependent: :destroy,
+          foreign_key: :payload_stager_ancestor_id,
+          inverse_of: :payload_stager_ancestor
 
   # Path under which this module's {Metasploit::Cache::Module::Ancestor#relative_path} exists.
   belongs_to :parent_path,

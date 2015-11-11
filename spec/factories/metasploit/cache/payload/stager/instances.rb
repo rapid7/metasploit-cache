@@ -2,7 +2,6 @@ FactoryGirl.define do
   factory :metasploit_cache_payload_stager_instance,
           class: Metasploit::Cache::Payload::Stager::Instance do
     description { generate :metasploit_cache_payload_stager_instance_description }
-    handler_type_alias { generate :metasploit_cache_payload_stager_handler_type_alias }
     name { generate :metasploit_cache_payload_stager_instance_name }
     privileged { generate :metasploit_cache_payload_stager_instance_privileged }
 
@@ -30,10 +29,6 @@ FactoryGirl.define do
 
   sequence(:metasploit_cache_payload_stager_instance_description) { |n|
     "Metasploit::Cache::Payload::Stager::Instance#description #{n}"
-  }
-
-  sequence(:metasploit_cache_payload_stager_handler_type_alias) { |n|
-    "metasploit_cache_payload_stager_handler_type_alias#{n}"
   }
 
   sequence(:metasploit_cache_payload_stager_instance_name) { |n|

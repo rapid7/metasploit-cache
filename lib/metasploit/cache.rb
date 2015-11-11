@@ -43,7 +43,7 @@ module Metasploit
     autoload :Direct
     autoload :EmailAddress
     autoload :Encoder
-    autoload :Ephemeral
+    autoload :Persister
     autoload :Error
     autoload :Exploit
     autoload :Licensable

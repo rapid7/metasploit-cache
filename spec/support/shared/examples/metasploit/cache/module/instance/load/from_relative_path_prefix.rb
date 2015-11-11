@@ -59,7 +59,9 @@ shared_examples_for 'Metasploit::Cache::*::Instance::Load from relative_path_pre
               logger: logger,
               # This should match the major version number of metasploit-framework
               maximum_version: 4,
-              module_ancestor: module_ancestor
+              module_ancestor: module_ancestor,
+              # this is safe because stager payloads aren't tested with this shared example
+              persister_class: Metasploit::Cache::Module::Ancestor::Persister
           )
         }
 

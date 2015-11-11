@@ -16,7 +16,7 @@ FactoryGirl.define do
       end
 
       create(
-          :metasploit_cache_payload_staged_class,
+          :full_metasploit_cache_payload_staged_class,
           payload_stager_instance_handler_load_pathname: payload_staged_class_payload_stager_instance_handler_load_pathname
       )
     }

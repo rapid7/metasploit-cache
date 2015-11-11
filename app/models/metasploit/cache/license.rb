@@ -4,7 +4,7 @@ class Metasploit::Cache::License < ActiveRecord::Base
 
   include Metasploit::Cache::Batch::Descendant
 
-  autoload :Ephemeral
+  autoload :Persister
 
   #
   # Associations

@@ -3,5 +3,5 @@
 module Metasploit::Cache::Payload::Handable
   extend ActiveSupport::Autoload
 
-  autoload :Ephemeral
+  autoload :Persister
 end

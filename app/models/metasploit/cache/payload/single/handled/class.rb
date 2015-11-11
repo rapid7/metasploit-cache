@@ -6,7 +6,7 @@ class Metasploit::Cache::Payload::Single::Handled::Class < ActiveRecord::Base
   include Metasploit::Cache::Batch::Root
   include Metasploit::Cache::Module::Class::Namable
 
-  autoload :Ephemeral
+  autoload :Persister
   autoload :Load
 
   #

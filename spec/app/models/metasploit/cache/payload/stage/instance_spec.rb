@@ -117,16 +117,17 @@ RSpec.describe Metasploit::Cache::Payload::Stage::Instance, type: :model do
 
                 let(:module_ancestor_load) {
                   Metasploit::Cache::Module::Ancestor::Load.new(
+                      logger: logger,
                       # This should match the major version number of metasploit-framework
                       maximum_version: 4,
                       module_ancestor: payload_stage_ancestor,
-                      logger: logger
+                      persister_class: Metasploit::Cache::Module::Ancestor::Persister
                   )
                 }
 
                 let(:module_instance_load) {
                   Metasploit::Cache::Module::Instance::Load.new(
-                      ephemeral_class: Metasploit::Cache::Payload::Stage::Instance::Ephemeral,
+                      persister_class: Metasploit::Cache::Payload::Stage::Instance::Persister,
                       logger: logger,
                       metasploit_framework: metasploit_framework,
                       metasploit_module_class: payload_unhandled_class_load.metasploit_class,

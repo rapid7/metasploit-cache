@@ -26,6 +26,7 @@ module Metasploit::Cache::Module
   autoload :Instance
   autoload :Namespace
   autoload :Path
+  autoload :Persister
   autoload :Rank
   autoload :Rankable
   autoload :Stance

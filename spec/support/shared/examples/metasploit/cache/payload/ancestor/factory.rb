@@ -1,11 +1,12 @@
-RSpec.shared_examples_for 'Metasploit::Cache::Payload::Ancestor factory' do |payload_type:|
+RSpec.shared_examples_for 'Metasploit::Cache::Payload::Ancestor factory' do |payload_type:, persister_class:|
   let(:module_ancestor) {
     payload_ancestor
   }
 
   it { is_expected.to be_valid }
 
-  it_should_behave_like 'Metasploit::Cache::Module::Ancestor factory loading'
+  it_should_behave_like 'Metasploit::Cache::Module::Ancestor factory loading',
+                        persister_class: persister_class
 
   context 'contents' do
     include_context 'Metasploit::Cache::Module::Ancestor factory contents'

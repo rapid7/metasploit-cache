@@ -45,7 +45,8 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Instance, type: :mod
                 logger: logger,
                 # This should match the major version number of metasploit-framework
                 maximum_version: 4,
-                module_ancestor: payload_single_ancestor
+                module_ancestor: payload_single_ancestor,
+                persister_class: Metasploit::Cache::Module::Ancestor::Persister
             )
           }
 
@@ -65,7 +66,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Instance, type: :mod
 
           let(:payload_single_handled_instance_load) {
             Metasploit::Cache::Module::Instance::Load.new(
-                ephemeral_class: Metasploit::Cache::Payload::Single::Handled::Instance::Ephemeral,
+                persister_class: Metasploit::Cache::Payload::Single::Handled::Instance::Persister,
                 logger: logger,
                 metasploit_framework: metasploit_framework,
                 metasploit_module_class: payload_single_handled_class_load.metasploit_class,
@@ -92,7 +93,7 @@ RSpec.describe Metasploit::Cache::Payload::Single::Handled::Instance, type: :mod
 
           let(:payload_single_unhandled_instance_load) {
             Metasploit::Cache::Module::Instance::Load.new(
-                ephemeral_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Ephemeral,
+                persister_class: Metasploit::Cache::Payload::Single::Unhandled::Instance::Persister,
                 logger: logger,
                 metasploit_framework: metasploit_framework,
                 metasploit_module_class: payload_single_unhandled_class_load.metasploit_class,

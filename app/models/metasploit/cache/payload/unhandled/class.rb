@@ -8,6 +8,6 @@ class Metasploit::Cache::Payload::Unhandled::Class < ActiveRecord::Base
   include Metasploit::Cache::Module::Rankable
 
   autoload :AncestorCell
-  autoload :Ephemeral
+  autoload :Persister
   autoload :Load
 end

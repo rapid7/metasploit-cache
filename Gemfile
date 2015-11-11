@@ -40,6 +40,8 @@ group :development, :test do
   gem 'factory_girl_rails'
   # Use to create fake data
   gem 'faker'
+  # Check Hound CI style warnings before uploading
+  gem 'rubocop', require: false
   # tests compatibility with main progess bar target
   gem 'ruby-progressbar'
 end

@@ -4,7 +4,7 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
 
   include Metasploit::Cache::Batch::Root
 
-  autoload :Ephemeral
+  autoload :Persister
   autoload :PayloadStagerClass
 
   #
@@ -96,12 +96,6 @@ class Metasploit::Cache::Payload::Stager::Instance < ActiveRecord::Base
 
   # @!attribute description
   #   The long-form human-readable description of this stager payload Metasploit Module.
-  #
-  #   @return [String]
-
-  # @!attribute handler_type_alias
-  #   Alternate name for the handler_type to prevent naming collisions in staged payload Metasploit Modules that use
-  #   this stager payload Metasploit Module.
   #
   #   @return [String]
 

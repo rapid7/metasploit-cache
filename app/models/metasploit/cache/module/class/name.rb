@@ -57,4 +57,18 @@ class Metasploit::Cache::Module::Class::Name < ActiveRecord::Base
                 scope: :module_type,
                 unless: :batched?
             }
+
+  #
+  # Instance Methods
+  #
+
+  # The full name, including the {#module_type} and {#reference}.
+  #
+  # @return [String]
+  # return [nil] if {#module_type} or {#reference} is blank
+  def full
+    if module_type.present? && reference.present?
+      "#{module_type}/#{reference}"
+    end
+  end
 end

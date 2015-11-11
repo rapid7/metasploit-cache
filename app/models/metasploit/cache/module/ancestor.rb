@@ -12,7 +12,7 @@ class Metasploit::Cache::Module::Ancestor < ActiveRecord::Base
   include Metasploit::Cache::Derivation::FullName
   include Metasploit::Model::Translation
 
-  autoload :Ephemeral
+  autoload :Persister
   autoload :Load
 
   #

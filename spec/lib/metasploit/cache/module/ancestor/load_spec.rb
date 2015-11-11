@@ -6,10 +6,11 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
   subject(:module_ancestor_load) do
     described_class.new(
+        logger: logger,
         # This should match the major version number of metasploit-framework
         maximum_version: 4,
         module_ancestor: module_ancestor,
-        logger: logger
+        persister_class: Metasploit::Cache::Module::Ancestor::Persister
     )
   end
 
@@ -470,31 +471,60 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
           # Shared Examples
           #
 
-          shared_examples_for 'relative_path_prefix' do |association:, relative_path_prefix:|
-            context relative_path_prefix do
-              real_prefix_pathname = module_path_real_pathname.join(relative_path_prefix)
+          shared_examples_for 'payloads/stagers' do |handler_type_aliased:|
+            context 'payloads' do
+              context 'stagers' do
+                relative_path_prefix = 'payloads/stagers'
+                real_prefix_pathname = module_path_real_pathname.join(relative_path_prefix)
 
-              rule = File::Find.new(
-                  ftype: 'file',
-                  pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}",
-                  path: real_prefix_pathname.to_path
-              )
+                rule = File::Find.new(
+                    ftype: 'file',
+                    pattern: "*#{Metasploit::Cache::Module::Ancestor::EXTENSION}",
+                    path: real_prefix_pathname.to_path
+                )
 
-              rule.find do |real_path|
-                real_pathname = Pathname.new(real_path)
-                display_pathname = real_pathname.relative_path_from(real_prefix_pathname)
-                relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
+                rule.find do |real_path|
+                  real_pathname = Pathname.new(real_path)
+                  display_pathname = real_pathname.relative_path_from(real_prefix_pathname)
+                  relative_pathname = real_pathname.relative_path_from(module_path_real_pathname)
 
-                context display_pathname.to_s do
-                  let(:module_ancestor) {
-                    module_path.send(
-                        association
-                    ).build(
-                        relative_path: relative_pathname.to_path
-                    )
-                  }
+                  context display_pathname.to_s do
+                    let(:payload_stager_ancestor) {
+                      module_path.stager_payload_ancestors.build(
+                          relative_path: relative_pathname.to_path
+                      )
+                    }
 
-                  it { is_expected.to load_metasploit_module}
+                    let(:payload_stager_ancestor_load) {
+                      Metasploit::Cache::Module::Ancestor::Load.new(
+                          logger: logger,
+                          maximum_version: 4,
+                          module_ancestor: payload_stager_ancestor,
+                          persister_class: Metasploit::Cache::Payload::Stager::Ancestor::Persister
+                      )
+                    }
+
+                    it 'can load with correct Metasploit::Cache::Payload::Stager::Ancestor#handler and Metasploit::Cache::Payload::Stager::Ancestor::Handler#type_alias' do
+                      expect(payload_stager_ancestor).to be_valid
+
+                      expect(payload_stager_ancestor_load).to be_valid(:loading)
+                      expect(payload_stager_ancestor_load).to be_valid
+
+                      display_path = display_pathname.to_path
+                      handler_type_alias = nil
+
+                      if handler_type_aliased.include? display_path
+                        handler_type_alias = display_pathname.basename('.rb').to_s
+                      end
+
+                      if handler_type_alias
+                        expect(payload_stager_ancestor.handler).not_to be_nil
+                        expect(payload_stager_ancestor.handler.type_alias).to eq(handler_type_alias)
+                      else
+                        expect(payload_stager_ancestor.handler).to be_nil
+                      end
+                    end
+                  end
                 end
               end
             end
@@ -513,6 +543,49 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
             )
           end
 
+          include_examples 'payloads/stagers',
+                           handler_type_aliased: %w{
+                               bsd/x86/bind_ipv6_tcp.rb
+                               bsd/x86/reverse_ipv6_tcp.rb
+                               linux/x86/bind_ipv6_tcp.rb
+                               linux/x86/bind_ipv6_tcp_uuid.rb
+                               linux/x86/bind_nonx_tcp.rb
+                               linux/x86/bind_tcp_uuid.rb
+                               linux/x86/reverse_ipv6_tcp.rb
+                               linux/x86/reverse_nonx_tcp.rb
+                               linux/x86/reverse_tcp_uuid.rb
+                               php/bind_tcp_ipv6.rb
+                               php/bind_tcp_ipv6_uuid.rb
+                               php/bind_tcp_uuid.rb
+                               php/reverse_tcp_uuid.rb
+                               python/bind_tcp_uuid.rb
+                               python/reverse_tcp_uuid.rb
+                               windows/bind_hidden_ipknock_tcp.rb
+                               windows/bind_hidden_tcp.rb
+                               windows/bind_ipv6_tcp.rb
+                               windows/bind_ipv6_tcp_uuid
+                               windows/bind_nonx_tcp.rb
+                               windows/bind_tcp_rc4.rb
+                               windows/bind_ipv6_tcp_uuid.rb
+                               windows/bind_tcp_uuid.rb
+                               windows/reverse_http_proxy_pstore.rb
+                               windows/reverse_ipv6_tcp.rb
+                               windows/reverse_nonx_tcp.rb
+                               windows/reverse_ord_tcp.rb
+                               windows/reverse_tcp_dns.rb
+                               windows/reverse_tcp_rc4.rb
+                               windows/reverse_tcp_rc4_dns.rb
+                               windows/reverse_tcp_uuid.rb
+                               windows/reverse_winhttp.rb
+                               windows/reverse_winhttps.rb
+                               windows/x64/bind_ipv6_tcp.rb
+                               windows/x64/bind_ipv6_tcp_uuid.rb
+                               windows/x64/bind_tcp_uuid.rb
+                               windows/x64/reverse_tcp_uuid.rb
+                               windows/x64/reverse_winhttp.rb
+                               windows/x64/reverse_winhttps.rb
+                           }
+
           # @note Testing of `relative_path_prefix: auxiliary` has been moved to
           #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Auxiliary::Ancestor loading.
 
@@ -524,10 +597,6 @@ RSpec.describe Metasploit::Cache::Module::Ancestor::Load, :cache do
 
           # @note Testing of `relative_path_prefix: nop` has been moved to
           #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Nop::Ancestor loading.
-
-          # @note Testing of `relative_path_prefix: 'payloads/stagers'` has been moved to
-          #   spec/lib/metasploit/cache/payload/direct/class/load_spec.rb to eliminate redundant
-          #   Payload::Stager::Ancestor loading.
 
           # @note Testing of `relative_path_prefix: post` has been moved to
           #   spec/lib/metasploit/cache/direct/class/load_spec.rb to eliminate redundant Post::Ancestor loading.

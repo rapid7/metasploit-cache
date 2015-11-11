@@ -4,7 +4,7 @@ class Metasploit::Cache::Payload::Stage::Instance < ActiveRecord::Base
 
   include Metasploit::Cache::Batch::Root
 
-  autoload :Ephemeral
+  autoload :Persister
   autoload :PayloadStageClass
 
   #

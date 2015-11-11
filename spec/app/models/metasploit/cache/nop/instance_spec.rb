@@ -123,20 +123,21 @@ RSpec.describe Metasploit::Cache::Nop::Instance, type: :model do
 
                 let(:module_ancestor_load) {
                   Metasploit::Cache::Module::Ancestor::Load.new(
+                      logger: logger,
                       # This should match the major version number of metasploit-framework
                       maximum_version: 4,
                       module_ancestor: nop_ancestor,
-                      logger: logger
+                      persister_class: Metasploit::Cache::Module::Ancestor::Persister
                   )
                 }
 
                 let(:module_instance_load) {
                   Metasploit::Cache::Module::Instance::Load.new(
-                      ephemeral_class: Metasploit::Cache::Nop::Instance::Ephemeral,
                       logger: logger,
                       metasploit_framework: metasploit_framework,
                       metasploit_module_class: direct_class_load.metasploit_class,
-                      module_instance: full_metasploit_cache_nop_instance
+                      module_instance: full_metasploit_cache_nop_instance,
+                      persister_class: Metasploit::Cache::Nop::Instance::Persister
                   )
                 }
 

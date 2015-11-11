@@ -44,6 +44,11 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
   #   @return [Module]
   attr_accessor :module_namespace
 
+  # Persister class
+  #
+  # @return [#new(ephemeral: Module, logger: ActiveSupport::TaggedLogging)]
+  attr_accessor :persister_class
+
   #
   #
   # Validations
@@ -72,6 +77,8 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
             numericality: {
                 less_than_or_equal_to: :maximum_core_version
             }
+  validates :persister_class,
+            presence: true
 
   #
   # Instance Methods
@@ -163,15 +170,15 @@ class Metasploit::Cache::Module::Namespace::Load < Metasploit::Model::Base
       @module_ancestor_eval_exception = exception
     else
       if valid?
-        ephemeral_cache = Metasploit::Cache::Module::Ancestor::Ephemeral.new(
+        persister = persister_class.new(
+            ephemeral: metasploit_module,
             logger: logger,
-            metasploit_module: metasploit_module,
             real_path_sha1_hex_digest: module_namespace.cache.real_path_sha1_hex_digest
         )
-        metasploit_module.ephemeral_cache_by_source[:ancestor] = ephemeral_cache
+        metasploit_module.persister_by_source[:ancestor] = persister
 
-        if ephemeral_cache.valid?
-          ephemeral_cache.persist_module_ancestor(to: module_ancestor)
+        if persister.valid?
+          persister.persist(to: module_ancestor)
 
           # TODO log module_ancestor.errors
           if module_ancestor.persisted?

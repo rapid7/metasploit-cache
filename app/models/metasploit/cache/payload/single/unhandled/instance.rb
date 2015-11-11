@@ -4,7 +4,7 @@ class Metasploit::Cache::Payload::Single::Unhandled::Instance < ActiveRecord::Ba
 
   include Metasploit::Cache::Batch::Root
 
-  autoload :Ephemeral
+  autoload :Persister
   autoload :PayloadSingleUnhandledClass
 
   #

@@ -9,7 +9,7 @@ class Metasploit::Cache::Direct::Class < ActiveRecord::Base
   include Metasploit::Cache::Module::Rankable
 
   autoload :AncestorCell
-  autoload :Ephemeral
+  autoload :Persister
   autoload :Framework
   autoload :Load
   autoload :Ranking
