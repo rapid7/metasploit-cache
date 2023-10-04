@@ -1,0 +1,15 @@
+---
+info:
+  title: Metasploit Cache
+  description: Managing Metasploit content since 2015
+  x-cortex-git:
+    github:
+      alias: r7org
+      repository: rapid7/metasploit-cache
+  x-cortex-tag: metasploit-cache
+  x-cortex-type: service
+  x-cortex-domain-parents:
+  - tag: metasploit
+openapi: 3.0.1
+servers:
+- url: "/"
